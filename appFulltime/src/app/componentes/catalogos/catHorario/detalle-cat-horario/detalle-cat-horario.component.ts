@@ -9,6 +9,12 @@ import { HorarioService } from 'src/app/servicios/catalogos/catHorarios/horario.
 import { ThemePalette } from '@angular/material/core';
 import { ProgressSpinnerMode } from '@angular/material/progress-spinner';
 
+const OPTIONS_HORARIOS = [
+  { orden: 1, accion: 'E', view_option: 'Entrada' },
+  { orden: 2, accion: 'S/A', view_option: 'Salida Almuerzo' },
+  { orden: 3, accion: 'E/A', view_option: 'Entrada Almuerzo' },
+  { orden: 4, accion: 'S', view_option: 'Salida' }
+]
 
 @Component({
   selector: 'app-detalle-cat-horario',
@@ -31,6 +37,8 @@ export class DetalleCatHorarioComponent implements OnInit {
     minEsperaForm: this.minEsperaF,
   });
 
+  options = OPTIONS_HORARIOS;
+
   /**
    * Variables progress spinner
    */
@@ -49,6 +57,12 @@ export class DetalleCatHorarioComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+  }
+
+  AutoSelectOrden(orden: number) {
+    this.DetalleHorarioForm.patchValue({
+      ordenForm: orden
+    })
   }
 
   ValidarMinEspera(form, datos) {

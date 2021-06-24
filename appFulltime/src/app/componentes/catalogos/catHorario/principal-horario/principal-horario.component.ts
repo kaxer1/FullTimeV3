@@ -1,3 +1,5 @@
+// IMPORTACIÓN DE LIBRERIAS
+import { environment } from 'src/environments/environment';
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
@@ -58,6 +60,8 @@ export class PrincipalHorarioComponent implements OnInit {
   empleado: any = [];
   idEmpleado: number;
 
+  hipervinculo: string = environment.url;
+
   constructor(
     private rest: HorarioService,
     public restE: EmpleadoService,
@@ -75,7 +79,7 @@ export class PrincipalHorarioComponent implements OnInit {
     this.nameFile = '';
     this.ObtenerEmpleados(this.idEmpleado);
     this.ObtenerLogo();
-    this.ObtnerColores();
+    this.ObtenerColores();
   }
 
   // Método para ver la información del empleado 
@@ -94,13 +98,15 @@ export class PrincipalHorarioComponent implements OnInit {
     });
   }
 
-  // Método para obtener colores de empresa
+  // MÉTODO PARA OBTENER COLORES Y MARCA DE AGUA DE EMPRESA 
   p_color: any;
   s_color: any;
-  ObtnerColores() {
+  frase: any;
+  ObtenerColores() {
     this.restEmpre.ConsultarDatosEmpresa(parseInt(localStorage.getItem('empresa'))).subscribe(res => {
       this.p_color = res[0].color_p;
       this.s_color = res[0].color_s;
+      this.frase = res[0].marca_agua;
     });
   }
 
@@ -309,11 +315,11 @@ export class PrincipalHorarioComponent implements OnInit {
 
       // Encabezado de página
       pageOrientation: 'landscape',
-      watermark: { text: 'Confidencial', color: 'blue', opacity: 0.1, bold: true, italics: false },
+      watermark: { text: this.frase, color: 'blue', opacity: 0.1, bold: true, italics: false },
       header: { text: 'Impreso por:  ' + this.empleado[0].nombre + ' ' + this.empleado[0].apellido, margin: 10, fontSize: 9, opacity: 0.3, alignment: 'right' },
 
       // Pie de página
-      footer: function (currentPage, pageCount, fecha) {
+      footer: function (currentPage: any, pageCount: any, fecha: any, hora: any) {
         var f = moment();
         fecha = f.format('YYYY-MM-DD');
 
@@ -383,6 +389,12 @@ export class PrincipalHorarioComponent implements OnInit {
                 ];
               })
             ]
+          },
+          // ESTILO DE COLORES FORMATO ZEBRA
+          layout: {
+            fillColor: function (i: any) {
+              return (i % 2 === 0) ? '#CCD1D1' : null;
+            }
           }
         },
         { width: '*', text: '' },
@@ -441,7 +453,7 @@ export class PrincipalHorarioComponent implements OnInit {
     this.rest.DownloadXMLRest(arregloHorarios).subscribe(res => {
       this.data = res;
       console.log("prueba data", res)
-      this.urlxml = 'http://localhost:3000/horario/download/' + this.data.name;
+      this.urlxml = `${environment.url}/horario/download/` + this.data.name;
       window.open(this.urlxml, "_blank");
     });
   }

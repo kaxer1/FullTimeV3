@@ -12,6 +12,7 @@ import { CancelarPermisoComponent } from './cancelar-permiso/cancelar-permiso.co
 import { EditarPermisoEmpleadoComponent } from './editar-permiso-empleado/editar-permiso-empleado.component';
 import { EmplCargosService } from 'src/app/servicios/empleado/empleadoCargo/empl-cargos.service';
 import { ValidacionesService } from '../../../servicios/validaciones/validaciones.service';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-solicitar-permisos-empleado',
@@ -30,6 +31,8 @@ export class SolicitarPermisosEmpleadoComponent implements OnInit {
   tamanio_pagina: number = 5;
   numero_pagina: number = 1;
   pageSizeOptions = [5, 10, 20, 50];
+
+  hipervinculo: string = environment.url
 
   constructor(
     public restEmpleado: EmpleadoService,

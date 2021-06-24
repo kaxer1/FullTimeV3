@@ -1,0 +1,26 @@
+<form class="example-form">
+    <mat-form-field class="example-full-width">
+      <mat-icon matPrefix>search</mat-icon>
+      <input type="text" placeholder="Buscar Empleados" aria-label="Number" matInput [formControl]="myControl"
+        [matAutocomplete]="auto">
+      <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+        <mat-option *ngFor="let option of filteredOptions | async" [value]="option" type="submit"
+          (click)="abrirInfoEmpleado(option)">
+          {{option}}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+</form>
+<!-- 
+<form class="example-form">
+    <mat-form-field class="full-width">
+      <mat-icon matPrefix>search</mat-icon>
+      <input type="text" placeholder="Buscar" aria-label="Number" matInput [formControl]="myControl"
+        [matAutocomplete]="auto">
+      <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+        <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+          {{option}}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+</form> -->

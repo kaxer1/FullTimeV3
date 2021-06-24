@@ -4,6 +4,7 @@ import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 import * as moment from 'moment';
+import { FormControl, FormGroup } from '@angular/forms';
 
 import { NotificacionService } from 'src/app/servicios/reportes/notificaciones/notificacion.service';
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
@@ -22,6 +23,18 @@ export class AdministradorTodasComponent implements OnInit {
   numero_pagina: number = 1;
 
   idEmpleadoLogueado: any;
+
+  fechas: boolean = true;
+
+  // Datos del Formulario de Periodo
+  fechaInicialF = new FormControl('');
+  fechaFinalF = new FormControl('');
+
+  // Formulario de Periodo
+  public fechasForm = new FormGroup({
+    inicioForm: this.fechaInicialF,
+    finalForm: this.fechaFinalF,
+  });
 
   constructor(
     public restN: NotificacionService,
@@ -82,14 +95,21 @@ export class AdministradorTodasComponent implements OnInit {
     });
   }
 
-  // MÉTODO PARA OBTENER COLORES DE EMPRESA
+  // MÉTODO PARA OBTENER COLORES Y MARCA DE AGUA DE EMPRESA 
   p_color: any;
   s_color: any;
+  frase: any;
   ObtenerColores() {
     this.restEmpre.ConsultarDatosEmpresa(parseInt(localStorage.getItem('empresa'))).subscribe(res => {
       this.p_color = res[0].color_p;
       this.s_color = res[0].color_s;
+      this.frase = res[0].marca_agua;
     });
+  }
+
+  LimpiarFechas() {
+    this.fechaInicialF.reset();
+    this.fechaFinalF.reset();
   }
 
   /** ************************************************************************************** */
@@ -151,25 +171,18 @@ export class AdministradorTodasComponent implements OnInit {
     return {
       // ENCABEZADO DE LA PÁGINA
       pageOrientation: 'landscape',
-      watermark: { text: 'Confidencial', color: 'blue', opacity: 0.1, bold: true, italics: false },
+      watermark: { text: this.frase, color: 'blue', opacity: 0.1, bold: true, italics: false },
       header: { text: 'Impreso por:  ' + this.empleado[0].nombre + ' ' + this.empleado[0].apellido, margin: 10, fontSize: 9, opacity: 0.3, alignment: 'right' },
 
       // PIE DE PÁGINA
-      footer: function (currentPage, pageCount, fecha) {
-        var h = new Date();
+      footer: function (currentPage: any, pageCount: any, fecha: any, hora: any) {
         var f = moment();
         fecha = f.format('YYYY-MM-DD');
-        // FORMATO DE HORA ACTUAL
-        if (h.getMinutes() < 10) {
-          var time = h.getHours() + ':0' + h.getMinutes();
-        }
-        else {
-          var time = h.getHours() + ':' + h.getMinutes();
-        }
+        hora = f.format('HH:mm:ss');
         return {
           margin: 10,
           columns: [
-            { text: 'Fecha: ' + fecha + ' Hora: ' + time, opacity: 0.3 },
+            { text: 'Fecha: ' + fecha + ' Hora: ' + hora, opacity: 0.3 },
             {
               text: [
                 {
@@ -273,25 +286,18 @@ export class AdministradorTodasComponent implements OnInit {
     return {
       // ENCABEZADO DE LA PÁGINA
       pageOrientation: 'landscape',
-      watermark: { text: 'Confidencial', color: 'blue', opacity: 0.1, bold: true, italics: false },
+      watermark: { text: this.frase, color: 'blue', opacity: 0.1, bold: true, italics: false },
       header: { text: 'Impreso por:  ' + this.empleado[0].nombre + ' ' + this.empleado[0].apellido, margin: 10, fontSize: 9, opacity: 0.3, alignment: 'right' },
 
       // PIE DE PÁGINA
-      footer: function (currentPage, pageCount, fecha) {
-        var h = new Date();
+      footer: function (currentPage: any, pageCount: any, fecha: any, hora: any) {
         var f = moment();
         fecha = f.format('YYYY-MM-DD');
-        // FORMATO DE HORA ACTUAL
-        if (h.getMinutes() < 10) {
-          var time = h.getHours() + ':0' + h.getMinutes();
-        }
-        else {
-          var time = h.getHours() + ':' + h.getMinutes();
-        }
+        hora = f.format('HH:mm:ss');
         return {
           margin: 10,
           columns: [
-            { text: 'Fecha: ' + fecha + ' Hora: ' + time, opacity: 0.3 },
+            { text: 'Fecha: ' + fecha + ' Hora: ' + hora, opacity: 0.3 },
             {
               text: [
                 {
@@ -399,25 +405,18 @@ export class AdministradorTodasComponent implements OnInit {
     return {
       // ENCABEZADO DE LA PÁGINA
       pageOrientation: 'landscape',
-      watermark: { text: 'Confidencial', color: 'blue', opacity: 0.1, bold: true, italics: false },
+      watermark: { text: this.frase, color: 'blue', opacity: 0.1, bold: true, italics: false },
       header: { text: 'Impreso por:  ' + this.empleado[0].nombre + ' ' + this.empleado[0].apellido, margin: 10, fontSize: 9, opacity: 0.3, alignment: 'right' },
 
       // PIE DE PÁGINA
-      footer: function (currentPage, pageCount, fecha) {
-        var h = new Date();
+      footer: function (currentPage: any, pageCount: any, fecha: any, hora: any) {
         var f = moment();
         fecha = f.format('YYYY-MM-DD');
-        // FORMATO DE HORA ACTUAL
-        if (h.getMinutes() < 10) {
-          var time = h.getHours() + ':0' + h.getMinutes();
-        }
-        else {
-          var time = h.getHours() + ':' + h.getMinutes();
-        }
+        hora = f.format('HH:mm:ss');
         return {
           margin: 10,
           columns: [
-            { text: 'Fecha: ' + fecha + ' Hora: ' + time, opacity: 0.3 },
+            { text: 'Fecha: ' + fecha + ' Hora: ' + hora, opacity: 0.3 },
             {
               text: [
                 {
@@ -523,25 +522,18 @@ export class AdministradorTodasComponent implements OnInit {
     return {
       // ENCABEZADO DE LA PÁGINA
       pageOrientation: 'landscape',
-      watermark: { text: 'Confidencial', color: 'blue', opacity: 0.1, bold: true, italics: false },
+      watermark: { text: this.frase, color: 'blue', opacity: 0.1, bold: true, italics: false },
       header: { text: 'Impreso por:  ' + this.empleado[0].nombre + ' ' + this.empleado[0].apellido, margin: 10, fontSize: 9, opacity: 0.3, alignment: 'right' },
 
       // PIE DE PÁGINA
-      footer: function (currentPage, pageCount, fecha) {
-        var h = new Date();
+      footer: function (currentPage: any, pageCount: any, fecha: any, hora: any) {
         var f = moment();
         fecha = f.format('YYYY-MM-DD');
-        // FORMATO DE HORA ACTUAL
-        if (h.getMinutes() < 10) {
-          var time = h.getHours() + ':0' + h.getMinutes();
-        }
-        else {
-          var time = h.getHours() + ':' + h.getMinutes();
-        }
+        hora = f.format('HH:mm:ss');
         return {
           margin: 10,
           columns: [
-            { text: 'Fecha: ' + fecha + ' Hora: ' + time, opacity: 0.3 },
+            { text: 'Fecha: ' + fecha + ' Hora: ' + hora, opacity: 0.3 },
             {
               text: [
                 {

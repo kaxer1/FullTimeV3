@@ -20,7 +20,7 @@ class TipoComidasControlador {
         return __awaiter(this, void 0, void 0, function* () {
             const TIPO_COMIDAS = yield database_1.default.query('SELECT ctc.id, ctc.nombre, ctc.tipo_comida, ctc.hora_inicio, ' +
                 'ctc.hora_fin, tc.nombre AS tipo FROM cg_tipo_comidas AS ctc, tipo_comida AS tc ' +
-                'WHERE ctc.tipo_comida = tc.id ORDER BY tc.nombre ASC');
+                'WHERE ctc.tipo_comida = tc.id ORDER BY tc.nombre ASC, ctc.id ASC');
             if (TIPO_COMIDAS.rowCount > 0) {
                 return res.jsonp(TIPO_COMIDAS.rows);
             }
@@ -94,114 +94,6 @@ class TipoComidasControlador {
             res.sendFile(__dirname.split("servidor")[0] + filePath);
         });
     }
-    /*public async CrearTipoComidasPlantilla(req: Request, res: Response): Promise<void> {
-        let list: any = req.files;
-        let cadena = list.uploads[0].path;
-        let filename = cadena.split("\\")[1];
-        var filePath = `./plantillas/${filename}`
-
-        const workbook = excel.readFile(filePath);
-        const sheet_name_list = workbook.SheetNames;
-        const plantilla = excel.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]);
-
-        plantilla.forEach(async (data: any) => {
-            const { nombre, tipo_comida } = data;
-            if (nombre != undefined) {
-                await pool.query('INSERT INTO cg_tipo_comidas (nombre, tipo_comida) VALUES ($1, $2)',
-                    [nombre, tipo_comida]);
-            } else {
-                res.jsonp({ error: 'plantilla equivocada' });
-            }
-        });
-
-        res.jsonp({ message: 'La plantilla a sido receptada' });
-        fs.unlinkSync(filePath);
-    }
-
-     public async RevisarDatos(req: Request, res: Response): Promise<void> {
-         let list: any = req.files;
-         let cadena = list.uploads[0].path;
-         let filename = cadena.split("\\")[1];
-         var filePath = `./plantillas/${filename}`
- 
-         const workbook = excel.readFile(filePath);
-         const sheet_name_list = workbook.SheetNames;
-         const plantilla = excel.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]);
-         var contarDatos = 0;
-         var contarLlenos = 0;
-         var contador = 1;
- 
-         plantilla.forEach(async (data: any) => {
-             const { nombre, tipo_comida } = data;
-             if (nombre != undefined && tipo_comida != undefined) {
-                 contarLlenos = contarLlenos + 1;
-             }
- 
-             const VERIFICAR_DATOS = await pool.query('SELECT * FROM cg_tipo_comidas WHERE UPPER(nombre) = $1 AND ' +
-                 'tipo_comida = $2',
-                 [nombre.toUpperCase(), tipo_comida]);
-             if (VERIFICAR_DATOS.rowCount === 0) {
-                 contarDatos = contarDatos + 1;
-             }
-             // Verificación cuando se ha leido todos los datos de la plantilla
-             console.log('datos', contarDatos, plantilla.length, contador);
-             console.log('llenos', contarLlenos, plantilla.length, contador);
-             if (contador === plantilla.length) {
-                 if (contarDatos === plantilla.length && contarLlenos === plantilla.length) {
-                     return res.jsonp({ message: 'correcto' });
-                 }
-                 else {
-                     return res.jsonp({ message: 'error' });
-                 }
-             }
-             contador = contador + 1;
-         });
-         fs.unlinkSync(filePath);
-     }
- 
-     public async RevisarDatos_Duplicados(req: Request, res: Response) {
-         let list: any = req.files;
-         let cadena = list.uploads[0].path;
-         let filename = cadena.split("\\")[1];
-         var filePath = `./plantillas/${filename}`
- 
-         const workbook = excel.readFile(filePath);
-         const sheet_name_list = workbook.SheetNames;
-         const plantilla = excel.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]);
-         var contador = 1;
-         var contarDatosData = 0;
-         var array_datos: any = [];
-         plantilla.forEach(async (data: any) => {
-             const { nombre, valor, observacion } = data;
-             let datos_array = {
-                 nombre: nombre,
-                 valor: valor,
-                 observacion: observacion
-             }
-             array_datos.push(datos_array);
-         });
-         console.log('array', array_datos)
-         for (var i = 0; i <= array_datos.length - 1; i++) {
-             for (var j = 0; j <= array_datos.length - 1; j++) {
-                 if (array_datos[i].nombre.toUpperCase() === array_datos[j].nombre.toUpperCase() &&
-                     array_datos[i].valor === array_datos[j].valor
-                     && array_datos[i].observacion.toUpperCase() === array_datos[j].observacion.toUpperCase()) {
-                     contarDatosData = contarDatosData + 1;
-                 }
-             }
-             contador = contador + 1;
-         }
-         console.log('datos', contarDatosData, plantilla.length, contador);
-         if ((contador - 1) === plantilla.length) {
-             if (contarDatosData === plantilla.length) {
-                 return res.jsonp({ message: 'correcto' });
-             }
-             else {
-                 return res.jsonp({ message: 'error' });
-             }
-         }
-         fs.unlinkSync(filePath);
-     }*/
     EliminarRegistros(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const id = req.params.id;
@@ -234,7 +126,8 @@ class TipoComidasControlador {
             const { id } = req.params;
             const TIPO_COMIDAS = yield database_1.default.query('SELECT tc.id AS id_servicio, tc.nombre AS servicio, ' +
                 'menu.id AS id_menu, menu.nombre AS menu, dm.id AS id_detalle, dm.nombre AS plato, dm.valor, ' +
-                'menu.hora_inicio, menu.hora_fin FROM tipo_comida AS tc, cg_tipo_comidas AS menu, detalle_menu AS dm ' +
+                'dm.observacion, menu.hora_inicio, menu.hora_fin ' +
+                'FROM tipo_comida AS tc, cg_tipo_comidas AS menu, detalle_menu AS dm ' +
                 'WHERE tc.id = menu.tipo_comida AND dm.id_menu = menu.id AND menu.id = $1', [id]);
             if (TIPO_COMIDAS.rowCount > 0) {
                 return res.jsonp(TIPO_COMIDAS.rows);

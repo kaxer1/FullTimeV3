@@ -1,8 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { MAT_MOMENT_DATE_FORMATS, MAT_MOMENT_DATE_ADAPTER_OPTIONS, MomentDateAdapter } from '@angular/material-moment-adapter';
-import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { ToastrService } from 'ngx-toastr';
 import * as moment from 'moment';
 
@@ -15,13 +13,7 @@ import { PlanGeneralService } from 'src/app/servicios/planGeneral/plan-general.s
 @Component({
   selector: 'app-editar-horario-empleado',
   templateUrl: './editar-horario-empleado.component.html',
-  styleUrls: ['./editar-horario-empleado.component.css'],
-  providers: [
-    { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
-    { provide: MAT_DATE_FORMATS, useValue: MAT_MOMENT_DATE_FORMATS },
-    { provide: MAT_DATE_LOCALE, useValue: 'es' },
-    { provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: { useUtc: true } },
-  ]
+  styleUrls: ['./editar-horario-empleado.component.css']
 })
 export class EditarHorarioEmpleadoComponent implements OnInit {
 
@@ -86,6 +78,8 @@ export class EditarHorarioEmpleadoComponent implements OnInit {
   BuscarHorarios() {
     this.horarios = [];
     this.restH.getHorariosRest().subscribe(datos => {
+      console.log(datos);
+      
       this.horarios = datos;
     })
   }
@@ -145,7 +139,10 @@ export class EditarHorarioEmpleadoComponent implements OnInit {
         this.EliminarPlanificacion();
         this.IngresarPlanGeneral(form);
         this.CerrarVentanaEmpleadoHorario();
-      }, error => { });
+      }, error => {
+        console.log(error);
+        
+       });
     });
   }
 
@@ -162,6 +159,10 @@ export class EditarHorarioEmpleadoComponent implements OnInit {
       this.id_planificacion_general = res;
       this.id_planificacion_general.map(obj => {
         this.restP.EliminarRegistro(obj.id).subscribe(res => {
+          console.log(res);
+        }, err => {
+          console.log(err);
+          
         })
       })
     })
@@ -228,7 +229,14 @@ export class EditarHorarioEmpleadoComponent implements OnInit {
             codigo: this.empleado[0].codigo,
             id_horario: form.horarioForm
           };
+          console.log('================PLAN: ',plan);
+          
           this.restP.CrearPlanGeneral(plan).subscribe(res => {
+            console.log(res);
+            
+          }, err => {
+            console.log(err);
+            
           })
         })
       })
@@ -268,9 +276,16 @@ export class EditarHorarioEmpleadoComponent implements OnInit {
   }
 
   VerificarDetalles(form) {
+    console.log('**********************');
+    console.log(form);
+    console.log('**********************');
+    
     this.restD.ConsultarUnDetalleHorario(form.horarioForm).subscribe(res => {
-    },
-      erro => {
+      console.log(res);
+      
+    }, err => {
+      console.log(err);
+      
         this.EmpleadoHorarioForm.patchValue({
           horarioForm: ''
         });

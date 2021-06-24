@@ -23,13 +23,14 @@ import { ReporteEmpleadosInactivosComponent } from './reporte-empleados-inactivo
 import { ReporteHorasTrabajadasComponent } from './reporte-horas-trabajadas/reporte-horas-trabajadas.component';
 import { ReportePuntualidadComponent } from './reporte-puntualidad/reporte-puntualidad.component';
 import { AsistenciaConsolidadoComponent } from './reporte-asistencia-consolidado/asistencia-consolidado.component';
-import { ReporteTimbresComponent } from './reporteTimbres/reporte-timbres/reporte-timbres.component';
+import { ReporteTimbresComponent } from './reporte-timbres/reporte-timbres.component';
 import { ReportePermisosComponent } from './reporte-permisos/reporte-permisos.component';
 import { ReporteAtrasosComponent } from './reporte-atrasos/reporte-atrasos.component';
 import { ReporteEntradaSalidaComponent } from './reporte-entrada-salida/reporte-entrada-salida.component';
 import { AppRoutingModule } from '../../app-routing.module';
 import { AdministradorTodasComponent } from './notificaciones/administrador-todas/administrador-todas.component';
 import { PorUsuarioComponent } from './notificaciones/por-usuario/por-usuario.component';
+import { OptionTimbreServidorComponent } from './option-timbre-servidor/option-timbre-servidor.component';
 
 @NgModule({
   declarations: [
@@ -55,6 +56,7 @@ import { PorUsuarioComponent } from './notificaciones/por-usuario/por-usuario.co
     ListaReportesComponent,
     AdministradorTodasComponent,
     PorUsuarioComponent,
+    OptionTimbreServidorComponent,
   ],
   exports: [
     ReporteFaltasComponent,

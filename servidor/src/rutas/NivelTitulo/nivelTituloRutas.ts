@@ -18,6 +18,8 @@ class NivelTituloRutas {
         this.router.put('/', TokenValidation, NIVEL_TITULO_CONTROLADOR.ActualizarNivelTitulo);
         this.router.delete('/eliminar/:id', TokenValidation, NIVEL_TITULO_CONTROLADOR.EliminarNivelTitulo);
         this.router.get('/nivel/datos', TokenValidation, NIVEL_TITULO_CONTROLADOR.ObtenerUltimoId);
+        this.router.post('/xmlDownload/', TokenValidation, NIVEL_TITULO_CONTROLADOR.FileXML);
+        this.router.get('/download/:nameXML', NIVEL_TITULO_CONTROLADOR.downloadXML);
     }
 }
 

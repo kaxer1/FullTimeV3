@@ -56,15 +56,17 @@ export class TimbreWebComponent implements OnInit {
   AbrirRegistrarTimbre() {
     this.openView.open(RegistrarTimbreComponent, {width: '500px'}).afterClosed().subscribe(data => {
       console.log('333333333333333333333', data);
-      if (!data.close) {
-        this.restTimbres.PostTimbreWeb(data).subscribe(res => {
-          console.log('res',  res);
-          this.ObtenerListaTimbres()
-          this.toastr.success(res.message)
-        }, err => {
-          console.log('error', err);
-          this.toastr.error(err.message)
-        })
+      if (data !== undefined) {
+        if (!data.close) {
+          this.restTimbres.PostTimbreWeb(data).subscribe(res => {
+            console.log('res',  res);
+            this.ObtenerListaTimbres()
+            this.toastr.success(res.message)
+          }, err => {
+            console.log('error', err);
+            this.toastr.error(err.message)
+          })
+        }
       }
     })
   }

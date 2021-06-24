@@ -13,6 +13,7 @@ import { RegistoEmpleadoHorarioComponent } from 'src/app/componentes/empleadoHor
 import { EditarHorarioEmpleadoComponent } from 'src/app/componentes/empleadoHorario/editar-horario-empleado/editar-horario-empleado.component';
 import { MetodosComponent } from 'src/app/componentes/metodoEliminar/metodos.component';
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-horarios-empleado',
@@ -32,6 +33,7 @@ export class HorariosEmpleadoComponent implements OnInit {
 
   /** Contador */
   cont = 0;
+  hipervinculo: string = environment.url
 
   constructor(
     public restCargo: EmplCargosService,

@@ -16,7 +16,8 @@ export const Credenciales = async function(id_empresa: number): Promise<void> {
     pass = credenciales.password_correo;
     
   } catch (error) {
-    console.log(error);
+    // console.log(error);
+    console.info(error.toString())
   }
 }
 
@@ -31,15 +32,20 @@ export const enviarMail = function(data : any) {
         }
     });
 
-    smtpTransport.sendMail(data, async (error: any, info: any) => {
-      console.log('****************************************************');
-      console.log(data);
-      console.log('****************************************************');
-      
-        if (error) {
-          console.log(error);
-        } else {
-          console.log('Email sent: ' + info.response);
-        }
-    });
+    try {
+      smtpTransport.sendMail(data, async (error: any, info: any) => {
+        console.log('****************************************************');
+        console.log(data);
+        console.log('****************************************************');
+        
+          if (error) {
+            console.warn(error);
+          } else {
+            console.log('Email sent: ' + info.response);
+          }
+      });
+    } catch (error) {
+      console.log(error.toString());
+      return {err: error.toString() }
+    }
 } 

@@ -3,6 +3,7 @@ import { BirthdayService } from 'src/app/servicios/birthday/birthday.service';
 import { MatDialog } from '@angular/material/dialog';
 import { RegistrarBirthdayComponent } from '../registrar-birthday/registrar-birthday.component';
 import { EditarBirthdayComponent } from '../editar-birthday/editar-birthday.component';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-ver-birthday',
@@ -13,7 +14,7 @@ export class VerBirthdayComponent implements OnInit {
 
   cumple: any = [];
   HabilitarBtn: boolean = false;
-  API_URL: string = 'http://localhost:3000';
+  API_URL: string = environment.url;
 
   constructor(
     private restB: BirthdayService,

@@ -5,6 +5,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 import { TituloService } from 'src/app/servicios/catalogos/catTitulos/titulo.service';
 import { EmplCargosService } from 'src/app/servicios/empleado/empleadoCargo/empl-cargos.service';
+import { environment } from '../../../../environments/environment';
 
 
 @Component({
@@ -18,6 +19,7 @@ export class ContratoCargoEmpleadoComponent implements OnInit {
   idEmpleado: string;
   idContrato: any = [];
   contratoEmpleado: any = [];
+  hipervinculo: string = environment.url
 
   constructor(
     public restTitulo: TituloService,

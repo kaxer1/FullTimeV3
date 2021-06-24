@@ -25,7 +25,7 @@
                     <button mat-button type="button" class="btn btn-sm" (click)="AbrirVentanaRegistrarRol()">Crear nuevo
                         Rol
                     </button>
-                    <button mat-button type="submit" class="btn btn-sm" (click)="limpiarCampoBuscar()">Cancelar
+                    <button mat-button type="submit" class="btn btn-sm" (click)="LimpiarCampoBuscar()">Cancelar
                     </button>
                 </div>
             </mat-card>
@@ -72,19 +72,19 @@
         <mat-paginator [length]="roles.length" [pageSize]="tamanio_pagina" [pageSizeOptions]="pageSizeOptions"
             id="estilo" (page)="ManejarPagina($event)" showFirstLastButtons></mat-paginator>
         <div class="d-flex justify-content-end" style="margin-right: 5%;">
-            <i (click)="generarPdf('download')" id="pdf" class="fas fa-file-pdf" matSuffix matTooltipPosition="right"
+            <i (click)="GenerarPdf('download')" id="pdf" class="fas fa-file-pdf" matSuffix matTooltipPosition="right"
                 matTooltipClass="departamento-tooltip" matTooltip="Descargar Lista de Roles en formato PDF">
                 <p>PDF</p>
             </i>
-            <i (click)="exportToExcel()" id="excel" class="fas fa-file-excel" matSuffix matTooltipPosition="right"
+            <i (click)="ExportToExcel()" id="excel" class="fas fa-file-excel" matSuffix matTooltipPosition="right"
                 matTooltipClass="departamento-tooltip" matTooltip="Descargar Lista de Roles en formato EXCEL">
                 <p>XLSL</p>
             </i>
-            <i (click)="exportToCVS()" id="csv" class="fas fa-file-csv" matSuffix matTooltipPosition="right"
+            <i (click)="ExportToCVS()" id="csv" class="fas fa-file-csv" matSuffix matTooltipPosition="right"
                 matTooltipClass="departamento-tooltip" matTooltip="Descargar Lista de Roles en formato CSV">
                 <p>CSV</p>
             </i>
-            <i (click)="exportToXML()" id="xml" class="fas fa-file-code" matSuffix matTooltipPosition="right"
+            <i (click)="ExportToXML()" id="xml" class="fas fa-file-code" matSuffix matTooltipPosition="right"
                 matTooltipClass="departamento-tooltip" matTooltip="Descargar Lista de Roles en formato XML">
                 <p>XML</p>
             </i>

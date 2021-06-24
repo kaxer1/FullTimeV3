@@ -271,6 +271,8 @@ class ReportesControlador {
     public async ListarEntradaSalidaHorarioEmpleado(req: Request, res: Response) {
         const { id_empleado } = req.params;
         const { fechaInicio, fechaFinal } = req.body;
+        console.log('id' , id_empleado, req.body);
+        
         let DATOS;
 
         //false sin acciones || true con acciones
@@ -449,6 +451,9 @@ async function AtrasosTimbresPlanificadosSinAcciones(id_empleado: string, fechaI
 }
 
 async function EntradaSalidaHorarioConAcciones(id_empleado: string, fechaInicio: string, fechaFinal: string): Promise<any[]> {
+
+    // const timbres = 
+
     return await pool.query('SELECT * FROM timbres AS t INNER JOIN ' +
             '(SELECT * FROM datos_empleado_cargo AS e INNER JOIN ' +
             '(SELECT h.id_horarios, ch.nombre AS nom_horario, dh.minu_espera, dh.tipo_accion, dh.hora, ' +
@@ -464,6 +469,8 @@ async function EntradaSalidaHorarioConAcciones(id_empleado: string, fechaInicio:
             'ORDER BY t.fec_hora_timbre ASC', [id_empleado, fechaInicio, fechaFinal])
             .then(result => {
                 return result.rows.map(obj => {
+                    console.log(obj);
+                    
                     obj.accion = obj.tipo_accion
                     return obj
                 })

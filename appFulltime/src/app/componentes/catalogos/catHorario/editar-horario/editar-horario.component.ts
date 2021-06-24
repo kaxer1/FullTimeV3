@@ -22,7 +22,7 @@ export class EditarHorarioComponent implements OnInit {
   // Validaciones para el formulario
   nombre = new FormControl('', [Validators.required, Validators.minLength(2)]);
   minAlmuerzo = new FormControl('', [Validators.pattern('[0-9]*')]);
-  horaTrabajo = new FormControl('', [Validators.required, Validators.pattern("^[0-9]*(:[0-9][0-9])?$")]);
+  horaTrabajo = new FormControl('', [Validators.required]);
   tipoF = new FormControl('');
   nombreCertificadoF = new FormControl('');
   archivoForm = new FormControl('');
@@ -92,19 +92,22 @@ export class EditarHorarioComponent implements OnInit {
     }
     if (form.nombreCertificadoForm === '') {
       this.rest.VerificarDuplicadosEdicion(this.data.horario.id, form.horarioNombreForm).subscribe(response => {
-        this.toastr.info('El nombre de horario ya existe, ingresar un nuevo nombre.', 'Verificar Datos', {
+        console.log(response);
+        this.toastr.info('d', 'Verificar Datos', {
           timeOut: 6000,
         });
         this.habilitarprogress = false;
       }, error => {
+        console.log(error);
         dataHorario.doc_nombre = null;
         this.rest.putHorarioRest(this.data.horario.id, dataHorario).subscribe(response => {
           this.ModificarDocumento();
           this.toastr.success('Operación Exitosa', 'Horario actualizado', {
             timeOut: 6000,
           });
-          this.SalirActualizar();
+          this.SalirActualizar(response);
         }, error => {
+          console.log(error);
           this.toastr.error('Operación Fallida', 'Horario no pudo ser actualizado', {
             timeOut: 6000,
           })
@@ -114,19 +117,26 @@ export class EditarHorarioComponent implements OnInit {
     else {
       if (this.contador === 0) {
         this.rest.VerificarDuplicadosEdicion(this.data.horario.id, form.horarioNombreForm).subscribe(response => {
-          this.toastr.info('El nombre de horario ya existe, ingresar un nuevo nombre.', 'Verificar Datos', {
+          console.log(response);
+          this.habilitarprogress = false;
+          this.toastr.info(response.message, 'Verificar Datos', {
             timeOut: 6000,
           });
         }, error => {
+          console.log(error);
+          
           this.GuardarDatos(dataHorario);
         });
       }
       else {
         this.rest.VerificarDuplicadosEdicion(this.data.horario.id, form.horarioNombreForm).subscribe(response => {
-          this.toastr.info('El nombre de horario ya existe, ingresar un nuevo nombre.', 'Verificar Datos', {
+          this.habilitarprogress = false;
+          console.log(response);
+          this.toastr.info(response.message, 'Verificar Datos', {
             timeOut: 6000,
           });
         }, error => {
+          console.log(error);
           this.ActualizarDatos(dataHorario);
         });
       }
@@ -142,8 +152,10 @@ export class EditarHorarioComponent implements OnInit {
           timeOut: 6000,
         });
         this.SubirRespaldo(this.data.horario.id);
-        this.SalirActualizar();
+        this.SalirActualizar(response);
       }, error => {
+        console.log(error);
+
         this.toastr.error('Operación Fallida', 'Horario no pudo ser actualizado', {
           timeOut: 6000,
         })
@@ -170,7 +182,9 @@ export class EditarHorarioComponent implements OnInit {
     }
     this.rest.EditarDocumento(this.data.horario.id, datoDocumento).subscribe(response => {
       this.habilitarprogress = false;
-    }, error => { });
+    }, error => { 
+      console.log(error);
+    });
   }
 
   GuardarDatos(datos) {
@@ -180,8 +194,10 @@ export class EditarHorarioComponent implements OnInit {
       this.toastr.success('Operación Exitosa', 'Horario actualizado', {
         timeOut: 6000,
       });
-      this.SalirActualizar();
+      this.SalirActualizar(response);
     }, error => {
+      this.habilitarprogress = false;
+      console.log(error);
       this.toastr.error('Operación Fallida', 'Horario no pudo ser actualizado', {
         timeOut: 6000,
       })
@@ -280,15 +296,9 @@ export class EditarHorarioComponent implements OnInit {
     this.dialogRef.close();
   }
 
-  SalirActualizar() {
+  SalirActualizar(response) {
     this.LimpiarCampos();
-    if (this.data.actualizar === true) {
-      this.dialogRef.close();
-    }
-    else {
-      this.dialogRef.close();
-      this.router.navigate(['/verHorario/', this.data.horario.id]);
-    }
+    this.dialogRef.close(response);
   }
 
 }

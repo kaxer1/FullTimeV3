@@ -1,5 +1,44 @@
 <!-- TABLA CON LISTA DE TIPOS DE NOTIFICACIONES -->
 <br>
+<div class="container" style="padding-bottom: 30px; text-align: center;" *ngIf='fechas'>
+    <mat-accordion>
+        <mat-expansion-panel hideToggle>
+            <mat-expansion-panel-header class="d-flex bd-highlight">
+                <mat-panel-title class="w-100 bd-highlight">
+                    Período de Búsqueda
+                </mat-panel-title>
+                <mat-icon id="icono" class="flex-shrink-1 bd-highlight" matTooltipPosition="right"
+                    matTooltip="Dar clic para desplegar y contraer los campos de búsqueda. La búsqueda por período de fecha.">
+                    search</mat-icon>
+            </mat-expansion-panel-header>
+            <form [formGroup]="fechasForm">
+                <div class="d-flex flex-wrap justify-content-center">
+                    <mat-form-field>
+                        <mat-label>Fecha Inicial</mat-label>
+                        <input matInput [matDatepicker]="picker1" [formControl]="fechaInicialF" required>
+                        <mat-datepicker-toggle matSuffix [for]="picker1" id="permiso" matTooltipClass="permiso-tooltip"
+                            matTooltipPosition="right" matTooltip="Fecha de inicio de periodo">
+                        </mat-datepicker-toggle>
+                        <mat-datepicker touchUi #picker1></mat-datepicker>
+                    </mat-form-field>
+                    <br>
+                    <mat-form-field>
+                        <mat-label>Fecha Final</mat-label>
+                        <input matInput [matDatepicker]="picker2" [formControl]="fechaFinalF" required>
+                        <mat-datepicker-toggle matSuffix [for]="picker2" id="permiso" matTooltipClass="permiso-tooltip"
+                            matTooltipPosition="right" matTooltip="Fecha de fin de periodo">
+                        </mat-datepicker-toggle>
+                        <mat-datepicker touchUi #picker2></mat-datepicker>
+                    </mat-form-field>
+                </div>
+            </form>
+            <div class="d-flex justify-content-around">
+                <button mat-button type="submit" class="btn btn-sm" (click)="LimpiarFechas()">Cancelar
+                </button>
+            </div>
+        </mat-expansion-panel>
+    </mat-accordion>
+</div>
 <div class="container" style="padding-bottom: 50px; text-align: center;">
     <div class="mat-elevation-z8" style="background: white;">
         <div class="d-flex bd-highlight" id="resultadosEmpre">

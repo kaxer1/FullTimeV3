@@ -18,13 +18,15 @@ class DatosGeneralesControlador {
         const DATOS = await pool.query('SELECT e_datos.id, e_datos.cedula, e_datos.apellido, e_datos.nombre, ' +
             'e_datos.esta_civil, e_datos.genero, e_datos.correo, e_datos.fec_nacimiento, e_datos.estado, ' +
             'e_datos.mail_alternativo, e_datos.domicilio, e_datos.telefono, e_datos.id_nacionalidad, ' +
-            'e_datos.imagen, e_datos.codigo, e_datos.id_contrato, r.id AS id_regimen, e_datos.regimen, e_datos.id_cargo, tc.id AS id_tipo_cargo, ' +
-            'tc.cargo, c.id_departamento, d.nombre AS departamento, c.id_sucursal, s.nombre AS sucursal, s.id_empresa, ' +
-            'empre.nombre AS empresa, s.id_ciudad, ciudades.descripcion AS ciudad ' +
+            'e_datos.imagen, e_datos.codigo, e_datos.id_contrato, r.id AS id_regimen, r.descripcion AS regimen, ' +
+            'e_datos.id_cargo, tc.id AS id_tipo_cargo, tc.cargo, c.id_departamento, d.nombre AS departamento, ' +
+            'c.id_sucursal, s.nombre AS sucursal, s.id_empresa, empre.nombre AS empresa, s.id_ciudad, ' +
+            'ciudades.descripcion AS ciudad ' +
             'FROM datos_actuales_empleado AS e_datos, empl_cargos AS c, cg_departamentos AS d, sucursales AS s, ' +
-            'cg_empresa AS empre, ciudades, cg_regimenes AS r, tipo_cargo AS tc ' +
+            'cg_empresa AS empre, ciudades, cg_regimenes AS r, tipo_cargo AS tc, empl_contratos AS co ' +
             'WHERE c.id = e_datos.id_cargo AND d.id = c.id_departamento AND s.id = c.id_sucursal AND ' +
-            's.id_empresa = empre.id AND ciudades.id = s.id_ciudad AND e_datos.regimen = r.descripcion AND c.cargo = tc.id');
+            's.id_empresa = empre.id AND ciudades.id = s.id_ciudad AND c.cargo = tc.id AND ' +
+            'e_datos.id_contrato = co.id AND co.id_regimen = r.id ORDER BY e_datos.nombre ASC');
         if (DATOS.rowCount > 0) {
             return res.jsonp(DATOS.rows)
         }
@@ -39,13 +41,15 @@ class DatosGeneralesControlador {
         const DATOS = await pool.query('SELECT e_datos.id, e_datos.cedula, e_datos.apellido, e_datos.nombre, ' +
             'e_datos.esta_civil, e_datos.genero, e_datos.correo, e_datos.fec_nacimiento, e_datos.estado, ' +
             'e_datos.mail_alternativo, e_datos.domicilio, e_datos.telefono, e_datos.id_nacionalidad, ' +
-            'e_datos.imagen, e_datos.codigo, e_datos.id_contrato, r.id AS id_regimen, e_datos.regimen, e_datos.id_cargo, tc.id AS id_tipo_cargo, ' +
-            'tc.cargo, c.id_departamento, d.nombre AS departamento, c.id_sucursal, s.nombre AS sucursal, s.id_empresa, ' +
-            'empre.nombre AS empresa, s.id_ciudad, ciudades.descripcion AS ciudad ' +
+            'e_datos.imagen, e_datos.codigo, e_datos.id_contrato, r.id AS id_regimen, r.descripcion AS regimen, ' +
+            'e_datos.id_cargo, tc.id AS id_tipo_cargo, tc.cargo, c.id_departamento, d.nombre AS departamento, ' +
+            'c.id_sucursal, s.nombre AS sucursal, s.id_empresa, empre.nombre AS empresa, s.id_ciudad, ' +
+            'ciudades.descripcion AS ciudad ' +
             'FROM datos_actuales_empleado AS e_datos, empl_cargos AS c, cg_departamentos AS d, sucursales AS s, ' +
-            'cg_empresa AS empre, ciudades, cg_regimenes AS r, tipo_cargo AS tc ' +
+            'cg_empresa AS empre, ciudades, cg_regimenes AS r, tipo_cargo AS tc, empl_contratos AS co ' +
             'WHERE c.id = e_datos.id_cargo AND d.id = c.id_departamento AND s.id = c.id_sucursal AND ' +
-            's.id_empresa = empre.id AND ciudades.id = s.id_ciudad AND e_datos.regimen = r.descripcion AND c.cargo = tc.id AND c.id_sucursal = $1', [id]);
+            's.id_empresa = empre.id AND ciudades.id = s.id_ciudad AND c.cargo = tc.id AND ' +
+            'e_datos.id_contrato = co.id AND co.id_regimen = r.id AND c.id_sucursal = $1', [id]);
         if (DATOS.rowCount > 0) {
             return res.jsonp(DATOS.rows)
         }
@@ -59,13 +63,15 @@ class DatosGeneralesControlador {
         const DATOS = await pool.query('SELECT e_datos.id, e_datos.cedula, e_datos.apellido, e_datos.nombre, ' +
             'e_datos.esta_civil, e_datos.genero, e_datos.correo, e_datos.fec_nacimiento, e_datos.estado, ' +
             'e_datos.mail_alternativo, e_datos.domicilio, e_datos.telefono, e_datos.id_nacionalidad, ' +
-            'e_datos.imagen, e_datos.codigo, e_datos.id_contrato, r.id AS id_regimen, e_datos.regimen, e_datos.id_cargo, tc.id AS id_tipo_cargo, ' +
-            'tc.cargo, c.id_departamento, d.nombre AS departamento, c.id_sucursal, s.nombre AS sucursal, s.id_empresa, ' +
-            'empre.nombre AS empresa, s.id_ciudad, ciudades.descripcion AS ciudad ' +
+            'e_datos.imagen, e_datos.codigo, e_datos.id_contrato, r.id AS id_regimen, r.descripcion AS regimen, ' +
+            'e_datos.id_cargo, tc.id AS id_tipo_cargo, tc.cargo, c.id_departamento, d.nombre AS departamento, ' +
+            'c.id_sucursal, s.nombre AS sucursal, s.id_empresa, empre.nombre AS empresa, s.id_ciudad, ' +
+            'ciudades.descripcion AS ciudad ' +
             'FROM datos_actuales_empleado AS e_datos, empl_cargos AS c, cg_departamentos AS d, sucursales AS s, ' +
-            'cg_empresa AS empre, ciudades, cg_regimenes AS r, tipo_cargo AS tc ' +
+            'cg_empresa AS empre, ciudades, cg_regimenes AS r, tipo_cargo AS tc, empl_contratos AS co ' +
             'WHERE c.id = e_datos.id_cargo AND d.id = c.id_departamento AND s.id = c.id_sucursal AND ' +
-            's.id_empresa = empre.id AND ciudades.id = s.id_ciudad AND e_datos.regimen = r.descripcion AND c.cargo = tc.id AND ' +
+            's.id_empresa = empre.id AND ciudades.id = s.id_ciudad AND c.cargo = tc.id AND ' +
+            'e_datos.id_contrato = co.id AND co.id_regimen = r.id AND ' +
             'c.id_sucursal = $1 AND c.id_departamento = $2', [id_sucursal, id_departamento]);
         if (DATOS.rowCount > 0) {
             return res.jsonp(DATOS.rows)
@@ -80,13 +86,15 @@ class DatosGeneralesControlador {
         const DATOS = await pool.query('SELECT e_datos.id, e_datos.cedula, e_datos.apellido, e_datos.nombre, ' +
             'e_datos.esta_civil, e_datos.genero, e_datos.correo, e_datos.fec_nacimiento, e_datos.estado, ' +
             'e_datos.mail_alternativo, e_datos.domicilio, e_datos.telefono, e_datos.id_nacionalidad, ' +
-            'e_datos.imagen, e_datos.codigo, e_datos.id_contrato, r.id AS id_regimen, e_datos.regimen, e_datos.id_cargo, tc.id AS id_tipo_cargo, ' +
-            'tc.cargo, c.id_departamento, d.nombre AS departamento, c.id_sucursal, s.nombre AS sucursal, s.id_empresa, ' +
-            'empre.nombre AS empresa, s.id_ciudad, ciudades.descripcion AS ciudad ' +
+            'e_datos.imagen, e_datos.codigo, e_datos.id_contrato, r.id AS id_regimen, r.descripcion AS regimen, ' +
+            'e_datos.id_cargo, tc.id AS id_tipo_cargo, tc.cargo, c.id_departamento, d.nombre AS departamento, ' +
+            'c.id_sucursal, s.nombre AS sucursal, s.id_empresa, empre.nombre AS empresa, s.id_ciudad, ' +
+            'ciudades.descripcion AS ciudad ' +
             'FROM datos_actuales_empleado AS e_datos, empl_cargos AS c, cg_departamentos AS d, sucursales AS s, ' +
-            'cg_empresa AS empre, ciudades, cg_regimenes AS r, tipo_cargo AS tc ' +
+            'cg_empresa AS empre, ciudades, cg_regimenes AS r, tipo_cargo AS tc, empl_contratos AS co ' +
             'WHERE c.id = e_datos.id_cargo AND d.id = c.id_departamento AND s.id = c.id_sucursal AND ' +
-            's.id_empresa = empre.id AND ciudades.id = s.id_ciudad AND e_datos.regimen = r.descripcion AND c.cargo = tc.id AND ' +
+            's.id_empresa = empre.id AND ciudades.id = s.id_ciudad AND c.cargo = tc.id AND ' +
+            'e_datos.id_contrato = co.id AND co.id_regimen = r.id AND co.id_regimen = r.id AND ' +
             'c.id_sucursal = $1 AND c.id_departamento = $2 AND tc.id = $3',
             [id_sucursal, id_departamento, id_cargo]);
         if (DATOS.rowCount > 0) {
@@ -102,13 +110,15 @@ class DatosGeneralesControlador {
         const DATOS = await pool.query('SELECT e_datos.id, e_datos.cedula, e_datos.apellido, e_datos.nombre, ' +
             'e_datos.esta_civil, e_datos.genero, e_datos.correo, e_datos.fec_nacimiento, e_datos.estado, ' +
             'e_datos.mail_alternativo, e_datos.domicilio, e_datos.telefono, e_datos.id_nacionalidad, ' +
-            'e_datos.imagen, e_datos.codigo, e_datos.id_contrato, r.id AS id_regimen, e_datos.regimen, e_datos.id_cargo, tc.id AS id_tipo_cargo, ' +
-            'tc.cargo, c.id_departamento, d.nombre AS departamento, c.id_sucursal, s.nombre AS sucursal, s.id_empresa, ' +
-            'empre.nombre AS empresa, s.id_ciudad, ciudades.descripcion AS ciudad ' +
+            'e_datos.imagen, e_datos.codigo, e_datos.id_contrato, r.id AS id_regimen, r.descripcion AS regimen, ' +
+            'e_datos.id_cargo, tc.id AS id_tipo_cargo, tc.cargo, c.id_departamento, d.nombre AS departamento, ' +
+            'c.id_sucursal, s.nombre AS sucursal, s.id_empresa, empre.nombre AS empresa, s.id_ciudad, ' +
+            'ciudades.descripcion AS ciudad ' +
             'FROM datos_actuales_empleado AS e_datos, empl_cargos AS c, cg_departamentos AS d, sucursales AS s, ' +
-            'cg_empresa AS empre, ciudades, cg_regimenes AS r, tipo_cargo AS tc ' +
+            'cg_empresa AS empre, ciudades, cg_regimenes AS r, tipo_cargo AS tc, empl_contratos AS co ' +
             'WHERE c.id = e_datos.id_cargo AND d.id = c.id_departamento AND s.id = c.id_sucursal AND ' +
-            's.id_empresa = empre.id AND ciudades.id = s.id_ciudad AND e_datos.regimen = r.descripcion AND c.cargo = tc.id AND ' +
+            's.id_empresa = empre.id AND ciudades.id = s.id_ciudad AND c.cargo = tc.id AND ' +
+            'e_datos.id_contrato = co.id AND co.id_regimen = r.id AND ' +
             'c.id_sucursal = $1 AND c.id_departamento = $2 AND r.id = $3', [id_sucursal, id_departamento, id_regimen]);
         if (DATOS.rowCount > 0) {
             return res.jsonp(DATOS.rows)
@@ -123,13 +133,15 @@ class DatosGeneralesControlador {
         const DATOS = await pool.query('SELECT e_datos.id, e_datos.cedula, e_datos.apellido, e_datos.nombre, ' +
             'e_datos.esta_civil, e_datos.genero, e_datos.correo, e_datos.fec_nacimiento, e_datos.estado, ' +
             'e_datos.mail_alternativo, e_datos.domicilio, e_datos.telefono, e_datos.id_nacionalidad, ' +
-            'e_datos.imagen, e_datos.codigo, e_datos.id_contrato, r.id AS id_regimen, e_datos.regimen, e_datos.id_cargo, tc.id AS id_tipo_cargo, ' +
-            'tc.cargo, c.id_departamento, d.nombre AS departamento, c.id_sucursal, s.nombre AS sucursal, s.id_empresa, ' +
-            'empre.nombre AS empresa, s.id_ciudad, ciudades.descripcion AS ciudad ' +
+            'e_datos.imagen, e_datos.codigo, e_datos.id_contrato, r.id AS id_regimen, r.descripcion AS regimen, ' +
+            'e_datos.id_cargo, tc.id AS id_tipo_cargo, tc.cargo, c.id_departamento, d.nombre AS departamento, ' +
+            'c.id_sucursal, s.nombre AS sucursal, s.id_empresa, empre.nombre AS empresa, s.id_ciudad, ' +
+            'ciudades.descripcion AS ciudad ' +
             'FROM datos_actuales_empleado AS e_datos, empl_cargos AS c, cg_departamentos AS d, sucursales AS s, ' +
-            'cg_empresa AS empre, ciudades, cg_regimenes AS r, tipo_cargo AS tc ' +
+            'cg_empresa AS empre, ciudades, cg_regimenes AS r, tipo_cargo AS tc, empl_contratos AS co ' +
             'WHERE c.id = e_datos.id_cargo AND d.id = c.id_departamento AND s.id = c.id_sucursal AND ' +
-            's.id_empresa = empre.id AND ciudades.id = s.id_ciudad AND e_datos.regimen = r.descripcion AND c.cargo = tc.id AND ' +
+            's.id_empresa = empre.id AND ciudades.id = s.id_ciudad AND c.cargo = tc.id AND ' +
+            'e_datos.id_contrato = co.id AND co.id_regimen = r.id AND ' +
             'c.id_sucursal = $1 AND c.id_departamento = $2 AND r.id = $3 AND tc.id = $4',
             [id_sucursal, id_departamento, id_regimen, id_cargo]);
         if (DATOS.rowCount > 0) {
@@ -145,13 +157,15 @@ class DatosGeneralesControlador {
         const DATOS = await pool.query('SELECT e_datos.id, e_datos.cedula, e_datos.apellido, e_datos.nombre, ' +
             'e_datos.esta_civil, e_datos.genero, e_datos.correo, e_datos.fec_nacimiento, e_datos.estado, ' +
             'e_datos.mail_alternativo, e_datos.domicilio, e_datos.telefono, e_datos.id_nacionalidad, ' +
-            'e_datos.imagen, e_datos.codigo, e_datos.id_contrato, r.id AS id_regimen, e_datos.regimen, e_datos.id_cargo, tc.id AS id_tipo_cargo, ' +
-            'tc.cargo, c.id_departamento, d.nombre AS departamento, c.id_sucursal, s.nombre AS sucursal, s.id_empresa, ' +
-            'empre.nombre AS empresa, s.id_ciudad, ciudades.descripcion AS ciudad ' +
+            'e_datos.imagen, e_datos.codigo, e_datos.id_contrato, r.id AS id_regimen, r.descripcion AS regimen, ' +
+            'e_datos.id_cargo, tc.id AS id_tipo_cargo, tc.cargo, c.id_departamento, d.nombre AS departamento, ' +
+            'c.id_sucursal, s.nombre AS sucursal, s.id_empresa, empre.nombre AS empresa, s.id_ciudad, ' +
+            'ciudades.descripcion AS ciudad ' +
             'FROM datos_actuales_empleado AS e_datos, empl_cargos AS c, cg_departamentos AS d, sucursales AS s, ' +
-            'cg_empresa AS empre, ciudades, cg_regimenes AS r, tipo_cargo AS tc ' +
+            'cg_empresa AS empre, ciudades, cg_regimenes AS r, tipo_cargo AS tc, empl_contratos AS co ' +
             'WHERE c.id = e_datos.id_cargo AND d.id = c.id_departamento AND s.id = c.id_sucursal AND ' +
-            's.id_empresa = empre.id AND ciudades.id = s.id_ciudad AND e_datos.regimen = r.descripcion AND c.cargo = tc.id AND ' +
+            's.id_empresa = empre.id AND ciudades.id = s.id_ciudad AND c.cargo = tc.id AND ' +
+            'e_datos.id_contrato = co.id AND co.id_regimen = r.id AND ' +
             'c.id_sucursal = $1 AND tc.id = $2',
             [id_sucursal, id_cargo]);
         if (DATOS.rowCount > 0) {
@@ -167,13 +181,15 @@ class DatosGeneralesControlador {
         const DATOS = await pool.query('SELECT e_datos.id, e_datos.cedula, e_datos.apellido, e_datos.nombre, ' +
             'e_datos.esta_civil, e_datos.genero, e_datos.correo, e_datos.fec_nacimiento, e_datos.estado, ' +
             'e_datos.mail_alternativo, e_datos.domicilio, e_datos.telefono, e_datos.id_nacionalidad, ' +
-            'e_datos.imagen, e_datos.codigo, e_datos.id_contrato, r.id AS id_regimen, e_datos.regimen, e_datos.id_cargo, tc.id AS id_tipo_cargo, ' +
-            'tc.cargo, c.id_departamento, d.nombre AS departamento, c.id_sucursal, s.nombre AS sucursal, s.id_empresa, ' +
-            'empre.nombre AS empresa, s.id_ciudad, ciudades.descripcion AS ciudad ' +
+            'e_datos.imagen, e_datos.codigo, e_datos.id_contrato, r.id AS id_regimen, r.descripcion AS regimen, ' +
+            'e_datos.id_cargo, tc.id AS id_tipo_cargo, tc.cargo, c.id_departamento, d.nombre AS departamento, ' +
+            'c.id_sucursal, s.nombre AS sucursal, s.id_empresa, empre.nombre AS empresa, s.id_ciudad, ' +
+            'ciudades.descripcion AS ciudad ' +
             'FROM datos_actuales_empleado AS e_datos, empl_cargos AS c, cg_departamentos AS d, sucursales AS s, ' +
-            'cg_empresa AS empre, ciudades, cg_regimenes AS r, tipo_cargo AS tc ' +
+            'cg_empresa AS empre, ciudades, cg_regimenes AS r, tipo_cargo AS tc, empl_contratos AS co ' +
             'WHERE c.id = e_datos.id_cargo AND d.id = c.id_departamento AND s.id = c.id_sucursal AND ' +
-            's.id_empresa = empre.id AND ciudades.id = s.id_ciudad AND e_datos.regimen = r.descripcion AND c.cargo = tc.id AND ' +
+            's.id_empresa = empre.id AND ciudades.id = s.id_ciudad AND c.cargo = tc.id AND ' +
+            'e_datos.id_contrato = co.id AND co.id_regimen = r.id AND ' +
             'c.id_sucursal = $1 AND r.id = $2 ',
             [id_sucursal, id_regimen]);
         if (DATOS.rowCount > 0) {
@@ -189,13 +205,15 @@ class DatosGeneralesControlador {
         const DATOS = await pool.query('SELECT e_datos.id, e_datos.cedula, e_datos.apellido, e_datos.nombre, ' +
             'e_datos.esta_civil, e_datos.genero, e_datos.correo, e_datos.fec_nacimiento, e_datos.estado, ' +
             'e_datos.mail_alternativo, e_datos.domicilio, e_datos.telefono, e_datos.id_nacionalidad, ' +
-            'e_datos.imagen, e_datos.codigo, e_datos.id_contrato, r.id AS id_regimen, e_datos.regimen, e_datos.id_cargo, tc.id AS id_tipo_cargo, ' +
-            'tc.cargo, c.id_departamento, d.nombre AS departamento, c.id_sucursal, s.nombre AS sucursal, s.id_empresa, ' +
-            'empre.nombre AS empresa, s.id_ciudad, ciudades.descripcion AS ciudad ' +
+            'e_datos.imagen, e_datos.codigo, e_datos.id_contrato, r.id AS id_regimen, r.descripcion AS regimen, ' +
+            'e_datos.id_cargo, tc.id AS id_tipo_cargo, tc.cargo, c.id_departamento, d.nombre AS departamento, ' +
+            'c.id_sucursal, s.nombre AS sucursal, s.id_empresa, empre.nombre AS empresa, s.id_ciudad, ' +
+            'ciudades.descripcion AS ciudad ' +
             'FROM datos_actuales_empleado AS e_datos, empl_cargos AS c, cg_departamentos AS d, sucursales AS s, ' +
-            'cg_empresa AS empre, ciudades, cg_regimenes AS r, tipo_cargo AS tc ' +
+            'cg_empresa AS empre, ciudades, cg_regimenes AS r, tipo_cargo AS tc, empl_contratos AS co ' +
             'WHERE c.id = e_datos.id_cargo AND d.id = c.id_departamento AND s.id = c.id_sucursal AND ' +
-            's.id_empresa = empre.id AND ciudades.id = s.id_ciudad AND e_datos.regimen = r.descripcion AND c.cargo = tc.id AND ' +
+            's.id_empresa = empre.id AND ciudades.id = s.id_ciudad AND c.cargo = tc.id AND ' +
+            'e_datos.id_contrato = co.id AND co.id_regimen = r.id AND ' +
             'c.id_sucursal = $1 AND r.id = $2 AND tc.id = $3',
             [id_sucursal, id_regimen, id_cargo]);
         if (DATOS.rowCount > 0) {
@@ -211,13 +229,15 @@ class DatosGeneralesControlador {
         const DATOS = await pool.query('SELECT e_datos.id, e_datos.cedula, e_datos.apellido, e_datos.nombre, ' +
             'e_datos.esta_civil, e_datos.genero, e_datos.correo, e_datos.fec_nacimiento, e_datos.estado, ' +
             'e_datos.mail_alternativo, e_datos.domicilio, e_datos.telefono, e_datos.id_nacionalidad, ' +
-            'e_datos.imagen, e_datos.codigo, e_datos.id_contrato, r.id AS id_regimen, e_datos.regimen, e_datos.id_cargo, tc.id AS id_tipo_cargo, ' +
-            'tc.cargo, c.id_departamento, d.nombre AS departamento, c.id_sucursal, s.nombre AS sucursal, s.id_empresa, ' +
-            'empre.nombre AS empresa, s.id_ciudad, ciudades.descripcion AS ciudad ' +
+            'e_datos.imagen, e_datos.codigo, e_datos.id_contrato, r.id AS id_regimen, r.descripcion AS regimen, ' +
+            'e_datos.id_cargo, tc.id AS id_tipo_cargo, tc.cargo, c.id_departamento, d.nombre AS departamento, ' +
+            'c.id_sucursal, s.nombre AS sucursal, s.id_empresa, empre.nombre AS empresa, s.id_ciudad, ' +
+            'ciudades.descripcion AS ciudad ' +
             'FROM datos_actuales_empleado AS e_datos, empl_cargos AS c, cg_departamentos AS d, sucursales AS s, ' +
-            'cg_empresa AS empre, ciudades, cg_regimenes AS r, tipo_cargo AS tc ' +
+            'cg_empresa AS empre, ciudades, cg_regimenes AS r, tipo_cargo AS tc, empl_contratos AS co ' +
             'WHERE c.id = e_datos.id_cargo AND d.id = c.id_departamento AND s.id = c.id_sucursal AND ' +
-            's.id_empresa = empre.id AND ciudades.id = s.id_ciudad AND e_datos.regimen = r.descripcion AND c.cargo = tc.id AND c.id_departamento = $1', [id]);
+            's.id_empresa = empre.id AND ciudades.id = s.id_ciudad AND c.cargo = tc.id AND ' +
+            'e_datos.id_contrato = co.id AND co.id_regimen = r.id AND c.id_departamento = $1', [id]);
         if (DATOS.rowCount > 0) {
             return res.jsonp(DATOS.rows)
         }
@@ -231,13 +251,15 @@ class DatosGeneralesControlador {
         const DATOS = await pool.query('SELECT e_datos.id, e_datos.cedula, e_datos.apellido, e_datos.nombre, ' +
             'e_datos.esta_civil, e_datos.genero, e_datos.correo, e_datos.fec_nacimiento, e_datos.estado, ' +
             'e_datos.mail_alternativo, e_datos.domicilio, e_datos.telefono, e_datos.id_nacionalidad, ' +
-            'e_datos.imagen, e_datos.codigo, e_datos.id_contrato, r.id AS id_regimen, e_datos.regimen, e_datos.id_cargo, tc.id AS id_tipo_cargo, ' +
-            'tc.cargo, c.id_departamento, d.nombre AS departamento, c.id_sucursal, s.nombre AS sucursal, s.id_empresa, ' +
-            'empre.nombre AS empresa, s.id_ciudad, ciudades.descripcion AS ciudad ' +
+            'e_datos.imagen, e_datos.codigo, e_datos.id_contrato, r.id AS id_regimen, r.descripcion AS regimen, ' +
+            'e_datos.id_cargo, tc.id AS id_tipo_cargo, tc.cargo, c.id_departamento, d.nombre AS departamento, ' +
+            'c.id_sucursal, s.nombre AS sucursal, s.id_empresa, empre.nombre AS empresa, s.id_ciudad, ' +
+            'ciudades.descripcion AS ciudad ' +
             'FROM datos_actuales_empleado AS e_datos, empl_cargos AS c, cg_departamentos AS d, sucursales AS s, ' +
-            'cg_empresa AS empre, ciudades, cg_regimenes AS r, tipo_cargo AS tc ' +
+            'cg_empresa AS empre, ciudades, cg_regimenes AS r, tipo_cargo AS tc, empl_contratos AS co ' +
             'WHERE c.id = e_datos.id_cargo AND d.id = c.id_departamento AND s.id = c.id_sucursal AND ' +
-            's.id_empresa = empre.id AND ciudades.id = s.id_ciudad AND e_datos.regimen = r.descripcion AND c.cargo = tc.id AND ' +
+            's.id_empresa = empre.id AND ciudades.id = s.id_ciudad AND c.cargo = tc.id AND ' +
+            'e_datos.id_contrato = co.id AND co.id_regimen = r.id AND ' +
             'c.id_departamento = $1 AND tc.id = $2',
             [id_departamento, id_cargo]);
         if (DATOS.rowCount > 0) {
@@ -253,13 +275,15 @@ class DatosGeneralesControlador {
         const DATOS = await pool.query('SELECT e_datos.id, e_datos.cedula, e_datos.apellido, e_datos.nombre, ' +
             'e_datos.esta_civil, e_datos.genero, e_datos.correo, e_datos.fec_nacimiento, e_datos.estado, ' +
             'e_datos.mail_alternativo, e_datos.domicilio, e_datos.telefono, e_datos.id_nacionalidad, ' +
-            'e_datos.imagen, e_datos.codigo, e_datos.id_contrato, r.id AS id_regimen, e_datos.regimen, e_datos.id_cargo, tc.id AS id_tipo_cargo, ' +
-            'tc.cargo, c.id_departamento, d.nombre AS departamento, c.id_sucursal, s.nombre AS sucursal, s.id_empresa, ' +
-            'empre.nombre AS empresa, s.id_ciudad, ciudades.descripcion AS ciudad ' +
+            'e_datos.imagen, e_datos.codigo, e_datos.id_contrato, r.id AS id_regimen, r.descripcion AS regimen, ' +
+            'e_datos.id_cargo, tc.id AS id_tipo_cargo, tc.cargo, c.id_departamento, d.nombre AS departamento, ' +
+            'c.id_sucursal, s.nombre AS sucursal, s.id_empresa, empre.nombre AS empresa, s.id_ciudad, ' +
+            'ciudades.descripcion AS ciudad ' +
             'FROM datos_actuales_empleado AS e_datos, empl_cargos AS c, cg_departamentos AS d, sucursales AS s, ' +
-            'cg_empresa AS empre, ciudades, cg_regimenes AS r, tipo_cargo AS tc ' +
+            'cg_empresa AS empre, ciudades, cg_regimenes AS r, tipo_cargo AS tc, empl_contratos AS co ' +
             'WHERE c.id = e_datos.id_cargo AND d.id = c.id_departamento AND s.id = c.id_sucursal AND ' +
-            's.id_empresa = empre.id AND ciudades.id = s.id_ciudad AND e_datos.regimen = r.descripcion AND c.cargo = tc.id AND ' +
+            's.id_empresa = empre.id AND ciudades.id = s.id_ciudad AND c.cargo = tc.id AND ' +
+            'e_datos.id_contrato = co.id AND co.id_regimen = r.id AND ' +
             'c.id_departamento = $1 AND r.id = $2',
             [id_departamento, id_regimen]);
         if (DATOS.rowCount > 0) {
@@ -275,13 +299,15 @@ class DatosGeneralesControlador {
         const DATOS = await pool.query('SELECT e_datos.id, e_datos.cedula, e_datos.apellido, e_datos.nombre, ' +
             'e_datos.esta_civil, e_datos.genero, e_datos.correo, e_datos.fec_nacimiento, e_datos.estado, ' +
             'e_datos.mail_alternativo, e_datos.domicilio, e_datos.telefono, e_datos.id_nacionalidad, ' +
-            'e_datos.imagen, e_datos.codigo, e_datos.id_contrato, r.id AS id_regimen, e_datos.regimen, e_datos.id_cargo, tc.id AS id_tipo_cargo, ' +
-            'tc.cargo, c.id_departamento, d.nombre AS departamento, c.id_sucursal, s.nombre AS sucursal, s.id_empresa, ' +
-            'empre.nombre AS empresa, s.id_ciudad, ciudades.descripcion AS ciudad ' +
+            'e_datos.imagen, e_datos.codigo, e_datos.id_contrato, r.id AS id_regimen, r.descripcion AS regimen, ' +
+            'e_datos.id_cargo, tc.id AS id_tipo_cargo, tc.cargo, c.id_departamento, d.nombre AS departamento, ' +
+            'c.id_sucursal, s.nombre AS sucursal, s.id_empresa, empre.nombre AS empresa, s.id_ciudad, ' +
+            'ciudades.descripcion AS ciudad ' +
             'FROM datos_actuales_empleado AS e_datos, empl_cargos AS c, cg_departamentos AS d, sucursales AS s, ' +
-            'cg_empresa AS empre, ciudades, cg_regimenes AS r, tipo_cargo AS tc ' +
+            'cg_empresa AS empre, ciudades, cg_regimenes AS r, tipo_cargo AS tc, empl_contratos AS co ' +
             'WHERE c.id = e_datos.id_cargo AND d.id = c.id_departamento AND s.id = c.id_sucursal AND ' +
-            's.id_empresa = empre.id AND ciudades.id = s.id_ciudad AND e_datos.regimen = r.descripcion AND c.cargo = tc.id AND ' +
+            's.id_empresa = empre.id AND ciudades.id = s.id_ciudad AND c.cargo = tc.id AND ' +
+            'e_datos.id_contrato = co.id AND co.id_regimen = r.id AND ' +
             'c.id_departamento = $1 AND r.id = $2 AND tc.id = $3',
             [id_departamento, id_regimen, id_cargo]);
         if (DATOS.rowCount > 0) {
@@ -297,13 +323,15 @@ class DatosGeneralesControlador {
         const DATOS = await pool.query('SELECT e_datos.id, e_datos.cedula, e_datos.apellido, e_datos.nombre, ' +
             'e_datos.esta_civil, e_datos.genero, e_datos.correo, e_datos.fec_nacimiento, e_datos.estado, ' +
             'e_datos.mail_alternativo, e_datos.domicilio, e_datos.telefono, e_datos.id_nacionalidad, ' +
-            'e_datos.imagen, e_datos.codigo, e_datos.id_contrato, r.id AS id_regimen, e_datos.regimen, e_datos.id_cargo, tc.id AS id_tipo_cargo, ' +
-            'tc.cargo, c.id_departamento, d.nombre AS departamento, c.id_sucursal, s.nombre AS sucursal, s.id_empresa, ' +
-            'empre.nombre AS empresa, s.id_ciudad, ciudades.descripcion AS ciudad ' +
+            'e_datos.imagen, e_datos.codigo, e_datos.id_contrato, r.id AS id_regimen, r.descripcion AS regimen, ' +
+            'e_datos.id_cargo, tc.id AS id_tipo_cargo, tc.cargo, c.id_departamento, d.nombre AS departamento, ' +
+            'c.id_sucursal, s.nombre AS sucursal, s.id_empresa, empre.nombre AS empresa, s.id_ciudad, ' +
+            'ciudades.descripcion AS ciudad ' +
             'FROM datos_actuales_empleado AS e_datos, empl_cargos AS c, cg_departamentos AS d, sucursales AS s, ' +
-            'cg_empresa AS empre, ciudades, cg_regimenes AS r, tipo_cargo AS tc ' +
+            'cg_empresa AS empre, ciudades, cg_regimenes AS r, tipo_cargo AS tc, empl_contratos AS co ' +
             'WHERE c.id = e_datos.id_cargo AND d.id = c.id_departamento AND s.id = c.id_sucursal AND ' +
-            's.id_empresa = empre.id AND ciudades.id = s.id_ciudad AND e_datos.regimen = r.descripcion AND c.cargo = tc.id AND r.id = $1', [id]);
+            's.id_empresa = empre.id AND ciudades.id = s.id_ciudad AND c.cargo = tc.id AND ' +
+            'e_datos.id_contrato = co.id AND co.id_regimen = r.id AND r.id = $1', [id]);
         if (DATOS.rowCount > 0) {
             return res.jsonp(DATOS.rows)
         }
@@ -317,13 +345,15 @@ class DatosGeneralesControlador {
         const DATOS = await pool.query('SELECT e_datos.id, e_datos.cedula, e_datos.apellido, e_datos.nombre, ' +
             'e_datos.esta_civil, e_datos.genero, e_datos.correo, e_datos.fec_nacimiento, e_datos.estado, ' +
             'e_datos.mail_alternativo, e_datos.domicilio, e_datos.telefono, e_datos.id_nacionalidad, ' +
-            'e_datos.imagen, e_datos.codigo, e_datos.id_contrato, r.id AS id_regimen, e_datos.regimen, e_datos.id_cargo, tc.id AS id_tipo_cargo, ' +
-            'tc.cargo, c.id_departamento, d.nombre AS departamento, c.id_sucursal, s.nombre AS sucursal, s.id_empresa, ' +
-            'empre.nombre AS empresa, s.id_ciudad, ciudades.descripcion AS ciudad ' +
+            'e_datos.imagen, e_datos.codigo, e_datos.id_contrato, r.id AS id_regimen, r.descripcion AS regimen, ' +
+            'e_datos.id_cargo, tc.id AS id_tipo_cargo, tc.cargo, c.id_departamento, d.nombre AS departamento, ' +
+            'c.id_sucursal, s.nombre AS sucursal, s.id_empresa, empre.nombre AS empresa, s.id_ciudad, ' +
+            'ciudades.descripcion AS ciudad ' +
             'FROM datos_actuales_empleado AS e_datos, empl_cargos AS c, cg_departamentos AS d, sucursales AS s, ' +
-            'cg_empresa AS empre, ciudades, cg_regimenes AS r, tipo_cargo AS tc ' +
+            'cg_empresa AS empre, ciudades, cg_regimenes AS r, tipo_cargo AS tc, empl_contratos AS co ' +
             'WHERE c.id = e_datos.id_cargo AND d.id = c.id_departamento AND s.id = c.id_sucursal AND ' +
-            's.id_empresa = empre.id AND ciudades.id = s.id_ciudad AND e_datos.regimen = r.descripcion AND c.cargo = tc.id AND ' +
+            's.id_empresa = empre.id AND ciudades.id = s.id_ciudad AND c.cargo = tc.id AND ' +
+            'e_datos.id_contrato = co.id AND co.id_regimen = r.id AND ' +
             'r.id = $1 AND tc.id = $2',
             [id_regimen, id_cargo]);
         if (DATOS.rowCount > 0) {
@@ -339,13 +369,15 @@ class DatosGeneralesControlador {
         const DATOS = await pool.query('SELECT e_datos.id, e_datos.cedula, e_datos.apellido, e_datos.nombre, ' +
             'e_datos.esta_civil, e_datos.genero, e_datos.correo, e_datos.fec_nacimiento, e_datos.estado, ' +
             'e_datos.mail_alternativo, e_datos.domicilio, e_datos.telefono, e_datos.id_nacionalidad, ' +
-            'e_datos.imagen, e_datos.codigo, e_datos.id_contrato, r.id AS id_regimen, e_datos.regimen, e_datos.id_cargo, tc.id AS id_tipo_cargo, ' +
-            'tc.cargo, c.id_departamento, d.nombre AS departamento, c.id_sucursal, s.nombre AS sucursal, s.id_empresa, ' +
-            'empre.nombre AS empresa, s.id_ciudad, ciudades.descripcion AS ciudad ' +
+            'e_datos.imagen, e_datos.codigo, e_datos.id_contrato, r.id AS id_regimen, r.descripcion AS regimen, ' +
+            'e_datos.id_cargo, tc.id AS id_tipo_cargo, tc.cargo, c.id_departamento, d.nombre AS departamento, ' +
+            'c.id_sucursal, s.nombre AS sucursal, s.id_empresa, empre.nombre AS empresa, s.id_ciudad, ' +
+            'ciudades.descripcion AS ciudad ' +
             'FROM datos_actuales_empleado AS e_datos, empl_cargos AS c, cg_departamentos AS d, sucursales AS s, ' +
-            'cg_empresa AS empre, ciudades, cg_regimenes AS r, tipo_cargo AS tc ' +
+            'cg_empresa AS empre, ciudades, cg_regimenes AS r, tipo_cargo AS tc, empl_contratos AS co ' +
             'WHERE c.id = e_datos.id_cargo AND d.id = c.id_departamento AND s.id = c.id_sucursal AND ' +
-            's.id_empresa = empre.id AND ciudades.id = s.id_ciudad AND e_datos.regimen = r.descripcion AND c.cargo = tc.id AND tc.id = $1', [id]);
+            's.id_empresa = empre.id AND ciudades.id = s.id_ciudad AND c.cargo = tc.id AND ' +
+            'e_datos.id_contrato = co.id AND co.id_regimen = r.id AND tc.id = $1', [id]);
         if (DATOS.rowCount > 0) {
             return res.jsonp(DATOS.rows)
         }

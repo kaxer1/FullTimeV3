@@ -40,7 +40,7 @@ export class EditarDetalleMenuComponent implements OnInit {
       nombre: form.nombreForm,
       valor: form.valorForm,
       observacion: form.observacionForm,
-      id: this.data.id,
+      id: this.data.id_detalle,
     };
     this.rest.ActualizarDetalleMenu(datosTipoComida).subscribe(response => {
       this.toastr.success('Operación Exitosa', 'Detalle del Menú actualizado', {
@@ -60,7 +60,7 @@ export class EditarDetalleMenuComponent implements OnInit {
       numero = String(this.data.valor) + 0;
     }
     this.TipoComidaForm.setValue({
-      nombreForm: this.data.nombre,
+      nombreForm: this.data.plato,
       valorForm: numero,
       observacionForm: this.data.observacion
     })

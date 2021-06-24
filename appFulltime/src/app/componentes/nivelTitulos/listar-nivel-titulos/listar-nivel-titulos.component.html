@@ -11,9 +11,8 @@
                     <div class="d-flex flex-wrap justify-content-center">
                         <mat-form-field>
                             <mat-label>Búsqueda por nombre</mat-label>
-                            <input matInput placeholder="Nombre Título" name="filtradoNombre"
-                                [formControl]="nombreF" [(ngModel)]="filtradoNombre"
-                                (keypress)="IngresarSoloLetras($event)">
+                            <input matInput placeholder="Nombre Título" name="filtradoNombre" [formControl]="nombreF"
+                                [(ngModel)]="filtradoNombre" (keypress)="IngresarSoloLetras($event)">
                             <mat-icon id="itituloL" matSuffix matTooltipClass="tituloL-tooltip"
                                 matTooltipPosition="right"
                                 matTooltip="Búsqueda de un nivel de título profesional por su nombre">
@@ -46,15 +45,18 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let t of nivelTitulos | filtrosNombres: filtradoNombre |  paginate:tamanio_pagina:numero_pagina">
+                    <tr
+                        *ngFor="let t of nivelTitulos | filtrosNombres: filtradoNombre |  paginate:tamanio_pagina:numero_pagina">
                         <td>{{t.nombre}}</td>
                         <td class="d-flex justify-content-center">
-                            <i class="fas fa-edit" (click)=AbrirVentanaEditarTitulo(t) matSuffix matTooltipClass="tituloL-tooltip" matTooltipPosition="right"
+                            <i class="fas fa-edit" (click)=AbrirVentanaEditarTitulo(t) matSuffix
+                                matTooltipClass="tituloL-tooltip" matTooltipPosition="right"
                                 matTooltip="Editar los datos generales de este registro">
                                 <p>Editar</p>
                             </i>
-                            <i class="far fa-trash-alt" (click)="ConfirmarDelete(t)" matSuffix matTooltipClass="tituloL-tooltip"
-                                matTooltipPosition="right" matTooltip="Eliminar este registro">
+                            <i class="far fa-trash-alt" (click)="ConfirmarDelete(t)" matSuffix
+                                matTooltipClass="tituloL-tooltip" matTooltipPosition="right"
+                                matTooltip="Eliminar este registro">
                                 <p>Eliminar</p>
                             </i>
                         </td>
@@ -65,5 +67,23 @@
         <mat-paginator [length]="nivelTitulos.length" [pageSize]="tamanio_pagina" [pageSizeOptions]="pageSizeOptions"
             id="estilo" (page)="ManejarPagina($event)" showFirstLastButtons>
         </mat-paginator>
+        <div class="d-flex justify-content-end" style="margin-right: 5%;">
+            <i (click)="GenerarPdf('download')" id="pdf" class="fas fa-file-pdf" matSuffix matTooltipPosition="right"
+                matTooltipClass="departamento-tooltip" matTooltip="Descargar Lista de Niveles de Títulos en formato PDF">
+                <p>PDF</p>
+            </i>
+            <i (click)="ExportToExcel()" id="excel" class="fas fa-file-excel" matSuffix matTooltipPosition="right"
+                matTooltipClass="departamento-tooltip" matTooltip="Descargar Lista de Niveles de Títulos en formato EXCEL">
+                <p>XLSL</p>
+            </i>
+            <i (click)="ExportToCVS()" id="csv" class="fas fa-file-csv" matSuffix matTooltipPosition="right"
+                matTooltipClass="departamento-tooltip" matTooltip="Descargar Lista de Niveles de Títulos en formato CSV">
+                <p>CSV</p>
+            </i>
+            <i (click)="ExportToXML()" id="xml" class="fas fa-file-code" matSuffix matTooltipPosition="right"
+                matTooltipClass="departamento-tooltip" matTooltip="Descargar Lista de Niveles de Títulos en formato XML">
+                <p>XML</p>
+            </i>
+        </div>
     </div>
 </div>

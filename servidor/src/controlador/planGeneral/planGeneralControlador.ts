@@ -3,14 +3,25 @@ import pool from '../../database';
 
 class PlanGeneralControlador {
 
-    public async CrearPlanificacion(req: Request, res: Response): Promise<void> {
+    public async CrearPlanificacion(req: Request, res: Response): Promise<any> {
         const { fec_hora_horario, maxi_min_espera, estado, id_det_horario,
             fec_horario, id_empl_cargo, tipo_entr_salida, codigo, id_horario } = req.body;
-        await pool.query('INSERT INTO plan_general (fec_hora_horario, maxi_min_espera, estado, id_det_horario, ' +
-            'fec_horario, id_empl_cargo, tipo_entr_salida, codigo, id_horario) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)',
-            [fec_hora_horario, maxi_min_espera, estado, id_det_horario,
-                fec_horario, id_empl_cargo, tipo_entr_salida, codigo, id_horario]);
-        res.jsonp({ message: 'Planificación ha sido guardado con éxito' });
+        try {
+            console.log(req.body);
+            
+            const [result] = await pool.query('INSERT INTO plan_general (fec_hora_horario, maxi_min_espera, estado, id_det_horario, ' +
+                'fec_horario, id_empl_cargo, tipo_entr_salida, codigo, id_horario) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *',
+                [fec_hora_horario, maxi_min_espera, estado, id_det_horario, fec_horario, id_empl_cargo, tipo_entr_salida, codigo, id_horario])
+                .then(result => { return result.rows })
+            if (result === undefined) return res.status(404).jsonp({message: 'Planificacion no creada'})
+
+            return res.jsonp({ message: 'Planificación ha sido guardado con éxito' });
+            
+        } catch (error) {
+            console.log(error);
+            
+            return res.status(500).jsonp({ message: 'Registros no encontrados' });
+        }
     }
 
     public async EliminarRegistros(req: Request, res: Response): Promise<void> {

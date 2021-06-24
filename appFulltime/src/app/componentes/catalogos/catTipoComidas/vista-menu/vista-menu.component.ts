@@ -60,6 +60,7 @@ export class VistaMenuComponent implements OnInit {
     this.datosDetalle = [];
     this.rest.ConsultarUnDetalleMenu(id_menu).subscribe(datos => {
       this.datosDetalle = datos;
+      console.log('detalles', this.datosDetalle)
     })
   }
 
@@ -107,7 +108,7 @@ export class VistaMenuComponent implements OnInit {
     this.vistaRegistrarDatos.open(MetodosComponent, { width: '450px' }).afterClosed()
       .subscribe((confirmado: Boolean) => {
         if (confirmado) {
-          this.EliminarDetalle(datos.id);
+          this.EliminarDetalle(datos.id_detalle);
         } else {
           this.router.navigate(['/verHorario/', this.idMenu]);
         }

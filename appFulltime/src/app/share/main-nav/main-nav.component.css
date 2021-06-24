@@ -1,11 +1,11 @@
 #logo { width: 52%; background: white; margin-top: 10px; margin-bottom: 10px;}
 
 /* .avatar {background-color: rgb(126, 126, 126); border-radius: 100%; margin-top: 10px; margin-bottom: 10px;} */
-#avatar { border-radius: 100%; height: 45px; width: 45px; background-color: rgb(126, 126, 126); margin-left: 10px; margin-top: 6px;}
+#avatar { border-radius: 100%; height: 35px; width: 35px; background-color: rgb(126, 126, 126); margin-left: 10px;}
 
-#avatarImagen { border-radius: 100%; height: 45px; width: 45px;}
+#avatarImagen { border-radius: 100%; height: 35px; width: 35px;}
 
-.iniciales {color: white; font-weight: bold; font-size: 20px; margin-bottom: 10px;}
+.iniciales {color: white; font-weight: bold; font-size: 15px; margin-bottom: 10px;}
 
 .uno {background: white; margin-bottom: 15px; text-align: center;}
 
@@ -23,7 +23,11 @@
 
 .color-icon { color: rgb(189, 189, 189); }
 
-mat-toolbar { background: rgb(255, 255, 255); }
+.mat-toolbar.mat-toolbar-multiple-rows { background: rgb(255, 255, 255);}
+
+mat-icon { font-size: 20px;}
+
+.mat-mini-fab { padding: -20px;}
 
 .degradado{
   background: rgb(232,232,232);
@@ -161,30 +165,10 @@ mat-tree {
 
 #icono-menu{ margin: 8px 0px 0px 0px; color: rgb(5, 162, 253) }
 
-#icono-despliega{ margin: 8px 0px 0px 10px;  color:  rgb(5, 162, 253) }
+#icono-despliega{ margin: 8px 0px 0px 10px; color: rgb(5, 162, 253) }
 
-.name-uno{ margin: 10px 0px 0px 10px; color: rgb(40, 40, 40); font-size: 18px }
+.name-uno{ margin: 10px 0px 0px 10px; color: rgb(40, 40, 40); font-size: 15px }
 
 #botones { background-color: rgb(5, 162, 253); color: white; margin: 10px 10px 10px 10px; }
 
 .mensaje-alerta { background-color: rgb(110, 1, 1); margin: 15px; border-radius: 25px; text-align: center;}
-
-.progress {
-  margin: 250px auto auto auto;
-  opacity: 1
-}
-
-.pantalla-progress {
-  position: fixed;
-  top: 0px;
-  left: 0px;
-  width: 100%;
-  height: 100%;
-  background: #ffff;
-  opacity: 0.8;
-}
-
-mat-progress-spinner {
-  background: transparent;
-  z-index: 100;
-}

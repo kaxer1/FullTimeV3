@@ -100,7 +100,7 @@ export class ReporteAtrasosComponent implements OnInit {
     this.ObtenerEmpleadoLogueado(this.idEmpleado);
     this.VerDatosEmpleado();
     this.ObtenerLogo();
-    this.ObtnerColores();
+    this.ObtenerColores();
   }
 
   // Método para ver la información del empleado 
@@ -119,13 +119,15 @@ export class ReporteAtrasosComponent implements OnInit {
     });
   }
 
-  // Método para obtener colores de empresa
+  // MÉTODO PARA OBTENER COLORES Y MARCA DE AGUA DE EMPRESA 
   p_color: any;
   s_color: any;
-  ObtnerColores() {
+  frase: any;
+  ObtenerColores() {
     this.restEmpre.ConsultarDatosEmpresa(parseInt(localStorage.getItem('empresa'))).subscribe(res => {
       this.p_color = res[0].color_p;
       this.s_color = res[0].color_s;
+      this.frase = res[0].marca_agua;
     });
   }
 
@@ -343,11 +345,11 @@ export class ReporteAtrasosComponent implements OnInit {
 
       // Encabezado de la página
       pageOrientation: 'landscape',
-      watermark: { text: 'Confidencial', color: 'blue', opacity: 0.1, bold: true, italics: false },
+      watermark: { text: this.frase, color: 'blue', opacity: 0.1, bold: true, italics: false },
       header: { text: 'Impreso por:  ' + this.empleadoLogueado[0].nombre + ' ' + this.empleadoLogueado[0].apellido, margin: 10, fontSize: 9, opacity: 0.3, alignment: 'right' },
 
       // Pie de página
-      footer: function (currentPage, pageCount, fecha) {
+      footer: function (currentPage: any, pageCount: any, fecha: any, hora: any) {
         // Obtener fecha y hora actual
         var h = new Date();
         var f = moment();
@@ -740,11 +742,11 @@ export class ReporteAtrasosComponent implements OnInit {
 
       // Encabezado de la página
       //pageOrientation: 'landscape',
-      watermark: { text: 'Confidencial', color: 'blue', opacity: 0.1, bold: true, italics: false },
+      watermark: { text: this.frase, color: 'blue', opacity: 0.1, bold: true, italics: false },
       header: { text: 'Impreso por:  ' + this.empleadoLogueado[0].nombre + ' ' + this.empleadoLogueado[0].apellido, margin: 10, fontSize: 9, opacity: 0.3, alignment: 'right' },
 
       // Pie de la página
-      footer: function (currentPage, pageCount, fecha) {
+      footer: function (currentPage: any, pageCount: any, fecha: any, hora: any) {
         var h = new Date();
         var f = moment();
         fecha = f.format('YYYY-MM-DD');

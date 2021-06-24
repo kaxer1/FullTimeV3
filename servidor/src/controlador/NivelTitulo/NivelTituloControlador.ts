@@ -1,5 +1,7 @@
 import { Request, Response } from 'express';
+const builder = require('xmlbuilder');
 import pool from '../../database';
+import fs from 'fs';
 
 class NivelTituloControlador {
   public async list(req: Request, res: Response) {
@@ -60,6 +62,25 @@ class NivelTituloControlador {
     else {
       return res.jsonp({ message: 'Registro no encontrado' })
     }
+  }
+
+  public async FileXML(req: Request, res: Response): Promise<any> {
+    var xml = builder.create('root').ele(req.body).end({ pretty: true });
+    console.log(req.body.userName);
+    let filename = "NvelTitulos-" + req.body.userName + '-' + req.body.userId + '-' + new Date().getTime() + '.xml';
+    fs.writeFile(`xmlDownload/${filename}`, xml, function (err) {
+      if (err) {
+        return console.log(err);
+      }
+      console.log("Archivo guardado");
+    });
+    res.jsonp({ text: 'XML creado', name: filename });
+  }
+
+  public async downloadXML(req: Request, res: Response): Promise<any> {
+    const name = req.params.nameXML;
+    let filePath = `servidor\\xmlDownload\\${name}`
+    res.sendFile(__dirname.split("servidor")[0] + filePath);
   }
 
 }
