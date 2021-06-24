@@ -9,7 +9,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.PLANTILLA_CONTROLADOR = void 0;
 class PlantillasControlador {
     DescargarPlantilla(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
