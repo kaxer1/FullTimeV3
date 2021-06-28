@@ -76,4 +76,12 @@ export class TimbreWebComponent implements OnInit {
     this.filtroFechaTimbre = filterValue.trim().toLowerCase();
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
+
+  abrirMapa(latitud, longitud) {
+    
+    if (!latitud || !longitud) return this.toastr.warning('El timbre no tiene la geolocalizacion completa.')
+
+    const rutaMapa = "https://www.google.com/maps/search/+" + latitud + "+" + longitud;
+    window.open(rutaMapa);
+  }
 }

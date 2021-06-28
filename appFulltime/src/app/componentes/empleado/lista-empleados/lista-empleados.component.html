@@ -117,8 +117,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr
-                        *ngFor="let e of empleado | emplCodigo: filtroCodigo | emplCedula: filtroCedula | emplNombre: filtroNombre | emplApellido: filtroApellido | paginate:tamanio_pagina:numero_pagina">
+                    <tr *ngFor="let e of empleado | emplCodigo: filtroCodigo | emplCedula: filtroCedula | emplNombre: filtroNombre | emplApellido: filtroApellido | paginate:tamanio_pagina:numero_pagina">
                         <td>
                             <mat-checkbox *ngIf="btnCheckHabilitar" (click)="$event.stopPropagation()"
                                 (change)="$event ? selectionUno.toggle(e) : null" [checked]="selectionUno.isSelected(e)"
@@ -129,8 +128,10 @@
                         <td>{{e.nombre}}</td>
                         <td>{{e.apellido}}</td>
                         <td>{{e.cedula}}</td>
-                        <td *ngIf="e.estado === 1">Activo</td>
-                        <td *ngIf="e.estado === 2">Inactivo</td>
+                        <td *ngIf="e.estado === 1; else showInactivo">Activo</td>
+                        <ng-template #showInactivo>
+                            <td *ngIf="e.estado === 2">Inactivo</td>
+                        </ng-template>
                         <td>{{e.correo}}</td>
                         <td class="d-flex justify-content-center">
                             <i matSuffix matTooltipClass="emple-tooltip" matTooltipPosition="right"

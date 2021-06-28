@@ -77,7 +77,10 @@ export interface IRestTotalAsisteConsoli {
 
 export interface ITableEmpleados {
     id: number,
-    nombre: string
+    nombre: string,
+    codigo?: string,
+    apellido?: string,
+    cedula?: string,
 }
 
 export interface IReporteAtrasos {

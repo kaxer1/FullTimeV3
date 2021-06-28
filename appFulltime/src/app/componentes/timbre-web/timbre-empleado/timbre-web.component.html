@@ -43,7 +43,9 @@
             <table class="table table-hover table-sm">
                 <thead class="thead-light">
                     <tr style="text-align: center;">
-                        <th scope="col">Timbre</th>
+                        <th scope="col">Maps</th>
+                        <th scope="col">Fecha</th>
+                        <th scope="col">Hora</th>
                         <th scope="col">Acción</th>
                         <th scope="col">Tecla funcion</th>
                         <th scope="col">Observacion</th>
@@ -55,7 +57,14 @@
                 </thead>
                 <tbody>
                     <tr *ngFor="let t of timbres | fecTimbre: filtroFechaTimbre | paginate:tamanio_pagina:numero_pagina">
-                        <td>{{t.fec_hora_timbre}}</td>
+                        <td>
+                            <mat-icon aria-hidden="false"  
+                                style="color: rgb(53, 95, 209); text-align: center; cursor: pointer;"
+                                (click)="abrirMapa(t.latitud, t.longitud)">
+                                location_on</mat-icon>
+                        </td>
+                        <td>{{t.fec_hora_timbre.split(' ')[0]}}</td>
+                        <td>{{t.fec_hora_timbre.split(' ')[1]}}</td>
                         <td>{{t.accion}}</td>
                         <td>{{t.tecl_funcion}}</td>
                         <td>{{t.observacion}}</td>

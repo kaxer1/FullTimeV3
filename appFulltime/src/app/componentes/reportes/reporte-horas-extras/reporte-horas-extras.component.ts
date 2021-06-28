@@ -2,13 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { ToastrService } from 'ngx-toastr';
-import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 import { KardexService } from 'src/app/servicios/reportes/kardex.service';
 import pdfMake from 'pdfmake/build/pdfmake';
 import * as moment from 'moment';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfigReportFirmasHorasExtrasComponent } from '../../reportes-Configuracion/config-report-firmas-horas-extras/config-report-firmas-horas-extras.component';
+import { PlantillaReportesService } from '../plantilla-reportes.service';
 
 @Component({
   selector: 'app-reporte-horas-extras',
@@ -17,8 +17,8 @@ import { ConfigReportFirmasHorasExtrasComponent } from '../../reportes-Configura
 })
 export class ReporteHorasExtrasComponent implements OnInit {
 
-  fec_inicia: string = '2020-12-01';
-  fec_fin: string = '2020-12-31';
+  fec_inicia: string = '2021-12-01';
+  fec_fin: string = '2021-12-31';
   horas_extras: any;
 
   Lista_empleados: any = [];
@@ -37,17 +37,22 @@ export class ReporteHorasExtrasComponent implements OnInit {
   idEmpleado: number;
   empleadoD: any = [];
 
+  // Getters de colores, nombre empresa y logo para colocar en reporte 
+  get p_color(): string { return this.plantillaPDF.color_Primary}
+  get s_color(): string { return this.plantillaPDF.color_Secundary}  
+  get urlImagen() : string { return this.plantillaPDF.logoBase64 }
+  get nombreEmpresa(): string { return this.plantillaPDF.nameEmpresa}
+
   constructor(
     private restEmpleado: EmpleadoService,
     private restReporte: KardexService,
     private toastr: ToastrService,
-    private restEmpre: EmpresaService,
+    private plantillaPDF: PlantillaReportesService,
     public vistaFlotante: MatDialog,
   ) { }
 
   ngOnInit(): void {
     this.idEmpleado = parseInt(localStorage.getItem('empleado'));
-    this.ObtnerColores();
     this.ObtenerEmpleados();
     this.ObtenerEmpleadoSolicitaKardex(this.idEmpleado);
   }
@@ -83,28 +88,10 @@ export class ReporteHorasExtrasComponent implements OnInit {
   }
 
   // Método para ver la informacion del empleado 
-  urlImagen: string;
-  nombreEmpresa: string;
   ObtenerEmpleadoSolicitaKardex(idemploy: any) {
     this.empleadoD = [];
     this.restEmpleado.getOneEmpleadoRest(idemploy).subscribe(data => {
       this.empleadoD = data;
-    });
-    this.restReporte.LogoEmpresaImagenBase64(localStorage.getItem('empresa')).subscribe(res => {
-      this.urlImagen = 'data:image/jpeg;base64,' + res.imagen;
-      this.nombreEmpresa = res.nom_empresa;
-    });
-  }
-
-  // Método para obtener colores de empresa
-  p_color: any;
-  s_color: any;
-  ObtnerColores() {
-    this.restEmpre.ConsultarDatosEmpresa(parseInt(localStorage.getItem('empresa'))).subscribe(res => {
-      console.log(res);
-      
-      this.p_color = res[0].color_p;
-      this.s_color = res[0].color_s;
     });
   }
 

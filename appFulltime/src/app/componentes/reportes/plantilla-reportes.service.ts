@@ -71,5 +71,27 @@ export class PlantillaReportesService {
     }
 
   }
+
+  headerText() {
+    console.log('llego a header text');
+    return { 
+      text: 'Impreso por:  ' + localStorage.getItem('fullname_print'), 
+      margin: 10, 
+      fontSize: 9, 
+      opacity: 0.3, 
+      alignment: 'right' 
+    }
+  }
+
+  EncabezadoVertical(titulo, fec_inicio, fec_final) {
+    console.log('llego a encabezado');
+    
+    return [
+      { image: this.logoBase64, width: 100, margin: [10, -25, 0, 5] },
+      { text: localStorage.getItem('name_empresa'), bold: true, fontSize: 21, alignment: 'center', margin: [0, -30, 0, 10] },
+      { text: titulo, bold: true, fontSize: 12, alignment: 'center', margin: [0, 5, 0, 5] },
+      { text: 'Periodo del: ' + fec_inicio + " al " +  fec_final, bold: true, fontSize: 12, alignment: 'center', margin: [0, 5, 0, 5]  },
+    ]
+  }
   
 }
