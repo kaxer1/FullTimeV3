@@ -29,6 +29,9 @@ class ReportesAsistenciasRutas {
         // Reportes de Timbres Multiple
         this.router.put('/timbres/:desde/:hasta', TokenValidation, REPORTE_A_CONTROLADOR.ReporteTimbresMultiple);
         
+        // Reportes de Timbres Habiertos
+        this.router.get('/timbres-abiertos', TokenValidation, REPORTE_A_CONTROLADOR.ReporteTimbresAbiertos);
+        
         // Reportes de Timbres Tabulado
         this.router.put('/timbres-tabulados/:desde/:hasta', TokenValidation, REPORTE_A_CONTROLADOR.ReporteTimbresTabulado);
         
