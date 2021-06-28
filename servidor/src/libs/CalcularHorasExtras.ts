@@ -1,4 +1,5 @@
 import pool from '../database';
+import { HHMMtoSegundos } from './SubMetodosGraficas';
 
 const DIAS_MES: number = 30; 
 
@@ -6,28 +7,28 @@ export const CalcularHoraExtra = async function(id_empleado: number, fec_desde: 
     console.log(id_empleado, fec_desde, fec_hasta);
     let codigo: number;
     try {
-        var code: any = await pool.query('SELECT codigo FROM empleados WHERE id = $1', [id_empleado]).then(result => { return result.rows});
-        // console.log('Codigo: ',code);
-        if (code.length === 0) return {mensaje: 'El empleado no tiene un codigo asignado.'};
-        codigo = parseInt(code[0].codigo);
-        // console.log('Codigo: ',codigo);
+        let [code]: any = await pool.query('SELECT codigo FROM empleados WHERE id = $1', [id_empleado]).then(result => { return result.rows});
+        
+        if (code === undefined) return {mensaje: 'El empleado no tiene un codigo asignado.'};
+        codigo = parseInt(code.codigo);
+        console.log('Codigo: ',codigo);
 
         let ids = await CargoContratoByFecha(id_empleado, fec_desde, fec_hasta);
-        // console.log('Contrato y cargo', ids);
+        console.log('Contrato y cargo', ids);
         if (ids[0].message) {
             return ids[0]
         }
         
         let cg_horas_extras = await CatalogoHorasExtras();
-        // console.log('Catalgo Horas Extras', cg_horas_extras);
+        console.log('Catalgo Horas Extras', cg_horas_extras);
         
         let horas_extras = await Promise.all(ids.map(async(obj) => {
             return await ListaHorasExtras(cg_horas_extras, codigo, obj.id_cargo, fec_desde, fec_hasta, parseInt(obj.sueldo), obj.hora_trabaja)
         }));
 
-        let feriados = await Promise.all(ids.map(async(obj) => {
-            return await FeriadosPorIdCargo(obj.id_cargo, fec_desde, fec_hasta)
-        }))
+        // let feriados = await Promise.all(ids.map(async(obj) => {
+        //     return await FeriadosPorIdCargo(obj.id_cargo, fec_desde, fec_hasta)
+        // }))
 
         console.log('Lista de horas extras ===', horas_extras[0]);
         // console.log('Lista de feriados ===', feriados[0]);
@@ -80,7 +81,7 @@ function SumaValorPagoEmpleado(horas_extras: any[]) {
 async function ListaHorasExtras(cg_horas_extras: any,codigo: number, id_cargo: number, fec_desde: Date, fec_hasta: Date, sueldo: number, horas_trabaja: number) {
     let arrayUno = await HorasExtrasSolicitadas(codigo, id_cargo, fec_desde, fec_hasta)
     let arrayDos = await PlanificacionHorasExtrasSolicitadas(codigo, id_cargo, fec_desde, fec_hasta)
-    // console.log('array uno ===', arrayUno); console.log('array dos ===', arrayDos);
+    console.log('array uno ===', arrayUno); console.log('array dos ===', arrayDos);
     let arrayUnido = arrayUno.concat(arrayDos)
 
     for (let j = 0; j < arrayUnido.length; j++) {
@@ -158,8 +159,8 @@ async function HorasExtrasSolicitadas(id_empleado: number, id_cargo: number, fec
             var f2 = new Date(obj.fec_final)
             f1.setUTCHours(f1.getUTCHours() - 5);
             f2.setUTCHours(f2.getUTCHours() - 5);
-            const hora_inicio = HHMMtoHorasDecimal(f1.toJSON().split('T')[1].split('.')[0]);
-            const hora_final = HHMMtoHorasDecimal(f2.toJSON().split('T')[1].split('.')[0]);
+            const hora_inicio = HHMMtoSegundos(f1.toJSON().split('T')[1].split('.')[0]);
+            const hora_final = HHMMtoSegundos(f2.toJSON().split('T')[1].split('.')[0]);
             const dia = f1.getUTCDay();
             f1.setUTCHours(f1.getUTCHours() - 5);
             f2.setUTCHours(f2.getUTCHours() - 5);
@@ -170,8 +171,8 @@ async function HorasExtrasSolicitadas(id_empleado: number, id_cargo: number, fec
                 fec_inicio: new Date(f1.toJSON().split('.')[0]),
                 fec_final: new Date(f2.toJSON().split('.')[0]),
                 descripcion: obj.descripcion,
-                num_hora: HHMMtoHorasDecimal(obj.num_hora),
-                tiempo_autorizado: HHMMtoHorasDecimal(obj.tiempo_autorizado),
+                num_hora: HHMMtoSegundos(obj.num_hora),
+                tiempo_autorizado: HHMMtoSegundos(obj.tiempo_autorizado),
                 valores_calculos: new Array,
                 calculos: new Array,
                 nocturno: false,
@@ -191,8 +192,8 @@ async function PlanificacionHorasExtrasSolicitadas(id_empleado: number, id_cargo
             var f2 = new Date(obj.fecha_hasta.toJSON().split('T')[0] + 'T' + obj.hora_fin);
             f1.setUTCHours(f1.getUTCHours() - 5);
             f2.setUTCHours(f2.getUTCHours() - 5);
-            const hora_inicio = HHMMtoHorasDecimal(f1.toJSON().split('T')[1].split('.')[0]);
-            const hora_final = HHMMtoHorasDecimal(f2.toJSON().split('T')[1].split('.')[0]);
+            const hora_inicio = HHMMtoSegundos(f1.toJSON().split('T')[1].split('.')[0]);
+            const hora_final = HHMMtoSegundos(f2.toJSON().split('T')[1].split('.')[0]);
             const dia = f1.getUTCDay();
             f1.setUTCHours(f1.getUTCHours() - 5);
             f2.setUTCHours(f2.getUTCHours() - 5);
@@ -203,7 +204,7 @@ async function PlanificacionHorasExtrasSolicitadas(id_empleado: number, id_cargo
             fec_inicio: new Date(f1.toJSON().split('.')[0]),
             fec_final: new Date(f2.toJSON().split('.')[0]),
             descripcion: obj.descripcion,
-            num_hora: HHMMtoHorasDecimal(obj.horas_totales),
+            num_hora: HHMMtoSegundos(obj.horas_totales),
             tiempo_autorizado: obj.tiempo_autorizado,
             valores_calculos: [],
             calculos: [],
@@ -230,33 +231,34 @@ async function ObtenerTimbres(id_empleado: number, fec_desde: string, fec_hasta:
 
 async function CargoContratoByFecha(id_empleado: number, fec_desde: Date, fec_hasta: Date): Promise <any[]> {
     try {
-        let cargo_contrato = await pool.query('SELECT e.nombre, e.apellido, e.codigo, e.cedula, ca.id AS id_cargo, ca.fec_inicio, ca.fec_final, co.id AS id_contrato, ca.sueldo, ca.hora_trabaja FROM empleados AS e, empl_contratos AS co, empl_cargos AS ca ' +
-                            'WHERE e.id = co.id_empleado AND co.id_empleado = $1 AND ca.id_empl_contrato = co.id', [id_empleado])
-                            .then(result => {
-                                return result.rows;
-                            });
+        const cargo_contrato = await pool.query('SELECT (e.nombre || \' \' || e.apellido) as nombre, e.codigo, e.cedula, ca.id AS id_cargo, ca.fec_inicio, ca.fec_final, co.id AS id_contrato, ca.sueldo, ca.hora_trabaja FROM empleados AS e, empl_contratos AS co, empl_cargos AS ca ' +
+            'WHERE e.id = co.id_empleado AND co.id_empleado = $1 AND ca.id_empl_contrato = co.id OR ca.fec_inicio BETWEEN $2 AND $3 OR ca.fec_final BETWEEN $2 AND $3 ', [id_empleado, fec_desde, fec_hasta])
+            .then(result => {
+                return result.rows;
+            });
+            console.log(cargo_contrato);
+            
         if (cargo_contrato.length === 0) return [{message: 'No tiene contratos ni cargos asignados'}];
+        return cargo_contrato
 
-        let datos_limpios = cargo_contrato.filter(obj => {
-            // console.log('Objeto sin filtrar UNO:',obj);
-            return (obj.fec_inicio <= fec_desde && obj.fec_final >= fec_desde )
-        }).filter(obj => {
-            // console.log('Objeto sin filtrar DOS:',obj);
-            return (obj.fec_inicio <= fec_hasta && obj.fec_final >= fec_hasta )
-        }).map(obj => {
-            // console.log('limpio: ',obj);
-            return {
-                nombre: obj.nombre + ' ' + obj.apellido,
-                codigo: obj.codigo,
-                cedula: obj.cedula,
-                id_cargo: obj.id_cargo,
-                id_contrato: obj.id_contrato,
-                sueldo: obj.sueldo,
-                hora_trabaja: obj.hora_trabaja
-            }
-        })
+        // let datos_limpios = cargo_contrato.filter(obj => {
+        //     console.log('Objeto sin filtrar UNO:',obj);
+        //     return (obj.fec_inicio <= fec_desde && obj.fec_final >= fec_desde )
+        // }).filter(obj => {
+        //     console.log('Objeto sin filtrar DOS:',obj);
+        //     return (obj.fec_inicio <= fec_hasta && obj.fec_final >= fec_hasta )
+        // }).map(obj => {
+        //     console.log('limpio: ',obj);
+        //     return obj
+        // })
 
-        return datos_limpios
+        // if (datos_limpios.length === 0) return [{message: 'No tiene contratos ni cargos asignados en la fecha de consulta.'}]
+
+        // console.log('*******************');
+        // console.log(datos_limpios);
+        // console.log('*******************');
+        
+        // return datos_limpios
     } catch (error) {
         return [{message: error}]
     }    
@@ -271,8 +273,8 @@ async function CargoContratoByFecha(id_empleado: number, fec_desde: Date, fec_ha
 async function CatalogoHorasExtras() {
     return await pool.query('SELECT id, descripcion, tipo_descuento, reca_porcentaje, hora_inicio, hora_final, hora_jornada, tipo_dia, tipo_funcion FROM cg_hora_extras').then(result => {
         return result.rows.map(obj => {
-            obj.hora_inicio = HHMMtoHorasDecimal(obj.hora_inicio);
-            obj.hora_final = HHMMtoHorasDecimal(obj.hora_final);
+            obj.hora_inicio = HHMMtoSegundos(obj.hora_inicio);
+            obj.hora_final = HHMMtoSegundos(obj.hora_final);
             (obj.tipo_descuento === 1) ? obj.tipo_descuento = 'HE' : obj.tipo_descuento = 'RN';
             obj.reca_porcentaje = parseInt(obj.reca_porcentaje) / 100;
             (obj.hora_jornada === 1)? obj.hora_jornada = 'Diurna' : obj.hora_jornada = 'Nocturna';
@@ -282,16 +284,6 @@ async function CatalogoHorasExtras() {
     }) 
 }
 
-function HHMMtoHorasDecimal(dato: any) {
-    if (dato === '') return 0
-    // if (dato === 0) return 0
-    // console.log(dato);
-    var h = parseInt(dato.split(':')[0]);
-    var m = parseInt(dato.split(':')[1])/60;
-    var s = parseInt(dato.split(':')[2])/3600;
-    // console.log(h, '>>>>>', m);
-    return h + m + s
-}
 /**************************************************************************
  *        /\                     _______________  _________
  *       /  \       |          |        |        |         |
