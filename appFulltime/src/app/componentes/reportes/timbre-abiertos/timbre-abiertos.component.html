@@ -33,7 +33,6 @@
     </div>
 </div>
 <div class="container" style="padding-bottom: 50px; text-align: center;">    
-    <!-- TABLA PARA EMPLEADOS -->
     <div class="mat-elevation-z8" style="background: white;">
         <div id="resulEmpleados">Lista de empleados</div>
         <div class="table-responsive">
@@ -92,7 +91,6 @@
                         <td> </td>
                         <td> </td>
                     </tr>
-                    <!-- <tr *ngFor="let e of empleados | emplCodigo: filtroCodigo | emplCedula: filtroCedula | emplNombre: filtroNombreEmp | paginate:tamanio_pagina:numero_pagina"> -->
                     <tr *ngFor="let e of empleados | emplCodigo: filtroCodigo | emplCedula: filtroCedula | emplNombre: filtroNombre | emplApellido: filtroApellido | paginate:tamanio_pagina:numero_pagina">
 
                         <td>

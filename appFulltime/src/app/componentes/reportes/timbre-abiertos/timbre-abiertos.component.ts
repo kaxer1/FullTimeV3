@@ -50,9 +50,9 @@ export class TimbreAbiertosComponent implements OnInit {
   constructor(
     private reporteService: ReportesService,
     private toastr: ToastrService,
-    private empeadoService: EmpleadoService,
     private metodosAsistencia: ReportesAsistenciasService,
     private plantillaPDF: PlantillaReportesService,
+    private empeadoService: EmpleadoService,
     private validacionesService: ValidacionesService
   ) { }
 
