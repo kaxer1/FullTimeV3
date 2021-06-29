@@ -16,6 +16,7 @@ class LoginControlador {
   public async ValidarCredenciales(req: Request, res: Response) {
     var ip = require("ip");
     console.log('ip', ip.address());
+    let caducidad_licencia: Date = new Date();
     try {
       const { nombre_usuario, pass, latitud, longitud} = req.body;
       console.log(nombre_usuario, pass, latitud, longitud);
@@ -49,7 +50,7 @@ class LoginControlador {
           const {fec_activacion, fec_desactivacion} = ok_licencias[0];
           if (hoy > fec_desactivacion) return res.status(404).jsonp({message: 'La licencia a expirado'});
           if (hoy < fec_activacion) return res.status(404).jsonp({message: 'La licencia a expirado'});
-          
+          caducidad_licencia = fec_desactivacion
         } catch (error) {
           return res.status(404).jsonp({message: 'No existe registro de licencias'});
         }
@@ -92,7 +93,7 @@ class LoginControlador {
           const token = jwt.sign({ _licencia: licencia, codigo: codigo, _id: id, _id_empleado: id_empleado, rol: id_rol, _dep: id_departamento, _web_access: web_access,
                       _acc_tim: acciones_timbres, _suc: id_sucursal, _empresa: id_empresa, estado: autoriza_est, cargo: id_cargo, ip_adress: ip.address(), modulos: modulos }, 
                       process.env.TOKEN_SECRET || 'llaveSecreta',  { expiresIn: 60 * 60 * 23, algorithm: 'HS512'});
-          return res.status(200).jsonp({ token, usuario: user, rol: id_rol, empleado: id_empleado, departamento: id_departamento, acciones_timbres: acciones_timbres, 
+          return res.status(200).jsonp({caducidad_licencia, token, usuario: user, rol: id_rol, empleado: id_empleado, departamento: id_departamento, acciones_timbres: acciones_timbres, 
                       sucursal: id_sucursal, empresa: id_empresa, cargo: id_cargo, estado: autoriza_est, ip_adress: ip.address(), modulos: modulos});
         
         } else {
@@ -100,7 +101,7 @@ class LoginControlador {
           const token = jwt.sign({ _licencia: licencia, codigo: codigo, _id: id, _id_empleado: id_empleado, rol: id_rol, _dep: id_departamento, _web_access: web_access,
                       _acc_tim: acciones_timbres, _suc: id_sucursal, _empresa: id_empresa, estado: false, cargo: id_cargo, ip_adress: ip.address(), modulos: modulos }, 
                       process.env.TOKEN_SECRET || 'llaveSecreta', { expiresIn: 60 * 60 * 23, algorithm: 'HS512'});
-          return res.status(200).jsonp({ token, usuario: user, rol: id_rol, empleado: id_empleado, departamento: id_departamento, acciones_timbres: acciones_timbres, 
+          return res.status(200).jsonp({caducidad_licencia, token, usuario: user, rol: id_rol, empleado: id_empleado, departamento: id_departamento, acciones_timbres: acciones_timbres, 
                       sucursal: id_sucursal, empresa: id_empresa, cargo: id_cargo, estado: false, ip_adress: ip.address(), modulos: modulos });
         
         }
@@ -109,7 +110,7 @@ class LoginControlador {
 
         const token = jwt.sign({ codigo: codigo, _id: id, _id_empleado: id_empleado, rol: id_rol, _web_access: web_access, ip_adress: ip.address(), modulos: modulos }
                       , process.env.TOKEN_SECRET || 'llaveSecreta', { expiresIn: 60 * 60 * 23, algorithm: 'HS512'});
-        return res.status(200).jsonp({ token, usuario: user, rol: id_rol, empleado: id_empleado, ip_adress: ip.address(), modulos: modulos });
+        return res.status(200).jsonp({caducidad_licencia, token, usuario: user, rol: id_rol, empleado: id_empleado, ip_adress: ip.address(), modulos: modulos });
       }
 
     } catch (error) {

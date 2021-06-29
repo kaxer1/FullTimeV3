@@ -1,6 +1,5 @@
 import { Request, Response } from 'express';
 import pool from '../../database';
-import { stream } from 'xlsx/types';
 
 class UsuarioControlador {
   public async list(req: Request, res: Response) {
@@ -10,6 +9,47 @@ class UsuarioControlador {
     }
     else {
       return res.status(404).jsonp({ text: 'No se encuentran registros' });
+    }
+  }
+
+  public async usersEmpleados(req: Request, res: Response) {
+    try {
+      const USUARIOS = await pool.query('SELECT (e.nombre || \' \' || e.apellido) AS nombre, e.cedula, e.codigo, u.usuario, u.app_habilita, u.id AS userId ' +
+      'FROM usuarios AS u, empleados AS e WHERE e.id = u.id_empleado ORDER BY nombre')
+      .then(result => { return result.rows });
+
+      if (USUARIOS.length === 0) return  res.status(404).jsonp({ message: 'No se encuentran registros' });
+      
+      return res.status(200).jsonp(USUARIOS)
+      
+    } catch (error) {
+      return res.status(500).jsonp({ message: error })
+    }
+  }
+
+  public async updateUsersEmpleados(req: Request, res: Response) {
+    try {
+      console.log(req.body);
+      const array= req.body;
+
+      if (array.length === 0) return res.status(400).jsonp({message: 'No llego datos para actualizar'})
+
+      const nuevo = await Promise.all(array.map(async(o: any) => {
+
+        try {
+          const [result] = await pool.query('UPDATE usuarios SET app_habilita = $1 WHERE id = $2 RETURNING id', [!o.app_habilita, o.userid])
+            .then(result => {return result.rows})
+          return result
+        } catch (error) {
+          return {error: error.toString()}
+        }
+
+      }))
+      
+      return res.status(200).jsonp({message: 'Datos actualizados exitosamente', nuevo })
+      
+    } catch (error) {
+      return res.status(500).jsonp({ message: error })
     }
   }
 
