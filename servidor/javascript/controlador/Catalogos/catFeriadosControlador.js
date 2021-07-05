@@ -12,11 +12,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const builder = require('xmlbuilder');
 const database_1 = __importDefault(require("../../database"));
+const moment_1 = __importDefault(require("moment"));
 const xlsx_1 = __importDefault(require("xlsx"));
 const fs_1 = __importDefault(require("fs"));
-const moment_1 = __importDefault(require("moment"));
-const builder = require('xmlbuilder');
 class FeriadosControlador {
     ListarFeriados(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -123,53 +123,104 @@ class FeriadosControlador {
             const workbook = xlsx_1.default.readFile(filePath);
             const sheet_name_list = workbook.SheetNames;
             const plantilla = xlsx_1.default.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]);
+            // VARIABLES USADAS PARA CONTAR NÚMERO DE FILAS CORRECTAS
             var contarFecha = 0;
+            var contarCampoFecha = 0;
             var contarFechaRecuperar = 0;
             var contarDescripcion = 0;
+            var contarFechaValida = 0;
+            var contarFechaRecuperarValida = 0;
+            var contarFechaPosterior = 0;
             var contador = 1;
+            var lectura = 1;
+            // VARIABLES DE ALMACENAMIENTO DE FILAS CON ERRORES
+            var fecha_c = '';
+            var desc_c = '';
+            var fec_v = '';
             plantilla.forEach((data) => __awaiter(this, void 0, void 0, function* () {
                 const { fecha, descripcion, fec_recuperacion } = data;
                 var fecha_data = fecha;
                 var fec_recuperacion_data = fec_recuperacion;
                 var descripcion_data = descripcion;
-                // var fec = new Date(fecha_data);
-                /*  console.log(' fec ',
-                      fec
-                  );*/
+                lectura = lectura + 1;
                 console.log('ver fecha - feriados', moment_1.default(fecha_data).format('YYYY-MM-DD'));
-                // console.log('ver fecha - feriados 1 ', fec.toString())
-                if (fecha_data === moment_1.default(fecha_data).format('YYYY-MM-DD')) {
-                    const VERIFICAR_FECHA = yield database_1.default.query('SELECT * FROM cg_feriados WHERE fecha = $1 OR fec_recuperacion = $1', [fecha_data]);
-                    if (VERIFICAR_FECHA.rowCount === 0) {
-                        contarFecha = contarFecha + 1;
-                    }
-                    if (fec_recuperacion != undefined) {
-                        console.log('ver fecha - feriados', moment_1.default(fec_recuperacion_data).format('YYYY-MM-DD'));
-                        if (fec_recuperacion_data === moment_1.default(fec_recuperacion_data).format('YYYY-MM-DD')) {
-                            const VERIFICAR_FECHA_RECUPERAR = yield database_1.default.query('SELECT * FROM cg_feriados WHERE fecha = $1 OR fec_recuperacion = $1', [fec_recuperacion_data]);
-                            if (VERIFICAR_FECHA_RECUPERAR.rowCount === 0 && fec_recuperacion > fecha) {
-                                contarFechaRecuperar = contarFechaRecuperar + 1;
-                            }
-                        }
-                    }
-                    else {
-                        contarFechaRecuperar = contarFechaRecuperar + 1;
-                    }
+                if (fecha_data != undefined) {
+                    contarCampoFecha = contarCampoFecha + 1;
                     if (descripcion_data != undefined) {
                         contarDescripcion = contarDescripcion + 1;
                     }
+                    else {
+                        desc_c = desc_c + ' - Fila: ' + lectura;
+                    }
+                    if (fecha_data === moment_1.default(fecha_data).format('YYYY-MM-DD')) {
+                        contarFechaValida = contarFechaValida + 1;
+                        const VERIFICAR_FECHA = yield database_1.default.query('SELECT * FROM cg_feriados WHERE fecha = $1 OR fec_recuperacion = $1', [fecha_data]);
+                        if (VERIFICAR_FECHA.rowCount === 0) {
+                            contarFecha = contarFecha + 1;
+                        }
+                        if (fec_recuperacion != undefined) {
+                            console.log('ver fecha - feriados', moment_1.default(fec_recuperacion_data).format('YYYY-MM-DD'));
+                            if (fec_recuperacion_data === moment_1.default(fec_recuperacion_data).format('YYYY-MM-DD')) {
+                                contarFechaRecuperarValida = contarFechaRecuperarValida + 1;
+                                if (fec_recuperacion > fecha) {
+                                    contarFechaPosterior = contarFechaPosterior + 1;
+                                    const VERIFICAR_FECHA_RECUPERAR = yield database_1.default.query('SELECT * FROM cg_feriados WHERE fecha = $1 OR fec_recuperacion = $1', [fec_recuperacion_data]);
+                                    if (VERIFICAR_FECHA_RECUPERAR.rowCount === 0) {
+                                        contarFechaRecuperar = contarFechaRecuperar + 1;
+                                    }
+                                }
+                            }
+                        }
+                        else {
+                            contarFechaRecuperar = contarFechaRecuperar + 1;
+                            contarFechaRecuperarValida = contarFechaRecuperarValida + 1;
+                            contarFechaPosterior = contarFechaPosterior + 1;
+                        }
+                    }
                 }
-                // Verificación cuando se ha leido todos los datos de la plantilla
+                else {
+                    fecha_c = fecha_c + ' - Fila: ' + lectura;
+                }
+                // VERIFICACIÓN CUANDO SE HA LEIDO TODOS LOS DATOS DE LA PLANTILLA
                 console.log('fecha', contarFecha, plantilla.length, contador);
                 console.log('fecha_rec', contarFechaRecuperar, plantilla.length, contador);
                 console.log('descripcion', contarDescripcion, plantilla.length, contador);
                 if (contador === plantilla.length) {
-                    if (contarFecha === plantilla.length && contarFechaRecuperar === plantilla.length &&
-                        contarDescripcion === plantilla.length) {
-                        return res.jsonp({ message: 'correcto' });
+                    if (contarCampoFecha === plantilla.length) {
+                        if (contarDescripcion === plantilla.length) {
+                            if (contarFechaValida === plantilla.length) {
+                                if (contarFecha === plantilla.length) {
+                                    if (contarFechaRecuperarValida === plantilla.length) {
+                                        if (contarFechaPosterior === plantilla.length) {
+                                            if (contarFechaRecuperar === plantilla.length) {
+                                                return res.jsonp({ message: 'CORRECTO' });
+                                            }
+                                            else {
+                                                return res.jsonp({ message: 'FECHA DE RECUPERACION YA EXISTE' });
+                                            }
+                                        }
+                                        else {
+                                            return res.jsonp({ message: 'FECHA DE RECUPERACION ANTERIOR' });
+                                        }
+                                    }
+                                    else {
+                                        return res.jsonp({ message: 'FECHA DE RECUPERACION INVALIDA' });
+                                    }
+                                }
+                                else {
+                                    return res.jsonp({ message: 'FECHA YA EXISTE' });
+                                }
+                            }
+                            else {
+                                return res.jsonp({ message: 'FECHA INVALIDA' });
+                            }
+                        }
+                        else {
+                            return res.jsonp({ message: 'CAMPO DESCRIPCION ES OBLIGATORIO', data: desc_c });
+                        }
                     }
                     else {
-                        return res.jsonp({ message: 'error' });
+                        return res.jsonp({ message: 'CAMPO FECHA ES OBLIGATORIO', data: fecha_c, valor: plantilla.length });
                     }
                 }
                 contador = contador + 1;

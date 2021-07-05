@@ -1,9 +1,9 @@
-import { Request, Response, text } from 'express';
+import { Request, Response } from 'express';
+const builder = require('xmlbuilder');
 import pool from '../../database';
+import moment from 'moment';
 import excel from 'xlsx';
 import fs from 'fs';
-import moment from 'moment';
-const builder = require('xmlbuilder');
 
 class FeriadosControlador {
 
@@ -87,11 +87,11 @@ class FeriadosControlador {
                 recuperar = fec_recuperacion;
             }
             await pool.query('INSERT INTO cg_feriados (fecha, descripcion, fec_recuperacion) VALUES ($1, $2, $3)', [fecha, descripcion, recuperar]);
-            
+
             if (contador === plantilla.length) {
                 console.log('ejecutandose')
                 return res.jsonp({ message: 'correcto' });
-                
+
             }
             contador = contador + 1;
         });
@@ -107,57 +107,108 @@ class FeriadosControlador {
         const workbook = excel.readFile(filePath);
         const sheet_name_list = workbook.SheetNames;
         const plantilla = excel.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]);
+        // VARIABLES USADAS PARA CONTAR NÚMERO DE FILAS CORRECTAS
         var contarFecha = 0;
+        var contarCampoFecha = 0;
         var contarFechaRecuperar = 0;
         var contarDescripcion = 0;
+        var contarFechaValida = 0;
+        var contarFechaRecuperarValida = 0;
+        var contarFechaPosterior = 0;
         var contador = 1;
+        var lectura = 1;
+
+        // VARIABLES DE ALMACENAMIENTO DE FILAS CON ERRORES
+        var fecha_c: string = '';
+        var desc_c: string = '';
+        var fec_v: string = '';
 
         plantilla.forEach(async (data: any) => {
             const { fecha, descripcion, fec_recuperacion } = data;
             var fecha_data = fecha;
             var fec_recuperacion_data = fec_recuperacion;
             var descripcion_data = descripcion;
-            // var fec = new Date(fecha_data);
-            /*  console.log(' fec ',
-                  fec
-              );*/
+            lectura = lectura + 1;
             console.log('ver fecha - feriados', moment(fecha_data).format('YYYY-MM-DD'))
 
-            // console.log('ver fecha - feriados 1 ', fec.toString())
-
-            if (fecha_data === moment(fecha_data).format('YYYY-MM-DD')) {
-                const VERIFICAR_FECHA = await pool.query('SELECT * FROM cg_feriados WHERE fecha = $1 OR fec_recuperacion = $1', [fecha_data]);
-                if (VERIFICAR_FECHA.rowCount === 0) {
-                    contarFecha = contarFecha + 1;
-                }
-                if (fec_recuperacion != undefined) {
-                    console.log('ver fecha - feriados', moment(fec_recuperacion_data).format('YYYY-MM-DD'))
-                    if (fec_recuperacion_data === moment(fec_recuperacion_data).format('YYYY-MM-DD')) {
-                        const VERIFICAR_FECHA_RECUPERAR = await pool.query('SELECT * FROM cg_feriados WHERE fecha = $1 OR fec_recuperacion = $1', [fec_recuperacion_data]);
-                        if (VERIFICAR_FECHA_RECUPERAR.rowCount === 0 && fec_recuperacion > fecha) {
-                            contarFechaRecuperar = contarFechaRecuperar + 1;
-                        }
-                    }
-                }
-                else {
-                    contarFechaRecuperar = contarFechaRecuperar + 1;
-                }
+            if (fecha_data != undefined) {
+                contarCampoFecha = contarCampoFecha + 1;
                 if (descripcion_data != undefined) {
                     contarDescripcion = contarDescripcion + 1;
                 }
+                else {
+                    desc_c = desc_c + ' - Fila: ' + lectura;
+                }
+                if (fecha_data === moment(fecha_data).format('YYYY-MM-DD')) {
+                    contarFechaValida = contarFechaValida + 1;
+                    const VERIFICAR_FECHA = await pool.query('SELECT * FROM cg_feriados WHERE fecha = $1 OR fec_recuperacion = $1', [fecha_data]);
+                    if (VERIFICAR_FECHA.rowCount === 0) {
+                        contarFecha = contarFecha + 1;
+                    }
+                    if (fec_recuperacion != undefined) {
+                        console.log('ver fecha - feriados', moment(fec_recuperacion_data).format('YYYY-MM-DD'))
+                        if (fec_recuperacion_data === moment(fec_recuperacion_data).format('YYYY-MM-DD')) {
+                            contarFechaRecuperarValida = contarFechaRecuperarValida + 1;
+                            if (fec_recuperacion > fecha) {
+                                contarFechaPosterior = contarFechaPosterior + 1;
+                                const VERIFICAR_FECHA_RECUPERAR = await pool.query('SELECT * FROM cg_feriados WHERE fecha = $1 OR fec_recuperacion = $1', [fec_recuperacion_data]);
+                                if (VERIFICAR_FECHA_RECUPERAR.rowCount === 0) {
+                                    contarFechaRecuperar = contarFechaRecuperar + 1;
+                                }
+                            }
+                        }
+                    }
+                    else {
+                        contarFechaRecuperar = contarFechaRecuperar + 1;
+                        contarFechaRecuperarValida = contarFechaRecuperarValida + 1;
+                        contarFechaPosterior = contarFechaPosterior + 1;
+                    }
+                }
+            }
+            else {
+                fecha_c = fecha_c + ' - Fila: ' + lectura;
             }
 
-            // Verificación cuando se ha leido todos los datos de la plantilla
+            // VERIFICACIÓN CUANDO SE HA LEIDO TODOS LOS DATOS DE LA PLANTILLA
             console.log('fecha', contarFecha, plantilla.length, contador);
             console.log('fecha_rec', contarFechaRecuperar, plantilla.length, contador);
             console.log('descripcion', contarDescripcion, plantilla.length, contador);
             if (contador === plantilla.length) {
-                if (contarFecha === plantilla.length && contarFechaRecuperar === plantilla.length &&
-                    contarDescripcion === plantilla.length) {
-                    return res.jsonp({ message: 'correcto' });
+                if (contarCampoFecha === plantilla.length) {
+                    if (contarDescripcion === plantilla.length) {
+                        if (contarFechaValida === plantilla.length) {
+                            if (contarFecha === plantilla.length) {
+                                if (contarFechaRecuperarValida === plantilla.length) {
+                                    if (contarFechaPosterior === plantilla.length) {
+                                        if (contarFechaRecuperar === plantilla.length) {
+                                            return res.jsonp({ message: 'CORRECTO' });
+                                        }
+                                        else {
+                                            return res.jsonp({ message: 'FECHA DE RECUPERACION YA EXISTE' });
+                                        }
+                                    }
+                                    else {
+                                        return res.jsonp({ message: 'FECHA DE RECUPERACION ANTERIOR' });
+                                    }
+                                }
+                                else {
+                                    return res.jsonp({ message: 'FECHA DE RECUPERACION INVALIDA' });
+                                }
+                            }
+                            else {
+                                return res.jsonp({ message: 'FECHA YA EXISTE' });
+                            }
+                        }
+                        else {
+                            return res.jsonp({ message: 'FECHA INVALIDA' });
+                        }
+                    }
+                    else {
+                        return res.jsonp({ message: 'CAMPO DESCRIPCION ES OBLIGATORIO', data: desc_c });
+                    }
                 }
                 else {
-                    return res.jsonp({ message: 'error' });
+                    return res.jsonp({ message: 'CAMPO FECHA ES OBLIGATORIO', data: fecha_c, valor: plantilla.length });
                 }
             }
             contador = contador + 1;
@@ -216,7 +267,7 @@ class FeriadosControlador {
                 return res.jsonp({ message: 'error' });
             }
         }
-       
+
     }
 
 
