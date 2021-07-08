@@ -33,12 +33,12 @@
                                 {{d.viewValue}}
                             </mat-option>
                         </mat-select>
-                    </mat-form-field>
+                    </mat-form-field >
                     <br>
                     <mat-form-field>
                         <mat-label>Seleccionar Horario</mat-label>
                         <mat-icon id="icono" matSuffix matTooltipClass="sucursalR-tooltip" matTooltipPosition="right"
-                            matTooltip="Lista de países del continente seleccionado">
+                            matTooltip="Seleccionar un horario ">
                             help_outline</mat-icon>
                         <mat-select [formControl]="horarioF" required>
                             <mat-option *ngFor="let h of vista_horarios" [value]="h.id" id="letra"
