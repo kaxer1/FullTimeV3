@@ -308,7 +308,7 @@ export class RegistoEmpleadoHorarioComponent implements OnInit {
       return this.toastr.success('Seleccion de horario correcta.')
     } else {
       this.EmpleadoHorarioForm.patchValue({ horarioForm: 0 });
-      return this.toastr.warning('Horas de trabajo del cargo no pueden ser mayores a las hora de trabajo total del horario.')
+      return this.toastr.warning('Proceder a Registrar Horario, ir a Detalle para completar el registro.')
     }
 
   }
