@@ -12,6 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.ReportePeriVacaciones = exports.vacacionesByIdUser = void 0;
 const database_1 = __importDefault(require("../database"));
 const moment_1 = __importDefault(require("moment"));
 function DescuentoDiasHorMin(hora_trabaja, num_dia_vacaciones) {
@@ -251,7 +252,7 @@ function diasObligaByRegimen(id_regimen) {
         return { dia_obli: x, max_acumulado: data.max_dia_acumulacion };
     });
 }
-exports.vacacionesByIdUser = function (id_empleado, desde, hasta) {
+const vacacionesByIdUser = function (id_empleado, desde, hasta) {
     return __awaiter(this, void 0, void 0, function* () {
         // busco ID del ultimo contrato y su regimen del usuario
         var f = new Date();
@@ -293,6 +294,7 @@ exports.vacacionesByIdUser = function (id_empleado, desde, hasta) {
         return arrayDetalleKardex;
     });
 };
+exports.vacacionesByIdUser = vacacionesByIdUser;
 function ArrayTotalDetalleKardex(arrayTotal, hora_trabaja, IAcumulado, id_empleado) {
     return __awaiter(this, void 0, void 0, function* () {
         let arrayDetalleKardex = [];
@@ -515,7 +517,7 @@ function ComprobarCalculo(hora_trabaja, dias, hora, min) {
  *
  * *****************************************************************************
  */
-exports.ReportePeriVacaciones = function (id_empleado) {
+const ReportePeriVacaciones = function (id_empleado) {
     return __awaiter(this, void 0, void 0, function* () {
         let periodos = yield PeriodosVacacionesEmpleado(id_empleado);
         if (periodos.length === 0)
@@ -524,6 +526,7 @@ exports.ReportePeriVacaciones = function (id_empleado) {
         return { message: 'Halgo a salido mal en el proceso' };
     });
 };
+exports.ReportePeriVacaciones = ReportePeriVacaciones;
 function PeriodosVacacionesEmpleado(id_empleado) {
     return __awaiter(this, void 0, void 0, function* () {
         return yield database_1.default.query('SELECT pv.descripcion, pv.dia_vacacion, pv.dia_antiguedad, pv.estado, pv.fec_inicio, pv.fec_final, ' +

@@ -102,7 +102,7 @@ export class ReportesService {
   }
 
   /**
-   * PARA MOSTRAR LOS FORMS DEACUERDO A LA OPCION SELECCIONADA
+   * PARA MOSTRAR LOS FORMS DE ACUERDO A LA OPCION SELECCIONADA
    */
   private _formCriteriosBusqueda: FormCriteriosBusqueda = {
     bool_suc: false,
