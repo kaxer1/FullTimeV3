@@ -303,8 +303,8 @@ export class RegistoEmpleadoHorarioComponent implements OnInit {
     const seg = this.SegundosToStringTime( this.datoEmpleado.horas_trabaja * 3600)
 
     const { hora_trabajo } = obj_res;
-    // console.log(obj_res, hora_trabajo, ' ====== ', seg);
-    if (this.StringTimeToSegundosTime(hora_trabajo) >= this.StringTimeToSegundosTime(seg)) {
+     console.log(obj_res, hora_trabajo, ' ====== ', seg);
+    if (this.StringTimeToSegundosTime(hora_trabajo) <= this.StringTimeToSegundosTime(seg)) {
       return this.toastr.success('Seleccion de horario correcta.')
     } else {
       this.EmpleadoHorarioForm.patchValue({ horarioForm: 0 });
