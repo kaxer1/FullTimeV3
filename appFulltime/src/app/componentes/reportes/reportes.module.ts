@@ -31,6 +31,7 @@ import { AppRoutingModule } from '../../app-routing.module';
 import { AdministradorTodasComponent } from './notificaciones/administrador-todas/administrador-todas.component';
 import { PorUsuarioComponent } from './notificaciones/por-usuario/por-usuario.component';
 import { OptionTimbreServidorComponent } from './option-timbre-servidor/option-timbre-servidor.component';
+import { TimbreAbiertosComponent } from './timbre-abiertos/timbre-abiertos.component';
 
 @NgModule({
   declarations: [
@@ -57,6 +58,7 @@ import { OptionTimbreServidorComponent } from './option-timbre-servidor/option-t
     AdministradorTodasComponent,
     PorUsuarioComponent,
     OptionTimbreServidorComponent,
+    TimbreAbiertosComponent,
   ],
   exports: [
     ReporteFaltasComponent,

@@ -107,12 +107,13 @@ const TREE_DATA: CategoriasReportes[] = [
     children: [
       { name: 'Kardex', url: '/reporteKardex' },
       { name: 'Timbres', url: '/reporteTimbres' },
+      { name: 'Timbre Abierto', url: '/reporte-timbre-abierto' },
       { name: 'Atrasos', url: '/reporteAtrasos' },
       { name: 'Permisos', url: '/reportePermisos' },
       { name: 'Empleados', url: '/reporteEmpleados' },
       { name: 'Entradas Salidas', url: '/reporteEntradaSalida' },
       { name: 'Empleados Inactivos', url: '/reporte-emp-inactivos' },
-      { name: 'Horas Extras calculados', url: '/horas/extras' },
+      { name: 'Horas Extras Calculados', url: '/horas/extras' },
       { name: 'Horas Extras Autorizaciones', url: '/reporteHorasExtras' },
       { name: 'Asistencia Detalle Consolidado', url: '/reporteAsistenciaConsolidado' },
     ]

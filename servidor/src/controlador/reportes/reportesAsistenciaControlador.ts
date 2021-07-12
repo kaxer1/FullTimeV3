@@ -522,6 +522,34 @@ class ReportesAsistenciaControlador {
         
     }
 
+    public async ReporteTimbresAbiertos(req: Request, res: Response) {
+
+        const {data, desde, hasta} = req.query;
+
+        try {
+            const array = JSON.parse(data);
+            if (array.length === 0) return res.status(400).jsonp({message: 'no existe datos de consulta'})
+            
+            const resultado = await Promise.all( array.map(async(o: any) => {
+                return {
+                    id: o.id,
+                    codigo: o.codigo,
+                    fullname: o.fullname,
+                    cedula: o.cedula,
+                    timbres: await pool.query('SELECT CAST(fec_hora_timbre AS VARCHAR), accion, observacion, latitud, longitud, CAST(fec_hora_timbre_servidor AS VARCHAR), dispositivo_timbre FROM timbres WHERE id_empleado = $1 AND accion = \'HA\' AND fec_hora_timbre BETWEEN $2 AND $3 ORDER BY fec_hora_timbre DESC ', [ parseInt(o.codigo), new Date(desde), new Date(hasta) ])
+                    .then(result => { return result.rows })
+                }
+            }) )
+
+            const nuevo = resultado.filter((obj: any) => { return obj.timbres.length > 0 })
+            
+            return res.status(200).jsonp(nuevo)
+        } catch (error) {
+            return res.status(500).jsonp({message: error})
+        }
+        
+    }
+
 }
 
 const REPORTE_A_CONTROLADOR = new ReportesAsistenciaControlador();
