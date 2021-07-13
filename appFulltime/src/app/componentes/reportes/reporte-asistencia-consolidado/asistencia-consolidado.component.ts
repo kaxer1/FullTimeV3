@@ -6,13 +6,10 @@ import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 import * as xlsx from 'xlsx';
-import { DateAdapter, MAT_DATE_LOCALE, MAT_DATE_FORMATS } from '@angular/material/core';
-import { MomentDateAdapter, MAT_MOMENT_DATE_FORMATS, MAT_MOMENT_DATE_ADAPTER_OPTIONS } from '@angular/material-moment-adapter';
 import * as moment from 'moment';
 
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 import { KardexService } from 'src/app/servicios/reportes/kardex.service';
-import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
 import { MatDialog } from '@angular/material/dialog';
 import { IReporteAsistenciaConsolidada, IRestAsisteConsoli, IRestTotalAsisteConsoli} from '../../../model/reportes.model'
 import { ConfigAsistenciaComponent } from '../../reportes-Configuracion/config-report-asistencia/config-asistencia.component';
@@ -23,13 +20,7 @@ import { PlantillaReportesService } from '../plantilla-reportes.service';
 @Component({
   selector: 'app-asistencia-consolidado',
   templateUrl: './asistencia-consolidado.component.html',
-  styleUrls: ['./asistencia-consolidado.component.css'],
-  // providers: [
-  //   { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
-  //   { provide: MAT_DATE_FORMATS, useValue: MAT_MOMENT_DATE_FORMATS },
-  //   { provide: MAT_DATE_LOCALE, useValue: 'es' },
-  //   { provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: { useUtc: true } },
-  // ]
+  styleUrls: ['./asistencia-consolidado.component.css']
 })
 
 export class AsistenciaConsolidadoComponent implements OnInit {

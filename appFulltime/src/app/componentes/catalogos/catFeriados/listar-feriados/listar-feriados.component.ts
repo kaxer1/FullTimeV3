@@ -243,17 +243,63 @@ export class ListarFeriadosComponent implements OnInit {
     }
     this.rest.RevisarArchivo(formData).subscribe(res => {
       console.log('probando plantilla1', res);
-      if (res.message === 'error') {
+      if (res.message === 'CAMPO FECHA ES OBLIGATORIO') {
         this.toastr.error('Para asegurar el buen funcionamiento del sistema es necesario que verifique los datos ' +
-          'de la plantilla ingresada, recuerde que que fechas fuera de rango no son válidas, los datos no pueden estar duplicados y la fecha de ' +
-          'recuperación debe ser posterior a la fecha del feriado a registrar.',
-          'Verificar los datos ingresados en la plantilla', {
+          'de la plantilla ingresada. No se encuentra el registro del campo fecha en la ' + res.data + '.', 'Recuerde el campo fecha es obligatorio.', {
           timeOut: 10000,
         });
         this.archivoForm.reset();
         this.nameFile = '';
       }
-      else if (res.message === 'correcto') {
+      else if (res.message === 'CAMPO DESCRIPCION ES OBLIGATORIO') {
+        this.toastr.error('Para asegurar el buen funcionamiento del sistema es necesario que verifique los datos ' +
+          'de la plantilla ingresada. No se encuentra el registro del campo descripcion en la ' + res.data + '.', 'Recuerde el campo descripcion es obligatorio.', {
+          timeOut: 10000,
+        });
+        this.archivoForm.reset();
+        this.nameFile = '';
+      }
+      else if (res.message === 'FECHA INVALIDA') {
+        this.toastr.error('Para asegurar el buen funcionamiento del sistema es necesario que verifique los datos ' +
+          'de la plantilla ingresada.', 'Una o más fechas ingresadas se encuentran fuera de rango.', {
+          timeOut: 10000,
+        });
+        this.archivoForm.reset();
+        this.nameFile = '';
+      }
+      else if (res.message === 'FECHA YA EXISTE') {
+        this.toastr.error('Para asegurar el buen funcionamiento del sistema es necesario que verifique los datos ' +
+          'de la plantilla ingresada.', 'Una o más fechas ingresadas ya se encuentran registradas en el sistema.', {
+          timeOut: 10000,
+        });
+        this.archivoForm.reset();
+        this.nameFile = '';
+      }
+      else if (res.message === 'FECHA DE RECUPERACION INVALIDA') {
+        this.toastr.error('Para asegurar el buen funcionamiento del sistema es necesario que verifique los datos ' +
+          'de la plantilla ingresada.', 'Una o más fechas de recuperación se encuentran fuera de rango.', {
+          timeOut: 10000,
+        });
+        this.archivoForm.reset();
+        this.nameFile = '';
+      }
+      else if (res.message === 'FECHA DE RECUPERACION ANTERIOR') {
+        this.toastr.error('Para asegurar el buen funcionamiento del sistema es necesario que verifique los datos ' +
+          'de la plantilla ingresada.', 'Recuerde la fecha de recuperación debe ser posterior a la fecha que registra como un feriado.', {
+          timeOut: 10000,
+        });
+        this.archivoForm.reset();
+        this.nameFile = '';
+      }
+      else if (res.message === 'FECHA DE RECUPERACION YA EXISTE') {
+        this.toastr.error('Para asegurar el buen funcionamiento del sistema es necesario que verifique los datos ' +
+          'de la plantilla ingresada.', 'Una o más fechas de recuperación ingresadas ya se encuentran registradas en el sistema.', {
+          timeOut: 10000,
+        });
+        this.archivoForm.reset();
+        this.nameFile = '';
+      }
+      else if (res.message === 'CORRECTO') {
         this.rest.RevisarArchivoDatos(formData).subscribe(respose => {
           console.log('probando plantilla2', respose);
           if (respose.message === 'error') {

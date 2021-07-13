@@ -94,7 +94,7 @@
                                 <mat-label id="selec">2.Regimen Laboral</mat-label>
                                 <mat-icon id="cargoE" matSuffix matTooltipClass="cargoE-tooltip"
                                     matTooltipPosition="right"
-                                    matTooltip="Indicar cuál es la cucursal en la que se encuntra el dispositivo">
+                                    matTooltip="Indicar el regimen laboral en el que se encuentra registrado">
                                     help_outline</mat-icon>
                                 <mat-select [formControl]="laboralF">
                                     <mat-option *ngFor="let r of regimen" [value]="r.id"
@@ -104,7 +104,7 @@
                             <mat-form-field>
                                 <mat-label id="selec">3.Departamentos</mat-label>
                                 <mat-icon id="cargoE" matSuffix matTooltipPosition="right"
-                                    matTooltip="Indicar cuál es la cucursal en la que se encuntra el dispositivo">
+                                    matTooltip="ndicar el Departamento en el que labora">
                                     help_outline</mat-icon>
                                 <mat-select [formControl]="depaF">
                                     <mat-option *ngFor="let d of departamentos" [value]="d.id"
@@ -116,7 +116,7 @@
                                 <mat-label id="selec">4.Cargos</mat-label>
                                 <mat-icon id="cargoE" matSuffix matTooltipClass="cargoE-tooltip"
                                     matTooltipPosition="right"
-                                    matTooltip="Indicar cuál es la cucursal en la que se encuntra el dispositivo">
+                                    matTooltip="Indicar el cargo que desempeña">
                                     help_outline</mat-icon>
                                 <mat-select [formControl]="cargosF">
                                     <mat-option *ngFor="let c of cargos" [value]="c.id">{{c.cargo}}</mat-option>

@@ -1,9 +1,11 @@
 import { Router } from 'express';
-import TIPO_PERMISOS_CONTROLADOR from '../../controlador/catalogos/catTipoPermisosControlador';
+
+import TIPO_PERMISOS_CONTROLADOR from  '../../controlador/catalogos/catTipoPermisosControlador';
 import { TokenValidation } from '../../libs/verificarToken';
 
 class TipoPermisosRutas {
     public router: Router = Router();
+    
 
     constructor() {
         this.configuracion();

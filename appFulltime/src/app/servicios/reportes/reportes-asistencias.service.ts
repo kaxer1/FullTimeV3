@@ -36,6 +36,14 @@ export class ReportesAsistenciasService {
   ReporteHorasTrabajadasMultiple(data: any, desde: string, hasta: string) {
     return this.http.put<any>(`${environment.url}/reportes-asistencias/horas-trabaja/${desde}/${hasta}`,data);
   }
+
+  ReporteTimbresAbiertos(dataArray: any, desde: string, hasta: string) {
+    const params = new HttpParams()
+    .set('data', JSON.stringify(dataArray) )
+    .set('desde', desde)
+    .set('hasta', hasta);
+    return this.http.get<any>(`${environment.url}/reportes-asistencias/timbres-abiertos`,{params});
+  }
   
   ReportePuntualidadMultiple(data: any, desde: string, hasta: string, parametros: any) {
     const params = new HttpParams()
