@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
 import { FormControl, FormGroup } from '@angular/forms';
@@ -68,6 +68,7 @@ import { TituloEmpleadoComponent } from '../titulo-empleado/titulo-empleado.comp
 import { EditarTituloComponent } from '../EditarTituloEmpleado/editar-titulo/editar-titulo.component';
 import { EditarContratoComponent } from '../editar-contrato/editar-contrato.component';
 import { EditarSolicitudComidaComponent } from '../../planificacionComidas/editar-solicitud-comida/editar-solicitud-comida.component';
+import { switchMap, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-ver-empleado',
@@ -151,12 +152,12 @@ export class VerEmpleadoComponent implements OnInit {
     public router: Router,
     private toastr: ToastrService,
     private scriptService: ScriptService,
+    private activatedRoute: ActivatedRoute,
   ) {
     console.log('Constructor');
-    
+
     this.idEmpleadoLogueado = parseInt(localStorage.getItem('empleado'));
     var cadena = this.router.url.split('#')[0];
-    // this.rutaCargo = 'http://localhost:4200' + cadena + '#editarCargo';
     this.idEmpleado = cadena.split("/")[2];
     this.obtenerTituloEmpleado(parseInt(this.idEmpleado));
     this.obtenerDiscapacidadEmpleado(this.idEmpleado);
@@ -164,31 +165,40 @@ export class VerEmpleadoComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log('ON INIT');
-    var a = moment();
-    this.FechaActual = a.format('YYYY-MM-DD');
-    this.ObtenerEmpleadoLogueado(this.idEmpleadoLogueado);
-    this.verEmpleado(this.idEmpleado);
-    this.obtenerContratoEmpleadoRegimen();
-    this.obtenerPlanComidasEmpleado(parseInt(this.idEmpleado));
-    this.obtenerPermisos(parseInt(this.idEmpleado))
-    this.ObtenerAutorizaciones(parseInt(this.idEmpleado));
-    this.ObtenerHorariosEmpleado(parseInt(this.idEmpleado));
-    this.obtenerCargoEmpleado(parseInt(this.idEmpleado));
-    this.obtenerEmpleadoProcesos(parseInt(this.idEmpleado));
-    this.obtenerPeriodoVacaciones(parseInt(this.idEmpleado));
-    this.obtenerVacaciones(parseInt(this.idEmpleado));
-    this.obtenerPlanHorarios(parseInt(this.idEmpleado));
-    this.ObtenerlistaHorasExtrasEmpleado();
-    this.obtenerContratosEmpleado();
-    //this.VerAccionPersonal();
-    //this.VerHorasExtras();
-    this.ObtenerLogo();
-    this.ObtnerColores();
-    this.VerAccionContrasena(this.idEmpleado);
-    this.VerEmpresa();
-    this.VerFuncionalidades();
-    this.VerAdminComida(this.idEmpleado);
+    this.activatedRoute.params
+      .pipe(
+        switchMap(({ id }) => this.idEmpleado = id)
+      )
+      .subscribe(() => {
+
+        console.log('ON INIT');
+        var a = moment();
+        this.FechaActual = a.format('YYYY-MM-DD');
+        this.ObtenerEmpleadoLogueado(this.idEmpleadoLogueado);
+        this.verEmpleado(this.idEmpleado);
+        this.obtenerContratoEmpleadoRegimen();
+        this.obtenerPlanComidasEmpleado(parseInt(this.idEmpleado));
+        this.obtenerPermisos(parseInt(this.idEmpleado))
+        this.ObtenerAutorizaciones(parseInt(this.idEmpleado));
+        this.ObtenerHorariosEmpleado(parseInt(this.idEmpleado));
+        this.obtenerCargoEmpleado(parseInt(this.idEmpleado));
+        this.obtenerEmpleadoProcesos(parseInt(this.idEmpleado));
+        this.obtenerPeriodoVacaciones(parseInt(this.idEmpleado));
+        this.obtenerVacaciones(parseInt(this.idEmpleado));
+        this.obtenerPlanHorarios(parseInt(this.idEmpleado));
+        this.ObtenerlistaHorasExtrasEmpleado();
+        this.obtenerContratosEmpleado();
+        //this.VerAccionPersonal();
+        //this.VerHorasExtras();
+        this.ObtenerLogo();
+        this.ObtnerColores();
+        this.VerAccionContrasena(this.idEmpleado);
+        this.VerEmpresa();
+        this.VerFuncionalidades();
+        this.VerAdminComida(this.idEmpleado);
+
+      });
+
   }
 
   // Método para ver la información del empleado 
@@ -1050,7 +1060,7 @@ export class VerEmpleadoComponent implements OnInit {
       this.idCargo = datos;
       console.log("idcargo: ", this.idCargo)
       this.vistaRegistrarDatos.open(RegistoEmpleadoHorarioComponent,
-        { width: '600px', data: { idEmpleado: this.idEmpleado, idCargo: this.idCargo[0].max, horas_trabaja: this.idCargo[0].hora_trabaja  } }).afterClosed().subscribe(item => {
+        { width: '600px', data: { idEmpleado: this.idEmpleado, idCargo: this.idCargo[0].max, horas_trabaja: this.idCargo[0].hora_trabaja } }).afterClosed().subscribe(item => {
           this.ObtenerHorariosEmpleado(parseInt(this.idEmpleado));
         });
     }, error => {

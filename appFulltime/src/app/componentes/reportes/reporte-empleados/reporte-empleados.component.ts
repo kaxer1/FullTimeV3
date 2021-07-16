@@ -19,12 +19,6 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
   selector: 'app-reporte-empleados',
   templateUrl: './reporte-empleados.component.html',
   styleUrls: ['./reporte-empleados.component.css'],
-  providers: [
-    { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
-    { provide: MAT_DATE_FORMATS, useValue: MAT_MOMENT_DATE_FORMATS },
-    { provide: MAT_DATE_LOCALE, useValue: 'es' },
-    { provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: { useUtc: true } },
-  ]
 })
 export class ReporteEmpleadosComponent implements OnInit {
 
@@ -115,7 +109,7 @@ export class ReporteEmpleadosComponent implements OnInit {
   }
 
   ConfiguracionReporteEmpleados() {
-    this.openVentana.open(ConfigEmpleadosComponent,{ width: '300px' }).afterClosed();
+    this.openVentana.open(ConfigEmpleadosComponent, { width: '300px' }).afterClosed();
   }
 
   ManejarPagina(e: PageEvent) {
@@ -126,24 +120,24 @@ export class ReporteEmpleadosComponent implements OnInit {
   /* ****************************************************************************************************
   *                               PARA LA EXPORTACIÓN DE ARCHIVOS PDF 
   * ****************************************************************************************************/
- fechaHoy: string;
+  fechaHoy: string;
 
- generarPdf(action = 'open', pdf: number) {
+  generarPdf(action = 'open', pdf: number) {
 
-   let documentDefinition;
+    let documentDefinition;
 
-   if (pdf === 2) {
-    documentDefinition = this.getDocumentDefinicionListaEmpleados();
+    if (pdf === 2) {
+      documentDefinition = this.getDocumentDefinicionListaEmpleados();
+    }
+
+    switch (action) {
+      case 'open': pdfMake.createPdf(documentDefinition).open(); break;
+      case 'print': pdfMake.createPdf(documentDefinition).print(); break;
+      case 'download': pdfMake.createPdf(documentDefinition).download(); break;
+
+      default: pdfMake.createPdf(documentDefinition).open(); break;
+    }
   }
-
-   switch (action) {
-     case 'open': pdfMake.createPdf(documentDefinition).open(); break;
-     case 'print': pdfMake.createPdf(documentDefinition).print(); break;
-     case 'download': pdfMake.createPdf(documentDefinition).download(); break;
-
-     default: pdfMake.createPdf(documentDefinition).open(); break;
-   }
- }
 
   /**********************************************
    *  METODOS PARA IMPRIMIR LA LISTA DE EMPLEADOS
@@ -228,7 +222,7 @@ export class ReporteEmpleadosComponent implements OnInit {
 
       return { text: 'No has seleccionado ningun campo de impresión.' }
     }
-    
+
     if (!!sessionStorage.getItem('columnasValidas') === false) {
       this.toastr.error('Configurar campos a imprimir antes de descargar o visualizar', 'Error Pdf', {
         timeOut: 10000,
@@ -241,10 +235,10 @@ export class ReporteEmpleadosComponent implements OnInit {
     }
 
     let columnas = parseInt(sessionStorage.getItem('columnasValidas'));
-    let s = JSON.parse( sessionStorage.getItem('arrayConfig')) as IReporteEmpleados;
+    let s = JSON.parse(sessionStorage.getItem('arrayConfig')) as IReporteEmpleados;
     console.log(s);
     return this.FuncionUno(columnas, s, datosRest);
-    
+
   }
 
   FuncionUno(columnas: number, configuracion: IReporteEmpleados, datos: any[]) {
@@ -255,66 +249,66 @@ export class ReporteEmpleadosComponent implements OnInit {
         widths: this.FuncionColumnas(columnas),
         body: [
           this.FuncionTituloColumna(configuracion),
-          ...datos.map((obj:IRestListEmpl) => {
+          ...datos.map((obj: IRestListEmpl) => {
             contador = contador + 1;
             var array = [
               { style: 'itemsTableDetalle', text: contador },
               { style: 'itemsTableDetalle', text: obj.cedula },
-              { style: 'itemsTableDetalle', text: obj.codigo},
-              { style: 'itemsTableDetalle', text: obj.nom_completo},
-              { style: 'itemsTableDetalle', text: obj.departamento},
-              { style: 'itemsTableDetalle', text: obj.cargo},
-              { style: 'itemsTableDetalle', text: obj.grupo},
-              { style: 'itemsTableDetalle', text: obj.detalle_grupo}
+              { style: 'itemsTableDetalle', text: obj.codigo },
+              { style: 'itemsTableDetalle', text: obj.nom_completo },
+              { style: 'itemsTableDetalle', text: obj.departamento },
+              { style: 'itemsTableDetalle', text: obj.cargo },
+              { style: 'itemsTableDetalle', text: obj.grupo },
+              { style: 'itemsTableDetalle', text: obj.detalle_grupo }
             ]
             let index = 0;
             let cont = 0;
-              if (configuracion.codigo === false) { 
-                cont = 0;
-                array.forEach(ele => {
-                  if (ele.text === obj.codigo) { index = cont; }
-                  cont = cont + 1
-                })
-                array.splice(index, 1) 
-              }
-              
-              if (configuracion.depart === false) { 
-                cont = 0;
-                array.forEach(ele => {
-                  if (ele.text === obj.departamento) { index = cont; }
-                  cont = cont + 1
-                })
-                array.splice(index, 1)  
-              }
-              
-              if (configuracion.cargo === false) { 
-                cont = 0;
-                array.forEach(ele => {
-                  if (ele.text === obj.cargo) { index = cont; }
-                  cont = cont + 1
-                })
-                array.splice(index, 1) 
-              } 
-              
-              if (configuracion.grupo === false) { 
-                cont = 0;
-                array.forEach(ele => {
-                  if (ele.text === obj.grupo) { index = cont; }
-                  cont = cont + 1
-                })
-                array.splice(index, 1) 
-              }
-              
-              if (configuracion.detall === false) { 
-                cont = 0;
-                array.forEach(ele => {
-                  if (ele.text === obj.detalle_grupo) { index = cont; }
-                  cont = cont + 1
-                })
-                array.splice(index, 1)  
-              }
+            if (configuracion.codigo === false) {
+              cont = 0;
+              array.forEach(ele => {
+                if (ele.text === obj.codigo) { index = cont; }
+                cont = cont + 1
+              })
+              array.splice(index, 1)
+            }
 
-            return array 
+            if (configuracion.depart === false) {
+              cont = 0;
+              array.forEach(ele => {
+                if (ele.text === obj.departamento) { index = cont; }
+                cont = cont + 1
+              })
+              array.splice(index, 1)
+            }
+
+            if (configuracion.cargo === false) {
+              cont = 0;
+              array.forEach(ele => {
+                if (ele.text === obj.cargo) { index = cont; }
+                cont = cont + 1
+              })
+              array.splice(index, 1)
+            }
+
+            if (configuracion.grupo === false) {
+              cont = 0;
+              array.forEach(ele => {
+                if (ele.text === obj.grupo) { index = cont; }
+                cont = cont + 1
+              })
+              array.splice(index, 1)
+            }
+
+            if (configuracion.detall === false) {
+              cont = 0;
+              array.forEach(ele => {
+                if (ele.text === obj.detalle_grupo) { index = cont; }
+                cont = cont + 1
+              })
+              array.splice(index, 1)
+            }
+
+            return array
           })
         ]
       },
@@ -328,15 +322,15 @@ export class ReporteEmpleadosComponent implements OnInit {
 
   FuncionColumnas(columnas: number) {
     console.log(columnas);
-    let col = ['auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto']; 
+    let col = ['auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'];
     // var inicio = 8 - columnas;
-    console.log(col.slice(0,columnas));
-    
+    console.log(col.slice(0, columnas));
+
     return col.slice(0, columnas);
   }
 
   FuncionTituloColumna(configuracion: IReporteEmpleados) {
-    
+
     var arrayTitulos = [
       { text: 'N°', style: 'tableHeaderDetalle' },
       { text: 'CEDULA', style: 'tableHeaderDetalle' },
@@ -349,53 +343,53 @@ export class ReporteEmpleadosComponent implements OnInit {
     ]
     let index = 0;
     let contador = 0;
-    if (configuracion.codigo === false) {   
+    if (configuracion.codigo === false) {
       contador = 0;
       arrayTitulos.forEach(obj => {
         if (obj.text === 'CODIGO') { index = contador; }
         contador = contador + 1
       })
-      arrayTitulos.splice(index, 1) 
+      arrayTitulos.splice(index, 1)
     }
-    
-    if (configuracion.depart === false) { 
+
+    if (configuracion.depart === false) {
       contador = 0;
       arrayTitulos.forEach(obj => {
         if (obj.text === 'DEPARTAMENTOS') { index = contador; }
         contador = contador + 1
       })
-      arrayTitulos.splice(index, 1) 
+      arrayTitulos.splice(index, 1)
     }
-    
-    if (configuracion.cargo === false) { 
+
+    if (configuracion.cargo === false) {
       contador = 0;
       arrayTitulos.forEach(obj => {
         if (obj.text === 'CARGO') { index = contador; }
         contador = contador + 1
       })
-      arrayTitulos.splice(index, 1) 
-    } 
-    
-    if (configuracion.grupo === false) { 
+      arrayTitulos.splice(index, 1)
+    }
+
+    if (configuracion.grupo === false) {
       contador = 0;
-      arrayTitulos.forEach(obj => { 
-        if (obj.text === 'GRUPO') { index = contador;}
+      arrayTitulos.forEach(obj => {
+        if (obj.text === 'GRUPO') { index = contador; }
         contador = contador + 1
       })
-      arrayTitulos.splice(index, 1) 
+      arrayTitulos.splice(index, 1)
     }
-    
-    if (configuracion.detall === false) { 
+
+    if (configuracion.detall === false) {
       contador = 0;
       arrayTitulos.forEach(obj => {
         if (obj.text === 'DETALLE GRUPO') { index = contador; }
         contador = contador + 1
       })
-      arrayTitulos.splice(index, 1) 
+      arrayTitulos.splice(index, 1)
     }
-    
+
     console.log(arrayTitulos);
-    
+
     return arrayTitulos
   }
 

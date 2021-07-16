@@ -289,6 +289,8 @@ import { ButtonOpcionesComponent } from './share/main-nav/button-opciones/button
 import { PlantillaReportesService } from './componentes/reportes/plantilla-reportes.service';
 import { ListaAppComponent } from './componentes/appMovil/lista-app/lista-app.component';
 import { UpdateEstadoAppComponent } from './componentes/appMovil/update-estado-app/update-estado-app.component';
+import { VerUbicacionTimbresEmpleadosComponent } from './componentes/timbre-web/ver-ubicacion-timbres-empleados/ver-ubicacion-timbres-empleados.component';
+import { ListaEmpleadosParaTimbresComponent } from './componentes/timbre-web/lista-empleados-para-timbres/lista-empleados-para-timbres.component';
 
 const config: SocketIoConfig = { url: environment.url, options: {} };
 
@@ -520,6 +522,8 @@ const config: SocketIoConfig = { url: environment.url, options: {} };
     ButtonOpcionesComponent,
     ListaAppComponent,
     UpdateEstadoAppComponent,
+    VerUbicacionTimbresEmpleadosComponent,
+    ListaEmpleadosParaTimbresComponent,
   ],
 
   imports: [
