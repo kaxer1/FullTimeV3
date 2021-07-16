@@ -137,6 +137,8 @@ import { ListarPlanificacionComponent } from './componentes/planificacionComidas
 import { AdministradorTodasComponent } from './componentes/reportes/notificaciones/administrador-todas/administrador-todas.component';
 import { PorUsuarioComponent } from './componentes/reportes/notificaciones/por-usuario/por-usuario.component';
 import { ListaAppComponent } from './componentes/appMovil/lista-app/lista-app.component';
+import { ListaEmpleadosParaTimbresComponent } from './componentes/timbre-web/lista-empleados-para-timbres/lista-empleados-para-timbres.component';
+import { VerUbicacionTimbresEmpleadosComponent } from './componentes/timbre-web/ver-ubicacion-timbres-empleados/ver-ubicacion-timbres-empleados.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -207,6 +209,8 @@ const routes: Routes = [
   { path: 'alimentacion', component: PlanComidasComponent, canActivate: [AuthGuard], data: { roles: 1 } },
   { path: 'listaPlanComida', component: ListarPlanificacionComponent, canActivate: [AuthGuard], data: { roles: 1 } },
   { path: 'app-movil', component: ListaAppComponent, canActivate: [AuthGuard], data: { roles: 1 } },
+  { path: 'lista-empleados', component: ListaEmpleadosParaTimbresComponent, canActivate: [AuthGuard], data: { roles: 1 } },
+  { path: 'lista-empleados/:codigo', component: VerUbicacionTimbresEmpleadosComponent, canActivate: [AuthGuard], data: { roles: 1 } },
 
   // Graficas administrador
   { path: 'macro/inasistencia', component: InasistenciaMacroComponent, canActivate: [AuthGuard], data: { roles: 1 } },

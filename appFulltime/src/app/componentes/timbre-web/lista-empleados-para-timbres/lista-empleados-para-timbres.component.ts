@@ -10,6 +10,7 @@ export class ListaEmpleadosParaTimbresComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
+
   }
 
 }
