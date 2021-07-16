@@ -241,7 +241,6 @@ SERVIDOR.start();
 
 import { cumpleanios } from './libs/sendBirthday';
 import { beforeFiveDays, beforeTwoDays, Peri_Vacacion_Automatico } from './libs/avisoVacaciones';
-import { conteoPermisos } from './libs/timerPermiso';
 import { RegistrarAsistenciaByTimbres } from './libs/ContarHoras';
 import { NotificacionTimbreAutomatica } from './libs/NotiTimbres'
 import { NotificacionSinTimbres } from './libs/SinTimbres'
@@ -263,9 +262,3 @@ NotificacionTimbreAutomatica();
 NotificacionSinTimbres();
 
 DesactivarFinContratoEmpleado();
-
-
-import { generarTimbres, ModificarTimbresEntrada } from './script/scriptTimbres'
-
-//generarTimbres(1);
-//ModificarTimbresEntrada();

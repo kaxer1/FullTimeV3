@@ -22,9 +22,9 @@ export class TimbreAbiertosComponent implements OnInit {
   empleados: any = [];
 
   selectionEmp = new SelectionModel<ITableEmpleados>(true, []);
-  
-  get rangoFechas () { return this.reporteService.rangoFechas; }
-  
+
+  get rangoFechas() { return this.reporteService.rangoFechas; }
+
   filtroCodigo: number;
   filtroCedula: '';
   filtroNombre: '';
@@ -41,8 +41,8 @@ export class TimbreAbiertosComponent implements OnInit {
   pageSizeOptions = [5, 10, 20, 50];
 
   // Getters de colores, nombre empresa y logo para colocar en reporte 
-  get p_color(): string { return this.plantillaPDF.color_Primary}
-  get s_color(): string { return this.plantillaPDF.color_Secundary}  
+  get p_color(): string { return this.plantillaPDF.color_Primary }
+  get s_color(): string { return this.plantillaPDF.color_Secundary }
   // get urlImagen() : string { return this.plantillaPDF.logoBase64 }
   // get nombreEmpresa(): string { return this.plantillaPDF.nameEmpresa}
   data_pdf: any = [];
@@ -77,12 +77,12 @@ export class TimbreAbiertosComponent implements OnInit {
 
   validacionReporte(action) {
 
-    if (this.rangoFechas.fec_inico === '' || this.rangoFechas.fec_final === '') return this.toastr.error('Primero valide fechas de busqueda') 
+    if (this.rangoFechas.fec_inico === '' || this.rangoFechas.fec_final === '') return this.toastr.error('Primero valide fechas de busqueda')
     // console.log(this.selectionEmp.selected);
     const arrayIds = this.selectionEmp.selected.map(o => {
-      return {id: o.id, codigo: o.codigo, fullname: o.nombre + ' ' + o.apellido, cedula: o.cedula }
+      return { id: o.id, codigo: o.codigo, fullname: o.nombre + ' ' + o.apellido, cedula: o.cedula }
     })
-    this.metodosAsistencia.ReporteTimbresAbiertos( arrayIds , this.rangoFechas.fec_inico, this.rangoFechas.fec_final).subscribe(res => {
+    this.metodosAsistencia.ReporteTimbresAbiertos(arrayIds, this.rangoFechas.fec_inico, this.rangoFechas.fec_final).subscribe(res => {
       console.log(res);
       this.data_pdf = res;
       switch (action) {
@@ -98,7 +98,7 @@ export class TimbreAbiertosComponent implements OnInit {
       console.log(err);
       this.toastr.error(err.error.message)
     })
-    
+
   }
 
   generarPdf(action) {
@@ -118,7 +118,7 @@ export class TimbreAbiertosComponent implements OnInit {
     return {
       pageSize: 'A4',
       pageOrientation: 'portrait',
-      pageMargins: [ 30, 60, 30, 40 ],
+      pageMargins: [30, 60, 30, 40],
       watermark: { text: 'Confidencial', color: 'blue', opacity: 0.1, bold: true, italics: false },
       header: this.plantillaPDF.headerText(),
 
@@ -130,10 +130,11 @@ export class TimbreAbiertosComponent implements OnInit {
         const time = h.toJSON().split("T")[1].split(".")[0];
 
         return {
-          margin: [10,2,0,-2],
+          margin: [10, 2, 0, -2],
           columns: [
             { text: 'Fecha: ' + fecha + ' Hora: ' + time, opacity: 0.3 },
-            { text: [
+            {
+              text: [
                 {
                   text: '© Pag ' + currentPage.toString() + ' of ' + pageCount,
                   alignment: 'right', opacity: 0.3
@@ -145,7 +146,7 @@ export class TimbreAbiertosComponent implements OnInit {
         }
       },
       content: [
-        ...this.plantillaPDF.EncabezadoVertical('Reporte - Timbres Habiertos', this.rangoFechas.fec_inico, this.rangoFechas.fec_final),
+        ...this.plantillaPDF.EncabezadoVertical('Reporte - Timbres abiertos', this.rangoFechas.fec_inico, this.rangoFechas.fec_final),
         ...this.impresionDatosPDF(this.data_pdf).map(obj => {
           return obj
         })
@@ -154,7 +155,7 @@ export class TimbreAbiertosComponent implements OnInit {
         itemsTable: { fontSize: 8 },
         itemsTableCentrado: { fontSize: 10, alignment: 'center' },
         tableHeader: { fontSize: 10, bold: true, alignment: 'center', fillColor: this.p_color },
-        itemsTableInfoBlanco: { fontSize: 10, margin: [0, 3, 0, 3]},
+        itemsTableInfoBlanco: { fontSize: 10, margin: [0, 3, 0, 3] },
         tableMarginCabecera: { margin: [0, 10, 0, 0] },
         tableMargin: { margin: [0, 0, 0, 10] },
         quote: { margin: [5, -2, 0, -2], italics: true },
@@ -199,28 +200,28 @@ export class TimbreAbiertosComponent implements OnInit {
       n.push({
         style: 'tableMargin',
         table: {
-          widths: ['auto','auto', 'auto', 'auto', 'auto', 'auto', 'auto', 60, 60, '*'],
+          widths: ['auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 60, 60, '*'],
           body: [
             [
-              { rowSpan: 2, text: 'N°', style: 'tableHeader', margin: [0,7,0,0]},
-              { colSpan: 2, text: 'Timbre', style: 'tableHeader', margin: [0,7,0,0] },
+              { rowSpan: 2, text: 'N°', style: 'tableHeader', margin: [0, 7, 0, 0] },
+              { colSpan: 2, text: 'Timbre', style: 'tableHeader', margin: [0, 7, 0, 0] },
               '',
-              { colSpan: 2, text: 'Timbre Servidor', style: 'tableHeader', margin: [0,7,0,0] },
+              { colSpan: 2, text: 'Timbre Servidor', style: 'tableHeader', margin: [0, 7, 0, 0] },
               '',
-              { rowSpan: 2, text: 'Observacion', style: 'tableHeader', margin: [0,7,0,0] },
-              { rowSpan: 2, text: 'Accion', style: 'tableHeader', margin: [0,7,0,0] },
-              { rowSpan: 2, text: 'Latitud', style: 'tableHeader', margin: [0,7,0,0] },
-              { rowSpan: 2, text: 'Longitud', style: 'tableHeader', margin: [0,7,0,0] },
-              { rowSpan: 2, text: 'Dispositivo', style: 'tableHeader', margin: [0,7,0,0] }
-            ],                  
+              { rowSpan: 2, text: 'Observacion', style: 'tableHeader', margin: [0, 7, 0, 0] },
+              { rowSpan: 2, text: 'Accion', style: 'tableHeader', margin: [0, 7, 0, 0] },
+              { rowSpan: 2, text: 'Latitud', style: 'tableHeader', margin: [0, 7, 0, 0] },
+              { rowSpan: 2, text: 'Longitud', style: 'tableHeader', margin: [0, 7, 0, 0] },
+              { rowSpan: 2, text: 'Dispositivo', style: 'tableHeader', margin: [0, 7, 0, 0] }
+            ],
             [
               '',
               { text: 'Fecha', style: 'tableHeader', fontSize: 7 },
               { text: 'Hora', style: 'tableHeader', fontSize: 7 },
               { text: 'Fecha', style: 'tableHeader', fontSize: 7 },
               { text: 'Hora', style: 'tableHeader', fontSize: 7 },
-               '', '', '', '', ''
-            ],                  
+              '', '', '', '', ''
+            ],
             ...obj.timbres.map(obj3 => {
               c = c + 1
               return [

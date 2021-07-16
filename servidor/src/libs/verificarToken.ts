@@ -51,7 +51,7 @@ export const TokenValidation = (req: Request, res: Response, next: NextFunction)
                 return o
             })
             // console.log(ok_licencias);
-            if (ok_licencias.leght === 0) return res.status(401).send('La licencia no existe');
+            if (ok_licencias.lenght === 0) return res.status(401).send('La licencia no existe');
 
             const hoy = new Date();
 
@@ -60,7 +60,7 @@ export const TokenValidation = (req: Request, res: Response, next: NextFunction)
                 req.userId = payload._id;
                 req.userIdEmpleado = payload._id_empleado;
                 req.id_empresa = payload._empresa,
-                req.userRol = payload.rol;
+                    req.userRol = payload.rol;
                 req.userIdCargo = payload.cargo;
                 req.userCodigo = payload.codigo;
                 req.acciones_timbres = payload._acc_tim;
@@ -68,7 +68,7 @@ export const TokenValidation = (req: Request, res: Response, next: NextFunction)
                 // console.log(payload.modulos);
                 next();
             } else {
-                return res.status(401).send('La licencia a expirado,');
+                return res.status(401).send('La licencia a expirado');
             }
 
         })
