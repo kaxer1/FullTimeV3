@@ -113,8 +113,7 @@ export class VistaRolesComponent implements OnInit {
 
   /* **************************************************************************** *
    *                     VENTANA PARA REGISTRAR Y EDITAR DATOS
-   * **************************************************************************** *
-   * */
+   * **************************************************************************** */
 
   AbrirVentanaEditar(datosSeleccionados: any): void {
     console.log(datosSeleccionados);

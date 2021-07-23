@@ -12,17 +12,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const fs_1 = __importDefault(require("fs"));
-const path_1 = __importDefault(require("path"));
-exports.ImagenBase64LogosEmpresas = function (path_file) {
+const database_1 = __importDefault(require("../../database"));
+exports.FechasFeriados = function (fecha_feriado) {
     return __awaiter(this, void 0, void 0, function* () {
-        try {
-            path_file = path_1.default.resolve('logos') + '/' + path_file;
-            let data = fs_1.default.readFileSync(path_file);
-            return data.toString('base64');
-        }
-        catch (error) {
-            return 0;
-        }
+        return yield database_1.default.query('SELECT * FROM cg_feriados WHERE fecha = $1 OR ' +
+            'fec_recuperacion = $1', [fecha_feriado])
+            .then(res => {
+            console.log('funciona', res.rows[0]);
+            return res.rows[0];
+        });
     });
 };

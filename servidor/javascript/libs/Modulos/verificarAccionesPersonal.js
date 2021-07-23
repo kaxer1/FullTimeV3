@@ -1,7 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ModuloAccionesPersonalValidation = void 0;
-const ModuloAccionesPersonalValidation = (req, res, next) => {
+exports.ModuloAccionesPersonalValidation = (req, res, next) => {
     const { accion_personal } = req.modulos;
     console.log('******************** validacion de modulo de accion_personal', accion_personal);
     if (!accion_personal)
@@ -13,4 +12,3 @@ const ModuloAccionesPersonalValidation = (req, res, next) => {
     console.log('******************** si tiene acceso modulo de accion_personal', accion_personal);
     next();
 };
-exports.ModuloAccionesPersonalValidation = ModuloAccionesPersonalValidation;

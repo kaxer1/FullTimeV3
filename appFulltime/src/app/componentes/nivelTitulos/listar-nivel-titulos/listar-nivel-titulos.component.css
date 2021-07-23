@@ -8,17 +8,7 @@ td { padding-top: 10px; text-align: center; }
 
 .far { color:red; cursor: pointer; margin-left: 20px;}
 
-mat-form-field { padding: 10px 15px 0px 15px;}
-
 button {margin: 5px 10px 5px 10px;}
-
-#pdf { color:red; font-size: 20px; text-align: center; margin-left: 20px; }
-
-#excel { color:green; font-size: 20px; text-align: center; margin-left: 20px; }
-
-#csv { color:blue; font-size: 20px; text-align: center; margin-left: 20px; }
-
-#xml { color:orangered; font-size: 20px; text-align: center; margin-left: 20px; cursor: pointer; }
 
 #itituloL { cursor: pointer; }
 
@@ -30,6 +20,7 @@ button {margin: 5px 10px 5px 10px;}
     padding-top: 10px;
     padding-bottom: 6px; 
 }
+
 #resulTitulos { 
     font-size: 17px; 
     text-align: center; 
@@ -42,3 +33,5 @@ button {margin: 5px 10px 5px 10px;}
 table { width: 100%; font-size: 14px;}
 
 #estilo { color: rgb(0, 0, 0); font-size: 13px; }
+
+mat-form-field { font-size: 12px; text-align: center; width: 100px; }

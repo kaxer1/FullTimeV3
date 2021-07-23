@@ -2,8 +2,6 @@
 
 td { padding-top: 10px; text-align: center; }
 
-mat-form-field { padding: 10px 15px 0px 15px;}
-
 #TituloResultado { 
     font-size: 17px; 
     text-align: center; 
@@ -24,20 +22,13 @@ mat-icon { cursor: pointer;}
     margin-left: 10px;
 }
 
-mat-expansion-panel-header { text-align: center; background: rgb(52,65,84); }
-
-mat-panel-title { color: white; }
-
 #icono { color: white; }
 
-.mat-expansion-panel-header.mat-expanded {
-    background: rgb(52,65,84);
-}
 
-.mat-expansion-panel-header.mat-expanded:hover {
-    background: rgb(52,65,84);
-}
-
-#menu { color: green; font-size: 20px; text-align: center; margin-left: 20px; cursor: pointer; }
+#menu { color: green; font-size: 20px; text-align: center; cursor: pointer; }
 
 p { font-size: x-small; }
+
+#t-input { font-size: 12px; text-align: center; width: 100px; }
+
+mat-form-field { padding: 10px 15px 0px 15px;}

@@ -334,6 +334,8 @@ export class ListaEmpleadosComponent implements OnInit {
           this.toastr.error('Cargar la plantilla con nombre EmpleadoAutomatico', 'Plantilla seleccionada incorrecta', {
             timeOut: 6000,
           });
+          this.archivoForm.reset();
+          this.nameFile = '';
         }
       }
       else {

@@ -29,13 +29,11 @@
                         <td>{{e.hora_fin}}</td>
                         <td class="d-flex justify-content-center">
                             <i *ngIf="ver_icono" class="fas fa-edit" (click)="HabilitarTablaEditar(e.id)" matSuffix
-                                matTooltipPosition="right" matTooltipClass="departamento-tooltip"
-                                matTooltip="Modificar los datos generales de este registro">
+                                matTooltipPosition="right" matTooltip="Modificar los datos generales de este registro.">
                                 <p>Editar</p>
                             </i>
                             <i *ngIf="ver_icono" (click)="HabilitarTablaEliminar(e.id)" class="far fa-trash-alt"
-                                matSuffix matTooltipPosition="right" matTooltipClass="departamento-tooltip"
-                                matTooltip="Eliminar este registro">
+                                id="t-eliminar" matSuffix matTooltipPosition="right" matTooltip="Eliminar este registro.">
                                 <p>Eliminar</p>
                             </i>
                         </td>
@@ -107,14 +105,13 @@
                         <td>{{e.hora_inicio}}</td>
                         <td>{{e.hora_fin}}</td>
                         <td class="d-flex justify-content-center">
-                            <i *ngIf="ver_editar" class="fas fa-edit" (click)="AbrirEditarPlanComidas(e, 'individual')" matSuffix
-                                matTooltipPosition="right" matTooltipClass="departamento-tooltip"
-                                matTooltip="Modificar los datos generales de este registro">
+                            <i *ngIf="ver_editar" class="fas fa-edit" (click)="AbrirEditarPlanComidas(e, 'individual')"
+                                matSuffix matTooltipPosition="right"
+                                matTooltip="Modificar los datos generales de este registro.">
                                 <p>Editar</p>
                             </i>
-                            <i *ngIf="ver_eliminar" (click)="ConfirmarDeletePlanComidas(e)" class="far fa-trash-alt"
-                                matSuffix matTooltipPosition="right" matTooltipClass="departamento-tooltip"
-                                matTooltip="Eliminar este registro">
+                            <i *ngIf="ver_eliminar" (click)="ConfirmarDeletePlanComidas(e)" class="far fa-trash-alt" id="t-eliminar"
+                                matSuffix matTooltipPosition="right" matTooltip="Eliminar este registro.">
                                 <p>Eliminar</p>
                             </i>
                         </td>
