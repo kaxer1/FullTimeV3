@@ -36,12 +36,5 @@ th { font-size: 14px;}
 
 #estilo { color: rgb(0, 0, 0); font-size: 13px; }
 
-mat-form-field.input-tables {
-    margin-bottom: -5px;
-    font-size: 12px;
-    text-align: center;
-}
-
-.buscar { width: 100px; }
 
 

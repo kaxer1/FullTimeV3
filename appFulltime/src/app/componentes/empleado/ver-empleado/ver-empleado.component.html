@@ -101,7 +101,7 @@
                             </button>
                             <a mat-button type="submit" (click)="AbirVentanaEditarEmpleado(e)">
                                 <i class="fas fa-edit" id="edit" matSuffix matTooltipPosition="right"
-                                    matTooltipClass="departamento-tooltip"
+                                    
                                     matTooltip="Modificar los datos generales de este registro">
                                     <p>Editar</p>
                                 </i>
@@ -640,7 +640,7 @@
                                             [formControl]="archivoHorarioForm" id="file"
                                             accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
                                         <label for="file" class="btn-2" matSuffix matTooltipPosition="right"
-                                            matTooltipClass="departamento-tooltip"
+                                            
                                             matTooltip="Presionar para cargar plantilla con nombre Horario Empleado">Subir
                                             Horario</label>
                                     </form>
@@ -702,7 +702,7 @@
                                 <td *ngIf="h.domingo == false">Normal</td>
                                 <td>
                                     <i class="fas fa-edit" id="edit" (click)="AbrirEditarHorario(h)" matSuffix
-                                        matTooltipPosition="right" matTooltipClass="departamento-tooltip"
+                                        matTooltipPosition="right" 
                                         matTooltip="Modificar los datos generales de este registro">
                                         <p>Editar</p>
                                     </i>
@@ -791,7 +791,7 @@
                         </div>
                         <div style="text-align: right; margin-right: 1px;">
                             <i (click)="AbrirEditarPeriodoVacaciones(p)" class="fas fa-edit" id="edit" matSuffix
-                                matTooltipPosition="right" matTooltipClass="departamento-tooltip"
+                                matTooltipPosition="right" 
                                 matTooltip="Modificar los datos generales de este registro">
                                 <p>Editar</p>
                             </i>
@@ -852,12 +852,12 @@
                         </div>
                         <div class="float-right" *ngIf="v.estado === 'Solicitado'">
                             <i class="fas fa-edit" id="edit" style="margin-right: 20px;" (click)="EditarVacaciones(v)"
-                                matSuffix matTooltipPosition="right" matTooltipClass="departamento-tooltip"
+                                matSuffix matTooltipPosition="right" 
                                 matTooltip="Modificar los datos generales de este registro">
                                 <p>Editar</p>
                             </i>
                             <i class="fas fa-backspace" id="cancel" (click)="CancelarVacaciones(v)" matSuffix
-                                matTooltipPosition="right" matTooltipClass="departamento-tooltip"
+                                matTooltipPosition="right" 
                                 matTooltip="Cancelar solicitud de vacaciones">
                                 <p>Cancelar</p>
                             </i>
@@ -919,7 +919,7 @@
                                     </i>
                                     <i class="fas fa-edit" style="color:green; margin-left: 15px;"
                                         (click)="AbrirEditarPlanificacion(h)" matSuffix matTooltipPosition="right"
-                                        matTooltipClass="departamento-tooltip"
+                                        
                                         matTooltip="Modificar los datos generales de este registro">
                                         <p>Editar</p>
                                     </i>
@@ -1013,7 +1013,7 @@
                     <div style="text-align: right;"
                         *ngIf="pc.fec_final === undefined && pc.aprobada === false && pc.fec_comida > FechaActual">
                         <i class="fas fa-edit" id="edit" (click)="AbrirEditarPlanComidas(pc)" matSuffix
-                            matTooltipPosition="right" matTooltipClass="departamento-tooltip"
+                            matTooltipPosition="right" 
                             matTooltip="Modificar los datos generales de este registro">
                             <p>Editar</p>
                         </i>
@@ -1025,7 +1025,7 @@
                     </div>
                     <div style="text-align: right;" *ngIf="pc.fec_final != undefined && pc.fec_final > FechaActual">
                         <i class="fas fa-edit" id="edit" (click)="AbrirEditarPlanComidas(pc)" matSuffix
-                            matTooltipPosition="right" matTooltipClass="departamento-tooltip"
+                            matTooltipPosition="right" 
                             matTooltip="Modificar los datos generales de este registro">
                             <p>Editar</p>
                         </i>
@@ -1115,12 +1115,12 @@
                             </div>
                             <div style="text-align: right;" *ngIf="pt.estado === 1">
                                 <i class="fas fa-edit" id="edit" style="margin-right: 20px;" (click)="EditarPermiso(pt)"
-                                    matSuffix matTooltipPosition="right" matTooltipClass="departamento-tooltip"
+                                    matSuffix matTooltipPosition="right" 
                                     matTooltip="Modificar los datos generales de este registro">
                                     <p>Editar</p>
                                 </i>
                                 <i class="fas fa-backspace" id="cancel" (click)="CancelarPermiso(pt)" matSuffix
-                                    matTooltipPosition="right" matTooltipClass="departamento-tooltip"
+                                    matTooltipPosition="right" 
                                     matTooltip="Cancelar solicitud de permiso">
                                     <p>Cancelar</p>
                                 </i>
@@ -1193,12 +1193,12 @@
                             </div>
                             <div style="text-align: right;" *ngIf="h.estado === 'Pendiente'">
                                 <i class="fas fa-edit" id="edit" style="margin-right: 20px" (click)="EditarHoraExtra(h)"
-                                    matSuffix matTooltipPosition="right" matTooltipClass="departamento-tooltip"
+                                    matSuffix matTooltipPosition="right" 
                                     matTooltip="Modificar los datos generales de este registro">
                                     <p>Editar</p>
                                 </i>
                                 <i class="fas fa-backspace" id="cancel" (click)="CancelarHoraExtra(h)" matSuffix
-                                    matTooltipPosition="right" matTooltipClass="departamento-tooltip"
+                                    matTooltipPosition="right" 
                                     matTooltip="Cancelar solicitud de horas extras">
                                     <p>Cancelar</p>
                                 </i>
@@ -1287,7 +1287,7 @@
                                 </div>
                                 <div style="text-align: right;">
                                     <i class="fas fa-edit" id="edit" (click)="AbrirEditarAutorizar(autoD)" matSuffix
-                                        matTooltipPosition="right" matTooltipClass="departamento-tooltip"
+                                        matTooltipPosition="right" 
                                         matTooltip="Modificar los datos generales de este registro">
                                         <p>Editar</p>
                                     </i>
@@ -1349,7 +1349,7 @@
                                 </div>
                                 <div style="text-align: right;">
                                     <i class="fas fa-edit" id="edit" (click)="AbrirVentanaEditarProceso(e)" matSuffix
-                                        matTooltipPosition="right" matTooltipClass="departamento-tooltip"
+                                        matTooltipPosition="right" 
                                         matTooltip="Modificar los datos generales de este registro">
                                         <p>Editar</p>
                                     </i>

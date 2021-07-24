@@ -2,8 +2,6 @@
 
 td { padding-top: 10px; text-align: center; }
 
-mat-form-field { padding: 10px 15px 0px 15px; width: 100%; font-size: 14px;}
-
 #TituloResultado { 
     font-size: 17px; 
     text-align: center; 
@@ -13,10 +11,12 @@ mat-form-field { padding: 10px 15px 0px 15px; width: 100%; font-size: 14px;}
     padding-bottom: 6px; 
 }
 
-table { width: 100%; font-size: 14px;}
+table { width: 100%; font-size: 12px;}
 
 #estilo { color: rgb(0, 0, 0); font-size: 13px; }
 
 h4 {
     font-weight: bold;
 }
+
+#accion { color: rgb(53, 95, 209); cursor: pointer; }

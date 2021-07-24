@@ -1,46 +1,18 @@
 <br>
 <div class="container" style="margin-bottom: 25px; padding-bottom: 10px;">
     <div class="row">
-        <div class="col-md" style="margin-bottom: 25px; padding-bottom: 10px;">
+        <div class="col-md">
             <div class="tituloCiudadesL">
                 <span>CIUDADES</span>
             </div>
             <mat-card class="example-card mat-elevation-z8">
-                <h5 style="text-align: center;">Críterios de Búsqueda</h5>
-                <form [formGroup]="BuscarCiudadForm">
-                    <div class="d-flex flex-wrap justify-content-center">
-                        <mat-form-field>
-                            <mat-label id="departamento">Provincia-Departamento-Estado</mat-label>
-                            <input matInput name="filtroProvincia" placeholder="Ej: Pichincha"
-                                (keypress)="IngresarSoloLetras($event)" [formControl]="provinciaF"
-                                [(ngModel)]="filtroProvincia">
-                            <mat-icon id="iciudadL" matSuffix matTooltipClass="ciudadL-tooltip"
-                                matTooltipPosition="right"
-                                matTooltip="Búsqueda de ciudad por el nombre de provincia, departamento o estado seleccionado">
-                                help_outline</mat-icon>
-                            <mat-error *ngIf="provinciaF.invalid">{{ObtenerMensajeProvinciaLetras()}}
-                            </mat-error>
-                        </mat-form-field>
-                        <br>
-                        <mat-form-field>
-                            <mat-label>Buscar Ciudad</mat-label>
-                            <input matInput name="filtroCiudad" placeholder="Ej: Quito"
-                                (keypress)="IngresarSoloLetras($event)" [formControl]="ciudadF"
-                                [(ngModel)]="filtroCiudad">
-                            <mat-icon id="iciudadL" matSuffix matTooltipClass="ciudadL-tooltip"
-                                matTooltipPosition="right"
-                                matTooltip="Búsqueda de una ciudad por su nombre">
-                                help_outline</mat-icon>
-                            <mat-error *ngIf="ciudadF.invalid">{{ObtenerMensajeCiudadLetras()}}
-                            </mat-error>
-                        </mat-form-field>
-                    </div>
-                </form>
                 <div class="d-flex justify-content-center">
                     <button type="button" class="btn btn-sm" (click)="AbrirVentanaRegistrarCiudad()">Crear
                         nueva Ciudad
                     </button>
-                    <button type="submit" class="btn btn-sm" (click)="LimpiarCampos()">Cancelar</button>
+                    <button type="submit" class="btn btn-sm" (click)="LimpiarCampos()" matSuffix
+                        matTooltipPosition="right"
+                        matTooltip="Limpiar campos de búsqueda de la tabla y mostrar todos los datos.">Cancelar</button>
                 </div>
             </mat-card>
         </div>
@@ -59,12 +31,35 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let ciudad of datosCiudades | provincia: filtroProvincia | filtroNombre: filtroCiudad | paginate:tamanio_pagina:numero_pagina">
+                    <tr>
+                        <td>
+                            <mat-form-field id="t-inputs">
+                                <input matInput placeholder="Buscar"
+                                    (keypress)="IngresarSoloLetras($event)" [formControl]="provinciaF"
+                                    [(ngModel)]="filtroProvincia">
+                            </mat-form-field>
+                        </td>
+                        <td>
+                            <mat-form-field id="t-inputs">
+                                <input matInput placeholder="Buscar"
+                                    (keypress)="IngresarSoloLetras($event)" [formControl]="ciudadF"
+                                    [(ngModel)]="filtroCiudad">
+                            </mat-form-field>
+                        </td>
+                        <td>
+                            <mat-icon id="i-ayuda" matSuffix matTooltipPosition="right"
+                                matTooltip="Búsqueda de ciudades de acuerdo a cada columna de la tabla.">
+                                help_outline</mat-icon>
+                        </td>
+                    </tr>
+                    <tr
+                        *ngFor="let ciudad of datosCiudades | provincia: filtroProvincia | filtroNombre: filtroCiudad | paginate:tamanio_pagina:numero_pagina">
                         <td>{{ciudad.nombre}}</td>
                         <td>{{ciudad.descripcion}}</td>
-                        <td class="d-flex justify-content-center">                        
-                            <i (click)="ConfirmarDelete(ciudad)" class="far fa-trash-alt" matSuffix matTooltipPosition="right"
-                                matTooltipClass="departamento-tooltip" matTooltip="Eliminar este registro">
+                        <td class="d-flex justify-content-center">
+                            <i (click)="ConfirmarDelete(ciudad)" class="far fa-trash-alt" matSuffix
+                                matTooltipPosition="right" 
+                                matTooltip="Eliminar este registro.">
                                 <p>Eliminar</p>
                             </i>
                         </td>

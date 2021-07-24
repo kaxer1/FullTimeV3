@@ -34,13 +34,13 @@
                 <tbody>
                     <tr>
                         <td>
-                            <mat-form-field>
+                            <mat-form-field id="t-inputs">
                                 <input matInput placeholder="Buscar" [formControl]="nombreF"
                                     [(ngModel)]="filtradoNombre" (keypress)="IngresarSoloLetras($event)">
                             </mat-form-field>
                         </td>
                         <td>
-                            <mat-form-field>
+                            <mat-form-field id="t-inputs">
                                 <input matInput placeholder="Buscar" [formControl]="nivelF" [(ngModel)]="filtradoNivel"
                                     (keypress)="IngresarSoloLetras($event)">
                             </mat-form-field>

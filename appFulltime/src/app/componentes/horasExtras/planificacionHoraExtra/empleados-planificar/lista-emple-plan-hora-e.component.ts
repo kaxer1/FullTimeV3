@@ -81,7 +81,6 @@ export class ListaEmplePlanHoraEComponent implements OnInit {
   codigo = new FormControl('');
   cedula = new FormControl('', [Validators.minLength(2)]);
   nombre = new FormControl('', [Validators.minLength(2)]);
-  apellido = new FormControl('', [Validators.minLength(2)]);
   departamentoF = new FormControl('', [Validators.minLength(2)]);
   regimenF = new FormControl('', [Validators.minLength(2)]);
   cargoF = new FormControl('', [Validators.minLength(2)]);
@@ -99,8 +98,7 @@ export class ListaEmplePlanHoraEComponent implements OnInit {
   // Datos de filtros de búsqueda
   filtroCodigo: number;
   filtroCedula: '';
-  filtroNombre: '';
-  filtroApellido: '';
+  filtroEmpleado = '';
   filtroDepartamento: '';
   filtroRegimen: '';
   filtroCargo: '';
@@ -282,10 +280,10 @@ export class ListaEmplePlanHoraEComponent implements OnInit {
     this.codigo.reset();
     this.cedula.reset();
     this.nombre.reset();
-    this.apellido.reset();
     this.departamentoF.reset();
     this.regimenF.reset();
     this.cargoF.reset();
+    this.filtroEmpleado = '';
   }
 
   LimpiarFechas() {

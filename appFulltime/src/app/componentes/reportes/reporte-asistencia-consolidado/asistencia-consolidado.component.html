@@ -19,7 +19,7 @@
                                 <input matInput placeholder="Ej: " [(ngModel)]="filtroCodigo"
                                     [formControl]="codigo" (keypress)="IngresarSoloNumeros($event)">
                                 <mat-icon id="iemple" matSuffix matTooltipPosition="right"
-                                    matTooltipClass="emple-tooltip"
+                                    
                                     matTooltip="Búsqueda de empleado por el código">
                                     help_outline</mat-icon>
                             </mat-form-field>
@@ -31,7 +31,7 @@
                                 <mat-error *ngIf="cedula.invalid">Indispensable ingresar dos valores
                                 </mat-error>
                                 <mat-icon id="iemple" matSuffix matTooltipPosition="right"
-                                    matTooltipClass="emple-tooltip"
+                                    
                                     matTooltip="Búsqueda de empleado por la cédula de identificación o pasaporte">
                                     help_outline</mat-icon>
                             </mat-form-field>
@@ -42,7 +42,7 @@
                                 <mat-error *ngIf="nombre.invalid">Indispensable ingresar dos letras
                                 </mat-error>
                                 <mat-icon id="iemple" matSuffix matTooltipPosition="right"
-                                    matTooltipClass="emple-tooltip"
+                                    
                                     matTooltip="Búsqueda de empleado por el nombre">
                                     help_outline</mat-icon>
                             </mat-form-field>
@@ -54,7 +54,7 @@
                                 <mat-error *ngIf="apellido.invalid">Indispensable ingresar dos letras
                                 </mat-error>
                                 <mat-icon id="iemple" matSuffix matTooltipPosition="right"
-                                    matTooltipClass="emple-tooltip"
+                                    
                                     matTooltip="Búsqueda de empleado por el apellido">
                                     help_outline</mat-icon>
                             </mat-form-field>
@@ -145,16 +145,16 @@
                         <td>{{e.apellido}}</td>
                         <td>{{e.cedula}}</td>
                         <td class="d-flex justify-content-center">
-                            <i matSuffix matTooltipClass="emple-tooltip" [ngStyle]="estilo" matTooltipPosition="right"
+                            <i matSuffix  [ngStyle]="estilo" matTooltipPosition="right"
                                 matTooltip="Descargar la asistencia consolidada del empleado" class="material-icons" id="upload"
                                 (click)="AsistenciaEmpleado(e.id, 'download')"> cloud_download
                             </i>
-                            <i matSuffix matTooltipClass="emple-tooltip" [ngStyle]="estilo" matTooltipPosition="right"
+                            <i matSuffix  [ngStyle]="estilo" matTooltipPosition="right"
                                 matTooltip="Ver la asistencia consolidada en formato pdf desde el navegador"  class="material-icons" id="pdf"
                                 (click)="AsistenciaEmpleado(e.id, 'open')">picture_as_pdf
                             </i>
                             <i (click)="exportToExcelAsistencia(e.id)" [ngStyle]="estilo" id="excel" class="fas fa-file-excel" matSuffix matTooltipPosition="right"
-                                matTooltipClass="departamento-tooltip" matTooltip="Descargar lista de empleados de la empresa en formato EXCEL">
+                                 matTooltip="Descargar lista de empleados de la empresa en formato EXCEL">
                             </i>
                         </td>
                     </tr>

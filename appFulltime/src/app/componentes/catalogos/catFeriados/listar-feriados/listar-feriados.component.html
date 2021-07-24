@@ -51,13 +51,13 @@
                 <tbody>
                     <tr>
                         <td>
-                            <mat-form-field class="input-tables buscar">
+                            <mat-form-field id="t-inputs">
                                 <input matInput placeholder="Buscar" [formControl]="descripcionF"
                                     [(ngModel)]="filtroDescripcion" (keypress)="IngresarSoloLetras($event)">
                             </mat-form-field>
                         </td>
                         <td>
-                            <mat-form-field class="input-tables buscar">
+                            <mat-form-field id="t-inputs">
                                 <input matInput placeholder="aaaa-mm-dd" [formControl]="fechaF"
                                     [(ngModel)]="filtradoFecha">
                             </mat-form-field>

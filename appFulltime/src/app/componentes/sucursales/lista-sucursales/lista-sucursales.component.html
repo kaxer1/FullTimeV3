@@ -4,46 +4,12 @@
         <span>ESTABLECIMIENTOS</span>
     </div>
     <mat-card class="example-card mat-elevation-z9">
-        <h5 style="text-align: center;">Criterios de Búsqueda</h5>
-        <form [formGroup]="BuscarSucursalForm">
-            <div class="d-flex flex-wrap justify-content-center">
-                <mat-form-field>
-                    <mat-label>Nombre</mat-label>
-                    <input matInput name="filtroNombreSuc" placeholder="Nombre de la Sucursal"
-                        [formControl]="buscarNombre" [(ngModel)]="filtroNombreSuc">
-                    <mat-error *ngIf="buscarNombre.invalid">Indispensable ingresar dos letras</mat-error>
-                    <mat-icon id="permisoSuc" matSuffix matTooltipClass="color-tooltipSuc"
-                        matTooltipPosition="right" matTooltip="Busqueda de la Sucursal por su nombre">
-                        help_outline</mat-icon>
-                </mat-form-field>
-                <br>
-                <mat-form-field>
-                    <mat-label>Empresa</mat-label>
-                    <input matInput name="filtroEmpresaSuc" placeholder="Nombre de su Empresa"
-                        (keypress)="IngresarSoloLetras($event)" [formControl]="buscarEmpresa"
-                        [(ngModel)]="filtroEmpresaSuc">
-                    <mat-error *ngIf="buscarEmpresa.invalid">Indispensable ingresar dos letras</mat-error>
-                    <mat-icon id="permisoSuc" matSuffix matTooltipClass="color-tooltipSuc"
-                        matTooltipPosition="right" matTooltip="Busqueda de la Sucursal por Empresa">
-                        help_outline</mat-icon>
-                </mat-form-field>
-                <br>
-                <mat-form-field>
-                    <mat-label>Ciudad</mat-label>
-                    <input matInput name="filtroCiudadSuc" placeholder="Ciudad de la Sucursal"
-                        (keypress)="IngresarSoloLetras($event)" [formControl]="buscarCiudad"
-                        [(ngModel)]="filtroCiudadSuc">
-                    <mat-error *ngIf="buscarCiudad.invalid">Indispensable ingresar dos letras</mat-error>
-                    <mat-icon id="permisoSuc" matSuffix matTooltipClass="color-tooltipSuc"
-                        matTooltipPosition="right" matTooltip="Busqueda de la Sucursal por su ciudad">
-                        help_outline</mat-icon>
-                </mat-form-field>
-            </div>
-        </form>
         <div class="d-flex flex-wrap justify-content-center">
             <button mat-button type="submit" class="btn btn-sm" (click)="AbrirVentanaRegistrarSucursal()">Crear
                 nuevo Establecimiento</button>
-            <button mat-button type="submit" class="btn btn-sm" (click)="LimpiarCampoBuscar()">Cancelar</button>
+            <button mat-button type="submit" class="btn btn-sm" (click)="LimpiarCampoBuscar()" matSuffix
+                matTooltipPosition="right"
+                matTooltip="Limpiar campos de búsqueda de la tabla y mostrar todos los datos.">Cancelar</button>
         </div>
     </mat-card>
 </div>
@@ -62,27 +28,46 @@
                     </tr>
                 </thead>
                 <tbody>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td>
+                            <mat-form-field id="t-inputs">
+                                <input matInput placeholder="Buscar" [formControl]="buscarNombre"
+                                    [(ngModel)]="filtroNombreSuc">
+                            </mat-form-field>
+                        </td>
+                        <td>
+                            <mat-form-field id="t-inputs">
+                                <input matInput placeholder="Buscar" (keypress)="IngresarSoloLetras($event)"
+                                    [formControl]="buscarCiudad" [(ngModel)]="filtroCiudadSuc">
+                            </mat-form-field>
+                        </td>
+                        <td>
+                            <mat-icon id="i-ayuda" matSuffix matTooltipClass="color-tooltipSuc"
+                                matTooltipPosition="right"
+                                matTooltip="Búsqueda de establecimientos de acuerdo a la columna de la tabla.">
+                                help_outline</mat-icon>
+                        </td>
+                    </tr>
                     <tr
-                        *ngFor="let s of sucursales | sucCiudad: filtroCiudadSuc | sucNombre: filtroNombreSuc | sucEmpresa: filtroEmpresaSuc | paginate:tamanio_pagina:numero_pagina">
+                        *ngFor="let s of sucursales | sucCiudad: filtroCiudadSuc | sucNombre: filtroNombreSuc | paginate:tamanio_pagina:numero_pagina">
                         <td>{{s.id}}</td>
                         <td>{{s.nomempresa}}</td>
                         <td>{{s.nombre}}</td>
                         <td>{{s.descripcion}}</td>
                         <td class="d-flex justify-content-center">
-                            <i matSuffix matTooltipClass="listaF-tooltip" matTooltipPosition="right"
-                                matTooltip="Ver datos generales de este establecimiento" class="fa fa-building" id="ver"
-                                [routerLink]="['/vistaSucursales/', s.id]">
+                            <i matSuffix matTooltipPosition="right" matTooltip="Ver datos generales de este registro."
+                                class="fa fa-building" id="ver" [routerLink]="['/vistaSucursales/', s.id]">
                                 <p>Departamento</p>
                             </i>
-                            
-                            <i id="editar" class="fas fa-edit" (click)="AbrirVentanaEditar(s)" matSuffix
-                                matTooltipPosition="right" matTooltipClass="departamento-tooltip"
-                                matTooltip="Modificar los datos generales de este registro">
+
+                            <i id="t-editar" class="fas fa-edit" (click)="AbrirVentanaEditar(s)" matSuffix
+                                matTooltipPosition="right" matTooltip="Modificar los datos generales de este registro.">
                                 <p>Editar</p>
                             </i>
-                            <i (click)="ConfirmarDelete(s)" id="eliminar" class="far fa-trash-alt" matSuffix
-                                matTooltipPosition="right" matTooltipClass="departamento-tooltip"
-                                matTooltip="Eliminar este registro">
+                            <i (click)="ConfirmarDelete(s)" id="t-eliminar" class="far fa-trash-alt" matSuffix
+                                matTooltipPosition="right" matTooltip="Eliminar este registro.">
                                 <p>Eliminar</p>
                             </i>
                         </td>
@@ -94,19 +79,19 @@
             id="estilo" (page)="ManejarPagina($event)" showFirstLastButtons></mat-paginator>
         <div class="d-flex justify-content-end" style="margin-right: 5%;">
             <i (click)="generarPdf('download')" id="pdf" class="fas fa-file-pdf" matSuffix matTooltipPosition="right"
-                matTooltipClass="departamento-tooltip" matTooltip="Descargar Lista de Sucursales en formato PDF">
+                matTooltip="Descargar Lista de Sucursales en formato PDF.">
                 <p>PDF</p>
             </i>
             <i (click)="exportToExcel()" id="excel" class="fas fa-file-excel" matSuffix matTooltipPosition="right"
-                matTooltipClass="departamento-tooltip" matTooltip="Descargar Lista de Sucursales en formato EXCEL">
+                matTooltip="Descargar Lista de Sucursales en formato EXCEL.">
                 <p>XLSL</p>
             </i>
             <i (click)="exportToCVS()" id="csv" class="fas fa-file-csv" matSuffix matTooltipPosition="right"
-                matTooltipClass="departamento-tooltip" matTooltip="Descargar Lista de Sucursales en formato CSV">
+                matTooltip="Descargar Lista de Sucursales en formato CSV.">
                 <p>CSV</p>
             </i>
             <i (click)="exportToXML()" id="xml" class="fas fa-file-code" matSuffix matTooltipPosition="right"
-                matTooltipClass="departamento-tooltip" matTooltip="Descargar Lista de Sucursales en formato XML">
+                matTooltip="Descargar Lista de Sucursales en formato XML.">
                 <p>XML</p>
             </i>
         </div>

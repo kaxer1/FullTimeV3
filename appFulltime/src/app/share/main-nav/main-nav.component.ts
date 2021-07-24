@@ -269,7 +269,7 @@ export class MainNavComponent implements OnInit {
           { name: 'Horas Extras Planificadas', url: '/planificacionesHorasExtras' },
           { name: 'Planificar Hora Extra', url: '/planificaHoraExtra' },
           { name: 'Planificaciones', url: '/listadoPlanificaciones' },
-          { name: 'Calcular Hora Extra', url: '/horaExtraReal' },
+       //   { name: 'Calcular Hora Extra', url: '/horaExtraReal' },
         ]
       },
       {
@@ -278,7 +278,7 @@ export class MainNavComponent implements OnInit {
         estado: true,
         icono: 'schedule',
         children: [
-          { name: 'Enrolar Empleado', url: '/enrolados' },
+        //  { name: 'Enrolar Empleado', url: '/enrolados' },
           { name: 'Registrar Dispositivo', url: '/listarRelojes' },
         ]
       },

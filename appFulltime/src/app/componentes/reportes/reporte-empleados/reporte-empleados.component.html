@@ -19,7 +19,7 @@
                                 <input matInput placeholder="jose " [(ngModel)]="filtroCodigo"
                                     [formControl]="codigo" (keypress)="IngresarSoloNumeros($event)">
                                 <mat-icon id="iemple" matSuffix matTooltipPosition="right"
-                                    matTooltipClass="emple-tooltip"
+                                    
                                     matTooltip="Búsqueda de empleado por el código">
                                     help_outline</mat-icon>
                             </mat-form-field>
@@ -31,7 +31,7 @@
                                 <mat-error *ngIf="cedula.invalid">Indispensable ingresar dos valores
                                 </mat-error>
                                 <mat-icon id="iemple" matSuffix matTooltipPosition="right"
-                                    matTooltipClass="emple-tooltip"
+                                    
                                     matTooltip="Búsqueda de empleado por la cédula de identificación o pasaporte">
                                     help_outline</mat-icon>
                             </mat-form-field>
@@ -42,7 +42,7 @@
                                 <mat-error *ngIf="nombre.invalid">Indispensable ingresar dos letras
                                 </mat-error>
                                 <mat-icon id="iemple" matSuffix matTooltipPosition="right"
-                                    matTooltipClass="emple-tooltip"
+                                    
                                     matTooltip="Búsqueda de empleado por el nombre">
                                     help_outline</mat-icon>
                             </mat-form-field>
@@ -54,7 +54,7 @@
                                 <mat-error *ngIf="apellido.invalid">Indispensable ingresar dos letras
                                 </mat-error>
                                 <mat-icon id="iemple" matSuffix matTooltipPosition="right"
-                                    matTooltipClass="emple-tooltip"
+                                    
                                     matTooltip="Búsqueda de empleado por el apellido">
                                     help_outline</mat-icon>
                             </mat-form-field>
@@ -77,16 +77,16 @@
                         <mat-icon class="flex-shrink-1 bd-highlight" matTooltipPosition="right"
                         matTooltip="Lista de empleados en su respectivo departamento, cargo y regimen laboral">account_circle</mat-icon>
                     </mat-expansion-panel-header>
-                    <i matSuffix matTooltipClass="emple-tooltip" matTooltipPosition="right" style="margin: 20px 10px 0px 10px;"
+                    <i matSuffix  matTooltipPosition="right" style="margin: 20px 10px 0px 10px;"
                         matTooltip="Descargar lista de empleados de la empresa en formato pdf" class="material-icons" id="upload"
                         (click)="ListaEmpleadosDetallado('download')"> cloud_download
                     </i>
-                    <i matSuffix matTooltipClass="emple-tooltip" matTooltipPosition="right" style="margin: 20px 10px 0px 10px;"
+                    <i matSuffix  matTooltipPosition="right" style="margin: 20px 10px 0px 10px;"
                         matTooltip="Ver la información de empleados en pdf desde el navegador"  class="material-icons" id="pdf"
                         (click)="ListaEmpleadosDetallado('open')">picture_as_pdf
                     </i>
                     <i (click)="exportToExcelListaEmpleados()" id="excel" class="fas fa-file-excel" matSuffix matTooltipPosition="right"
-                        matTooltipClass="departamento-tooltip" matTooltip="Descargar Lista de Empleados en formato EXCEL">
+                         matTooltip="Descargar Lista de Empleados en formato EXCEL">
                     </i>
                     <button mat-icon-button (click)="ConfiguracionReporteEmpleados()">
                         <mat-icon style="margin-top: -8px; color: black;">settings</mat-icon>

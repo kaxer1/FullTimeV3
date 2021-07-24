@@ -46,7 +46,7 @@ import { ListarRelojesComponent } from './componentes/catalogos/catRelojes/lista
 import { TituloEmpleadoComponent } from './componentes/empleado/titulo-empleado/titulo-empleado.component';
 import { ListarCiudadComponent } from './componentes/ciudades/listar-ciudad/listar-ciudad.component';
 import { RegistrarCiudadComponent } from './componentes/ciudades/registrar-ciudad/registrar-ciudad.component';
-import { VistaElementosComponent } from './componentes/catalogos/catTipoPermisos/listarTipoPermisos/vista-elementos/vista-elementos.component';
+import { VistaElementosComponent } from './componentes/catalogos/catTipoPermisos/listarTipoPermisos/vista-elementos.component';
 import { AsignarCiudadComponent } from './componentes/catalogos/catFeriados/asignar-ciudad/asignar-ciudad.component';
 import { RegistroContratoComponent } from './componentes/empleadoContrato/registro-contrato/registro-contrato.component';
 import { EmplCargosComponent } from './componentes/empleadoCargos/empl-cargos/empl-cargos.component';

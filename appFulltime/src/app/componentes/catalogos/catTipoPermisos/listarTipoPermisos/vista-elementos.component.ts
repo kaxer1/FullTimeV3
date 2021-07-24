@@ -14,7 +14,7 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
 import * as xlsx from 'xlsx';
 import * as FileSaver from 'file-saver';
 
-import { EditarTipoPermisosComponent } from '../../editar-tipo-permisos/editar-tipo-permisos.component';
+import { EditarTipoPermisosComponent } from '../editar-tipo-permisos/editar-tipo-permisos.component';
 import { MetodosComponent } from 'src/app/componentes/metodoEliminar/metodos.component';
 
 import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';

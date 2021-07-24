@@ -60,17 +60,17 @@
                         <td>{{t.nombre}}</td>
                         <td class="d-flex justify-content-center">
                             <i (click)="GenerarPDF('download', t.id, 'E')" class="fas fa-file-export" id="enviar" matSuffix matTooltipPosition="right"
-                                matTooltipClass="departamento-tooltip"
+                                
                                 matTooltip="Modificar los datos generales de este registro">
                                 <p>Enviados</p>
                             </i>
                             <i (click)="GenerarPDF('download', t.id, 'R')" class="fas fa-file-import" id="recibir" matSuffix matTooltipPosition="right"
-                                matTooltipClass="departamento-tooltip"
+                                
                                 matTooltip="Modificar los datos generales de este registro">
                                 <p>Recibidos</p>
                             </i>
                             <i (click)="GenerarPDF('download', t.id, 'D')" class="fas fa-file-excel" id="eliminar" matSuffix matTooltipPosition="right"
-                                matTooltipClass="departamento-tooltip"
+                                
                                 matTooltip="Modificar los datos generales de este registro">
                                 <p>Eliminados</p>
                             </i>

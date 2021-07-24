@@ -41,5 +41,8 @@ body { margin: 0;}
 
 #t-eliminar { color: red; margin-left: 20px; cursor: pointer; }
 
-#t-detalles { color: rgb(38, 0, 255); margin-left: 20px; cursor: pointer;}
+#t-detalles { color: rgb(38, 0, 255); margin-left: 20px; cursor: pointer; }
+
+/* ESTILOS DE INPUTS DE BÚSQUEDA EN TABLAS */
+#t-inputs { font-size: 12px; text-align: center; width: 100px; }
 

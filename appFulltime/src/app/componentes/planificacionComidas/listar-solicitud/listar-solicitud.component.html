@@ -46,7 +46,7 @@
                         <td>{{e.hora_fin}}</td>
                         <td class="d-flex justify-content-center">
                             <i *ngIf="auto_individual" class="fas fa-edit" (click)="VentanaEditarPlanComida(e)"
-                                matSuffix matTooltipPosition="right" matTooltipClass="departamento-tooltip"
+                                matSuffix matTooltipPosition="right" 
                                 matTooltip="Modificar los datos generales de este registro">
                                 <p>Editar</p>
                             </i>
@@ -115,7 +115,7 @@
                         <td>{{e.hora_fin}}</td>
                         <td class="d-flex justify-content-center">
                             <i *ngIf="auto_individual_estado && e.aprobada === 'NEGADO'" class="fas fa-edit" (click)="VentanaEditarPlanComida(e)"
-                            matSuffix matTooltipPosition="right" matTooltipClass="departamento-tooltip"
+                            matSuffix matTooltipPosition="right" 
                             matTooltip="Modificar los datos generales de este registro">
                             <p>Editar</p>
                         </i>

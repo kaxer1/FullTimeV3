@@ -79,7 +79,7 @@ export class TimbreWebComponent implements OnInit {
 
   abrirMapa(latitud, longitud) {
     
-    if (!latitud || !longitud) return this.toastr.warning('El timbre no tiene la geolocalizacion completa.')
+    if (!latitud || !longitud) return this.toastr.warning('Timbre seleccionado no tiene registro de coordenadas de ubicación.')
 
     const rutaMapa = "https://www.google.com/maps/search/+" + latitud + "+" + longitud;
     window.open(rutaMapa);

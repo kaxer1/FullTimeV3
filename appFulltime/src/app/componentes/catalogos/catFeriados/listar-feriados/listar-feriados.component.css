@@ -111,11 +111,3 @@ table {width: 100%;}
     padding-bottom: 6px;
     margin-left: 5px;
 }
-
-mat-form-field.input-tables {
-    margin-bottom: -5px;
-    font-size: 12px;
-    text-align: center;
-}
-
-.buscar { width: 100px; }

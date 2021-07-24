@@ -18,7 +18,7 @@
                                 <input matInput placeholder="Ej: " [(ngModel)]="filtroCodigo" [formControl]="codigo"
                                     (keypress)="IngresarSoloNumeros($event)">
                                 <mat-icon id="iemple" matSuffix matTooltipPosition="right"
-                                    matTooltipClass="emple-tooltip" matTooltip="Búsqueda de empleado por el código">
+                                     matTooltip="Búsqueda de empleado por el código">
                                     help_outline</mat-icon>
                             </mat-form-field>
                             <br>
@@ -30,7 +30,7 @@
                                 <mat-error *ngIf="cedula.invalid">Indispensable ingresar dos valores
                                 </mat-error>
                                 <mat-icon id="iemple" matSuffix matTooltipPosition="right"
-                                    matTooltipClass="emple-tooltip"
+                                    
                                     matTooltip="Búsqueda de empleado por la cédula de identificación o pasaporte">
                                     help_outline</mat-icon>
                             </mat-form-field>
@@ -42,7 +42,7 @@
                                 <mat-error *ngIf="nombre.invalid">Indispensable ingresar dos letras
                                 </mat-error>
                                 <mat-icon id="iemple" matSuffix matTooltipPosition="right"
-                                    matTooltipClass="emple-tooltip" matTooltip="Búsqueda de empleado por el nombre">
+                                     matTooltip="Búsqueda de empleado por el nombre">
                                     help_outline</mat-icon>
                             </mat-form-field>
                             <br>
@@ -53,7 +53,7 @@
                                 <mat-error *ngIf="apellido.invalid">Indispensable ingresar dos letras
                                 </mat-error>
                                 <mat-icon id="iemple" matSuffix matTooltipPosition="right"
-                                    matTooltipClass="emple-tooltip" matTooltip="Búsqueda de empleado por el apellido">
+                                     matTooltip="Búsqueda de empleado por el apellido">
                                     help_outline</mat-icon>
                             </mat-form-field>
                             <br>
@@ -64,7 +64,7 @@
                                 <mat-error *ngIf="departamentoF.invalid">Indispensable ingresar dos letras
                                 </mat-error>
                                 <mat-icon id="iemple" matSuffix matTooltipPosition="right"
-                                    matTooltipClass="emple-tooltip"
+                                    
                                     matTooltip="Búsqueda de empleado por el departamento">
                                     help_outline</mat-icon>
                             </mat-form-field>
@@ -76,7 +76,7 @@
                                 <mat-error *ngIf="regimenF.invalid">Indispensable ingresar dos letras
                                 </mat-error>
                                 <mat-icon id="iemple" matSuffix matTooltipPosition="right"
-                                    matTooltipClass="emple-tooltip"
+                                    
                                     matTooltip="Búsqueda de empleado por el Régimen Laboral">
                                     help_outline</mat-icon>
                             </mat-form-field>
@@ -88,7 +88,7 @@
                                 <mat-error *ngIf="cargoF.invalid">Indispensable ingresar dos letras
                                 </mat-error>
                                 <mat-icon id="iemple" matSuffix matTooltipPosition="right"
-                                    matTooltipClass="emple-tooltip"
+                                    
                                     matTooltip="Búsqueda de empleado por el cargo que ocupa">
                                     help_outline</mat-icon>
                             </mat-form-field>
@@ -182,12 +182,12 @@
                         <td>{{d.regimen | titlecase}}</td>
                         <td class="d-flex justify-content-center">
                             <i id="pdf" class="fas fa-file-pdf" matSuffix matTooltipPosition="right"
-                                matTooltipClass="departamento-tooltip"
+                                
                                 matTooltip="Ver reporte de timbres del empleado en formato PDF">
                                 <p>PDF</p>
                             </i>
                             <i id="excel" class="fas fa-file-excel" matSuffix matTooltipPosition="right"
-                                matTooltipClass="departamento-tooltip"
+                                
                                 matTooltip="Descargar Lista de Empleados en formato EXCEL">
                                 <p>XLSL</p>
                             </i>
@@ -201,19 +201,19 @@
         </mat-paginator>-->
 <!--   <div class="d-flex justify-content-end" style="margin-right: 5%;">
             <i (click)="generarPdf('download')" id="pdf" class="fas fa-file-pdf" matSuffix matTooltipPosition="right"
-                matTooltipClass="departamento-tooltip" matTooltip="Descargar Lista de Empleados en formato PDF">
+                 matTooltip="Descargar Lista de Empleados en formato PDF">
                 <p>PDF</p>
             </i>
             <i (click)="exportToExcel()" id="excel" class="fas fa-file-excel" matSuffix matTooltipPosition="right"
-                matTooltipClass="departamento-tooltip" matTooltip="Descargar Lista de Empleados en formato EXCEL">
+                 matTooltip="Descargar Lista de Empleados en formato EXCEL">
                 <p>XLSL</p>
             </i>
             <i (click)="exportToCVS()" id="csv" class="fas fa-file-csv" matSuffix matTooltipPosition="right"
-                matTooltipClass="departamento-tooltip" matTooltip="Descargar Lista de Empleados en formato CSV">
+                 matTooltip="Descargar Lista de Empleados en formato CSV">
                 <p>CSV</p>
             </i>
             <i (click)="exportToXML()" id="xml" class="fas fa-file-code" matSuffix matTooltipPosition="right"
-                matTooltipClass="departamento-tooltip" matTooltip="Descargar Lista de Empleados en formato XML">
+                 matTooltip="Descargar Lista de Empleados en formato XML">
                 <p>XML</p>
             </i>
         </div> -->
