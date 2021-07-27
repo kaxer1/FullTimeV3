@@ -48,7 +48,7 @@ export class AsistenciaMacroComponent implements OnInit {
   ) {
     this.ObtenerLogo();
     this.ObtenerColores();
-   }
+  }
 
   ngOnInit(): void {
     echarts.use(
@@ -62,7 +62,7 @@ export class AsistenciaMacroComponent implements OnInit {
   llamarGraficaOriginal() {
     let local = sessionStorage.getItem('asistencia');
     this.chartDom = document.getElementById('charts_asistencia_macro') as HTMLCanvasElement;
-    this.thisChart = echarts.init(this.chartDom, 'light', {width: 1050, renderer: 'svg',devicePixelRatio: 5 });
+    this.thisChart = echarts.init(this.chartDom, 'light', { width: 1050, renderer: 'svg', devicePixelRatio: 5 });
 
     if (local === null) {
       this.restGraficas.MetricaAsistenciaMicro().subscribe(res => {
@@ -95,7 +95,7 @@ export class AsistenciaMacroComponent implements OnInit {
     if (f_i < f_f) {
 
       if (f_i.getFullYear() === f_f.getFullYear()) {
-        this.toastr.success('Fechas validas','', {
+        this.toastr.success('Fechas validas', '', {
           timeOut: 6000,
         });
 
@@ -110,18 +110,18 @@ export class AsistenciaMacroComponent implements OnInit {
           this.thisChart.setOption(res.datos_grafica);
         });
       } else {
-        this.toastr.error('Años de consulta diferente','Solo puede consultar datos de un año en concreto', {
+        this.toastr.error('Años de consulta diferente', 'Solo puede consultar datos de un año en concreto', {
           timeOut: 6000,
         });
-      }      
+      }
 
     } else if (f_i > f_f) {
-      this.toastr.info('Fecha final es menor a la fecha inicial','', {
+      this.toastr.info('Fecha final es menor a la fecha inicial', '', {
         timeOut: 6000,
       });
       this.fechasConsultaForm.reset();
     } else if (f_i.toLocaleDateString() === f_f.toLocaleDateString()) {
-      this.toastr.info('Fecha inicial es igual a la fecha final','', {
+      this.toastr.info('Fecha inicial es igual a la fecha final', '', {
         timeOut: 6000,
       });
       this.fechasConsultaForm.reset();
@@ -150,9 +150,9 @@ export class AsistenciaMacroComponent implements OnInit {
   }
 
   graficaBase64: any;
-  metodosPDF(accion){  
-    this.graficaBase64 = this.thisChart.getDataURL({type: 'jpg' , pixelRatio: 5 });
-    this.generarPdf(accion) 
+  metodosPDF(accion) {
+    this.graficaBase64 = this.thisChart.getDataURL({ type: 'jpg', pixelRatio: 5 });
+    this.generarPdf(accion)
   }
 
   generarPdf(action) {
@@ -172,7 +172,7 @@ export class AsistenciaMacroComponent implements OnInit {
     return {
       pageSize: 'A4',
       pageOrientation: 'portrait',
-      pageMargins: [ 30, 60, 30, 40 ],
+      pageMargins: [30, 60, 30, 40],
       watermark: { text: this.frase, color: 'blue', opacity: 0.1, bold: true, italics: false },
       header: { text: 'Impreso por:  ' + localStorage.getItem('fullname_print'), margin: 10, fontSize: 9, opacity: 0.3, alignment: 'right' },
 
@@ -182,12 +182,13 @@ export class AsistenciaMacroComponent implements OnInit {
         fecha = f.format('YYYY-MM-DD');
         h.setUTCHours(h.getHours());
         var time = h.toJSON().split("T")[1].split(".")[0];
-        
+
         return {
           margin: 10,
           columns: [
             { text: 'Fecha: ' + fecha + ' Hora: ' + time, opacity: 0.3 },
-            { text: [
+            {
+              text: [
                 {
                   text: '© Pag ' + currentPage.toString() + ' of ' + pageCount,
                   alignment: 'right', opacity: 0.3
@@ -217,31 +218,31 @@ export class AsistenciaMacroComponent implements OnInit {
   ImprimirDatos() {
     let datos = this.asistencia.series.data;
     let tabla = {
-			table: {
+      table: {
         // widths: ['auto',40,'auto',40,'auto',40],
-				body: []
-			}
-		}
+        body: []
+      }
+    }
     let colums = [];
 
     for (let i = 0; i < datos.length; i++) {
 
       if (i >= 0 && i <= 2) {
-        colums.push({ text: datos[i].name, margin: [0,3,0,3], fillColor: this.p_color });
-        colums.push({ text: datos[i].value, margin: [0,3,0,3], alignment: 'center' });
+        colums.push({ text: datos[i].name, margin: [0, 3, 0, 3], fillColor: this.p_color });
+        colums.push({ text: datos[i].value, margin: [0, 3, 0, 3], alignment: 'center' });
       };
     }
-    
+
     if (colums.length > 0) { tabla.table.body.push(colums); }
 
     let columnas = {
       alignment: 'justify',
-			columns: [
-				{ width: 35, text: '' },
-				tabla,
-				{ width: 35, text: '' }
-			]
-		}
+      columns: [
+        { width: 35, text: '' },
+        tabla,
+        { width: 35, text: '' }
+      ]
+    }
 
     return columnas
   }
@@ -252,10 +253,10 @@ export class AsistenciaMacroComponent implements OnInit {
     this.llamarGraficaOriginal();
   }
 
-  texto_grafica: string = 
-  "La asistencia en jornada permite identificar la cantidad de ausencias justificadas, ausencias " + 
-  "injustificadas y la cantidad de días presentes de toda la compañia, sucursal o departamento. \n" + 
-  "Generalemente, las ausencias no justificadas pueden significar que no se le ha asignado correctamente un " +
-  "trabajador, que su licencia médica o vacación no esta ingresada en el sistema, o pude representar a un " +
-  "trabajador desvinculado que sigue activo en la plataforma."
+  texto_grafica: string =
+    "Indicador que permite identificar la cantidad de ausencias justificadas, ausencias " +
+    "injustificadas y la cantidad de días de asistencia de los colaboradores de toda la compañia, sucursal o departamento. \n" +
+    "Generalemente, las ausencias no justificadas pueden significar: que no se le ha asignado correctamente un horario a un " +
+    "trabajador, que la licencia médica o vacaciones no esten ingresadas en el sistema, o pude ser de un " +
+    "trabajador desvinculado que sigue activo en la plataforma."
 }

@@ -98,7 +98,7 @@
             </table>
         </div>
         <mat-paginator [length]="datosDispositivos.length" [pageSize]="tamanio_pagina" [pageSizeOptions]="pageSizeOptions"
-            id="estilo" (page)="ManejarPagina($event)" showFirstLastButtons>
+            id="pagina" (page)="ManejarPagina($event)" showFirstLastButtons>
         </mat-paginator>
         <div class="d-flex flex-wrap justify-content-center">
             <input type="submit" class="btn btn-sm" [routerLink]="['/enrolados/']" value="Ir a la Lista de Usuarios Enrolados">

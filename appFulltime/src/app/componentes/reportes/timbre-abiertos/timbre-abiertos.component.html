@@ -15,16 +15,16 @@
                     <br>
                     <div class="d-flex flex-wrap justify-content-around" style="margin: 0px 10px 0px 10px;">
                         <button mat-icon-button (click)="validacionReporte('open')">
-                            <mat-icon class="i-pdf" matTooltipPosition="right" matTooltip="Previsualizar pdf del reporte en el navegador">picture_as_pdf</mat-icon>
+                            <mat-icon class="i-pdf" matTooltipPosition="right" matTooltip="Previsualizar reporte en el navegador en fomato PDF.">picture_as_pdf</mat-icon>
                         </button>
                         <button mat-icon-button (click)="validacionReporte('print')">
-                            <mat-icon class="i-print" matTooltipPosition="right" matTooltip="Imprimir pdf del reporte.">local_printshop</mat-icon>
+                            <mat-icon class="i-print" matTooltipPosition="right" matTooltip="Imprimir reporte en formato PDF.">local_printshop</mat-icon>
                         </button>
                         <button mat-icon-button (click)="validacionReporte('download')">
-                            <mat-icon class="i-download" matTooltipPosition="right" matTooltip="Descargar en formato pdf el reporte">cloud_download</mat-icon>
+                            <mat-icon class="i-download" matTooltipPosition="right" matTooltip="Descargar reporte en formato PDF.">cloud_download</mat-icon>
                         </button>
                         <button mat-icon-button (click)="validacionReporte('excel')">
-                            <mat-icon class="fas fa-file-excel i-excel" matTooltipPosition="right" matTooltip="Descargar en formato EXCEL"></mat-icon>
+                            <mat-icon class="fas fa-file-excel i-excel" matTooltipPosition="right" matTooltip="Descargar reporte en formato EXCEL."></mat-icon>
                         </button>
                     </div>
                 </mat-expansion-panel>
@@ -114,7 +114,7 @@
             </table>
         </div>
         <mat-paginator [length]="empleados.length" [pageSize]="tamanio_pagina" [pageSizeOptions]="pageSizeOptions"
-            id="estilo" (page)="ManejarPagina($event)" showFirstLastButtons>
+            id="pagina" (page)="ManejarPagina($event)" showFirstLastButtons>
         </mat-paginator>
     </div>
 </div>

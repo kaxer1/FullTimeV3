@@ -94,7 +94,7 @@
             </table>
         </div>
         <mat-paginator [length]="desactivados.length" [pageSize]="tamanio_paginaDes"
-            [pageSizeOptions]="pageSizeOptionsDes" id="estilo" (page)="ManejarPaginaDes($event)" showFirstLastButtons>
+            [pageSizeOptions]="pageSizeOptionsDes" id="pagina" (page)="ManejarPaginaDes($event)" showFirstLastButtons>
         </mat-paginator>
         <div class="d-flex justify-content-end" style="margin-right: 5%;">
             <i (click)="GenerarPdf('download', 2)" id="pdf" class="fas fa-file-pdf" matSuffix matTooltipPosition="right"
@@ -212,7 +212,7 @@
             </table>
         </div>
         <mat-paginator [length]="empleado.length" [pageSize]="tamanio_pagina" [pageSizeOptions]="pageSizeOptions"
-            id="estilo" (page)="ManejarPagina($event)" showFirstLastButtons>
+            id="pagina" (page)="ManejarPagina($event)" showFirstLastButtons>
         </mat-paginator>
         <div class="d-flex justify-content-end" style="margin-right: 5%;">
             <i (click)="GenerarPdf('download', 1)" id="pdf" class="fas fa-file-pdf" matSuffix matTooltipPosition="right"

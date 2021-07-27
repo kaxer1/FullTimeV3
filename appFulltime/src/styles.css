@@ -22,6 +22,8 @@ body { margin: 0;}
 
 .i-excel { color: rgb(19, 172, 19); font-size: 30px; }
 
+.i-help { color: rgb(100, 100, 100); font-size: 30px; }
+
 /* ESTILOS DE ÍCONOS DE DESCARGA DE REPORTES DE PANTALLAS PRINCIPALES */
 #pdf { color:red; font-size: 20px; text-align: center; margin-left: 20px; cursor: pointer; }
 
@@ -45,4 +47,17 @@ body { margin: 0;}
 
 /* ESTILOS DE INPUTS DE BÚSQUEDA EN TABLAS */
 #t-inputs { font-size: 12px; text-align: center; width: 100px; }
+
+/* ESTILO PARA BARRA DE TÍTULOS */
+#titulo { 
+    font-size: 17px; 
+    text-align: center; 
+    background: rgb(52,65,84); 
+    color: white; 
+    padding-top: 10px; 
+    padding-bottom: 6px; 
+}
+
+/* ESTILO DE PÁGINACIÓN DE TABLAS */
+#pagina { color: rgb(0, 0, 0); font-size: 13px; }
 

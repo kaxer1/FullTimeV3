@@ -1,36 +1,34 @@
 <br>
 <div class="container" style="margin-bottom: 25px; padding-bottom: 10px;">
     <div class="row">
-        <div class="col-lg-5">
+        <div class="col-lg-5" style="padding-bottom: 10px;">
             <app-rango-fechas></app-rango-fechas>
-            <br>
-            <mat-accordion>
-                <mat-expansion-panel>
-                    <mat-expansion-panel-header class="d-flex bd-highlight">
-                        <mat-panel-title>
-                        Opciones Reporte Faltas
-                        </mat-panel-title>
-                    </mat-expansion-panel-header>
-                    <br>
-                    <div class="d-flex flex-wrap justify-content-around" style="margin: 0px 10px 0px 10px;">
-                        <button mat-icon-button (click)="validacionReporte('open')">
-                            <mat-icon class="i-pdf" matTooltipPosition="right" matTooltip="Previsualizar pdf del reporte en el navegador">picture_as_pdf</mat-icon>
-                        </button>
-                        <button mat-icon-button (click)="validacionReporte('print')">
-                            <mat-icon class="i-print" matTooltipPosition="right" matTooltip="Imprimir pdf del reporte.">local_printshop</mat-icon>
-                        </button>
-                        <button mat-icon-button (click)="validacionReporte('download')">
-                            <mat-icon class="i-download" matTooltipPosition="right" matTooltip="Descargar en formato pdf el reporte">cloud_download</mat-icon>
-                        </button>
-                        <button mat-icon-button (click)="validacionReporte('excel')">
-                            <mat-icon class="fas fa-file-excel i-excel" matTooltipPosition="right" matTooltip="Descargar en formato EXCEL"></mat-icon>
-                        </button>
-                    </div>
-                </mat-expansion-panel>
-            </mat-accordion>
-            <br>
         </div>
         <div class="col-lg-7">
+            <div id="titulo">
+                <span>Opciones de Descarga</span>
+            </div>
+            <mat-card class="example-card mat-elevation-z9">
+                <div class="d-flex flex-wrap justify-content-around" style="margin: 0px 10px 0px 10px;">
+                    <button mat-icon-button (click)="validacionReporte('open')">
+                        <mat-icon class="i-pdf" matTooltipPosition="right"
+                            matTooltip="Previsualizar reporte en el navegador en fomato PDF.">picture_as_pdf</mat-icon>
+                    </button>
+                    <button mat-icon-button (click)="validacionReporte('print')">
+                        <mat-icon class="i-print" matTooltipPosition="right" matTooltip="Imprimir reporte en formato PDF.">
+                            local_printshop</mat-icon>
+                    </button>
+                    <button mat-icon-button (click)="validacionReporte('download')">
+                        <mat-icon class="i-download" matTooltipPosition="right"
+                            matTooltip="Descargar reporte en formato PDF.">cloud_download</mat-icon>
+                    </button>
+                    <button mat-icon-button (click)="validacionReporte('excel')">
+                        <mat-icon class="fas fa-file-excel i-excel" matTooltipPosition="right"
+                            matTooltip="Descargar reporte en formato EXCEL."></mat-icon>
+                    </button>
+                </div>
+            </mat-card>
+            <br>
             <app-criterios-busqueda [num_option]="4"></app-criterios-busqueda>
         </div>
     </div>
@@ -54,11 +52,11 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let s of sucursales | emplNombre: filtroNombreSuc | paginate:tamanio_pagina:numero_pagina">
+                    <tr
+                        *ngFor="let s of sucursales | emplNombre: filtroNombreSuc | paginate:tamanio_pagina:numero_pagina">
                         <td>
                             <mat-checkbox (click)="$event.stopPropagation()"
-                                (change)="$event ? selectionSuc.toggle(s) : null" 
-                                [checked]="selectionSuc.isSelected(s)"
+                                (change)="$event ? selectionSuc.toggle(s) : null" [checked]="selectionSuc.isSelected(s)"
                                 [aria-label]="checkboxLabelSuc(s)">
                             </mat-checkbox>
                         </td>
@@ -68,7 +66,7 @@
             </table>
         </div>
         <mat-paginator [length]="sucursales.length" [pageSize]="tamanio_pagina" [pageSizeOptions]="pageSizeOptions"
-            id="estilo" (page)="ManejarPagina($event)" showFirstLastButtons>
+            id="pagina" (page)="ManejarPagina($event)" showFirstLastButtons>
         </mat-paginator>
     </div>
     <!-- TABLA PARA DEPARTAMENTOS -->
@@ -89,11 +87,11 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let d of departamentos | emplNombre: filtroNombreDep | paginate:tamanio_pagina:numero_pagina">
+                    <tr
+                        *ngFor="let d of departamentos | emplNombre: filtroNombreDep | paginate:tamanio_pagina:numero_pagina">
                         <td>
                             <mat-checkbox (click)="$event.stopPropagation()"
-                                (change)="$event ? selectionDep.toggle(d) : null" 
-                                [checked]="selectionDep.isSelected(d)"
+                                (change)="$event ? selectionDep.toggle(d) : null" [checked]="selectionDep.isSelected(d)"
                                 [aria-label]="checkboxLabelDep(d)">
                             </mat-checkbox>
                         </td>
@@ -103,7 +101,7 @@
             </table>
         </div>
         <mat-paginator [length]="departamentos.length" [pageSize]="tamanio_pagina" [pageSizeOptions]="pageSizeOptions"
-            id="estilo" (page)="ManejarPagina($event)" showFirstLastButtons>
+            id="pagina" (page)="ManejarPagina($event)" showFirstLastButtons>
         </mat-paginator>
     </div>
     <!-- TABLA PARA EMPLEADOS -->
@@ -126,11 +124,11 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let e of empleados | emplCodigo: filtroCodigo | emplCedula: filtroCedula | emplNombre: filtroNombreEmp | paginate:tamanio_pagina:numero_pagina">
+                    <tr
+                        *ngFor="let e of empleados | emplCodigo: filtroCodigo | emplCedula: filtroCedula | emplNombre: filtroNombreEmp | paginate:tamanio_pagina:numero_pagina">
                         <td>
                             <mat-checkbox (click)="$event.stopPropagation()"
-                                (change)="$event ? selectionEmp.toggle(e) : null" 
-                                [checked]="selectionEmp.isSelected(e)"
+                                (change)="$event ? selectionEmp.toggle(e) : null" [checked]="selectionEmp.isSelected(e)"
                                 [aria-label]="checkboxLabelEmp(e)">
                             </mat-checkbox>
                         </td>
@@ -142,7 +140,7 @@
             </table>
         </div>
         <mat-paginator [length]="empleados.length" [pageSize]="tamanio_pagina" [pageSizeOptions]="pageSizeOptions"
-            id="estilo" (page)="ManejarPagina($event)" showFirstLastButtons>
+            id="pagina" (page)="ManejarPagina($event)" showFirstLastButtons>
         </mat-paginator>
     </div>
     <!-- TABLA PARA TABULACION -->
@@ -163,11 +161,11 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let t of tabular | emplCodigo: filtroCodigo_tab | emplCedula: filtroCedula_tab  | emplNombre: filtroNombreTab | paginate:tamanio_pagina:numero_pagina">
+                    <tr
+                        *ngFor="let t of tabular | emplCodigo: filtroCodigo_tab | emplCedula: filtroCedula_tab  | emplNombre: filtroNombreTab | paginate:tamanio_pagina:numero_pagina">
                         <td>
                             <mat-checkbox (click)="$event.stopPropagation()"
-                                (change)="$event ? selectionTab.toggle(t) : null" 
-                                [checked]="selectionTab.isSelected(t)"
+                                (change)="$event ? selectionTab.toggle(t) : null" [checked]="selectionTab.isSelected(t)"
                                 [aria-label]="checkboxLabelTab(t)">
                             </mat-checkbox>
                         </td>
@@ -177,7 +175,7 @@
             </table>
         </div>
         <mat-paginator [length]="tabular.length" [pageSize]="tamanio_pagina" [pageSizeOptions]="pageSizeOptions"
-            id="estilo" (page)="ManejarPagina($event)" showFirstLastButtons>
+            id="pagina" (page)="ManejarPagina($event)" showFirstLastButtons>
         </mat-paginator>
     </div>
 </div>

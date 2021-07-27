@@ -70,7 +70,7 @@
         </div>
         <br>
         <mat-paginator [length]="horas_extras.length" [pageSize]="tamanio_pagina" [pageSizeOptions]="pageSizeOptions"
-            id="estilo" (page)="ManejarPagina($event)" (click)="calcularHoraPaginacion()" showFirstLastButtons>
+            id="pagina" (page)="ManejarPagina($event)" (click)="calcularHoraPaginacion()" showFirstLastButtons>
         </mat-paginator>
     </div>
 </div>
@@ -145,7 +145,7 @@
         </div>
         <br>
         <mat-paginator [length]="solicitudes_observacion.length" [pageSize]="tamanio_pagina_observacion" [pageSizeOptions]="pageSizeOptions_observacion"
-            id="estilo" (page)="ManejarPaginaObservacion($event)" (click)="calcularHoraPaginacionObservacion()" showFirstLastButtons>
+            id="pagina" (page)="ManejarPaginaObservacion($event)" (click)="calcularHoraPaginacionObservacion()" showFirstLastButtons>
         </mat-paginator>
     </div>
 </div>
@@ -196,7 +196,7 @@
         </div>
         <br>
         <mat-paginator [length]="pedido_hora_autoriza.length" [pageSize]="tamanio_pagina_auto" [pageSizeOptions]="pageSizeOptions_auto"
-            id="estilo" (page)="ManejarPaginaAutorizadas($event)" showFirstLastButtons>
+            id="pagina" (page)="ManejarPaginaAutorizadas($event)" showFirstLastButtons>
         </mat-paginator>
     </div>
 </div>
