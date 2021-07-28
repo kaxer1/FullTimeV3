@@ -2,7 +2,7 @@
 <br>
 <div class="container" style="padding-bottom: 50px; text-align: center;" *ngIf="lista_solicitados">
     <div class="mat-elevation-z8" style="background: white;">
-        <div class="d-flex bd-highlight" id="resultadosEmpre">
+        <div class="d-flex bd-highlight" id="titulo">
             <mat-icon class="flex-shrink-1 bd-highlight" (click)="HabilitarSeleccion()" matSuffix
                 matTooltipPosition="right"
                 matTooltip="Autorizar a todos los empleados su solicitud de servicio de alimentación." id="SelectCheck">
@@ -69,7 +69,7 @@
 <!-- TABLA CON LISTA DE SOLICITUDES DE SERVICIO DE ALIMENTACIÓN AUTORIZADAS O NEGADAS -->
 <div class="container" style="padding-bottom: 50px; text-align: center;" *ngIf="lista_autorizados">
     <div class="mat-elevation-z8" style="background: white;">
-        <div class="d-flex bd-highlight" id="resultadosEmpre">
+        <div class="d-flex bd-highlight" id="titulo">
             <mat-icon class="flex-shrink-1 bd-highlight" (click)="HabilitarSeleccionEstado()" matSuffix
                 matTooltipPosition="right"
                 matTooltip="Autorizar a todos los empleados su solicitud de servicio de alimentación." id="SelectCheck">
@@ -139,7 +139,7 @@
 <!-- TABLA CON LISTA DE SOLICITUDES DE SERVICIO DE ALIMENTACIÓN EXPIRADAS -->
 <div class="container" style="padding-bottom: 50px; text-align: center;" *ngIf="lista_expirados">
     <div class="mat-elevation-z8" style="background: white;">
-        <div class="d-flex bd-highlight" id="resultadosEmpre">
+        <div class="d-flex bd-highlight" id="titulo">
             <span class="w-100 bd-highlight">
                 Lista de Servicios de Alimentación</span>
         </div>

@@ -40,14 +40,14 @@
                         <mat-label>Descripción</mat-label>
                         <input matInput placeholder="Ej: Descripcion del tipo de permiso"
                             (keypress)="IngresarSoloLetras($event)" [formControl]="descripcionF" required>
-                        <mat-icon id="permiso" matSuffix matTooltipClass="color-tooltip" matTooltipPosition="right"
+                        <mat-icon id="permiso" matSuffix  matTooltipPosition="right"
                             matTooltip="Indicar un motivo por el que solicita el permiso">
                             help_outline</mat-icon>
                         <mat-error *ngIf="descripcionF.invalid">{{ObtenerMensajeErrorDescripcion()}}</mat-error>
                     </mat-form-field>
                     <mat-form-field>
                         <mat-label id=solP>Solicitud de permiso por:</mat-label>
-                        <mat-icon id="permiso" matSuffix matTooltipClass="color-tooltip" matTooltipPosition="right"
+                        <mat-icon id="permiso" matSuffix  matTooltipPosition="right"
                             matTooltip="Seleccionar si el permiso será por días o por horas y minutos">
                             help_outline</mat-icon>
                         <mat-select [formControl]="solicitarF" required>
@@ -61,7 +61,7 @@
                         <mat-label>Días de permiso</mat-label>
                         <input matInput placeholder="Ej: 3" (keypress)="IngresarSoloNumeros($event)"
                             [formControl]="diasF" [ngStyle]="estiloDias" id="dias" (click)="LimpiarCamposFecha()">
-                        <mat-icon id="permiso" matSuffix matTooltipClass="color-tooltip" matTooltipPosition="right"
+                        <mat-icon id="permiso" matSuffix  matTooltipPosition="right"
                             matTooltip="Ingresar número de días solicitados de permiso">
                             help_outline</mat-icon>
                     </mat-form-field>
@@ -70,7 +70,7 @@
                         <input matInput type="time" placeholder="Ej: 4" (keypress)="IngresarSoloNumeros($event)"
                             max="7:30" [formControl]="horasF" [ngStyle]="estiloHoras" id="horas"
                             (click)="LimpiarCamposFecha()">
-                        <mat-icon id="permiso" matSuffix matTooltipClass="color-tooltip" matTooltipPosition="right"
+                        <mat-icon id="permiso" matSuffix  matTooltipPosition="right"
                             matTooltip="Ingresar número de horas y minutos solicitados de permiso. Se le recuerda que debe ingresar menos de 8 horas. En caso de necesitar más tiempo seleccionar Días.">
                             help_outline</mat-icon>
                     </mat-form-field>

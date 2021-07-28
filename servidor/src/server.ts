@@ -67,6 +67,7 @@ import ACCION_PERSONAL_RUTAS from './rutas/accionPersonal/accionPersonalRutas';
 import NOTIFICACION_RUTAS from './rutas/reportes/reportesNotificacionRutas';
 import LICENCIAS_RUTAS from './utils/licencias';
 import RELOJ_VIRTUAL_RUTAS from './utils/reloj_virtual';
+import VACUNA_RUTAS from './rutas/empleado/empleadoVacuna/vacunasRutas';
 
 import { createServer, Server } from 'http';
 const socketIo = require('socket.io');
@@ -207,6 +208,9 @@ class Servidor {
 
         // NOTIFICACIONES
         this.app.use('/notificacionSistema', NOTIFICACION_RUTAS);
+
+        // VACUNACIÓN
+        this.app.use('/vacunas', VACUNA_RUTAS)
 
     }
 

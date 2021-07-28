@@ -7,6 +7,7 @@ const multipart = require('connect-multiparty');
 const multipartMiddleware = multipart({
     uploadDir: './contratos',
 });
+
 class DepartamentoRutas {
     public router: Router = Router();
 

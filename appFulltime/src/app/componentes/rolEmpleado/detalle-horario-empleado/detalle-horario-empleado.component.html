@@ -85,7 +85,7 @@
                     <td *ngIf="dh.tipo_dia == 3">Normal</td>
                     <td>{{dh.horarios}}</td>
                     <td>
-                        <i *ngFor="let h of datosPlanificacion"  id="editarI" (click)="AbrirVentanaEditar(dh, h)" matSuffix matTooltipClass="color-tooltip"
+                        <i *ngFor="let h of datosPlanificacion"  id="editarI" (click)="AbrirVentanaEditar(dh, h)" matSuffix 
                             matTooltipPosition="right" matTooltip="Modificar datos de este registro"
                             class="fas fa-edit">
                             <p>Editar</p>

@@ -21,6 +21,7 @@ import { AutorizaDepartamentoService } from 'src/app/servicios/autorizaDepartame
 import { EmpleadoProcesosService } from 'src/app/servicios/empleado/empleadoProcesos/empleado-procesos.service';
 import { EmpleadoHorariosService } from 'src/app/servicios/horarios/empleadoHorarios/empleado-horarios.service';
 import { PeriodoVacacionesService } from 'src/app/servicios/periodoVacaciones/periodo-vacaciones.service';
+import { VacunacionService } from 'src/app/servicios/empleado/empleadoVacunas/vacunacion.service';
 import { EmplCargosService } from 'src/app/servicios/empleado/empleadoCargo/empl-cargos.service';
 import { PlanHorarioService } from 'src/app/servicios/horarios/planHorario/plan-horario.service';
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
@@ -30,6 +31,7 @@ import { PlanComidasService } from 'src/app/servicios/planComidas/plan-comidas.s
 import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
 import { PlanGeneralService } from 'src/app/servicios/planGeneral/plan-general.service';
 import { TituloService } from 'src/app/servicios/catalogos/catTitulos/titulo.service';
+import { PlantillaReportesService } from '../../reportes/plantilla-reportes.service';
 import { VacacionesService } from 'src/app/servicios/vacaciones/vacaciones.service';
 import { FuncionesService } from 'src/app/servicios/funciones/funciones.service';
 import { PermisosService } from 'src/app/servicios/permisos/permisos.service';
@@ -37,13 +39,13 @@ import { UsuarioService } from 'src/app/servicios/usuarios/usuario.service';
 import { ScriptService } from 'src/app/servicios/empleado/script.service';
 
 // IMPORTAR COMPONENTES
+import { EditarVacacionesEmpleadoComponent } from 'src/app/componentes/rolEmpleado/vacaciones-empleado/editar-vacaciones-empleado/editar-vacaciones-empleado.component';
+import { EditarHoraExtraEmpleadoComponent } from 'src/app/componentes/rolEmpleado/hora-extra-empleado/editar-hora-extra-empleado/editar-hora-extra-empleado.component';
+import { EditarPermisoEmpleadoComponent } from 'src/app/componentes/rolEmpleado/solicitar-permisos-empleado/editar-permiso-empleado/editar-permiso-empleado.component';
 import { RegistroDetallePlanHorarioComponent } from 'src/app/componentes/detallePlanHorarios/registro-detalle-plan-horario/registro-detalle-plan-horario.component';
 import { RegistroAutorizacionDepaComponent } from 'src/app/componentes/autorizacionDepartamento/registro-autorizacion-depa/registro-autorizacion-depa.component';
 import { EditarAutorizacionDepaComponent } from 'src/app/componentes/autorizacionDepartamento/editar-autorizacion-depa/editar-autorizacion-depa.component';
 import { EditarPeriodoVacacionesComponent } from 'src/app/componentes/periodoVacaciones/editar-periodo-vacaciones/editar-periodo-vacaciones.component';
-import { EditarPermisoEmpleadoComponent } from 'src/app/componentes/rolEmpleado/solicitar-permisos-empleado/editar-permiso-empleado/editar-permiso-empleado.component';
-import { EditarHoraExtraEmpleadoComponent } from 'src/app/componentes/rolEmpleado/hora-extra-empleado/editar-hora-extra-empleado/editar-hora-extra-empleado.component';
-import { EditarVacacionesEmpleadoComponent } from 'src/app/componentes/rolEmpleado/vacaciones-empleado/editar-vacaciones-empleado/editar-vacaciones-empleado.component';
 import { RegistroEmpleadoPermisoComponent } from 'src/app/componentes/empleadoPermisos/registro-empleado-permiso/registro-empleado-permiso.component';
 import { CancelarVacacionesComponent } from 'src/app/componentes/rolEmpleado/vacaciones-empleado/cancelar-vacaciones/cancelar-vacaciones.component';
 import { CancelarHoraExtraComponent } from 'src/app/componentes/rolEmpleado/hora-extra-empleado/cancelar-hora-extra/cancelar-hora-extra.component';
@@ -51,9 +53,7 @@ import { CancelarPermisoComponent } from 'src/app/componentes/rolEmpleado/solici
 import { RegistoEmpleadoHorarioComponent } from 'src/app/componentes/empleadoHorario/registo-empleado-horario/registo-empleado-horario.component';
 import { RegistrarEmpleProcesoComponent } from 'src/app/componentes/empleadoProcesos/registrar-emple-proceso/registrar-emple-proceso.component';
 import { EditarEmpleadoProcesoComponent } from 'src/app/componentes/empleadoProcesos/editar-empleado-proceso/editar-empleado-proceso.component';
-
 import { PlanificacionComidasComponent } from 'src/app/componentes/planificacionComidas/planificacion-comidas/planificacion-comidas.component';
-
 import { EditarHorarioEmpleadoComponent } from 'src/app/componentes/empleadoHorario/editar-horario-empleado/editar-horario-empleado.component';
 import { EditarPlanComidasComponent } from 'src/app/componentes/planificacionComidas/editar-plan-comidas/editar-plan-comidas.component';
 import { RegistroPlanHorarioComponent } from 'src/app/componentes/planHorarios/registro-plan-horario/registro-plan-horario.component';
@@ -73,8 +73,6 @@ import { FraseSeguridadComponent } from '../../frase-seguridad/frase-seguridad.c
 import { MetodosComponent } from 'src/app/componentes/metodoEliminar/metodos.component';
 import { TituloEmpleadoComponent } from '../titulo-empleado/titulo-empleado.component';
 import { EditarContratoComponent } from '../editar-contrato/editar-contrato.component';
-import { NavbarComponent } from '../../../share/main-nav/navbar/navbar.component';
-import { PlantillaReportesService } from '../../reportes/plantilla-reportes.service';
 
 @Component({
   selector: 'app-ver-empleado',
@@ -98,6 +96,7 @@ export class VerEmpleadoComponent implements OnInit {
   // VARIABLES DE ALMACENAMIENTO DE DATOS DE BOTONES
   btnTitulo = 'Añadir';
   btnDisc = 'Añadir';
+  btnVacuna = 'Añadir';
   editar: string = '';
   idEmpleado: string; // VARIABLE DE ALMACENAMIENTO DE ID DE EMPLEADO SELECCIONADO PARA VER DATOS
 
@@ -105,7 +104,9 @@ export class VerEmpleadoComponent implements OnInit {
   HabilitarAccion: boolean = true;
   HabilitarHorasE: boolean = true;
   mostrarDiscapacidad = true;
+  mostrarVacuna = true;
   btnHabilitado = true;
+  btnHabilitadoVacuna = true;
 
   hipervinculo: string = environment.url; // VARIABLE DE MANEJO DE RUTAS CON URL
   idEmpleadoLogueado: number; // VARIABLE DE ALMACENAMIENTO DE ID DE EMPLEADO QUE INICIA SESIÓN
@@ -140,6 +141,7 @@ export class VerEmpleadoComponent implements OnInit {
     public restEmpleado: EmpleadoService, // SERVICIO DATOS DE EMPLEADO
     public restPlanH: PlanHorarioService, // SERVICIO DATOS PLANIFICACIÓN DE HORARIO
     private scriptService: ScriptService, // SERVICIO DATOS EMPLEADO - REPORTE
+    public restVacuna: VacunacionService, // SERVICIO DE DATOS DE REGISTRO DE VACUNACIÓN
     public restPermiso: PermisosService, // SERVICIO DATOS PERMISOS
     public restCargo: EmplCargosService, // SERVICIO DATOS CARGO
     private restHE: PedHoraExtraService, // SERVICIO DATOS PEDIDO HORA EXTRA
@@ -148,12 +150,10 @@ export class VerEmpleadoComponent implements OnInit {
     private restF: FuncionesService, // SERVICIO DATOS FUNCIONES DEL SISTEMA
     private toastr: ToastrService, // VARIABLE MANEJO DE MENSAJES DE NOTIFICACIONES
     public restU: UsuarioService, // SERVICIO DATOS USUARIO
-    //public Main: NavbarComponent, // VARIABLE BARRA DE NAVEGACIÓN
     public router: Router, // VARIABLE NAVEGACIÓN DE RUTAS URL
-
   ) {
     console.log('Constructor');
-    
+
     this.idEmpleadoLogueado = parseInt(localStorage.getItem('empleado'));
     var cadena = this.router.url.split('#')[0];
     this.idEmpleado = cadena.split("/")[2];
@@ -282,7 +282,7 @@ export class VerEmpleadoComponent implements OnInit {
       });
   }
 
-  
+
 
 
   /** * ******************************************************************************************** *
@@ -461,7 +461,7 @@ export class VerEmpleadoComponent implements OnInit {
       if (data[0]['imagen'] != null) {
         this.urlImagen = `${environment.url}/empleado/img/` + data[0]['imagen'];
         if (idEmpleadoActivo === idemploy) {
-         // this.Main.urlImagen = this.urlImagen;
+          // this.Main.urlImagen = this.urlImagen;
         }
         this.mostrarImagen = true;
         this.textoBoton = 'Editar Foto';
@@ -1024,6 +1024,28 @@ export class VerEmpleadoComponent implements OnInit {
     }
   }
 
+
+  // LÓGICA DE BOTÓN PARA MOSTRAR COMPONENTE DEL REGISTRO DE VACUNACION 
+  MostrarVentanaVacuna() {
+    if (this.btnVacuna != 'Editar') {
+      if (this.mostrarVacuna == true) {
+        this.mostrarVacuna = false;
+        this.btnVacuna = 'No Añadir';
+      } else {
+        this.mostrarVacuna = true;
+        this.btnVacuna = 'Añadir';
+      }
+    } else {
+      if (this.mostrarVacuna == false) {
+        this.mostrarVacuna = true;
+        this.editar = 'editar';
+      } else {
+        this.mostrarVacuna = false;
+        this.editar = 'editar';
+      }
+    }
+  }
+
   /* **************************************************************************************************** *
    *                               ABRIR VENTANAS PARA REGISTRAR DATOS DEL EMPLEADO                       *
    ****************************************************************************************************** */
@@ -1034,7 +1056,7 @@ export class VerEmpleadoComponent implements OnInit {
       this.idCargo = datos;
       console.log("idcargo: ", this.idCargo)
       this.vistaRegistrarDatos.open(RegistoEmpleadoHorarioComponent,
-        { width: '600px', data: { idEmpleado: this.idEmpleado, idCargo: this.idCargo[0].max, horas_trabaja: this.idCargo[0].hora_trabaja  } }).afterClosed().subscribe(item => {
+        { width: '600px', data: { idEmpleado: this.idEmpleado, idCargo: this.idCargo[0].max, horas_trabaja: this.idCargo[0].hora_trabaja } }).afterClosed().subscribe(item => {
           this.ObtenerHorariosEmpleado(parseInt(this.idEmpleado));
         });
     }, error => {

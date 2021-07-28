@@ -287,6 +287,8 @@ import { ButtonAvisosComponent } from './share/main-nav/button-avisos/button-avi
 import { ProgressComponent } from './share/progress/progress.component';
 import { ButtonOpcionesComponent } from './share/main-nav/button-opciones/button-opciones.component';
 import { PlantillaReportesService } from './componentes/reportes/plantilla-reportes.service';
+import { CrearVacunaComponent } from './componentes/empleado/vacunacion/crear-vacuna/crear-vacuna.component';
+import { EditarVacunaComponent } from './componentes/empleado/vacunacion/editar-vacuna/editar-vacuna.component';
 
 const config: SocketIoConfig = { url: environment.url, options: {} };
 
@@ -516,6 +518,8 @@ const config: SocketIoConfig = { url: environment.url, options: {} };
     ButtonAvisosComponent,
     ProgressComponent,
     ButtonOpcionesComponent,
+    CrearVacunaComponent,
+    EditarVacunaComponent,
   ],
 
   imports: [

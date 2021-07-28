@@ -46,7 +46,7 @@
 <!-- LISTA DE EMPLEADOS QUE HAN SIDO INACTIVADOS O QUE YA NO FORMAN PARTE DE LA EMPRESA -->
 <div *ngIf="Hab_Deshabilitados" class="container" style="padding-bottom: 50px; text-align: center;">
     <div class="mat-elevation-z8" style="background: white;">
-        <div class="d-flex bd-highlight" id="resulEmpleados">
+        <div class="d-flex bd-highlight" id="titulo">
             <mat-icon class="flex-shrink-1 bd-highlight" (click)="HabilitarSeleccionDesactivados()" matSuffix
                 matTooltipPosition="right" matTooltip="Selección múltiple para habilitar empleados." id="SelectCheck">
                 library_add_check</mat-icon>
@@ -119,7 +119,7 @@
 <!-- LISTA DE EMPLEADOS QUE FORMAN PARTE DE LA EMPRESA -->
 <div class="container" style="padding-bottom: 50px; text-align: center;">
     <div class="mat-elevation-z8" style="background: white;">
-        <div class="d-flex bd-highlight" id="resulEmpleados">
+        <div class="d-flex bd-highlight" id="titulo">
             <mat-icon class="flex-shrink-1 bd-highlight" (click)="HabilitarSeleccion()" matSuffix
                 matTooltipPosition="right" matTooltip="Selección múltiple para inhabilitar empleados." id="SelectCheck">
                 library_add_check</mat-icon>

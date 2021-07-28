@@ -1,14 +1,3 @@
-mat-form-field { padding: 10px 15px 0px 15px;}
-
-.tituloEmpleados { 
-    font-size: 20px; 
-    text-align: center; 
-    background: rgb(52,65,84); 
-    color: white; 
-    padding-top: 10px; 
-    padding-bottom: 6px; 
-}
-
 #resulEmpleados { 
     font-size: 17px; 
     text-align: center; 
@@ -24,63 +13,10 @@ tr { text-align: center; }
 
 td { padding-top: 10px; text-align: center; }
 
-
-
-#descargar:hover { 
-    font-weight: bold; 
-    font-size: 14px; 
-    font-family: "Poppins", sans-serif; 
-    border-radius: 5px; 
-    height: 58px; 
-    background-color: rgb(0, 76, 255);
-    padding-top: 10px; 
-    padding-bottom: 6px;
-    margin-left: 5px;
-}
-
-#descargar { 
-    font-weight: bold; 
-    font-size: 14px; 
-    font-family: "Poppins", sans-serif; 
-    border-radius: 5px; 
-    height: 55px; 
-    background-color: #93a3c7; 
-    overflow: hidden;
-    padding-top: 10px; 
-    padding-bottom: 6px;
-    margin-left: 5px;
-}
-
-#upload { color:rgb(0, 132, 255); font-size: 25px; text-align: center; cursor: pointer; margin: 0px 7px 0px 7px; }
-
-#pdf { color:red; font-size: 25px; text-align: center; cursor: pointer; margin: 0px 7px 0px 7px; }
-
-#excel { color:green; font-size: 20px; text-align: center;  cursor: pointer; margin: 2px 7px 0px 7px; }
-
-.mat-expansion-panel-header-description {
-    flex-basis: 0;
-}
-
-.mat-expansion-panel-header-description {
-    justify-content: space-between;
-    align-items: center;
-}
-
-mat-expansion-panel-header { text-align: center; background: rgb(52,65,84); }
-
-mat-panel-title { color: white; }
-
-mat-panel-description { color: white; }
-
-mat-icon { color: white; }
-
-.mat-expansion-panel-header.mat-expanded,
-.mat-expansion-panel-header.mat-expanded:hover {
-    background: rgb(52,65,84);
-}
-
-#boton { background-color: rgb(80,87,97); color: white; margin-top: 10px;}
-
 #botones { background-color: rgb(80,87,97); color: white; margin: 10px 10px 10px 10px;}
 
 #ayuda_fec {color: black}
+
+mat-form-field { padding: 10px 15px 0px 15px;}
+
+#limpiar { cursor: pointer; padding-top: 10px; margin-right: 20px;}

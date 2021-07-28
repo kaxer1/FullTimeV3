@@ -2,7 +2,7 @@
 <br>
 <div class="container" style="padding-bottom: 50px; text-align: center;" *ngIf="lista_pedidos">
     <div class="mat-elevation-z8" style="background: white;">
-        <div class="d-flex bd-highlight" id="resultadosEmpre">
+        <div class="d-flex bd-highlight" id="titulo">
             <mat-icon class="flex-shrink-1 bd-highlight" (click)="HabilitarSeleccion()" matSuffix
                 matTooltipPosition="right" matTooltip="Autorizar a todos los empleados su Solicitud de Horas Extras"
                 id="SelectCheck">library_add_check</mat-icon>
@@ -77,7 +77,7 @@
 <!--************************** LISTA DE SOLICITUDES DE HORAS EXTRAS CON OBSERVACIONES **************************-->
 <div class="container" style="padding-bottom: 50px; text-align: center;" *ngIf="lista_observacion">
     <div class="mat-elevation-z8" style="background: white;">
-        <div class="d-flex bd-highlight" id="resultadosEmpre">
+        <div class="d-flex bd-highlight" id="titulo">
             <mat-icon class="flex-shrink-1 bd-highlight" (click)="HabilitarSeleccionObserva()" matSuffix
                 matTooltipPosition="right" matTooltip="Autorizar a todos los empleados su Solicitud de Horas Extras"
                 id="SelectCheck">library_add_check</mat-icon>
@@ -152,7 +152,7 @@
 <!--************************** LISTA DE SOLICITUDES DE HORAS EXTRAS AUTORIZADAS O NEGADAS *************************-->
 <div class="container" style="padding-bottom: 50px; text-align: center;" *ngIf="lista_autorizacion">
     <div class="mat-elevation-z8" style="background: white;">
-        <div class="d-flex bd-highlight" id="resultadosEmpre">
+        <div class="d-flex bd-highlight" id="titulo">
             <span class="w-100 bd-highlight">
                 Lista de Horas Extras solicitadas Autorizadas o Negadas</span>
             <button class="btn btn-sm" style="float: right; margin-right: 10px;" ngDefaultControl

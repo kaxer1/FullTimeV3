@@ -1,155 +1,109 @@
 <br>
 <div class="container" style="margin-bottom: 25px; padding-bottom: 10px;">
-    <div class="tituloEmpleados">
-        <span>REPORTE DE ATRASOS</span>
-    </div>
-    <br>
     <div class="row">
         <div class="col-md">
-            <mat-accordion>
-                <mat-expansion-panel hideToggle>
-                    <mat-expansion-panel-header class="d-flex bd-highlight">
-                        <mat-panel-title class="w-100 bd-highlight">
-                            Críterios de Búsqueda Inmediata
-                        </mat-panel-title>
-                        <mat-icon id="icono" class="flex-shrink-1 bd-highlight" matTooltipPosition="right"
-                            matTooltip="Dar clic para desplegar y contraer todos los campos de búsqueda. La búsqueda es inmediata para un dato en específico.">
-                            search</mat-icon>
-                    </mat-expansion-panel-header>
-                    <form [formGroup]="">
-                        <div class="d-flex flex-wrap justify-content-around">
-                            <mat-form-field>
-                                <mat-label>Ingresar Código</mat-label>
-                                <input matInput placeholder="Ej: " [(ngModel)]="filtroCodigo" [formControl]="codigo"
-                                    (keypress)="IngresarSoloNumeros($event)">
-                                <mat-icon id="iemple" matSuffix matTooltipPosition="right"
-                                     matTooltip="Búsqueda de empleado por el código">
-                                    help_outline</mat-icon>
-                            </mat-form-field>
-                            <mat-form-field>
-                                <mat-label>Ingresar CI o pasaporte</mat-label>
-                                <input matInput placeholder="Ej: " [(ngModel)]="filtroCedula" maxlength="10"
-                                    oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                                    [formControl]="cedula" type="text" (keypress)="IngresarSoloNumeros($event)">
-                                <mat-error *ngIf="cedula.invalid">Indispensable ingresar dos valores
-                                </mat-error>
-                                <mat-icon id="iemple" matSuffix matTooltipPosition="right"
-                                    
-                                    matTooltip="Búsqueda de empleado por la cédula de identificación o pasaporte">
-                                    help_outline</mat-icon>
-                            </mat-form-field>
-                            <mat-form-field>
-                                <mat-label>Ingresar Nombres</mat-label>
-                                <input matInput placeholder="Ej: " [(ngModel)]="filtroNombre" [formControl]="nombre"
-                                    type="text" (keypress)="IngresarSoloLetras($event)">
-                                <mat-error *ngIf="nombre.invalid">Indispensable ingresar dos letras
-                                </mat-error>
-                                <mat-icon id="iemple" matSuffix matTooltipPosition="right"
-                                     matTooltip="Búsqueda de empleado por el nombre">
-                                    help_outline</mat-icon>
-                            </mat-form-field>
-                            <mat-form-field>
-                                <mat-label>Ingresar Apellidos</mat-label>
-                                <input matInput placeholder="Ej: " [(ngModel)]="filtroApellido" [formControl]="apellido"
-                                    type="text" (keypress)="IngresarSoloLetras($event)">
-                                <mat-error *ngIf="apellido.invalid">Indispensable ingresar dos letras
-                                </mat-error>
-                                <mat-icon id="iemple" matSuffix matTooltipPosition="right"
-                                     matTooltip="Búsqueda de empleado por el apellido">
-                                    help_outline</mat-icon>
-                            </mat-form-field>
-                        </div>
-                    </form>
-                    <div class="d-flex justify-content-around">
-                        <button mat-button type="submit" class="btn btn-sm" (click)="LimpiarCampos()">Cancelar
-                        </button>
+            <div id="titulo">
+                <span>Búsqueda Rango Fechas</span>
+            </div>
+            <mat-card class="example-card mat-elevation-z9">
+                <form [formGroup]="fechasForm">
+                    <div class="d-flex flex-wrap justify-content-center">
+                        <mat-form-field>
+                            <mat-label>Fecha Inicial</mat-label>
+                            <input matInput [matDatepicker]="picker1" [formControl]="fechaInicialF" required>
+                            <mat-datepicker-toggle matSuffix [for]="picker1" id="permiso"
+                                matTooltipClass="permiso-tooltip" matTooltipPosition="right"
+                                matTooltip="Fecha de inicio de periodo.">
+                            </mat-datepicker-toggle>
+                            <mat-datepicker touchUi #picker1></mat-datepicker>
+                        </mat-form-field>
+                        <br>
+                        <mat-form-field>
+                            <mat-label>Fecha Final</mat-label>
+                            <input matInput [matDatepicker]="picker2" [formControl]="fechaFinalF" required>
+                            <mat-datepicker-toggle matSuffix [for]="picker2" id="permiso"
+                                matTooltipClass="permiso-tooltip" matTooltipPosition="right"
+                                matTooltip="Fecha de fin de periodo.">
+                            </mat-datepicker-toggle>
+                            <mat-datepicker touchUi #picker2></mat-datepicker>
+                        </mat-form-field>
                     </div>
-                </mat-expansion-panel>
-            </mat-accordion>
-        </div>
-    </div>
-    <br>
-    <div class="row">
-        <div class="col-md">
-            <mat-accordion>
-                <mat-expansion-panel hideToggle>
-                    <mat-expansion-panel-header class="d-flex bd-highlight">
-                        <mat-panel-title class="w-100 bd-highlight">
-                            Período de Búsqueda
-                        </mat-panel-title>
-                        <mat-icon id="icono" class="flex-shrink-1 bd-highlight" matTooltipPosition="right"
-                            matTooltip="Dar clic para desplegar y contraer todos los campos de búsqueda. La búsqueda es inmediata para un dato en específico.">
-                            search</mat-icon>
-                    </mat-expansion-panel-header>
-                    <form [formGroup]="fechasForm">
-                        <div class="d-flex flex-wrap justify-content-center">
-                            <mat-form-field>
-                                <mat-label>Fecha Inicial</mat-label>
-                                <input matInput [matDatepicker]="picker1" [formControl]="fechaInicialF" required>
-                                <mat-datepicker-toggle matSuffix [for]="picker1" id="permiso"
-                                    matTooltipClass="permiso-tooltip" matTooltipPosition="right"
-                                    matTooltip="Fecha de inicio de periodo">
-                                </mat-datepicker-toggle>
-                                <mat-datepicker touchUi #picker1></mat-datepicker>
-                            </mat-form-field>
-                            <br>
-                            <mat-form-field>
-                                <mat-label>Fecha Final</mat-label>
-                                <input matInput [matDatepicker]="picker2" [formControl]="fechaFinalF" required>
-                                <mat-datepicker-toggle matSuffix [for]="picker2" id="permiso"
-                                    matTooltipClass="permiso-tooltip" matTooltipPosition="right"
-                                    matTooltip="Fecha de fin de periodo">
-                                </mat-datepicker-toggle>
-                                <mat-datepicker touchUi #picker2></mat-datepicker>
-                            </mat-form-field>
-                        </div>
-                    </form>
-                    <div class="d-flex justify-content-around">
-                        <button mat-button type="submit" class="btn btn-sm" (click)="LimpiarFechas()">Cancelar
-                        </button>
-                    </div>
-                </mat-expansion-panel>
-            </mat-accordion>
+                </form>
+                <div class="d-flex justify-content-around">
+                    <button mat-button type="submit" class="btn btn-sm" (click)="LimpiarFechas()">Cancelar
+                    </button>
+                </div>
+            </mat-card>
         </div>
     </div>
 </div>
 <div class="container" style="padding-bottom: 50px; text-align: center;">
     <div class="mat-elevation-z8" style="background: white;">
-        <div id="resulEmpleados">Resultado de búsqueda</div>
+        <div id="titulo">REPORTE ATRASOS</div>
         <div class="table-responsive">
             <table class="table table-hover table-sm">
                 <thead class="thead-light">
                     <tr style="text-align: center;">
                         <th scope="col">Código</th>
                         <th scope="col">Cédula</th>
-                        <th scope="col">Apellido</th>
-                        <th scope="col">Nombre</th>
+                        <th scope="col">Empleado</th>
                         <th scope="col">Departamento</th>
                         <th scope="col">Cargo</th>
                         <th scope="col">Régimen</th>
-                        <th scope="col">Reporte Atrasos</th>
+                        <th scope="col">Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
+                    <tr>
+                        <td>
+                            <mat-form-field id="t-inputs">
+                                <input matInput placeholder="Buscar" [(ngModel)]="filtroCodigo" [formControl]="codigo"
+                                    (keypress)="IngresarSoloNumeros($event)">
+                            </mat-form-field>
+                        </td>
+                        <td>
+                            <mat-form-field id="t-inputs">
+                                <input matInput placeholder="Buscar" [(ngModel)]="filtroCedula" maxlength="10"
+                                    oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                    [formControl]="cedula" type="text" (keypress)="IngresarSoloNumeros($event)">
+                            </mat-form-field>
+                        </td>
+                        <td>
+                            <mat-form-field id="t-inputs">
+                                <input matInput placeholder="Buscar" [(ngModel)]="filtroEmpleado" [formControl]="nombre"
+                                    type="text" (keypress)="IngresarSoloLetras($event)">
+                            </mat-form-field>
+                        </td>
+                        <td></td>
+                        <td></td>
+                        <td>
+                            <mat-icon id="i-ayuda" (click)="LimpiarCampos()" matSuffix matTooltipPosition="right"
+                                matTooltip="Limpiar campos de búsqueda de la tabla y mostrar todos los datos.">
+                                format_clear
+                            </mat-icon>
+                        </td>
+                        <td>
+                            <mat-icon id="i-ayuda" matSuffix matTooltipPosition="right"
+                                matTooltip="Búsqueda de datos de empleado de acuerdo a las columnas de la tabla.">
+                                help_outline</mat-icon>
+                        </td>
+                    </tr>
                     <tr
-                        *ngFor="let d of datosEmpleado | emplCargo: filtroCargo | regimen: filtroRegimen | departamento: filtroDepartamento | emplCodigo: filtroCodigo | emplCedula: filtroCedula | emplNombre: filtroNombre | emplApellido: filtroApellido  | paginate:tamanio_pagina:numero_pagina">
+                        *ngFor="let d of datosEmpleado | emplCargo: filtroCargo | regimen: filtroRegimen | departamento: filtroDepartamento | emplCodigo: filtroCodigo | emplCedula: filtroCedula | nombreApellido: filtroEmpleado | paginate:tamanio_pagina:numero_pagina">
                         <th scope="row">{{d.codigo}}</th>
                         <td>{{d.cedula}}</td>
-                        <td>{{d.apellido}}</td>
-                        <td>{{d.nombre}}</td>
+                        <td>{{d.apellido}} {{d.nombre}}</td>
                         <td>{{d.departamento | titlecase}}</td>
                         <td>{{d.cargo}}</td>
                         <td>{{d.regimen | titlecase}}</td>
                         <td class="d-flex justify-content-center">
                             <i (click)="ConfigurarAtrasos(d.codigo, fechasForm.value, 'pdf')" id="pdf"
                                 class="fas fa-file-pdf" matSuffix matTooltipPosition="right"
-                                
                                 matTooltip="Ver reporte de timbres del empleado en formato PDF">
                                 <p>PDF</p>
                             </i>
                             <i (click)="ConfigurarAtrasos(d.codigo, fechasForm.value, 'excel')" id="excel"
                                 class="fas fa-file-excel" matSuffix matTooltipPosition="right"
-                                
                                 matTooltip="Descargar Lista de Empleados en formato EXCEL">
                                 <p>XLSL</p>
                             </i>
@@ -161,23 +115,5 @@
         <mat-paginator [length]="datosEmpleado.length" [pageSize]="tamanio_pagina" [pageSizeOptions]="pageSizeOptions"
             id="pagina" (page)="ManejarPagina($event)" showFirstLastButtons>
         </mat-paginator>
-        <!--   <div class="d-flex justify-content-end" style="margin-right: 5%;">
-            <i (click)="generarPdf('download')" id="pdf" class="fas fa-file-pdf" matSuffix matTooltipPosition="right"
-                 matTooltip="Descargar Lista de Empleados en formato PDF">
-                <p>PDF</p>
-            </i>
-            <i (click)="exportToExcel()" id="excel" class="fas fa-file-excel" matSuffix matTooltipPosition="right"
-                 matTooltip="Descargar Lista de Empleados en formato EXCEL">
-                <p>XLSL</p>
-            </i>
-            <i (click)="exportToCVS()" id="csv" class="fas fa-file-csv" matSuffix matTooltipPosition="right"
-                 matTooltip="Descargar Lista de Empleados en formato CSV">
-                <p>CSV</p>
-            </i>
-            <i (click)="exportToXML()" id="xml" class="fas fa-file-code" matSuffix matTooltipPosition="right"
-                 matTooltip="Descargar Lista de Empleados en formato XML">
-                <p>XML</p>
-            </i>
-        </div> -->
     </div>
 </div>

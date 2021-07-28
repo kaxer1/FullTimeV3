@@ -9,7 +9,7 @@
                 <input matInput [matDatepicker]="pickerInicial" placeholder="dd/mm/aaaa" [disabled]="habilitar"
                     [formControl]="fec_inicio_mes" required>
                 <mat-datepicker-toggle matSuffix [for]="pickerInicial" matTooltipPosition="right" id="ayuda_fec"
-                    matTooltip="Ingresa la fecha inicial del mes que deseas consultar el reporte. Ejm: 01/08/2020">
+                    matTooltip="Ingresa la fecha inicial del mes que deseas consultar el reporte. Ejm: 01/08/2020.">
                 </mat-datepicker-toggle>
                 <mat-datepicker touchUi #pickerInicial></mat-datepicker>
             </mat-form-field>
@@ -18,7 +18,7 @@
                 <input matInput [matDatepicker]="pickerFinal" placeholder="dd/mm/aaaa" [disabled]="habilitar"
                     [formControl]="fec_final_mes" required>
                 <mat-datepicker-toggle matSuffix [for]="pickerFinal" matTooltipPosition="right" id="ayuda_fec"
-                    matTooltip="Ingresa la fecha final del mes que deseas consultar el reporte. Ejm: 31/08/2020">
+                    matTooltip="Ingresa la fecha final del mes que deseas consultar el reporte. Ejm: 31/08/2020.">
                 </mat-datepicker-toggle>
                 <mat-datepicker touchUi #pickerFinal></mat-datepicker>
             </mat-form-field>

@@ -2,7 +2,7 @@
 <br *ngIf="!HabilitarPlan">
 <div class="container" style="padding-bottom: 50px; text-align: center;" *ngIf="!HabilitarPlan">
     <div class="mat-elevation-z8" style="background: white;">
-        <div class="d-flex bd-highlight" id="resultadosEmpre">
+        <div class="d-flex bd-highlight" id="titulo">
             <mat-icon class="flex-shrink-1 bd-highlight" (click)="HabilitarSeleccion()" matSuffix
                 matTooltipPosition="right" matTooltip="Autorizar a todos los empleados la Planificación de Horas Extras"
                 id="SelectCheck">library_add_check</mat-icon>
@@ -136,7 +136,7 @@
                                     [formControl]="codigo" (keypress)="IngresarSoloNumeros($event)">
                                 <mat-icon id="iemple" matSuffix matTooltipPosition="right"
                                     
-                                    matTooltip="Búsqueda de empleado por el código">
+                                    matTooltip="Búsqueda de datos de empleado por código.">
                                     help_outline</mat-icon>
                             </mat-form-field>-->
                             <mat-form-field>
@@ -187,7 +187,7 @@
 </div>
 <div class="container" style="padding-bottom: 50px; text-align: center;" *ngIf="!HabilitarObservacion">
     <div class="mat-elevation-z8" style="background: white;">
-        <div class="d-flex bd-highlight" id="resultadosEmpre">
+        <div class="d-flex bd-highlight" id="titulo">
             <mat-icon class="flex-shrink-1 bd-highlight" (click)="HabilitarSeleccionO()" matSuffix
                 matTooltipPosition="right" matTooltip="Autorizar a todos los empleados la Planificación de Horas Extras"
                 id="SelectCheck">library_add_check</mat-icon>
@@ -273,7 +273,7 @@
 <br *ngIf="!HabilitarAutoriza">
 <div class="container" style="padding-bottom: 50px; text-align: center;" *ngIf="!HabilitarAutoriza">
     <div class="mat-elevation-z8" style="background: white;">
-        <div class="d-flex bd-highlight" id="resultadosEmpre">
+        <div class="d-flex bd-highlight" id="titulo">
             <span class="w-100 bd-highlight">
                 Lista de planificaciones de horas extras realizadas autorizadas</span>
             <button class="btn btn-sm" style="float: right; margin-right: 10px;" ngDefaultControl

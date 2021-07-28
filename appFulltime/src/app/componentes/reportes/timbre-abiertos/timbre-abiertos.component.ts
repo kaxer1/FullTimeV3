@@ -283,4 +283,11 @@ export class TimbreAbiertosComponent implements OnInit {
     return this.validacionesService.IngresarSoloLetras(e);
   }
 
+  LimpiarCampos() {
+    this.codigo.reset();
+    this.cedula.reset();
+    this.nombre.reset();
+    this.apellido.reset();
+  }
+
 }
