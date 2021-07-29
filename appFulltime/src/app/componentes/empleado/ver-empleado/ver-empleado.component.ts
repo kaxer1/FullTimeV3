@@ -73,6 +73,7 @@ import { FraseSeguridadComponent } from '../../frase-seguridad/frase-seguridad.c
 import { MetodosComponent } from 'src/app/componentes/metodoEliminar/metodos.component';
 import { TituloEmpleadoComponent } from '../titulo-empleado/titulo-empleado.component';
 import { EditarContratoComponent } from '../editar-contrato/editar-contrato.component';
+import { CambiarFraseComponent } from '../../frase-administrar/cambiar-frase/cambiar-frase.component';
 
 @Component({
   selector: 'app-ver-empleado',
@@ -1778,9 +1779,16 @@ export class VerEmpleadoComponent implements OnInit {
     this.vistaRegistrarDatos.open(FraseSeguridadComponent, { width: '350px', data: this.idEmpleado }).disableClose = true;
   }
 
+  // CAMBIAR FRASE 
+  CambiarFrase(): void {
+    console.log(this.idEmpleado);
+    this.vistaRegistrarDatos.open(CambiarFraseComponent, { width: '350px', data: this.idEmpleado }).disableClose = true;
+  }
+
   // VER BOTÓN FRASE DE ACUERDO A LA  CONFIGURACIÓN DE SEGURIDAD
   empresa: any = [];
   frase: boolean = false;
+  cambiar_frase: boolean = false;
   VerEmpresa() {
     this.empresa = [];
     this.restEmpresa.ConsultarDatosEmpresa(parseInt(localStorage.getItem('empresa'))).subscribe(data => {
@@ -1789,6 +1797,9 @@ export class VerEmpleadoComponent implements OnInit {
         this.restU.BuscarDatosUser(this.idEmpleadoLogueado).subscribe(data => {
           if (data[0].frase === null || data[0].frase === '') {
             this.frase = true;
+          }
+          else {
+            this.cambiar_frase = true;
           }
         });
       }

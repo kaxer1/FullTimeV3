@@ -290,6 +290,8 @@ import { PlantillaReportesService } from './componentes/reportes/plantilla-repor
 import { CrearVacunaComponent } from './componentes/empleado/vacunacion/crear-vacuna/crear-vacuna.component';
 import { EditarVacunaComponent } from './componentes/empleado/vacunacion/editar-vacuna/editar-vacuna.component';
 import { TimbreMultipleComponent } from './componentes/timbre-web/timbre-multiple/timbre-multiple.component';
+import { CambiarFraseComponent } from './componentes/frase-administrar/cambiar-frase/cambiar-frase.component';
+import { RecuperarFraseComponent } from './componentes/frase-administrar/recuperar-frase/recuperar-frase.component';
 
 const config: SocketIoConfig = { url: environment.url, options: {} };
 
@@ -522,6 +524,8 @@ const config: SocketIoConfig = { url: environment.url, options: {} };
     CrearVacunaComponent,
     EditarVacunaComponent,
     TimbreMultipleComponent,
+    CambiarFraseComponent,
+    RecuperarFraseComponent,
   ],
 
   imports: [
