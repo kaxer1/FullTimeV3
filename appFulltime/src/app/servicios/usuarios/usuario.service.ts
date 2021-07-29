@@ -18,6 +18,14 @@ export class UsuarioService {
     return this.http.get(`${environment.url}/usuarios`);
   }
 
+  getUsersAppMovil() {
+    return this.http.get<any>(`${environment.url}/usuarios/lista-app-movil/`);
+  }
+
+  updateUsersAppMovil(data: any) {
+    return this.http.put<any>(`${environment.url}/usuarios/lista-app-movil/`, data);
+  }
+
   BuscarUsersNoEnrolados() {
     return this.http.get(`${environment.url}/usuarios/noEnrolados`);
   }

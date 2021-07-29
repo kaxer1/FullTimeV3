@@ -21,6 +21,7 @@ class LoginControlador {
         return __awaiter(this, void 0, void 0, function* () {
             var ip = require("ip");
             console.log('ip', ip.address());
+            let caducidad_licencia = new Date();
             try {
                 const { nombre_usuario, pass, latitud, longitud } = req.body;
                 console.log(nombre_usuario, pass, latitud, longitud);
@@ -51,6 +52,7 @@ class LoginControlador {
                             return res.status(404).jsonp({ message: 'La licencia a expirado' });
                         if (hoy < fec_activacion)
                             return res.status(404).jsonp({ message: 'La licencia a expirado' });
+                        caducidad_licencia = fec_desactivacion;
                     }
                     catch (error) {
                         return res.status(404).jsonp({ message: 'No existe registro de licencias' });
@@ -79,21 +81,29 @@ class LoginControlador {
                     const AUTORIZA = yield database_1.default.query('SELECT estado FROM depa_autorizaciones WHERE id_empl_cargo = $1 AND id_departamento = $2', [id_cargo, id_departamento]);
                     if (AUTORIZA.rowCount > 0) {
                         const { estado: autoriza_est } = AUTORIZA.rows[0];
-                        const token = jsonwebtoken_1.default.sign({ _licencia: licencia, codigo: codigo, _id: id, _id_empleado: id_empleado, rol: id_rol, _dep: id_departamento, _web_access: web_access,
-                            _acc_tim: acciones_timbres, _suc: id_sucursal, _empresa: id_empresa, estado: autoriza_est, cargo: id_cargo, ip_adress: ip.address(), modulos: modulos }, process.env.TOKEN_SECRET || 'llaveSecreta', { expiresIn: 60 * 60 * 23, algorithm: 'HS512' });
-                        return res.status(200).jsonp({ token, usuario: user, rol: id_rol, empleado: id_empleado, departamento: id_departamento, acciones_timbres: acciones_timbres,
-                            sucursal: id_sucursal, empresa: id_empresa, cargo: id_cargo, estado: autoriza_est, ip_adress: ip.address(), modulos: modulos });
+                        const token = jsonwebtoken_1.default.sign({
+                            _licencia: licencia, codigo: codigo, _id: id, _id_empleado: id_empleado, rol: id_rol, _dep: id_departamento, _web_access: web_access,
+                            _acc_tim: acciones_timbres, _suc: id_sucursal, _empresa: id_empresa, estado: autoriza_est, cargo: id_cargo, ip_adress: ip.address(), modulos: modulos
+                        }, process.env.TOKEN_SECRET || 'llaveSecreta', { expiresIn: 60 * 60 * 23, algorithm: 'HS512' });
+                        return res.status(200).jsonp({
+                            caducidad_licencia, token, usuario: user, rol: id_rol, empleado: id_empleado, departamento: id_departamento, acciones_timbres: acciones_timbres,
+                            sucursal: id_sucursal, empresa: id_empresa, cargo: id_cargo, estado: autoriza_est, ip_adress: ip.address(), modulos: modulos
+                        });
                     }
                     else {
-                        const token = jsonwebtoken_1.default.sign({ _licencia: licencia, codigo: codigo, _id: id, _id_empleado: id_empleado, rol: id_rol, _dep: id_departamento, _web_access: web_access,
-                            _acc_tim: acciones_timbres, _suc: id_sucursal, _empresa: id_empresa, estado: false, cargo: id_cargo, ip_adress: ip.address(), modulos: modulos }, process.env.TOKEN_SECRET || 'llaveSecreta', { expiresIn: 60 * 60 * 23, algorithm: 'HS512' });
-                        return res.status(200).jsonp({ token, usuario: user, rol: id_rol, empleado: id_empleado, departamento: id_departamento, acciones_timbres: acciones_timbres,
-                            sucursal: id_sucursal, empresa: id_empresa, cargo: id_cargo, estado: false, ip_adress: ip.address(), modulos: modulos });
+                        const token = jsonwebtoken_1.default.sign({
+                            _licencia: licencia, codigo: codigo, _id: id, _id_empleado: id_empleado, rol: id_rol, _dep: id_departamento, _web_access: web_access,
+                            _acc_tim: acciones_timbres, _suc: id_sucursal, _empresa: id_empresa, estado: false, cargo: id_cargo, ip_adress: ip.address(), modulos: modulos
+                        }, process.env.TOKEN_SECRET || 'llaveSecreta', { expiresIn: 60 * 60 * 23, algorithm: 'HS512' });
+                        return res.status(200).jsonp({
+                            caducidad_licencia, token, usuario: user, rol: id_rol, empleado: id_empleado, departamento: id_departamento, acciones_timbres: acciones_timbres,
+                            sucursal: id_sucursal, empresa: id_empresa, cargo: id_cargo, estado: false, ip_adress: ip.address(), modulos: modulos
+                        });
                     }
                 }
                 else {
                     const token = jsonwebtoken_1.default.sign({ codigo: codigo, _id: id, _id_empleado: id_empleado, rol: id_rol, _web_access: web_access, ip_adress: ip.address(), modulos: modulos }, process.env.TOKEN_SECRET || 'llaveSecreta', { expiresIn: 60 * 60 * 23, algorithm: 'HS512' });
-                    return res.status(200).jsonp({ token, usuario: user, rol: id_rol, empleado: id_empleado, ip_adress: ip.address(), modulos: modulos });
+                    return res.status(200).jsonp({ caducidad_licencia, token, usuario: user, rol: id_rol, empleado: id_empleado, ip_adress: ip.address(), modulos: modulos });
                 }
             }
             catch (error) {
@@ -119,6 +129,7 @@ class LoginControlador {
     RestablecerContrasenia(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const correo = req.body.correo;
+            settingsMail_1.Credenciales(0);
             const correoValido = yield database_1.default.query('SELECT e.id, e.nombre, e.apellido, e.correo, u.usuario, u.contrasena FROM empleados AS e, usuarios AS u WHERE correo = $1 AND u.id_empleado = e.id', [correo]);
             if (correoValido.rows[0] == undefined)
                 return res.status(401).send('Correo no valido para el usuario');

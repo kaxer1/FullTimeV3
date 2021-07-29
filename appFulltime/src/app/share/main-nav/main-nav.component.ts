@@ -19,6 +19,8 @@ import { FuncionesService } from 'src/app/servicios/funciones/funciones.service'
 import { MainNavService } from './main-nav.service';
 import { PlantillaReportesService } from '../../componentes/reportes/plantilla-reportes.service';
 
+import * as moment from 'moment';
+
 @Component({
   selector: 'app-main-nav',
   templateUrl: './main-nav.component.html',
@@ -40,6 +42,8 @@ export class MainNavComponent implements OnInit {
   idEmpresa: number;
   datosEmpresa: any = [];
   mensaje: boolean = false;
+
+  fec_caducidad_licencia: Date;
 
   constructor(
     private breakpointObserver: BreakpointObserver,
@@ -74,10 +78,35 @@ export class MainNavComponent implements OnInit {
     }
   }
 
+  showMessageLicencia: Boolean = false;
+
+  FuncionLicencia() {
+    const licencia = localStorage.getItem('fec_caducidad_licencia');
+    if (licencia !== null) {
+      const fec_caducidad = new Date(licencia.split('.')[0])
+      const fecha_hoy = new Date();
+      this.fec_caducidad_licencia = fec_caducidad;
+      const fecha1 = moment(fecha_hoy.toJSON().split('T')[0])
+      const fecha2 = moment(fec_caducidad.toJSON().split('T')[0])
+
+      const diferencia = fecha2.diff(fecha1, 'days');
+
+      if (diferencia <= 30) {
+        this.showMessageLicencia = true;
+        const text = (diferencia === 1) ? 'dia' : 'dias';
+        this.toaster.warning(`Tu licencia expira en ${diferencia + ' ' + text}`)
+      }
+      
+    }
+  }
+
   ngOnInit() {
 
     if (this.loginService.loggedIn()) { // es importante el orden en el q se invocan las funciones.
       this.idEmpresa = parseInt(localStorage.getItem('empresa'))
+      
+      this.FuncionLicencia()
+
       this.mainService.LogicaFunciones()
       this.plantillaPDF.ShowColoresLogo(localStorage.getItem('empresa'))
       this.breakpointObserver.observe('(max-width: 800px)').subscribe((result: BreakpointState) => {
@@ -280,6 +309,7 @@ export class MainNavComponent implements OnInit {
         children: [
           //  { name: 'Enrolar Empleado', url: '/enrolados' },
           { name: 'Registrar Dispositivo', url: '/listarRelojes' },
+          { name: 'App Movil', url: '/app-movil' },
         ]
       },
       {

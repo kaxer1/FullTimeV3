@@ -18,15 +18,23 @@ exports.email = process.env.EMAIL || '';
 let pass = process.env.PASSWORD || '';
 // export let email: string;
 // let pass: string;
-exports.Credenciales = function (id_empresa) {
+exports.Credenciales = function (id_empresa, correo = process.env.EMAIL, password = process.env.PASSWORD) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            let credenciales = yield database_1.default.query('SELECT correo, password_correo FROM cg_empresa WHERE id = $1', [id_empresa]).then(result => {
-                return result.rows[0];
-            });
-            console.log('Credenciales === ', credenciales);
-            exports.email = credenciales.correo;
-            pass = credenciales.password_correo;
+            if (id_empresa === 0) {
+                exports.email = correo;
+                pass = password;
+                return;
+            }
+            else {
+                let credenciales = yield database_1.default.query('SELECT correo, password_correo FROM cg_empresa WHERE id = $1', [id_empresa]).then(result => {
+                    return result.rows[0];
+                });
+                // console.log('Credenciales === ',credenciales);
+                exports.email = credenciales.correo;
+                pass = credenciales.password_correo;
+                return;
+            }
         }
         catch (error) {
             // console.log(error);
@@ -35,7 +43,7 @@ exports.Credenciales = function (id_empresa) {
     });
 };
 exports.enviarMail = function (data) {
-    console.log(exports.email, '>>>>>>', pass);
+    // console.log(email,'>>>>>>', pass);
     const smtpTransport = nodemailer_1.default.createTransport({
         service: 'Gmail',
         auth: {
@@ -45,9 +53,9 @@ exports.enviarMail = function (data) {
     });
     try {
         smtpTransport.sendMail(data, (error, info) => __awaiter(this, void 0, void 0, function* () {
-            console.log('****************************************************');
-            console.log(data);
-            console.log('****************************************************');
+            // console.log('****************************************************');
+            // console.log(data);
+            // console.log('****************************************************');
             if (error) {
                 console.warn(error);
             }

@@ -226,5 +226,3 @@ ContarHoras_1.RegistrarAsistenciaByTimbres();
 NotiTimbres_1.NotificacionTimbreAutomatica();
 SinTimbres_1.NotificacionSinTimbres();
 DesactivarEmpleado_1.DesactivarFinContratoEmpleado();
-//generarTimbres(1);
-//ModificarTimbresEntrada();

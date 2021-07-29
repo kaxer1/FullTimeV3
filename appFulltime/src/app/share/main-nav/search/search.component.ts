@@ -38,7 +38,7 @@ export class SearchComponent implements OnInit {
   }
 
   BarraBusquedaEmpleados() {
-    
+
     if (!!sessionStorage.getItem('lista-empleados')) {
       // console.log('ya hay lista en la sesion iniciada');
       let empleados = JSON.parse(sessionStorage.getItem('lista-empleados'));
@@ -63,7 +63,8 @@ export class SearchComponent implements OnInit {
   abrirInfoEmpleado(nombre: string) {
     this.buscar_empl.forEach(element => {
       if (element.empleado === nombre) {
-        this.router.navigate(['/verEmpleado/', element.id], { relativeTo: this.route, skipLocationChange: false });
+        this.router.navigate(['/verEmpleado/', element.id],
+          { relativeTo: this.route, skipLocationChange: false });
       }
     });
   }

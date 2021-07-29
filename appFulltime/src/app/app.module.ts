@@ -287,11 +287,16 @@ import { ButtonAvisosComponent } from './share/main-nav/button-avisos/button-avi
 import { ProgressComponent } from './share/progress/progress.component';
 import { ButtonOpcionesComponent } from './share/main-nav/button-opciones/button-opciones.component';
 import { PlantillaReportesService } from './componentes/reportes/plantilla-reportes.service';
+
 import { CrearVacunaComponent } from './componentes/empleado/vacunacion/crear-vacuna/crear-vacuna.component';
 import { EditarVacunaComponent } from './componentes/empleado/vacunacion/editar-vacuna/editar-vacuna.component';
 import { TimbreMultipleComponent } from './componentes/timbre-web/timbre-multiple/timbre-multiple.component';
 import { CambiarFraseComponent } from './componentes/frase-administrar/cambiar-frase/cambiar-frase.component';
 import { RecuperarFraseComponent } from './componentes/frase-administrar/recuperar-frase/recuperar-frase.component';
+
+import { ListaAppComponent } from './componentes/appMovil/lista-app/lista-app.component';
+import { UpdateEstadoAppComponent } from './componentes/appMovil/update-estado-app/update-estado-app.component';
+
 
 const config: SocketIoConfig = { url: environment.url, options: {} };
 
@@ -521,11 +526,16 @@ const config: SocketIoConfig = { url: environment.url, options: {} };
     ButtonAvisosComponent,
     ProgressComponent,
     ButtonOpcionesComponent,
+
     CrearVacunaComponent,
     EditarVacunaComponent,
     TimbreMultipleComponent,
     CambiarFraseComponent,
     RecuperarFraseComponent,
+
+    ListaAppComponent,
+    UpdateEstadoAppComponent,
+
   ],
 
   imports: [

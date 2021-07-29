@@ -11,6 +11,8 @@ class UsuarioRutas {
 
     configuracion(): void {
         this.router.get('/', TokenValidation, USUARIO_CONTROLADOR.list);
+        this.router.get('/lista-app-movil/', TokenValidation, USUARIO_CONTROLADOR.usersEmpleados);
+        this.router.put('/lista-app-movil/', TokenValidation, USUARIO_CONTROLADOR.updateUsersEmpleados);
         this.router.post('/', TokenValidation, USUARIO_CONTROLADOR.create);
         this.router.get('/busqueda/:usuario', TokenValidation, USUARIO_CONTROLADOR.getIdByUsuario);
         this.router.get('/datos/:id_empleado', TokenValidation, USUARIO_CONTROLADOR.ObtenerDatosUsuario);

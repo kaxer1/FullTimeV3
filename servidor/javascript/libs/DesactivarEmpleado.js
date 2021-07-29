@@ -13,7 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const database_1 = __importDefault(require("../database"));
-const HORA_EJECUTA = 1;
+const HORA_EJECUTA = 23;
 exports.DesactivarFinContratoEmpleado = function () {
     setInterval(() => __awaiter(this, void 0, void 0, function* () {
         var f = new Date();

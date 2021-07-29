@@ -35,7 +35,7 @@ exports.TokenValidation = (req, res, next) => {
                 return o;
             });
             // console.log(ok_licencias);
-            if (ok_licencias.leght === 0)
+            if (ok_licencias.lenght === 0)
                 return res.status(401).send('La licencia no existe');
             const hoy = new Date();
             const { fec_activacion, fec_desactivacion } = ok_licencias[0];
@@ -52,7 +52,7 @@ exports.TokenValidation = (req, res, next) => {
                 next();
             }
             else {
-                return res.status(401).send('La licencia a expirado,');
+                return res.status(401).send('La licencia a expirado');
             }
         });
     }

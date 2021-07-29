@@ -76,17 +76,6 @@ function CrearNuevoPeriodo(Obj, descripcion, dia, anio) {
         if (year >= regimen.anio_antiguedad) {
             antiguedad = regimen.dia_incr_antiguedad;
         }
-        // var nuevo = new PVacacion(
-        //     Obj.id_empl_contrato,
-        //     descripcion,
-        //     regimen.dia_anio_vacacion,
-        //     antiguedad,
-        //     1,
-        //     dia,
-        //     anio,
-        //     Obj.dia_perdido,
-        //     Obj.horas_vacaciones,
-        //     Obj.min_vacaciones );
         // console.log(nuevo);
         yield database_1.default.query('INSERT INTO peri_vacaciones(id_empl_contrato, descripcion, dia_vacacion, dia_antiguedad, estado, fec_inicio, fec_final, dia_perdido, horas_vacaciones, min_vacaciones) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10 )', [Obj.id_empl_contrato, descripcion, regimen.dia_anio_vacacion, antiguedad, 1, dia, anio, Obj.dia_perdido, Obj.horas_vacaciones, Obj.min_vacaciones])
             .then(() => {
@@ -143,6 +132,7 @@ exports.beforeFiveDays = function () {
             if (avisoVacacion.rowCount > 0) {
                 // Enviar mail a todos los que nacieron en la fecha seleccionada
                 avisoVacacion.rows.forEach(obj => {
+                    settingsMail_1.Credenciales(0);
                     let data = {
                         to: obj.correo,
                         from: settingsMail_1.email,
@@ -173,6 +163,7 @@ exports.beforeTwoDays = function () {
             if (avisoVacacion.rowCount > 0) {
                 // Enviar mail a todos los que nacieron en la fecha seleccionada
                 avisoVacacion.rows.forEach(obj => {
+                    settingsMail_1.Credenciales(0);
                     let data = {
                         to: obj.correo,
                         from: settingsMail_1.email,

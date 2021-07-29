@@ -1,6 +1,6 @@
-
 // IMPORTAR LIBRERIAS
 import { environment } from 'src/environments/environment';
+import { Router, ActivatedRoute } from '@angular/router';
 import { FormControl, FormGroup } from '@angular/forms';
 import { PageEvent } from '@angular/material/paginator';
 import { MatDialog } from '@angular/material/dialog';
@@ -8,7 +8,6 @@ import { Component, OnInit } from '@angular/core';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 import pdfMake from 'pdfmake/build/pdfmake';
 import { ToastrService } from 'ngx-toastr';
-import { Router } from '@angular/router';
 import * as FileSaver from 'file-saver';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 import * as moment from 'moment';
@@ -73,7 +72,11 @@ import { FraseSeguridadComponent } from '../../frase-seguridad/frase-seguridad.c
 import { MetodosComponent } from 'src/app/componentes/metodoEliminar/metodos.component';
 import { TituloEmpleadoComponent } from '../titulo-empleado/titulo-empleado.component';
 import { EditarContratoComponent } from '../editar-contrato/editar-contrato.component';
+
 import { CambiarFraseComponent } from '../../frase-administrar/cambiar-frase/cambiar-frase.component';
+
+import { switchMap, tap } from 'rxjs/operators';
+
 
 @Component({
   selector: 'app-ver-empleado',
@@ -152,6 +155,9 @@ export class VerEmpleadoComponent implements OnInit {
     private toastr: ToastrService, // VARIABLE MANEJO DE MENSAJES DE NOTIFICACIONES
     public restU: UsuarioService, // SERVICIO DATOS USUARIO
     public router: Router, // VARIABLE NAVEGACIÓN DE RUTAS URL
+
+    private activatedRoute: ActivatedRoute,
+
   ) {
     console.log('Constructor');
 
@@ -188,6 +194,12 @@ export class VerEmpleadoComponent implements OnInit {
     this.VerEmpresa();
     //this.VerAccionPersonal();
     //this.VerHorasExtras();
+    this.activatedRoute.params
+      .pipe(
+        switchMap(({ id }) => this.idEmpleado = id)
+      )
+      .subscribe(() => {
+      });
   }
 
   // MÉTODO PARA VER LA INFORMACIÓN DEL EMPLEADO 

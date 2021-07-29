@@ -41,28 +41,6 @@ function CalcularEntradaAlmuerzo(hora, tiempo_almuerzo) {
     }
     return hora_string;
 }
-/**
- * Metodo obtine un rango de fechas inicial y final de la semana en que se encuentre presente.
- */
-// function ObtenerRangoSemanal(fHoy: Date) {
-//     fHoy.setUTCHours(0);
-//     fHoy.setUTCMinutes(0);
-//     var fechaInicio = new Date(fHoy); 
-//     var fechaFinal = new Date(fHoy); 
-//     let dia_suma = sumaDias(fechaFinal, 6 - fHoy.getDay())
-//     let dia_resta = restaDias(fechaInicio, fHoy.getDay())
-//     return {
-//         inicio: dia_resta,
-//         final: dia_suma
-//     }             
-// }
-// function ObtenerDiaIniciaSemana(fHoy: Date) {
-//     fHoy.setUTCHours(0);
-//     fHoy.setUTCMinutes(0);
-//     var fechaInicio = new Date(fHoy); 
-//     let dia_resta = restaDias(fechaInicio, fHoy.getDay())
-//     return dia_resta
-// }
 function ListaTimbresDiarioToEmpleado(hoy) {
     return __awaiter(this, void 0, void 0, function* () {
         // aqui falta definir si es entrada, salida, entrada de almuerzo y salida de almuerzo === o crear mas funciones para cada uno
@@ -243,26 +221,6 @@ function CalcularCamposFaltantes(obj, labora) {
     }
     return obj;
 }
-/*
-function CalculoHoraSalida(t: ITiempoLaboral) {
-    // console.log('******************');
-    var c = t.h_ingreso.getUTCHours() // hora
-    var d = t.h_ingreso.getUTCMinutes()/60 // hora
-
-    var a = t.min_almuerzo/60 // horas
-    
-    var resultado = parseInt(t.h_trabaja.toString()) + a + c + d;
-    var z = resultado - parseInt(resultado.toString());
-    let hora_string;
-    if (resultado <= 9) {
-        hora_string = '0' + parseInt(resultado.toString()) + ':' + (z * 60)
-    } else {
-        hora_string = parseInt(resultado.toString()) + ':' + (z * 60)
-    }
-    // console.log('******************');
-    return hora_string
-}
-*/
 function HHMMtoSegundos(dato) {
     if (dato === '')
         return 0;

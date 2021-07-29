@@ -31,8 +31,12 @@
         </div>
     </div>
 </div>
+<<<<<<< HEAD
 <div class="container" style="padding-bottom: 50px; text-align: center;">
     <!-- TABLA PARA EMPLEADOS -->
+=======
+<div class="container" style="padding-bottom: 50px; text-align: center;">    
+>>>>>>> 49df35cebcff172bb1f1b54b1dc1d1a431b4fc5c
     <div class="mat-elevation-z8" style="background: white;">
         <div id="titulo">REPORTE TIMBRE HORARIO ABIERTO</div>
         <div class="table-responsive">
@@ -91,8 +95,13 @@
                                 help_outline</mat-icon>
                         </td>
                     </tr>
+<<<<<<< HEAD
                     <tr
                         *ngFor="let e of empleados | emplCodigo: filtroCodigo | emplCedula: filtroCedula | emplNombre: filtroNombre | emplApellido: filtroApellido | paginate:tamanio_pagina:numero_pagina">
+=======
+                    <tr *ngFor="let e of empleados | emplCodigo: filtroCodigo | emplCedula: filtroCedula | emplNombre: filtroNombre | emplApellido: filtroApellido | paginate:tamanio_pagina:numero_pagina">
+
+>>>>>>> 49df35cebcff172bb1f1b54b1dc1d1a431b4fc5c
                         <td>
                             <mat-checkbox (click)="$event.stopPropagation()"
                                 (change)="$event ? selectionEmp.toggle(e) : null" [checked]="selectionEmp.isSelected(e)"
