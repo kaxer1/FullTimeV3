@@ -33,9 +33,6 @@ export class VacunacionService {
     return this.http.put(`${environment.url}/vacunas/${id}/documento`, formData)
   }
 
-  EditarDocumento(id: number, data: any) {
-    return this.http.put(`${environment.url}/vacunas/editarDocumento/${id}`, data);
-  }
 
   // SERVICIOS DE REGISTROS DE TIPO DE VACUNACIÓN
   CrearTipoVacuna(data: any) {
@@ -43,10 +40,10 @@ export class VacunacionService {
   }
 
   ListarTiposVacuna() {
-    return this.http.get(`${environment.url}/vacunas/tipo_vacuna`);
+    return this.http.get(`${environment.url}/vacunas/lista/tipo_vacuna`);
   }
 
   ConsultarUltimoId() {
-    return this.http.get(`${environment.url}/vacunas/buscarTipo/ultimoId`);
+    return this.http.get(`${environment.url}/vacunas/tipo_vacuna/buscar/ultimoId`);
   }
 }

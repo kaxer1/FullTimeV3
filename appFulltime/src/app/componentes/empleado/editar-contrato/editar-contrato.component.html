@@ -14,7 +14,7 @@
     <div class="d-flex flex-wrap justify-content-around">
         <mat-form-field>
             <mat-label>Seleccionar Régimen</mat-label>
-            <mat-icon id="contratoE" matSuffix matTooltipClass="contratoE-tooltip" matTooltipPosition="right"
+            <mat-icon id="contratoE" matSuffix  matTooltipPosition="right"
                 matTooltip="Seleccionar Régimen Laboral con el cual va a prestar sus servicios el empleado">
                 help_outline</mat-icon>
             <mat-select id="nomContrato" [formControl]="idRegimenF" required>
@@ -26,7 +26,7 @@
         <mat-form-field>
             <mat-label>Fecha de ingreso</mat-label>
             <input matInput [matDatepicker]="picker" placeholder="dd/mm/aaaa" [formControl]="fechaIngresoF" required>
-            <mat-datepicker-toggle matSuffix [for]="picker" id="contratoE" matTooltipClass="contratoE-tooltip"
+            <mat-datepicker-toggle matSuffix [for]="picker" id="contratoE" 
                 matTooltipPosition="right"
                 matTooltip="Ingresar la fecha de ingreso del empleado a la empresa. Seleccione la fecha dando click en el icono de calendario o puede escribir la fecha con el formato  día/mes/año. Ejemplo: 12/04/1993">
             </mat-datepicker-toggle>
@@ -35,7 +35,7 @@
         <mat-form-field>
             <mat-label>Fecha de salida</mat-label>
             <input matInput [matDatepicker]="picker2" placeholder="dd/mm/aaaa" [formControl]="fechaSalidaF">
-            <mat-datepicker-toggle matSuffix [for]="picker2" id="contratoE" matTooltipClass="contratoE-tooltip"
+            <mat-datepicker-toggle matSuffix [for]="picker2" id="contratoE" 
                 matTooltipPosition="right"
                 matTooltip="Ingresar la fecha estimada de salida del empleado, en caso de conocerla. Seleccione la fecha dando click en el icono de calendario o puede escribir la fecha con el formato  día/mes/año. Ejemplo: 12/04/1993">
             </mat-datepicker-toggle>
@@ -65,7 +65,7 @@
             <mat-form-field>
                 <mat-label>Controlar Vacaciones *</mat-label>
                 <input matInput readonly="readonly">
-                <mat-icon id="contratoE" matSuffix matTooltipClass="contratoE-tooltip" matTooltipPosition="right"
+                <mat-icon id="contratoE" matSuffix  matTooltipPosition="right"
                     matTooltip="Selecionar Si para el control, caso contrario No">
                     help_outline</mat-icon>
             </mat-form-field>
@@ -80,7 +80,7 @@
             <mat-form-field>
                 <mat-label>Controlar Asistencia *</mat-label>
                 <input matInput readonly="readonly">
-                <mat-icon id="contratoE" matSuffix matTooltipClass="contratoE-tooltip" matTooltipPosition="right"
+                <mat-icon id="contratoE" matSuffix  matTooltipPosition="right"
                     matTooltip="Selecionar Si para el control, caso contrario No">
                     help_outline</mat-icon>
             </mat-form-field>

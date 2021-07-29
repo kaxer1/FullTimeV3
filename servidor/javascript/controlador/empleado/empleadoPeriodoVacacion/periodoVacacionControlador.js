@@ -40,17 +40,19 @@ class PeriodoVacacionControlador {
     EncontrarIdPerVacaciones(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { id_empleado } = req.params;
-            const VACACIONES = yield database_1.default.query('SELECT pv.id, ce.id AS idContrato FROM peri_vacaciones AS pv, empl_contratos AS ce, empleados AS e WHERE ce.id_empleado = e.id AND pv.id_empl_contrato = ce.id AND pv.estado = 1 AND e.id = $1 ORDER BY pv.fec_final DESC', [id_empleado]);
+            const VACACIONES = yield database_1.default.query('SELECT pv.id, ce.id AS idContrato FROM peri_vacaciones AS pv, ' +
+                'empl_contratos AS ce, empleados AS e WHERE ce.id_empleado = e.id AND pv.id_empl_contrato = ce.id ' +
+                'AND e.id = $1 ORDER BY pv.fec_final DESC', [id_empleado]);
             if (VACACIONES.rowCount > 0) {
                 return res.jsonp(VACACIONES.rows);
             }
             res.status(404).jsonp({ text: 'Registro no encontrado' });
         });
     }
-    EncontrarPerVacacionesPorIdContrato(req, res) {
+    EncontrarPerVacaciones(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { id_empl_contrato } = req.params;
-            const PERIODO_VACACIONES = yield database_1.default.query('SELECT * FROM peri_vacaciones AS p WHERE p.id_empl_contrato = $1 AND p.estado = 1', [id_empl_contrato]);
+            const { codigo } = req.params;
+            const PERIODO_VACACIONES = yield database_1.default.query('SELECT * FROM peri_vacaciones AS p WHERE p.codigo = $1', [codigo]);
             if (PERIODO_VACACIONES.rowCount > 0) {
                 return res.jsonp(PERIODO_VACACIONES.rows);
             }

@@ -167,7 +167,6 @@ export class VerEmpleadoComponent implements OnInit {
     var a = moment();
     this.FechaActual = a.format('YYYY-MM-DD');
     this.obtenerPlanComidasEmpleado(parseInt(this.idEmpleado));
-    this.obtenerPeriodoVacaciones(parseInt(this.idEmpleado));
     this.ObtenerHorariosEmpleado(parseInt(this.idEmpleado));
     this.obtenerEmpleadoProcesos(parseInt(this.idEmpleado));
     this.ObtenerAutorizaciones(parseInt(this.idEmpleado));
@@ -183,6 +182,7 @@ export class VerEmpleadoComponent implements OnInit {
     this.verEmpleado(this.idEmpleado);
     this.obtenerContratosEmpleado();
     this.ObtenerNacionalidades();
+    this.ObtenerDatosVacunas();
     this.VerFuncionalidades();
     this.VerEmpresa();
     //this.VerAccionPersonal();
@@ -471,6 +471,7 @@ export class VerEmpleadoComponent implements OnInit {
         this.textoBoton = 'Subir Foto';
       }
       this.MapGeolocalizar(data[0]['latitud'], data[0]['longitud'], empleado);
+      this.obtenerPeriodoVacaciones();
     })
   }
 
@@ -612,33 +613,12 @@ export class VerEmpleadoComponent implements OnInit {
   }
 
   // MÉTODO PARA IMPRIMIR DATOS DEL PERIODO DE VACACIONES 
-  buscarPeriodosVacaciones: any;
   peridoVacaciones: any;
-  obtenerPeriodoVacaciones(id_empleado: number) {
-    this.buscarPeriodosVacaciones = [];
+  obtenerPeriodoVacaciones() {
     this.peridoVacaciones = [];
-    this.restEmpleado.BuscarIDContrato(id_empleado).subscribe(datos => {
-      this.idContrato = datos;
-      console.log("idContrato ", this.idContrato[0].id);
-      for (let i = 0; i <= this.idContrato.length - 1; i++) {
-        this.restPerV.getInfoPeriodoVacacionesPorIdContrato(this.idContrato[i]['id']).subscribe(datos => {
-          this.buscarPeriodosVacaciones = datos;
-          if (this.buscarPeriodosVacaciones.length === 0) {
-            console.log("No se encuentran registros")
-          }
-          else {
-            if (this.cont === 0) {
-              this.peridoVacaciones = datos
-              this.cont++;
-            }
-            else {
-              this.peridoVacaciones = this.peridoVacaciones.concat(datos);
-              console.log("Datos Periodo Vacaciones" + i + '', this.peridoVacaciones)
-            }
-          }
-        })
-      }
-    });
+    this.restPerV.ObtenerPeriodoVacaciones(this.empleadoUno[0].codigo).subscribe(datos => {
+      this.peridoVacaciones = datos;
+    })
   }
 
   // MÉTODO PARA MOSTRAR DATOS DE AUTORIDAD DEPARTAMENTOS 
@@ -1025,9 +1005,31 @@ export class VerEmpleadoComponent implements OnInit {
   }
 
 
+  /* ************************************************************************************************** *
+   *                               REGISTRO DE VACUNACIÓN                                               *
+   * ************************************************************************************************** */
+  // MÉTODO PARA CONSULTAR DATOS DE REGISTRO DE VACUNACIÓN
+  datosVacuna: any = [];
+  ObtenerDatosVacunas() {
+    this.datosVacuna = [];
+    this.restVacuna.ObtenerVacunaEmpleado(parseInt(this.idEmpleado)).subscribe(data => {
+      this.datosVacuna = data;
+      this.HabilitarBotonesVacuna();
+    });
+  }
+
+  mostrarVacunaEditar: boolean = true;
+  HabilitarBotonesVacuna() {
+    if (this.datosVacuna.length == 0) {
+      this.btnVacuna = 'Añadir';
+    } else {
+      this.btnVacuna = 'Editar';
+    }
+  }
+
   // LÓGICA DE BOTÓN PARA MOSTRAR COMPONENTE DEL REGISTRO DE VACUNACION 
   MostrarVentanaVacuna() {
-    if (this.btnVacuna != 'Editar') {
+    if (this.btnVacuna != 'Editar' && this.btnVacuna != 'Cancelar') {
       if (this.mostrarVacuna == true) {
         this.mostrarVacuna = false;
         this.btnVacuna = 'No Añadir';
@@ -1036,14 +1038,37 @@ export class VerEmpleadoComponent implements OnInit {
         this.btnVacuna = 'Añadir';
       }
     } else {
-      if (this.mostrarVacuna == false) {
-        this.mostrarVacuna = true;
-        this.editar = 'editar';
+      if (this.mostrarVacunaEditar == false) {
+        this.mostrarVacunaEditar = true;
+        this.btnVacuna = 'Editar';
       } else {
-        this.mostrarVacuna = false;
-        this.editar = 'editar';
+        this.mostrarVacunaEditar = false;
+        this.btnVacuna = 'Cancelar';
       }
     }
+  }
+
+  // ELIMINAR REGISTRO DE VACUNA
+  EliminarVacuna(id: number) {
+    this.restVacuna.EliminarRegistroVacuna(id).subscribe(res => {
+      this.ObtenerDatosVacunas();
+      this.btnVacuna = 'Añadir';
+      this.toastr.error('Registro eliminado', '', {
+        timeOut: 6000,
+      });
+    });
+  }
+
+  // FUNCIÓN PARA CONFIRMAR SI SE ELIMINA O NO UN REGISTRO 
+  ConfirmarEliminarVacuna(id: number) {
+    this.vistaRegistrarDatos.open(MetodosComponent, { width: '450px' }).afterClosed()
+      .subscribe((confirmado: Boolean) => {
+        if (confirmado) {
+          this.EliminarVacuna(id);
+        } else {
+          this.router.navigate(['/verEmpleado/', this.idEmpleado]);
+        }
+      });
   }
 
   /* **************************************************************************************************** *
@@ -1081,7 +1106,7 @@ export class VerEmpleadoComponent implements OnInit {
         this.vistaRegistrarDatos.open(RegistrarPeriodoVComponent,
           { width: '900px', data: { idEmpleado: this.idEmpleado, idContrato: this.idContrato[0].max } })
           .afterClosed().subscribe(item => {
-            this.obtenerPeriodoVacaciones(parseInt(this.idEmpleado));
+            this.obtenerPeriodoVacaciones();
           });
       });
     }, error => {
@@ -1252,7 +1277,7 @@ export class VerEmpleadoComponent implements OnInit {
     this.vistaRegistrarDatos.open(EditarPeriodoVacacionesComponent,
       { width: '900px', data: { idEmpleado: this.idEmpleado, datosPeriodo: datoSeleccionado } })
       .afterClosed().subscribe(item => {
-        this.obtenerPeriodoVacaciones(parseInt(this.idEmpleado));
+        this.obtenerPeriodoVacaciones();
       });
   }
 

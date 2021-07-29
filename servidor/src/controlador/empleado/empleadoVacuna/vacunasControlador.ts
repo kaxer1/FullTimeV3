@@ -6,8 +6,8 @@ class VacunasControlador {
     // LISTAR TODOS LOS REGISTROS DE VACUNACIÓN
     public async ListarRegistro(req: Request, res: Response) {
         const VACUNA = await pool.query('SELECT ev.id, ev.id_empleado, ev.id_tipo_vacuna, ev.dosis, ' +
-            'ev.carnet, tv.nombre AS vacuna, ev.nom_carnet ' +
-            'FROM empl_vacuna AS ev, tipo_vacuna AS tv WHERE ev.id_tipo = tv.id ORDER BY ev.id ASC');
+            'ev.carnet, tv.nombre AS vacuna, ev.nom_carnet, ev.nom_carnet ' +
+            'FROM empl_vacuna AS ev, tipo_vacuna AS tv WHERE ev.id_tipo_vacuna = tv.id ORDER BY ev.id ASC');
         if (VACUNA.rowCount > 0) {
             return res.jsonp(VACUNA.rows)
         }
@@ -20,8 +20,8 @@ class VacunasControlador {
     public async ListarUnRegistro(req: Request, res: Response): Promise<any> {
         const { id_empleado } = req.params;
         const VACUNA = await pool.query('SELECT ev.id, ev.id_empleado, ev.id_tipo_vacuna, ev.dosis, ' +
-            'ev.carnet, tv.nombre AS vacuna, ev.nom_carnet ' +
-            'FROM empl_vacuna AS ev, tipo_vacuna AS tv WHERE ev.id_tipo = tv.id AND ev.id_empleado = $1',
+            'ev.carnet, tv.nombre AS vacuna, ev.nom_carnet, ev.nom_carnet ' +
+            'FROM empl_vacuna AS ev, tipo_vacuna AS tv WHERE ev.id_tipo_vacuna = tv.id AND ev.id_empleado = $1',
             [id_empleado]);
         if (VACUNA.rowCount > 0) {
             return res.jsonp(VACUNA.rows)
@@ -41,7 +41,7 @@ class VacunasControlador {
 
     // ACTUALIZAR REGISTRO DE VACUNACIÓN
     public async ActualizarRegistro(req: Request, res: Response): Promise<void> {
-        const id = req.params;
+        const { id } = req.params;
         const { id_tipo_vacuna, dosis, nom_carnet } = req.body;
         await pool.query('UPDATE empl_vacuna SET id_tipo_vacuna = $1, dosis = $2, nom_carnet = $3 ' +
             'WHERE id = $4',
@@ -51,7 +51,7 @@ class VacunasControlador {
 
     // ELIMINAR REGISTRO DE VACUNACIÓN
     public async EliminarRegistro(req: Request, res: Response): Promise<void> {
-        const id = req.params;
+        const { id } = req.params;
         await pool.query('DELETE FROM empl_vacuna WHERE id = $1', [id]);
         res.jsonp({ message: 'Registro eliminado.' });
     }
@@ -70,14 +70,6 @@ class VacunasControlador {
         const docs = req.params.docs;
         let filePath = `servidor\\carnetVacuna\\${docs}`
         res.sendFile(__dirname.split("servidor")[0] + filePath);
-    }
-
-    // ACTUALIZACIÓN DE CERTIFICADO O CARNET DE VACUNACIÓN
-    public async EditarDocumento(req: Request, res: Response): Promise<void> {
-        const id = req.params.id;
-        const { documento } = req.body;
-        await pool.query('UPDATE empl_vacuna SET carnet = $1 WHERE id_empleado = $2', [documento, id]);
-        res.jsonp({ message: 'Registro actualizado.' });
     }
 
     /** ****************************************************************************************  *

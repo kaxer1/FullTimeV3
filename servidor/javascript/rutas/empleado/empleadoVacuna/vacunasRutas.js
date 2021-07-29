@@ -24,12 +24,11 @@ class VacunaRutas {
         this.router.put('/:id', verificarToken_1.TokenValidation, vacunasControlador_1.default.ActualizarRegistro);
         this.router.get('/:id_empleado', verificarToken_1.TokenValidation, vacunasControlador_1.default.ListarUnRegistro);
         this.router.delete('/eliminar/:id', verificarToken_1.TokenValidation, vacunasControlador_1.default.EliminarRegistro);
-        this.router.put('/editarDocumento/:id', verificarToken_1.TokenValidation, vacunasControlador_1.default.EditarDocumento);
         this.router.put('/:id/documento', [verificarToken_1.TokenValidation, multipartMiddleware], vacunasControlador_1.default.GuardarDocumento);
         // RUTAS REGISTROS TIPOS DE VACUNA
-        this.router.get('/tipo_vacuna', verificarToken_1.TokenValidation, vacunasControlador_1.default.ListarTipoVacuna);
+        this.router.get('/lista/tipo_vacuna', verificarToken_1.TokenValidation, vacunasControlador_1.default.ListarTipoVacuna);
         this.router.post('/tipo_vacuna', verificarToken_1.TokenValidation, vacunasControlador_1.default.CrearTipoVacuna);
-        this.router.get('/tipo_vacuna/ultimoId', verificarToken_1.TokenValidation, vacunasControlador_1.default.ObtenerUltimoId);
+        this.router.get('/tipo_vacuna/buscar/ultimoId', verificarToken_1.TokenValidation, vacunasControlador_1.default.ObtenerUltimoId);
     }
 }
 const VACUNA_RUTAS = new VacunaRutas();
