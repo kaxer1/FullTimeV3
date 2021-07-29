@@ -1,27 +1,14 @@
-.btn { margin-left: 15px; background-color: rgb(80,87,97); color: white; } 
+.btn { background-color: rgb(80,87,97); color: white; } 
 
 td { padding-top: 10px; text-align: center; }
 
-mat-form-field { padding: 10px 15px 0px 15px;}
+table { width: 100%; font-size: 12px;}
 
-#TituloResultado { 
-    font-size: 17px; 
-    text-align: center; 
-    background: rgb(52,65,84); 
-    color: white; 
-    padding-top: 10px; 
-    padding-bottom: 6px; 
+h4 {
+    font-weight: bold;
 }
 
-table { width: 100%; font-size: 13px;}
+#accion { color: rgb(53, 95, 209); cursor: pointer; }
 
+#cerrar { cursor: pointer; margin-left: 25px;}
 
-
-p { font-size: x-small; }
-
-#SelectCheck {
-    cursor: pointer;
-    margin-left: 10px;
-}
-
-#accion { color: rgb(38, 0, 255); cursor: pointer; }

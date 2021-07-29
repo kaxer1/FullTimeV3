@@ -25,7 +25,7 @@ import { PlantillaReportesService } from '../../componentes/reportes/plantilla-r
   styleUrls: ['./main-nav.component.css']
 })
 export class MainNavComponent implements OnInit {
- 
+
   isHandset$: Observable<boolean> = this.breakpointObserver.observe('(max-width: 800px)')
     .pipe(
       map(result => result.matches),
@@ -54,7 +54,7 @@ export class MainNavComponent implements OnInit {
     private plantillaPDF: PlantillaReportesService,
     private route: ActivatedRoute,
     private mainService: MainNavService
-  ) {  }
+  ) { }
 
   hasChild = (_: number, node: MenuNode) => !!node.children && node.children.length > 0;
 
@@ -88,9 +88,9 @@ export class MainNavComponent implements OnInit {
 
   }
 
-  get color_p(): string { return this.plantillaPDF.color_Primary}
-  get color_s(): string { return this.plantillaPDF.color_Secundary}  
-  get logo() : string { return this.plantillaPDF.logoBase64 }
+  get color_p(): string { return this.plantillaPDF.color_Primary }
+  get color_s(): string { return this.plantillaPDF.color_Secundary }
+  get logo(): string { return this.plantillaPDF.logoBase64 }
 
   LlamarDatos() {
     this.id_empleado_logueado = parseInt(localStorage.getItem('empleado'));
@@ -142,12 +142,12 @@ export class MainNavComponent implements OnInit {
     }
   }
 
-  
-  get HabilitarAccion() : boolean { return this.mainService.accionesPersonal; }
-  get HabilitarHoraExtra() : boolean { return this.mainService.horasExtras; }
-  get HabilitarAlimentacion() : boolean { return this.mainService.alimentacion; }
-  get HabilitarPermisos() : boolean { return this.mainService.permisos; }
-  get HabilitarReportes() : boolean { return this.mainService.reportes; }
+
+  get HabilitarAccion(): boolean { return this.mainService.accionesPersonal; }
+  get HabilitarHoraExtra(): boolean { return this.mainService.horasExtras; }
+  get HabilitarAlimentacion(): boolean { return this.mainService.alimentacion; }
+  get HabilitarPermisos(): boolean { return this.mainService.permisos; }
+  get HabilitarReportes(): boolean { return this.mainService.reportes; }
 
   /**
    * MENU PRINCIPAL
@@ -166,21 +166,21 @@ export class MainNavComponent implements OnInit {
     if (name_emp !== null && tipo_empresa !== null) {
 
       this.MetodoSubSelectMenu(name_emp, tipo_empresa)
-      
+
     } else {
       this.restEmpresa.ConsultarEmpresas().subscribe(res => {
-        console.log('Empresa: ',res);
+        console.log('Empresa: ', res);
         localStorage.setItem('name_empresa', res[0].nombre);
         localStorage.setItem('tipo_empresa', res[0].tipo_empresa);
         this.MetodoSubSelectMenu(res[0].nombre, res[0].tipo_empresa)
-  
+
       })
 
     }
 
   }
 
-  MetodoSubSelectMenu(nombre: string, tipo_empresa: string){
+  MetodoSubSelectMenu(nombre: string, tipo_empresa: string) {
     if (tipo_empresa === 'Pública') {
       this.mainService.setAccionesPersonal(true);
     }
@@ -269,7 +269,7 @@ export class MainNavComponent implements OnInit {
           { name: 'Horas Extras Planificadas', url: '/planificacionesHorasExtras' },
           { name: 'Planificar Hora Extra', url: '/planificaHoraExtra' },
           { name: 'Planificaciones', url: '/listadoPlanificaciones' },
-       //   { name: 'Calcular Hora Extra', url: '/horaExtraReal' },
+          //   { name: 'Calcular Hora Extra', url: '/horaExtraReal' },
         ]
       },
       {
@@ -278,7 +278,7 @@ export class MainNavComponent implements OnInit {
         estado: true,
         icono: 'schedule',
         children: [
-        //  { name: 'Enrolar Empleado', url: '/enrolados' },
+          //  { name: 'Enrolar Empleado', url: '/enrolados' },
           { name: 'Registrar Dispositivo', url: '/listarRelojes' },
         ]
       },
@@ -300,7 +300,8 @@ export class MainNavComponent implements OnInit {
         icono: 'fingerprint',
         children: [
           { name: 'Administrar Timbres', url: '/timbres-admin' },
-          { name: 'Timbres personales', url: '/timbres-personal' },
+          { name: 'Timbres Personales', url: '/timbres-personal' },
+          { name: 'Timbres Múltiples', url: '/timbres-multiples' },
         ]
       },
       {

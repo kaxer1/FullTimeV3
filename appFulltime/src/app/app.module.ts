@@ -289,6 +289,7 @@ import { ButtonOpcionesComponent } from './share/main-nav/button-opciones/button
 import { PlantillaReportesService } from './componentes/reportes/plantilla-reportes.service';
 import { CrearVacunaComponent } from './componentes/empleado/vacunacion/crear-vacuna/crear-vacuna.component';
 import { EditarVacunaComponent } from './componentes/empleado/vacunacion/editar-vacuna/editar-vacuna.component';
+import { TimbreMultipleComponent } from './componentes/timbre-web/timbre-multiple/timbre-multiple.component';
 
 const config: SocketIoConfig = { url: environment.url, options: {} };
 
@@ -520,6 +521,7 @@ const config: SocketIoConfig = { url: environment.url, options: {} };
     ButtonOpcionesComponent,
     CrearVacunaComponent,
     EditarVacunaComponent,
+    TimbreMultipleComponent,
   ],
 
   imports: [

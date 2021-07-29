@@ -136,6 +136,7 @@ import { ListarSolicitudComponent } from './componentes/planificacionComidas/lis
 import { ListarPlanificacionComponent } from './componentes/planificacionComidas/listar-planificacion/listar-planificacion.component';
 import { AdministradorTodasComponent } from './componentes/reportes/notificaciones/administrador-todas/administrador-todas.component';
 import { PorUsuarioComponent } from './componentes/reportes/notificaciones/por-usuario/por-usuario.component';
+import { TimbreMultipleComponent } from './componentes/timbre-web/timbre-multiple/timbre-multiple.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -205,6 +206,7 @@ const routes: Routes = [
   { path: 'timbres-admin', component: TimbreAdminComponent, canActivate: [AuthGuard], data: { roles: 1 } },
   { path: 'alimentacion', component: PlanComidasComponent, canActivate: [AuthGuard], data: { roles: 1 } },
   { path: 'listaPlanComida', component: ListarPlanificacionComponent, canActivate: [AuthGuard], data: { roles: 1 } },
+  { path: 'timbres-multiples', component: TimbreMultipleComponent, canActivate: [AuthGuard], data: { roles: 1 } },
 
   // Graficas administrador
   { path: 'macro/inasistencia', component: InasistenciaMacroComponent, canActivate: [AuthGuard], data: { roles: 1 } },
