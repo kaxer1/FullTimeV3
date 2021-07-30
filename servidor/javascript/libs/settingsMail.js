@@ -33,6 +33,7 @@ exports.Credenciales = function (id_empresa, correo = process.env.EMAIL, passwor
                 // console.log('Credenciales === ',credenciales);
                 exports.email = credenciales.correo;
                 pass = credenciales.password_correo;
+                console.log('Credenciales === ', credenciales);
                 return;
             }
         }

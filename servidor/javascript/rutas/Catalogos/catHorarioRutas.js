@@ -30,7 +30,7 @@ class HorarioRutas {
         this.router.put('/:id/documento', [verificarToken_1.TokenValidation, multipartMiddlewareD], catHorarioControlador_1.default.GuardarDocumentoHorario);
         this.router.put('/editar/editarDocumento/:id', verificarToken_1.TokenValidation, catHorarioControlador_1.default.EditarDocumento);
         this.router.delete('/eliminar/:id', verificarToken_1.TokenValidation, catHorarioControlador_1.default.EliminarRegistros);
-        this.router.get('/verificarDuplicados', verificarToken_1.TokenValidation, catHorarioControlador_1.default.VerificarDuplicados);
+        this.router.get('/verificarDuplicados/registro', verificarToken_1.TokenValidation, catHorarioControlador_1.default.VerificarDuplicados);
         this.router.get('/verificarDuplicados/edicion', verificarToken_1.TokenValidation, catHorarioControlador_1.default.VerificarDuplicadosEdicion);
         // Verificar datos de la plantilla de catálogo horario y luego subir al sistema
         this.router.post('/cargarHorario/verificarDatos/upload', [verificarToken_1.TokenValidation, multipartMiddleware], catHorarioControlador_1.default.VerificarDatos);

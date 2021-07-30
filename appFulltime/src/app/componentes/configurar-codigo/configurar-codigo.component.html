@@ -36,7 +36,7 @@
                                 <input matInput placeholder="1000" [formControl]="inicioF" [ngStyle]="estilo"
                                     maxlength="10" (keypress)="IngresarSoloNumeros($event)"
                                     oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
-                                <mat-icon id="iHorL" matSuffix matTooltipClass="horarioL-tooltip"
+                                <mat-icon id="iHorL" matSuffix 
                                     matTooltipPosition="right"
                                     matTooltip="Indicar desde que valor se generará el código del empleado">
                                     help_outline</mat-icon>

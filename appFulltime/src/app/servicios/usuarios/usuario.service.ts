@@ -67,4 +67,12 @@ export class UsuarioService {
     return this.http.put(`${environment.url}/usuarios/admin/comida`, data);
   }
 
+  RecuperarFraseSeguridad(data: any) {
+    return this.http.post(`${environment.url}/usuarios/frase/olvido-frase`, data)
+  }
+
+  CambiarFrase(data: any) {
+    return this.http.post(`${environment.url}/usuarios/frase/restaurar-frase/nueva`, data)
+  }
+
 }

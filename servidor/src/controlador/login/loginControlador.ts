@@ -141,11 +141,11 @@ class LoginControlador {
 
   public async RestablecerContrasenia(req: Request, res: Response) {
     const correo = req.body.correo;
-    Credenciales(0);
+    Credenciales(1);
     const correoValido = await pool.query('SELECT e.id, e.nombre, e.apellido, e.correo, u.usuario, u.contrasena FROM empleados AS e, usuarios AS u WHERE correo = $1 AND u.id_empleado = e.id', [correo]);
     if (correoValido.rows[0] == undefined) return res.status(401).send('Correo no valido para el usuario');
 
-    const token = jwt.sign({ _id: correoValido.rows[0].id }, process.env.TOKEN_SECRET_MAIL || 'llaveEmail', { expiresIn: 60 * 3, algorithm: 'HS512' });
+    const token = jwt.sign({ _id: correoValido.rows[0].id }, process.env.TOKEN_SECRET_MAIL || 'llaveEmail', { expiresIn: 60 * 5, algorithm: 'HS512' });
 
     var url = 'http://localhost:4200/confirmar-contrasenia';
     var data = {
@@ -154,7 +154,7 @@ class LoginControlador {
       template: 'forgot-password-email',
       subject: 'Recupera tu contraseña!',
       html: `<p>Hola <b>${correoValido.rows[0].nombre.split(' ')[0] + ' ' + correoValido.rows[0].apellido.split(' ')[0]}</b>
-       da click en el siguiente link para poder restaurar tu contraseña: </p>
+       ingresar al siguiente link y registrar una nueva contraseña: </p>
         <a href="${url}/${token}">
         ${url}/${token}
         </a>

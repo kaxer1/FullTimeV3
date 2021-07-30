@@ -14,7 +14,7 @@
                                 <mat-label>Nombre</mat-label>
                                 <input matInput name="filtroNombreDocumento" placeholder="Nombre Documento"
                                     [formControl]="nombreDocF" [(ngModel)]="filtroNombreDocumento">
-                                <mat-icon id="iHorL" matSuffix matTooltipClass="horarioL-tooltip"
+                                <mat-icon id="iHorL" matSuffix 
                                     matTooltipPosition="right" matTooltip="Búsqueda del documento por el nombre">
                                     help_outline</mat-icon>
                                 <mat-error *ngIf="nombreDocF.invalid">Indispensable ingresar dos letras

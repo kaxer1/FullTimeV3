@@ -1,6 +1,5 @@
 import { Router } from 'express';
 import LOGIN_CONTROLADOR from '../../controlador/login/loginControlador';
-import { TokenValidation } from '../../libs/verificarToken'
 
 class LoginRuta {
     public router: Router = Router();
@@ -12,7 +11,7 @@ class LoginRuta {
     configuracion(): void {
         this.router.post('/', LOGIN_CONTROLADOR.ValidarCredenciales);
         this.router.post('/recuperar-contrasenia/', LOGIN_CONTROLADOR.RestablecerContrasenia);
-        this.router.post('/cambiar-contrasenia/', TokenValidation, LOGIN_CONTROLADOR.CambiarContrasenia);
+        this.router.post('/cambiar-contrasenia/', LOGIN_CONTROLADOR.CambiarContrasenia);
     }
 
 }

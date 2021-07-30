@@ -52,7 +52,7 @@ export class HorarioService {
   VerificarDuplicados(nombre: string) {
     const params = new HttpParams()
     .set('nombre', nombre)
-    return this.http.get(`${environment.url}/horario/verificarDuplicados`, {params});
+    return this.http.get(`${environment.url}/horario/verificarDuplicados/registro`, {params});
   }
 
   VerificarDuplicadosEdicion(id: number, nombre: string) {

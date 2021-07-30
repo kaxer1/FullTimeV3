@@ -42,7 +42,7 @@ export class RegistroHorarioComponent implements OnInit {
   mode: ProgressSpinnerMode = 'indeterminate';
   value = 10;
   habilitarprogress: boolean = false;
-  
+
   constructor(
     private rest: HorarioService,
     private toastr: ToastrService,
@@ -62,7 +62,7 @@ export class RegistroHorarioComponent implements OnInit {
       doc_nombre: form.nombreCertificadoForm,
       nocturno: form.tipoForm
     };
-    if (dataHorario.min_almuerzo === '') {
+    if (dataHorario.min_almuerzo === '' || dataHorario.min_almuerzo === null || dataHorario.min_almuerzo === undefined) {
       dataHorario.min_almuerzo = 0;
     }
     if (form.nombreCertificadoForm === '') {

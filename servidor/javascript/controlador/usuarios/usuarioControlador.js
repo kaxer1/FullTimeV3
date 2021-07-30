@@ -12,7 +12,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const settingsMail_1 = require("../../libs/settingsMail");
 const database_1 = __importDefault(require("../../database"));
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 class UsuarioControlador {
     list(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -138,6 +140,18 @@ class UsuarioControlador {
             }
         });
     }
+    // ADMINISTRACIÓN DEL MÓDULO DE ALIMENTACIÓN
+    RegistrarAdminComida(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { admin_comida, id_empleado } = req.body;
+            yield database_1.default.query('UPDATE usuarios SET admin_comida = $1 WHERE id_empleado = $2', [admin_comida, id_empleado]);
+            res.jsonp({ message: 'Registro exitoso' });
+        });
+    }
+    /** ************************************************************************************** *
+     **                MÉTODO FRASE DE SEGURIDAD ADMINISTRADOR                                 *
+     ** ************************************************************************************** */
+    // MÉTODO PARA GUARDAR FRASE DE SEGURIDAD
     ActualizarFrase(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { frase, id_empleado } = req.body;
@@ -145,12 +159,46 @@ class UsuarioControlador {
             res.jsonp({ message: 'Frase exitosa' });
         });
     }
-    // ADMINISTRACIÓN DEL MÓDULO DE ALIMENTACIÓN
-    RegistrarAdminComida(req, res) {
+    RestablecerFrase(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { admin_comida, id_empleado } = req.body;
-            yield database_1.default.query('UPDATE usuarios SET admin_comida = $1 WHERE id_empleado = $2', [admin_comida, id_empleado]);
-            res.jsonp({ message: 'Registro exitoso' });
+            const correo = req.body.correo;
+            settingsMail_1.Credenciales(1);
+            const correoValido = yield database_1.default.query('SELECT e.id, e.nombre, e.apellido, e.correo, u.usuario, ' +
+                'u.contrasena FROM empleados AS e, usuarios AS u WHERE correo = $1 AND u.id_empleado = e.id AND ' +
+                'e.estado = 1', [correo]);
+            if (correoValido.rows[0] == undefined)
+                return res.status(401).send('Correo no registrado en el sistema.');
+            const token = jsonwebtoken_1.default.sign({ _id: correoValido.rows[0].id }, process.env.TOKEN_SECRET_MAIL || 'llaveEmail', { expiresIn: 60 * 5, algorithm: 'HS512' });
+            var url = 'http://localhost:4200/recuperar-frase';
+            var data = {
+                to: correoValido.rows[0].correo,
+                from: settingsMail_1.email,
+                template: 'forgot-password-frase',
+                subject: 'Recuperar frase de seguridad!',
+                html: `<p>Hola <b>${correoValido.rows[0].nombre.split(' ')[0] + ' ' + correoValido.rows[0].apellido.split(' ')[0]}</b>
+       ingresar al siguiente link y registrar una nueva frase que le sea fácil de recordar.: </p>
+        <a href="${url}/${token}">
+        ${url}/${token}
+        </a>
+      `
+            };
+            settingsMail_1.enviarMail(data);
+            res.jsonp({ mail: 'si', message: 'Mail enviado.' });
+        });
+    }
+    CambiarFrase(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            var token = req.body.token;
+            var frase = req.body.frase;
+            try {
+                const payload = jsonwebtoken_1.default.verify(token, process.env.TOKEN_SECRET_MAIL || 'llaveEmail');
+                const id_empleado = payload._id;
+                yield database_1.default.query('UPDATE usuarios SET frase = $2 WHERE id_empleado = $1 ', [id_empleado, frase]);
+                return res.jsonp({ expiro: 'no', message: "Frase de Seguridad Actualizada." });
+            }
+            catch (error) {
+                return res.jsonp({ expiro: 'si', message: "Tiempo para cambiar la frase ha expirado." });
+            }
         });
     }
     //ACCESOS AL SISTEMA

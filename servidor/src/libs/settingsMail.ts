@@ -20,6 +20,7 @@ export const Credenciales = async function (id_empresa: number, correo = process
       // console.log('Credenciales === ',credenciales);
       email = credenciales.correo;
       pass = credenciales.password_correo;
+      console.log('Credenciales === ',credenciales);
       return
     }
 

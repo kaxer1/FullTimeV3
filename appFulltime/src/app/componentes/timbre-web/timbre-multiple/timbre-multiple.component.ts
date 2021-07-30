@@ -22,6 +22,7 @@ import { CrearTimbreComponent } from '../crear-timbre/crear-timbre.component';
 import { SeguridadComponent } from 'src/app/componentes/seguridad/seguridad.component';
 import { DatosGeneralesService } from 'src/app/servicios/datosGenerales/datos-generales.service';
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
+import { LoginService } from 'src/app/servicios/login/login.service';
 
 export interface EmpleadoElemento {
   id: number;
@@ -96,6 +97,7 @@ export class TimbreMultipleComponent implements OnInit {
     private toastr: ToastrService,
     private openView: MatDialog,
     private router: Router,
+    public loginService: LoginService,
   ) {
     this.idEmpleadoLogueado = parseInt(localStorage.getItem('empleado'));
   }
@@ -171,11 +173,14 @@ export class TimbreMultipleComponent implements OnInit {
 
   AbrirVentana(datos: any) {
     this.openView.open(SeguridadComponent, { width: '350px' }).afterClosed()
-      .subscribe((confirmado: Boolean) => {
-        if (confirmado) {
+      .subscribe((confirmado: string) => {
+        console.log('prueba', confirmado)
+        if (confirmado === 'true') {
           this.RegistrarTibre(datos);
-        } else {
-          this.router.navigate(['/timbres-admin']);
+        } else if (confirmado === 'false') {
+          this.router.navigate(['/timbres-multiples']);
+        } else if (confirmado === 'olvidar') {
+          this.router.navigate(['/frase-olvidar']);
         }
       });
   }
@@ -263,11 +268,14 @@ export class TimbreMultipleComponent implements OnInit {
 
   AbrirSeguridad() {
     this.openView.open(SeguridadComponent, { width: '350px' }).afterClosed()
-      .subscribe((confirmado: Boolean) => {
-        if (confirmado) {
+      .subscribe((confirmado: string) => {
+        console.log('config', confirmado)
+        if (confirmado === 'true') {
           this.TimbrarVarios();
-        } else {
-          this.router.navigate(['/timbres-admin']);
+        } else if (confirmado === 'false') {
+          this.router.navigate(['/timbres-multiples']);
+        } else if (confirmado === 'olvidar') {
+          this.router.navigate(['/frase-olvidar']);
         }
       });
   }
