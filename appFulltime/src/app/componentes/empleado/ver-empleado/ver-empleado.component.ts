@@ -68,7 +68,7 @@ import { EditarEmpleadoComponent } from '../EditarEmpleado/editar-empleado/edita
 import { EditarTituloComponent } from '../EditarTituloEmpleado/editar-titulo/editar-titulo.component';
 import { EmplLeafletComponent } from '../../settings/leaflet/empl-leaflet/empl-leaflet.component';
 import { AdministraComidaComponent } from '../../administra-comida/administra-comida.component';
-import { FraseSeguridadComponent } from '../../frase-seguridad/frase-seguridad.component';
+import { FraseSeguridadComponent } from '../../frase-administrar/frase-seguridad/frase-seguridad.component';
 import { MetodosComponent } from 'src/app/componentes/metodoEliminar/metodos.component';
 import { TituloEmpleadoComponent } from '../titulo-empleado/titulo-empleado.component';
 import { EditarContratoComponent } from '../editar-contrato/editar-contrato.component';

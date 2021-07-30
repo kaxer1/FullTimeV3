@@ -232,9 +232,9 @@ import { JornadaVsHoraExtraMacroComponent } from './componentes/graficas-macro/j
 import { MarcacionesEmpMacroComponent } from './componentes/graficas-macro/marcaciones-emp-macro/marcaciones-emp-macro.component';
 import { RetrasosMacroComponent } from './componentes/graficas-macro/retrasos-macro/retrasos-macro.component';
 import { TiempoJornadaVsHoraExtMacroComponent } from './componentes/graficas-macro/tiempo-jornada-vs-hora-ext-macro/tiempo-jornada-vs-hora-ext-macro.component';
-import { SeguridadComponent } from './componentes/seguridad/seguridad.component';
+import { SeguridadComponent } from './componentes/frase-administrar/seguridad/seguridad.component';
 import { TipoSeguridadComponent } from './componentes/catalogos/catEmpresa/tipo-seguridad/tipo-seguridad.component';
-import { FraseSeguridadComponent } from './componentes/frase-seguridad/frase-seguridad.component';
+import { FraseSeguridadComponent } from './componentes/frase-administrar/frase-seguridad/frase-seguridad.component';
 import { PlanComidasComponent } from './componentes/planificacionComidas/plan-comidas/plan-comidas.component';
 import { SalidasAntesMacroComponent } from './componentes/graficas-macro/salidas-antes-macro/salidas-antes-macro.component';
 import { MetricaVacacionesComponent } from './componentes/rolEmpleado/grafica-empl-macro/metrica-vacaciones/metrica-vacaciones.component';

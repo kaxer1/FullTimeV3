@@ -14,7 +14,7 @@ import { NestedTreeControl } from '@angular/cdk/tree';
 import { MatTreeNestedDataSource } from '@angular/material/tree';
 import { MenuNode } from '../../model/menu.model'
 import { UsuarioService } from 'src/app/servicios/usuarios/usuario.service';
-import { FraseSeguridadComponent } from 'src/app/componentes/frase-seguridad/frase-seguridad.component';
+import { FraseSeguridadComponent } from 'src/app/componentes/frase-administrar/frase-seguridad/frase-seguridad.component';
 import { FuncionesService } from 'src/app/servicios/funciones/funciones.service';
 import { MainNavService } from './main-nav.service';
 import { PlantillaReportesService } from '../../componentes/reportes/plantilla-reportes.service';

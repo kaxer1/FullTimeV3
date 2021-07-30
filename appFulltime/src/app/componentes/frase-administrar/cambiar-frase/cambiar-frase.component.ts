@@ -6,6 +6,8 @@ import { ToastrService } from 'ngx-toastr';
 
 // IMPORTACIÓN DE SERVICIOS
 import { UsuarioService } from 'src/app/servicios/usuarios/usuario.service';
+import { LoginService } from 'src/app/servicios/login/login.service';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -33,6 +35,8 @@ export class CambiarFraseComponent implements OnInit {
     public dialogRef: MatDialogRef<CambiarFraseComponent>,
     private restUser: UsuarioService,
     private toastr: ToastrService,
+    public loginService: LoginService,
+    public router: Router,
   ) {
     this.usuario = localStorage.getItem('empleado');
   }
@@ -73,6 +77,11 @@ export class CambiarFraseComponent implements OnInit {
       });
     });
     this.CerrarRegistro();
+  }
+
+  RecuperarFrase() {
+    this.loginService.logout();
+    this.router.navigate(['/frase-olvidar']);
   }
 
 }

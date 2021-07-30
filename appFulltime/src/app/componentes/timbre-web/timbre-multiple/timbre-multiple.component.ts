@@ -17,9 +17,9 @@ import { EmplCargosService } from 'src/app/servicios/empleado/empleadoCargo/empl
 import { RegimenService } from 'src/app/servicios/catalogos/catRegimen/regimen.service';
 
 
-import { FraseSeguridadComponent } from '../../frase-seguridad/frase-seguridad.component';
+import { FraseSeguridadComponent } from '../../frase-administrar/frase-seguridad/frase-seguridad.component';
 import { CrearTimbreComponent } from '../crear-timbre/crear-timbre.component';
-import { SeguridadComponent } from 'src/app/componentes/seguridad/seguridad.component';
+import { SeguridadComponent } from 'src/app/componentes/frase-administrar/seguridad/seguridad.component';
 import { DatosGeneralesService } from 'src/app/servicios/datosGenerales/datos-generales.service';
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 import { LoginService } from 'src/app/servicios/login/login.service';

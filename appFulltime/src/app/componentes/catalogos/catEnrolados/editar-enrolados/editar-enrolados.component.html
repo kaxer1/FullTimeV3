@@ -10,7 +10,7 @@
         <div class="d-flex flex-wrap justify-content-between">
             <mat-form-field>
                 <mat-label>Usuario Enrolado</mat-label>
-                <mat-icon id="iEnrol" matSuffix matTooltipClass="enrol-tooltip" matTooltipPosition="right"
+                <mat-icon id="iEnrol" matSuffix  matTooltipPosition="right"
                     matTooltip="Usuario Enrolado">
                     help_outline</mat-icon>
                 <mat-select [formControl]="id_usuario" required [disabled]="true">
@@ -23,14 +23,14 @@
                 <mat-label>Nombre</mat-label>
                 <input matInput placeholder="Ej: Usuario" formControlName="enroladoNombreForm" readonly
                         required>
-                <mat-icon id="iEnrol" matSuffix matTooltipClass="enrol-tooltip" matTooltipPosition="right"
+                <mat-icon id="iEnrol" matSuffix  matTooltipPosition="right"
                     matTooltip="Modificar nombre del usuario enrolado">
                     help_outline</mat-icon>
             </mat-form-field>
             <mat-form-field>
                 <mat-label>Código</mat-label>
                 <input matInput placeholder="Ej: Usuario" formControlName="codigoForm" required readonly>
-                <mat-icon id="iEnrol" matSuffix matTooltipClass="enrol-tooltip" matTooltipPosition="right"
+                <mat-icon id="iEnrol" matSuffix  matTooltipPosition="right"
                     matTooltip="Código del usuario enrolado">
                     help_outline</mat-icon>
             </mat-form-field>
@@ -42,7 +42,7 @@
                     formControlName="enroladoContraseniaForm" required>
                 <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
                     [attr.aria-pressed]="hide">
-                    <mat-icon id="iEnrol" matSuffix matTooltipClass="enrol-tooltip" matTooltipPosition="right"
+                    <mat-icon id="iEnrol" matSuffix  matTooltipPosition="right"
                         matTooltip="Ocultar o mostrar la contraseña ingresada">
                         {{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
                 </button>
@@ -51,7 +51,7 @@
                 <mat-label>Número de huella </mat-label>
                 <input matInput placeholder="Ejm: 1" formControlName="enroladoFingerForm"
                     (keypress)="IngresarSoloNumeros($event)" required>
-                <mat-icon id="iEnrol" matSuffix matTooltipClass="enrol-tooltip" matTooltipPosition="right"
+                <mat-icon id="iEnrol" matSuffix  matTooltipPosition="right"
                     matTooltip="Modificar el número del dedo del cual se obtiene la huella del empleado">
                     help_outline</mat-icon>
             </mat-form-field>
@@ -59,14 +59,14 @@
                 <mat-label>Data finger </mat-label>
                 <input matInput placeholder="Ejm: 1" formControlName="enroladoData_FingerForm"
                     (keypress)="IngresarSoloNumeros($event)" required>
-                <mat-icon id="iEnrol" matSuffix matTooltipClass="enrol-tooltip" matTooltipPosition="right"
+                <mat-icon id="iEnrol" matSuffix  matTooltipPosition="right"
                     matTooltip=" Modificar registro de huella del empleado enrolado">
                     help_outline</mat-icon>
             </mat-form-field>
             <mat-radio-group aria-label="Select an option" formControlName="enroladoActivoForm" [disabled]="true" required>
                 <label class="d-flex justify-content-start">
                     <span>Estado: Activo *</span>
-                    <mat-icon id="iEnrol" matSuffix matTooltipClass="enrol-tooltip" matTooltipPosition="right"
+                    <mat-icon id="iEnrol" matSuffix  matTooltipPosition="right"
                         matTooltip="Modificar el estado del empleado enrolado">
                         help_outline</mat-icon>
                 </label>
