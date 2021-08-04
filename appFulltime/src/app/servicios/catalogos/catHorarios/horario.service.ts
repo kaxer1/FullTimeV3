@@ -22,7 +22,7 @@ export class HorarioService {
   }
 
   postHorarioRest(data: any) {
-    return this.http.post(`${environment.url}/horario`, data);
+    return this.http.post<any>(`${environment.url}/horario`, data);
   }
 
   putHorarioRest(id: number, data: any) {
@@ -51,14 +51,14 @@ export class HorarioService {
 
   VerificarDuplicados(nombre: string) {
     const params = new HttpParams()
-    .set('nombre', nombre)
-    return this.http.get(`${environment.url}/horario/verificarDuplicados/registro`, {params});
+      .set('nombre', nombre)
+    return this.http.get(`${environment.url}/horario/verificarDuplicados/registro`, { params });
   }
 
   VerificarDuplicadosEdicion(id: number, nombre: string) {
     const params = new HttpParams()
-    .set('id', id.toString())
-    .set('nombre', nombre)
+      .set('id', id.toString())
+      .set('nombre', nombre)
     return this.http.get<any>(`${environment.url}/horario/verificarDuplicados/edicion`, { params });
   }
 

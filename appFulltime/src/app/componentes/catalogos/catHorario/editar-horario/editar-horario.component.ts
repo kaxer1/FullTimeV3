@@ -18,14 +18,16 @@ import { ProgressSpinnerMode } from '@angular/material/progress-spinner';
 export class EditarHorarioComponent implements OnInit {
 
   nocturno = false;
+  detalle = false;
 
   // Validaciones para el formulario
   nombre = new FormControl('', [Validators.required, Validators.minLength(2)]);
   minAlmuerzo = new FormControl('', [Validators.pattern('[0-9]*')]);
-  horaTrabajo = new FormControl('', [Validators.required]);
+  horaTrabajo = new FormControl('', [Validators.required, Validators.pattern("^[0-9]*(:[0-9][0-9])?$")]);
   tipoF = new FormControl('');
   nombreCertificadoF = new FormControl('');
   archivoForm = new FormControl('');
+  detalleF = new FormControl('');
 
   // asignar los campos en un formulario en grupo
   public nuevoHorarioForm = new FormGroup({
@@ -33,7 +35,8 @@ export class EditarHorarioComponent implements OnInit {
     horarioMinAlmuerzoForm: this.minAlmuerzo,
     horarioHoraTrabajoForm: this.horaTrabajo,
     nombreCertificadoForm: this.nombreCertificadoF,
-    tipoForm: this.tipoF
+    tipoForm: this.tipoF,
+    detalleForm: this.detalleF,
   });
 
   contador: number = 0;
@@ -57,12 +60,16 @@ export class EditarHorarioComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    console.log('edit', this.data)
     this.nuevoHorarioForm.patchValue({
       horarioNombreForm: this.data.horario.nombre,
       horarioMinAlmuerzoForm: this.data.horario.min_almuerzo,
-      horarioHoraTrabajoForm: this.data.horario.hora_trabajo,
+      horarioHoraTrabajoForm: this.data.horario.hora_trabajo.split(':')[0] + ':' + this.data.horario.hora_trabajo.split(':')[1],
       nombreCertificadoForm: this.data.horario.doc_nombre,
+      detalleForm: this.data.horario.detalle,
+      tipoForm: this.data.horario.nocturno,
     });
+
     if (this.data.horario.doc_nombre != '' && this.data.horario.doc_nombre != null) {
       this.HabilitarBtn = true;
       this.isChecked = true;
@@ -76,6 +83,11 @@ export class EditarHorarioComponent implements OnInit {
     } else {
       this.nocturno = false;
     }
+    if (this.data.horario.detalle === true) {
+      this.detalle = true;
+    } else {
+      this.detalle = false;
+    }
   }
 
   ModificarHorario(form) {
@@ -85,8 +97,15 @@ export class EditarHorarioComponent implements OnInit {
       min_almuerzo: form.horarioMinAlmuerzoForm,
       hora_trabajo: form.horarioHoraTrabajoForm,
       doc_nombre: form.nombreCertificadoForm,
-      nocturno: form.tipoForm
+      nocturno: form.tipoForm,
+      detalle: form.detalleForm,
     };
+    if (dataHorario.detalle === false) {
+      dataHorario.hora_trabajo = this.StringTimeToSegundosTime(form.horarioHoraTrabajoForm)
+    }
+    else {
+      dataHorario.hora_trabajo = this.CambiarFormato(form.horarioHoraTrabajoForm)
+    }
     if (dataHorario.min_almuerzo === '' || dataHorario.min_almuerzo === null || dataHorario.min_almuerzo === undefined) {
       dataHorario.min_almuerzo = 0;
     }
@@ -105,7 +124,7 @@ export class EditarHorarioComponent implements OnInit {
           this.toastr.success('Operación Exitosa', 'Horario actualizado.', {
             timeOut: 6000,
           });
-          this.SalirActualizar(response);
+          this.SalirActualizar(dataHorario, response);
         }, error => {
           console.log(error);
           this.toastr.error('Operación Fallida', 'Horario no pudo ser actualizado.', {
@@ -152,7 +171,7 @@ export class EditarHorarioComponent implements OnInit {
           timeOut: 6000,
         });
         this.SubirRespaldo(this.data.horario.id);
-        this.SalirActualizar(response);
+        this.SalirActualizar(datos, response);
       }, error => {
         console.log(error);
 
@@ -165,6 +184,30 @@ export class EditarHorarioComponent implements OnInit {
       this.toastr.info('El archivo ha excedido el tamaño permitido', 'Tamaño de archivos permitido máximo 2MB', {
         timeOut: 6000,
       });
+    }
+  }
+
+  CambiarFormato(stringTime: string) {
+    let horaT = '';
+    if (stringTime.split(':').length === 1) {
+      if (parseInt(stringTime) < 10) {
+        horaT = '0' + parseInt(stringTime) + ':00';
+        return horaT;
+      }
+      else {
+        horaT = stringTime + ':00';
+        return horaT;
+      }
+    }
+    else if (stringTime.split(':').length === 2) {
+      if (parseInt(stringTime.split(':')[0]) < 10) {
+        horaT = '0' + String(parseInt(stringTime)).split(':')[0] + ':' + stringTime.split(':')[1];
+        return horaT;
+      }
+      else {
+        horaT = stringTime.split(':')[0] + ':' + stringTime.split(':')[1];
+        return horaT;
+      }
     }
   }
 
@@ -194,7 +237,7 @@ export class EditarHorarioComponent implements OnInit {
       this.toastr.success('Operación Exitosa', 'Horario actualizado', {
         timeOut: 6000,
       });
-      this.SalirActualizar(response);
+      this.SalirActualizar(datos, response);
     }, error => {
       this.habilitarprogress = false;
       console.log(error);
@@ -296,9 +339,49 @@ export class EditarHorarioComponent implements OnInit {
     this.dialogRef.close();
   }
 
-  SalirActualizar(response) {
-    this.LimpiarCampos();
-    this.dialogRef.close(response);
+  SalirActualizar(datos, response) {
+
+    if (this.data.actualizar === false) {
+      console.log('verificar entrada false', this.data.actualizar)
+      this.LimpiarCampos();
+      this.dialogRef.close(response);
+      if (datos.detalle != false) {
+        this.router.navigate(['/verHorario/', this.data.horario.id]);
+      }
+    }
+    else {
+      this.LimpiarCampos();
+      console.log('verificar entrada true', this.data.actualizar)
+      this.dialogRef.close(response);
+      if (datos.detalle != true) {
+        this.router.navigate(['/horario']);
+      }
+    }
+
+  }
+
+  StringTimeToSegundosTime(stringTime: string) {
+    let hora = '';
+    if (stringTime.split(':').length === 1) {
+      if (parseInt(stringTime) < 10) {
+        hora = '0' + parseInt(stringTime) + ':00:00';
+        return hora;
+      }
+      else {
+        hora = stringTime + ':00:00';
+        return hora;
+      }
+    }
+    else if (stringTime.split(':').length === 2) {
+      if (parseInt(stringTime.split(':')[0]) < 10) {
+        hora = '0' + String(parseInt(stringTime)).split(':')[0] + ':' + stringTime.split(':')[1] + ':00';
+        return hora;
+      }
+      else {
+        hora = stringTime.split(':')[0] + ':' + stringTime.split(':')[1] + ':00';
+        return hora;
+      }
+    }
   }
 
 }

@@ -10,8 +10,7 @@
                         <input (change)="fileChangeCatalogoHorario($event)" type="file" [formControl]="archivo1Form"
                             id="file1"
                             accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
-                        <label for="file1" class="btn-2" matSuffix matTooltipClass="listaF-tooltip"
-                            matTooltipPosition="right"
+                        <label for="file1" class="btn-2" matSuffix matTooltipPosition="right"
                             matTooltip="Presionar para seleccionar Plantilla con nombre Catalogo Horarios.">Cargar
                             Horarios</label>
                     </form>
@@ -27,8 +26,7 @@
                     <form method="post" enctype="multipart/form-data">
                         <input (change)="fileChangeDetalle($event)" type="file" [formControl]="archivo2Form" id="file2"
                             accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
-                        <label for="file2" class="btn-2" matSuffix matTooltipClass="listaF-tooltip"
-                            matTooltipPosition="right"
+                        <label for="file2" class="btn-2" matSuffix matTooltipPosition="right"
                             matTooltip="Presionar para seleccionar Plantilla con nombre Detalles Horarios.">Cargar
                             Detalles</label>
                     </form>
@@ -68,7 +66,7 @@
                 <thead class="thead-light">
                     <tr style="text-align: center;">
                         <th scope="col">Nombre</th>
-                        <th scope="col">Minutos de almuerzo</th>
+                        <th scope="col">Minutos de alimentación</th>
                         <th scope="col">Horas de trabajo</th>
                         <th scope="col">Horario Nocturno</th>
                         <th scope="col">Documento</th>
@@ -108,12 +106,12 @@
                                 <p>{{horario.doc_nombre}}</p>
                             </a></td>
                         <td class="d-flex justify-content-center">
-                            <i matSuffix matTooltipClass="listaF-tooltip" matTooltipPosition="right"
+                            <i *ngIf="horario.detalle == true" matSuffix matTooltipPosition="right"
                                 matTooltip="Ver datos generales de este registro." class="fas fa-eye" id="t-ver"
                                 [routerLink]="['/verHorario/', horario.id]">
                                 <p>Ver</p>
                             </i>
-                            <i matSuffix matTooltipClass="listaF-tooltip" matTooltipPosition="right"
+                            <i *ngIf="horario.detalle == true" matSuffix matTooltipPosition="right"
                                 matTooltip="Agregar Detalles de Horario." class="far fa-list-alt" id="t-detalles"
                                 (click)="AbrirRegistraDetalle(horario)">
                                 <p>Detalle</p>

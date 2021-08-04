@@ -23,13 +23,13 @@
                         <td>{{h.fec_inicio.split("T")[0]}}</td>
                         <td>{{h.fec_final.split("T")[0]}}</td>
                         <td class="d-flex justify-content-center">
-                            <i matSuffix matTooltipClass="listaF-tooltip" matTooltipPosition="right"
+                            <i matSuffix  matTooltipPosition="right"
                                 matTooltip="Agregar Detalles de Planificación de Horario"
                                 class="far fa-list-alt" id="detalleH"
                                 (click)="AbrirVentanaDetallePlanHorario(h)">
                                 <p>Detalle</p>
                             </i>
-                            <i *ngFor="let e of empleadoUno" matSuffix matTooltipClass="listaF-tooltip"
+                            <i *ngFor="let e of empleadoUno" matSuffix 
                                 matTooltipPosition="right" matTooltip="Ver datos generales de la planificación"
                                 class="fas fa-eye" id="ver" [routerLink]="['/detallesHEmpleado/', h.id, e.id]">
                                 <p>Ver</p>

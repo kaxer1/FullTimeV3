@@ -20,12 +20,12 @@
                         <td>{{t.id}}</td>
                         <td>{{t.nombre}}</td>
                         <td class="d-flex justify-content-center">
-                            <i matSuffix matTooltipClass="listaF-tooltip" matTooltipPosition="right"
+                            <i matSuffix  matTooltipPosition="right"
                                 matTooltip="Listar usuarios a quienes se ha enviado notificaciones." class="fas fa-eye"
                                 id="enviar" (click)="MostrarTablas(t.id, 'E')">
                                 <p>Enviados</p>
                             </i>
-                            <i matSuffix matTooltipClass="listaF-tooltip" matTooltipPosition="right"
+                            <i matSuffix  matTooltipPosition="right"
                                 matTooltip="Listar usuarios de los cuales se ha recibido notificaciones."
                                 class="fas fa-eye" id="recibir" (click)="MostrarTablas(t.id, 'R')">
                                 <p>Recibidos</p>

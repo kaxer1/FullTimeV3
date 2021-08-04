@@ -130,9 +130,10 @@ export class PrincipalHorarioComponent implements OnInit {
 
   AbrirRegistraDetalle(datosSeleccionados: any): void {
     console.log(datosSeleccionados);
-    this.vistaRegistrarDatos.open(DetalleCatHorarioComponent, { width: '600px', data: { datosHorario: datosSeleccionados, actualizar: false } }).afterClosed().subscribe(items => {
-      this.ObtenerHorarios();
-    });
+    this.vistaRegistrarDatos.open(DetalleCatHorarioComponent,
+      { width: '600px', data: { datosHorario: datosSeleccionados, actualizar: false } }).afterClosed().subscribe(items => {
+        this.ObtenerHorarios();
+      });
   }
 
   LimpiarCampos() {
