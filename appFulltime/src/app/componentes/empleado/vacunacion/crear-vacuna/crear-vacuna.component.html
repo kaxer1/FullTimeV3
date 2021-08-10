@@ -33,17 +33,12 @@
                                 matTooltip="Ingresar nombre tipo de vacuna.">
                                 help_outline</mat-icon>
                         </mat-form-field>
-                        <mat-form-field>
-                            <mat-label>Dosis</mat-label>
-                            <mat-icon id="icono" matSuffix matTooltipPosition="right"
-                                matTooltip="Seleccionar la dosis recibida.">
-                                help_outline
-                            </mat-icon>
-                            <mat-select [formControl]="dosisF">
-                                <mat-option [value]=1>1 dosis</mat-option>
-                                <mat-option [value]=2>2 dosis</mat-option>
-                            </mat-select>
-                        </mat-form-field>
+                        <div class="separar">
+                            <mat-checkbox [checked]="estado"
+                            (change)="setAll($event.checked)">
+                                Primera dosis
+                            </mat-checkbox>
+                        </div>
                     </div>
                     <div class="col">
                         <div class="d-flex flex-wrap justify-content-around">
@@ -71,7 +66,8 @@
         </mat-card-content>
     </form>
     <div style="text-align: center;">
-        <button type="submit" class="btn" (click)="GuardarDatosSistema(vacunaForm.value)" [disabled]="!vacunaForm.valid">
+        <button type="submit" class="btn" (click)="GuardarDatosSistema(vacunaForm.value)"
+            [disabled]="!vacunaForm.valid">
             <span class="material-icons alinear" matSuffix matTooltipPosition="right"
                 matTooltip="Guardar datos registrados.">save</span>
         </button>

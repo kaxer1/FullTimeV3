@@ -30,9 +30,10 @@ export class CrearVacunaComponent implements OnInit {
 
   // VARIABLES VISUALIZACIÓN INGRESO DE TIPO DE VACUNA
   ingresarTipo: boolean = true;
+  estado: boolean = true;
   estilo: any;
 
-  // VARIABLES DE ALMACENAMINETO DE DATOS
+  // VARIABLES DE ALMACENAMIENTO DE DATOS
   tipoVacuna: any = [];
 
   // VALIDACIONES DE CAMPOS DE FORMULARIO
@@ -209,4 +210,10 @@ export class CrearVacunaComponent implements OnInit {
     }
   }
 
+  setAll(completed: boolean) {
+    this.estado = completed;
+
+  }
 }
+
+
