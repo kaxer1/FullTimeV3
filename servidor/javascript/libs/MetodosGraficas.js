@@ -1,23 +1,4 @@
 "use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -27,10 +8,16 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.MetricaAtrasosEmpleadoSinAcciones = exports.MetricaAtrasosEmpleado = exports.MetricaPermisosEmpleado = exports.MetricaVacacionesEmpleado = exports.MetricaHorasExtraEmpleado = exports.GraficaSalidasAnticipadasSinAcciones = exports.GraficaSalidasAnticipadas = exports.GraficaMarcaciones = exports.GraficaTiempoJornada_VS_HorasExtras = exports.GraficaT_Jor_VS_HorExtTimbresSinAcciones = exports.GraficaJ_VS_H_E_SinAcciones = exports.GraficaJornada_VS_HorasExtras = exports.GraficaHorasExtras = exports.GraficaAsistencia = exports.GraficaAtrasos = exports.GraficaAtrasosSinAcciones = exports.GraficaInasistencia = void 0;
 const M_graficas = __importStar(require("./SubMetodosGraficas"));
-const GraficaInasistencia = function (id_empresa, fec_inicio, fec_final) {
+exports.GraficaInasistencia = function (id_empresa, fec_inicio, fec_final) {
     return __awaiter(this, void 0, void 0, function* () {
         // console.log(id_empresa, fec_inicio, fec_final);
         let horarios = yield M_graficas.BuscarHorariosActivos(fec_inicio.toJSON().split('T')[0], fec_final.toJSON().split('T')[0]);
@@ -140,12 +127,11 @@ const GraficaInasistencia = function (id_empresa, fec_inicio, fec_final) {
         };
     });
 };
-exports.GraficaInasistencia = GraficaInasistencia;
-const GraficaAtrasosSinAcciones = function (id_empresa, fec_inicio, fec_final) {
+exports.GraficaAtrasosSinAcciones = function (id_empresa, fec_inicio, fec_final) {
     return __awaiter(this, void 0, void 0, function* () {
-        console.log(id_empresa, fec_inicio, fec_final);
+        // console.log(id_empresa, fec_inicio, fec_final);
         let array = yield M_graficas.BuscarTimbresEntradasSinAcciones(fec_inicio.toJSON().split('T')[0], fec_final.toJSON().split('T')[0]);
-        console.log(array);
+        // console.log(array);
         let modelarAnio = {
             enero: [],
             febrero: [],
@@ -161,7 +147,7 @@ const GraficaAtrasosSinAcciones = function (id_empresa, fec_inicio, fec_final) {
             diciembre: []
         };
         array.forEach((ele) => {
-            console.log('ATRASOS: ', ele.fecha);
+            // console.log('ATRASOS: ', ele.fecha);
             if (ele !== 0) {
                 let fecha = parseInt(ele.fecha.split('-')[1]);
                 switch (fecha) {
@@ -250,12 +236,11 @@ const GraficaAtrasosSinAcciones = function (id_empresa, fec_inicio, fec_final) {
         };
     });
 };
-exports.GraficaAtrasosSinAcciones = GraficaAtrasosSinAcciones;
-const GraficaAtrasos = function (id_empresa, fec_inicio, fec_final) {
+exports.GraficaAtrasos = function (id_empresa, fec_inicio, fec_final) {
     return __awaiter(this, void 0, void 0, function* () {
         // console.log(id_empresa, fec_inicio, fec_final);
         let timbres = yield M_graficas.BuscarTimbresEntradas(fec_inicio.toJSON().split('T')[0], fec_final.toJSON().split('T')[0]);
-        // console.log(timbres);
+        console.log(timbres);
         let modelarAnio = {
             enero: [],
             febrero: [],
@@ -363,10 +348,9 @@ const GraficaAtrasos = function (id_empresa, fec_inicio, fec_final) {
         };
     });
 };
-exports.GraficaAtrasos = GraficaAtrasos;
-const GraficaAsistencia = function (id_empresa, fec_inicio, fec_final) {
+exports.GraficaAsistencia = function (id_empresa, fec_inicio, fec_final) {
     return __awaiter(this, void 0, void 0, function* () {
-        console.log(id_empresa, fec_inicio, fec_final);
+        // console.log(id_empresa, fec_inicio, fec_final);
         let horarios = yield M_graficas.BuscarHorariosActivos(fec_inicio.toJSON().split('T')[0], fec_final.toJSON().split('T')[0]);
         let array = yield Promise.all(horarios.map((obj) => __awaiter(this, void 0, void 0, function* () {
             obj.horario = yield M_graficas.BuscarTimbresByCodigo_Fecha(obj.codigo, obj.horario);
@@ -383,7 +367,7 @@ const GraficaAsistencia = function (id_empresa, fec_inicio, fec_final) {
         };
         array.forEach(obj => {
             obj.horario.forEach((ele) => {
-                console.log(ele);
+                // console.log(ele);
                 let fecha = parseInt(ele.fecha.split('-')[1]);
                 if (ele.timbresTotal === 0 && ele.justificado === 0) {
                     modelarPie.a_no_justi.push(fecha);
@@ -426,10 +410,9 @@ const GraficaAsistencia = function (id_empresa, fec_inicio, fec_final) {
         };
     });
 };
-exports.GraficaAsistencia = GraficaAsistencia;
-const GraficaHorasExtras = function (id_empresa, fec_inicio, fec_final) {
+exports.GraficaHorasExtras = function (id_empresa, fec_inicio, fec_final) {
     return __awaiter(this, void 0, void 0, function* () {
-        console.log(id_empresa, fec_inicio, fec_final);
+        // console.log(id_empresa, fec_inicio, fec_final);
         let horas_extras = yield M_graficas.HoraExtra_ModelarDatos(fec_inicio, fec_final);
         let modelarAnio = {
             enero: [],
@@ -529,10 +512,9 @@ const GraficaHorasExtras = function (id_empresa, fec_inicio, fec_final) {
         };
     });
 };
-exports.GraficaHorasExtras = GraficaHorasExtras;
-const GraficaJornada_VS_HorasExtras = function (id_empresa, fec_inicio, fec_final) {
+exports.GraficaJornada_VS_HorasExtras = function (id_empresa, fec_inicio, fec_final) {
     return __awaiter(this, void 0, void 0, function* () {
-        console.log('ingreso a jornada ', id_empresa, fec_inicio, fec_final);
+        // console.log('ingreso a jornada ',id_empresa, fec_inicio, fec_final);
         /**
          * Para Horas Extras
          */
@@ -744,10 +726,9 @@ const GraficaJornada_VS_HorasExtras = function (id_empresa, fec_inicio, fec_fina
         };
     });
 };
-exports.GraficaJornada_VS_HorasExtras = GraficaJornada_VS_HorasExtras;
-const GraficaJ_VS_H_E_SinAcciones = function (id_empresa, fec_inicio, fec_final) {
+exports.GraficaJ_VS_H_E_SinAcciones = function (id_empresa, fec_inicio, fec_final) {
     return __awaiter(this, void 0, void 0, function* () {
-        console.log('ingreso a jornada ', id_empresa, fec_inicio, fec_final);
+        // console.log('ingreso a jornada ',id_empresa, fec_inicio, fec_final);
         /**
          * Para Horas Extras
          */
@@ -936,10 +917,9 @@ const GraficaJ_VS_H_E_SinAcciones = function (id_empresa, fec_inicio, fec_final)
         };
     });
 };
-exports.GraficaJ_VS_H_E_SinAcciones = GraficaJ_VS_H_E_SinAcciones;
-const GraficaT_Jor_VS_HorExtTimbresSinAcciones = function (id_empresa, fec_inicio, fec_final) {
+exports.GraficaT_Jor_VS_HorExtTimbresSinAcciones = function (id_empresa, fec_inicio, fec_final) {
     return __awaiter(this, void 0, void 0, function* () {
-        console.log(id_empresa, fec_inicio, fec_final);
+        // console.log(id_empresa, fec_inicio, fec_final);
         /**
          * Para Horas Extras
          */
@@ -1043,7 +1023,7 @@ const GraficaT_Jor_VS_HorExtTimbresSinAcciones = function (id_empresa, fec_inici
         timbres = [];
         nuevo.forEach(obj => {
             let fecha = parseInt(obj.fecha.split('-')[1]);
-            console.log(obj);
+            // console.log(obj);
             switch (fecha) {
                 case 1:
                     modelarAnioTiempoJornada.enero.push(obj.total);
@@ -1131,10 +1111,9 @@ const GraficaT_Jor_VS_HorExtTimbresSinAcciones = function (id_empresa, fec_inici
         };
     });
 };
-exports.GraficaT_Jor_VS_HorExtTimbresSinAcciones = GraficaT_Jor_VS_HorExtTimbresSinAcciones;
-const GraficaTiempoJornada_VS_HorasExtras = function (id_empresa, fec_inicio, fec_final) {
+exports.GraficaTiempoJornada_VS_HorasExtras = function (id_empresa, fec_inicio, fec_final) {
     return __awaiter(this, void 0, void 0, function* () {
-        console.log(id_empresa, fec_inicio, fec_final);
+        // console.log(id_empresa, fec_inicio, fec_final);
         /**
          * Para Horas Extras
          */
@@ -1344,10 +1323,9 @@ const GraficaTiempoJornada_VS_HorasExtras = function (id_empresa, fec_inicio, fe
         };
     });
 };
-exports.GraficaTiempoJornada_VS_HorasExtras = GraficaTiempoJornada_VS_HorasExtras;
-const GraficaMarcaciones = function (id_empresa, fec_inicio, fec_final) {
+exports.GraficaMarcaciones = function (id_empresa, fec_inicio, fec_final) {
     return __awaiter(this, void 0, void 0, function* () {
-        console.log(id_empresa, fec_inicio, fec_final);
+        // console.log(id_empresa, fec_inicio, fec_final);
         let timbres = yield M_graficas.BuscarTimbresByFecha(fec_inicio.toJSON().split('T')[0], fec_final.toJSON().split('T')[0]);
         // console.log('==========================================');
         // console.log(timbres);
@@ -1448,10 +1426,9 @@ const GraficaMarcaciones = function (id_empresa, fec_inicio, fec_final) {
         };
     });
 };
-exports.GraficaMarcaciones = GraficaMarcaciones;
-const GraficaSalidasAnticipadas = function (id_empresa, fec_inicio, fec_final) {
+exports.GraficaSalidasAnticipadas = function (id_empresa, fec_inicio, fec_final) {
     return __awaiter(this, void 0, void 0, function* () {
-        console.log(id_empresa, fec_inicio, fec_final);
+        // console.log(id_empresa, fec_inicio, fec_final);
         let timbres = yield M_graficas.ModelarSalidasAnticipadas(fec_inicio.toJSON().split('T')[0], fec_final.toJSON().split('T')[0]);
         // console.log(timbres);    
         let modelarAnio = {
@@ -1550,10 +1527,9 @@ const GraficaSalidasAnticipadas = function (id_empresa, fec_inicio, fec_final) {
         };
     });
 };
-exports.GraficaSalidasAnticipadas = GraficaSalidasAnticipadas;
-const GraficaSalidasAnticipadasSinAcciones = function (id_empresa, fec_inicio, fec_final) {
+exports.GraficaSalidasAnticipadasSinAcciones = function (id_empresa, fec_inicio, fec_final) {
     return __awaiter(this, void 0, void 0, function* () {
-        console.log(id_empresa, fec_inicio, fec_final);
+        // console.log(id_empresa, fec_inicio, fec_final);
         let timbres = yield M_graficas.ModelarSalidasAnticipadasSinAcciones(fec_inicio.toJSON().split('T')[0], fec_final.toJSON().split('T')[0]);
         // console.log(timbres);    
         let modelarAnio = {
@@ -1654,15 +1630,14 @@ const GraficaSalidasAnticipadasSinAcciones = function (id_empresa, fec_inicio, f
         };
     });
 };
-exports.GraficaSalidasAnticipadasSinAcciones = GraficaSalidasAnticipadasSinAcciones;
 /**
  *
  * Graficas para los usuarios de rol empleado
  *
  */
-const MetricaHorasExtraEmpleado = function (codigo, id_empleado, fec_inicio, fec_final) {
+exports.MetricaHorasExtraEmpleado = function (codigo, id_empleado, fec_inicio, fec_final) {
     return __awaiter(this, void 0, void 0, function* () {
-        console.log(codigo, id_empleado, fec_inicio, fec_final);
+        // console.log(codigo, id_empleado, fec_inicio, fec_final);
         let horas_extras = yield M_graficas.Empleado_HoraExtra_ModelarDatos(codigo, fec_inicio, fec_final);
         let modelarAnio = {
             enero: [],
@@ -1766,10 +1741,9 @@ const MetricaHorasExtraEmpleado = function (codigo, id_empleado, fec_inicio, fec
         };
     });
 };
-exports.MetricaHorasExtraEmpleado = MetricaHorasExtraEmpleado;
-const MetricaVacacionesEmpleado = function (codigo, id_empleado, fec_inicio, fec_final) {
+exports.MetricaVacacionesEmpleado = function (codigo, id_empleado, fec_inicio, fec_final) {
     return __awaiter(this, void 0, void 0, function* () {
-        console.log(codigo, id_empleado, fec_inicio, fec_final);
+        // console.log(codigo, id_empleado, fec_inicio, fec_final);
         let vacaciones = yield M_graficas.Empleado_Vacaciones_ModelarDatos(codigo, fec_inicio, fec_final);
         // let ids = await IdsEmpleados(id_empresa);
         let modelarAnio = {
@@ -1874,10 +1848,9 @@ const MetricaVacacionesEmpleado = function (codigo, id_empleado, fec_inicio, fec
         };
     });
 };
-exports.MetricaVacacionesEmpleado = MetricaVacacionesEmpleado;
-const MetricaPermisosEmpleado = function (codigo, id_empleado, fec_inicio, fec_final) {
+exports.MetricaPermisosEmpleado = function (codigo, id_empleado, fec_inicio, fec_final) {
     return __awaiter(this, void 0, void 0, function* () {
-        console.log(codigo, id_empleado, fec_inicio, fec_final);
+        // console.log(codigo, id_empleado, fec_inicio, fec_final);
         let permisos = yield M_graficas.Empleado_Permisos_ModelarDatos(codigo, fec_inicio, fec_final);
         let modelarAnio = {
             enero: [],
@@ -1982,11 +1955,10 @@ const MetricaPermisosEmpleado = function (codigo, id_empleado, fec_inicio, fec_f
         };
     });
 };
-exports.MetricaPermisosEmpleado = MetricaPermisosEmpleado;
-const MetricaAtrasosEmpleado = function (codigo, id_empleado, fec_inicio, fec_final) {
+exports.MetricaAtrasosEmpleado = function (codigo, id_empleado, fec_inicio, fec_final) {
     return __awaiter(this, void 0, void 0, function* () {
-        console.log(id_empleado, fec_inicio, fec_final);
-        console.log(codigo, id_empleado, fec_inicio, fec_final);
+        // console.log(id_empleado, fec_inicio, fec_final);
+        // console.log(codigo, id_empleado, fec_inicio, fec_final);
         let atrasos = yield M_graficas.Empleado_Atrasos_ModelarDatos(codigo, fec_inicio, fec_final);
         // let ids = await IdsEmpleados(id_empresa);
         let modelarAnio = {
@@ -2092,10 +2064,9 @@ const MetricaAtrasosEmpleado = function (codigo, id_empleado, fec_inicio, fec_fi
         };
     });
 };
-exports.MetricaAtrasosEmpleado = MetricaAtrasosEmpleado;
-const MetricaAtrasosEmpleadoSinAcciones = function (codigo, id_empleado, fec_inicio, fec_final) {
+exports.MetricaAtrasosEmpleadoSinAcciones = function (codigo, id_empleado, fec_inicio, fec_final) {
     return __awaiter(this, void 0, void 0, function* () {
-        console.log(id_empleado, fec_inicio, fec_final);
+        // console.log(id_empleado, fec_inicio, fec_final);
         let atrasos = yield M_graficas.Empleado_Atrasos_ModelarDatos_SinAcciones(codigo, fec_inicio, fec_final);
         // let ids = await IdsEmpleados(id_empresa);
         let modelarAnio = {
@@ -2113,7 +2084,7 @@ const MetricaAtrasosEmpleadoSinAcciones = function (codigo, id_empleado, fec_ini
             diciembre: []
         };
         atrasos.forEach((ele) => {
-            console.log(ele);
+            // console.log(ele);
             if (ele !== 0) {
                 let fecha = parseInt(ele.fecha.split('-')[1]);
                 switch (fecha) {
@@ -2202,4 +2173,3 @@ const MetricaAtrasosEmpleadoSinAcciones = function (codigo, id_empleado, fec_ini
         };
     });
 };
-exports.MetricaAtrasosEmpleadoSinAcciones = MetricaAtrasosEmpleadoSinAcciones;

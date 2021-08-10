@@ -12,7 +12,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.EMPLEADO_HORARIOS_CONTROLADOR = void 0;
 const database_1 = __importDefault(require("../../../database"));
 const xlsx_1 = __importDefault(require("xlsx"));
 const fs_1 = __importDefault(require("fs"));
@@ -355,8 +354,18 @@ class EmpleadoHorariosControlador {
     ActualizarEmpleadoHorarios(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { id_empl_cargo, id_hora, fec_inicio, fec_final, lunes, martes, miercoles, jueves, viernes, sabado, domingo, id_horarios, estado, id } = req.body;
-            yield database_1.default.query('UPDATE empl_horarios SET id_empl_cargo = $1, id_hora = $2, fec_inicio = $3, fec_final = $4, lunes = $5, martes = $6, miercoles = $7, jueves = $8, viernes = $9, sabado = $10, domingo = $11, id_horarios = $12, estado = $13 WHERE id = $14', [id_empl_cargo, id_hora, fec_inicio, fec_final, lunes, martes, miercoles, jueves, viernes, sabado, domingo, id_horarios, estado, id]);
-            res.jsonp({ message: 'El horario del empleado se registró con éxito' });
+            try {
+                // console.log(req.body);
+                const [result] = yield database_1.default.query('UPDATE empl_horarios SET id_empl_cargo = $1, id_hora = $2, fec_inicio = $3, fec_final = $4, lunes = $5, martes = $6, miercoles = $7, jueves = $8, viernes = $9, sabado = $10, domingo = $11, id_horarios = $12, estado = $13 WHERE id = $14 RETURNING *', [id_empl_cargo, id_hora, fec_inicio, fec_final, lunes, martes, miercoles, jueves, viernes, sabado, domingo, id_horarios, estado, id])
+                    .then(result => { return result.rows; });
+                if (result === undefined)
+                    return res.status(404).jsonp({ message: 'Horario no actualizado' });
+                return res.status(200).jsonp({ message: 'El horario del empleado se registró con éxito' });
+            }
+            catch (error) {
+                console.log(error);
+                return res.status(500).jsonp({ message: 'Registros no encontrados' });
+            }
         });
     }
     EliminarRegistros(req, res) {
@@ -409,6 +418,20 @@ class EmpleadoHorariosControlador {
                 '($1 BETWEEN fec_inicio AND fec_final OR $2 BETWEEN fec_inicio AND fec_final ' +
                 'OR fec_inicio BETWEEN $1 AND $2 OR fec_final BETWEEN $1 AND $2) AND id_horarios = $5 ' +
                 'AND codigo = $4', [fechaInicio, fechaFinal, id, codigo, id_horario]);
+            if (HORARIO.rowCount > 0) {
+                return res.jsonp(HORARIO.rows);
+            }
+            else {
+                return res.status(404).jsonp({ text: 'Registros no encontrados' });
+            }
+        });
+    }
+    BuscarHorariosFechas(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const codigo = req.params.codigo;
+            const { fechaInicio, fechaFinal } = req.body;
+            const HORARIO = yield database_1.default.query('SELECT * FROM empl_horarios WHERE codigo = $1 AND $2 ' +
+                'BETWEEN fec_inicio AND fec_final AND $3 BETWEEN fec_inicio AND fec_final', [codigo, fechaInicio, fechaFinal]);
             if (HORARIO.rowCount > 0) {
                 return res.jsonp(HORARIO.rows);
             }

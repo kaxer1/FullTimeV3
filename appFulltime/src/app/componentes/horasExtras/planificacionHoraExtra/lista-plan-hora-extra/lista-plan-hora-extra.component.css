@@ -15,21 +15,14 @@
     padding-bottom: 6px; 
 }
 
-#permisoSuc { cursor: pointer; }
-
 .btn { margin-left: 20px; background-color: rgb(80,87,97); color: white; }
 
 p { font-size: x-small; }
 
 td { padding-top: 10px; text-align: center;  }
 
-.fas { color:green; margin-right: 20px; cursor: pointer; }
-
-.far { color:red; margin-right: 20px; cursor: pointer; }
-
 table { width: 100%; font-size: 14px; }
 
-#estilo { color: rgb(0, 0, 0); font-size: 13px; }
 
 
 #SelectCheck {
@@ -37,24 +30,6 @@ table { width: 100%; font-size: 14px; }
     margin-left: 10px;
 }
 
-.mat-expansion-panel-header-description {
-    flex-basis: 0;
-}
-
-.mat-expansion-panel-header-description {
-    justify-content: space-between;
-    align-items: center;
-}
-
-mat-expansion-panel-header { text-align: center; background: rgb(52,65,84); }
-
-mat-panel-title { color: white; }
+#plan { color: rgb(38, 0, 255); font-size: 20px; text-align: center; cursor: pointer; }
 
 mat-panel-description { color: white; }
-
-mat-icon { color: white; }
-
-.mat-expansion-panel-header.mat-expanded,
-.mat-expansion-panel-header.mat-expanded:hover {
-    background: rgb(52,65,84);
-}

@@ -3,8 +3,8 @@ import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { PageEvent } from '@angular/material/paginator';
 import { Validators, FormControl, FormGroup } from '@angular/forms';
-import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
-import { MAT_MOMENT_DATE_FORMATS, MAT_MOMENT_DATE_ADAPTER_OPTIONS, MomentDateAdapter } from '@angular/material-moment-adapter';
+// import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
+// import { MAT_MOMENT_DATE_FORMATS, MAT_MOMENT_DATE_ADAPTER_OPTIONS, MomentDateAdapter } from '@angular/material-moment-adapter';
 import * as moment from 'moment';
 moment.locale('es');
 import pdfMake from 'pdfmake/build/pdfmake';
@@ -23,24 +23,24 @@ import { PlanHorarioService } from 'src/app/servicios/horarios/planHorario/plan-
 import { CiudadFeriadosService } from 'src/app/servicios/ciudadFeriados/ciudad-feriados.service';
 import { DatosGeneralesService } from 'src/app/servicios/datosGenerales/datos-generales.service';
 import { EntradasSalidas } from 'src/app/model/timbres.model';
+import { ValidacionesService } from '../../../servicios/validaciones/validaciones.service';
 
 @Component({
   selector: 'app-reporte-entrada-salida',
   templateUrl: './reporte-entrada-salida.component.html',
   styleUrls: ['./reporte-entrada-salida.component.css'],
-  providers: [
-    { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
-    { provide: MAT_DATE_FORMATS, useValue: MAT_MOMENT_DATE_FORMATS },
-    { provide: MAT_DATE_LOCALE, useValue: 'es' },
-    { provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: { useUtc: true } },
-  ]
+  // providers: [
+  //   { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
+  //   { provide: MAT_DATE_FORMATS, useValue: MAT_MOMENT_DATE_FORMATS },
+  //   { provide: MAT_DATE_LOCALE, useValue: 'es' },
+  //   { provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: { useUtc: true } },
+  // ]
 })
 
 export class ReporteEntradaSalidaComponent implements OnInit {
 
   // Datos del Empleado Timbre
   empleado: any = [];
-
 
   // Arreglo datos del empleado
   datosEmpleado: any = [];
@@ -49,7 +49,6 @@ export class ReporteEntradaSalidaComponent implements OnInit {
   codigo = new FormControl('');
   cedula = new FormControl('', [Validators.minLength(2)]);
   nombre = new FormControl('', [Validators.minLength(2)]);
-  apellido = new FormControl('', [Validators.minLength(2)]);
   departamentoF = new FormControl('', [Validators.minLength(2)]);
   regimenF = new FormControl('', [Validators.minLength(2)]);
   cargoF = new FormControl('', [Validators.minLength(2)]);
@@ -67,8 +66,7 @@ export class ReporteEntradaSalidaComponent implements OnInit {
   // Datos de filtros de búsqueda
   filtroCodigo: number;
   filtroCedula: '';
-  filtroNombre: '';
-  filtroApellido: '';
+  filtroEmpleado = '';
   filtroDepartamento: '';
   filtroRegimen: '';
   filtroCargo: '';
@@ -93,6 +91,7 @@ export class ReporteEntradaSalidaComponent implements OnInit {
     public restPlan: PlanHorarioService,
     public restD: DatosGeneralesService,
     public router: Router,
+    public validacionesService: ValidacionesService,
     private toastr: ToastrService,
   ) {
     this.idEmpleado = parseInt(localStorage.getItem('empleado'));
@@ -103,7 +102,7 @@ export class ReporteEntradaSalidaComponent implements OnInit {
     this.VerDatosEmpleado();
     this.ObtenerFeriados();
     this.ObtenerLogo();
-    this.ObtnerColores();
+    this.ObtenerColores();
   }
 
   // Método para ver la información del empleado 
@@ -123,13 +122,15 @@ export class ReporteEntradaSalidaComponent implements OnInit {
     });
   }
 
-  // Método para obtener colores de empresa
+  // MÉTODO PARA OBTENER COLORES Y MARCA DE AGUA DE EMPRESA 
   p_color: any;
   s_color: any;
-  ObtnerColores() {
+  frase: any;
+  ObtenerColores() {
     this.restEmpre.ConsultarDatosEmpresa(parseInt(localStorage.getItem('empresa'))).subscribe(res => {
       this.p_color = res[0].color_p;
       this.s_color = res[0].color_s;
+      this.frase = res[0].marca_agua;
     });
   }
 
@@ -341,45 +342,13 @@ export class ReporteEntradaSalidaComponent implements OnInit {
 
   // Método para ingresar solo letras
   IngresarSoloLetras(e) {
-    let key = e.keyCode || e.which;
-    let tecla = String.fromCharCode(key).toString();
-    //Se define todo el abecedario que se va a usar.
-    let letras = " áéíóúabcdefghijklmnñopqrstuvwxyzÁÉÍÓÚABCDEFGHIJKLMNÑOPQRSTUVWXYZ";
-    //Es la validación del KeyCodes, que teclas recibe el campo de texto.
-    let especiales = [8, 37, 39, 46, 6, 13];
-    let tecla_especial = false
-    for (var i in especiales) {
-      if (key == especiales[i]) {
-        tecla_especial = true;
-        break;
-      }
-    }
-    if (letras.indexOf(tecla) == -1 && !tecla_especial) {
-      this.toastr.info('No se admite datos numéricos', 'Usar solo letras', {
-        timeOut: 6000,
-      })
-      return false;
-    }
+    return this.validacionesService.IngresarSoloLetras(e);
   }
 
   // Método para ingresar solo números
   IngresarSoloNumeros(evt) {
-    if (window.event) {
-      var keynum = evt.keyCode;
-    }
-    else {
-      keynum = evt.which;
-    }
-    // Comprobamos si se encuentra en el rango numérico y que teclas no recibirá.
-    if ((keynum > 47 && keynum < 58) || keynum == 8 || keynum == 13 || keynum == 6) {
-      return true;
-    }
-    else {
-      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números', {
-        timeOut: 6000,
-      })
-      return false;
-    }
+    return this.validacionesService.IngresarSoloNumeros(evt);
+
   }
 
   // Método para limpiar campos de búsqueda
@@ -387,10 +356,10 @@ export class ReporteEntradaSalidaComponent implements OnInit {
     this.codigo.reset();
     this.cedula.reset();
     this.nombre.reset();
-    this.apellido.reset();
     this.departamentoF.reset();
     this.regimenF.reset();
     this.cargoF.reset();
+    this.filtroEmpleado = '';
   }
 
   // Método para limpiar campos de fecha
@@ -422,11 +391,11 @@ export class ReporteEntradaSalidaComponent implements OnInit {
     return {
       // Encabezado de la página
       pageOrientation: 'landscape',
-      watermark: { text: 'Confidencial', color: 'blue', opacity: 0.1, bold: true, italics: false },
+      watermark: { text: this.frase, color: 'blue', opacity: 0.1, bold: true, italics: false },
       header: { text: 'Impreso por:  ' + this.empleadoLogueado[0].nombre + ' ' + this.empleadoLogueado[0].apellido, margin: 10, fontSize: 9, opacity: 0.3, alignment: 'right' },
 
       // Pie de página
-      footer: function (currentPage, pageCount, fecha) {
+      footer: function (currentPage: any, pageCount: any, fecha: any, hora: any) {
         var h = new Date();
         var f = moment();
         fecha = f.format('YYYY-MM-DD');
@@ -823,7 +792,7 @@ export class ReporteEntradaSalidaComponent implements OnInit {
           return (i % 2 === 0) ? '#CCD1D1' : null;
         }
       },
-    }; 
+    };
 
   }
 
@@ -850,11 +819,11 @@ export class ReporteEntradaSalidaComponent implements OnInit {
 
       // Encabezado de la página
       //pageOrientation: 'landscape',
-      watermark: { text: 'Confidencial', color: 'blue', opacity: 0.1, bold: true, italics: false },
+      watermark: { text: this.frase, color: 'blue', opacity: 0.1, bold: true, italics: false },
       header: { text: 'Impreso por:  ' + this.empleadoLogueado[0].nombre + ' ' + this.empleadoLogueado[0].apellido, margin: 10, fontSize: 9, opacity: 0.3, alignment: 'right' },
 
       // Pie de la página
-      footer: function (currentPage, pageCount, fecha) {
+      footer: function (currentPage: any, pageCount: any, fecha: any, hora: any) {
         var h = new Date();
         var f = moment();
         fecha = f.format('YYYY-MM-DD');

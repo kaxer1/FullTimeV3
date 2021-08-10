@@ -40,7 +40,7 @@
 
 <div class="container" style="padding-bottom: 50px; text-align: center;">
     <div class="mat-elevation-z8" style="background: white;">
-        <div id="resultadosEmpre">Resultado de búsqueda</div>
+        <div id="titulo">Resultado de búsqueda</div>
         <div class="table-responsive">
             <table class="table table-hover table-sm ">
                 <thead class="thead-light">
@@ -64,18 +64,18 @@
                         <td>{{e.ruc}}</td>
                         <td>{{e.direccion}}</td>
                         <td class="d-flex justify-content-center">
-                            <i matSuffix matTooltipClass="listaF-tooltip" matTooltipPosition="right"
+                            <i matSuffix  matTooltipPosition="right"
                                 matTooltip="Ver datos generales de este feriado" class="fas fa-eye" id="ver"
                                 [routerLink]="['/vistaEmpresa/', e.id]">
                                 <p>Ver</p>
                             </i>
                             <i id="editar" class="fas fa-edit" (click)="AbrirVentanaEditar(e)" matSuffix
-                                matTooltipPosition="right" matTooltipClass="departamento-tooltip"
+                                matTooltipPosition="right" 
                                 matTooltip="Modificar los datos generales de este registro">
                                 <p>Editar</p>
                             </i>
                             <i (click)="ConfirmarDelete(e)" id="eliminar" class="far fa-trash-alt" matSuffix
-                                matTooltipPosition="right" matTooltipClass="departamento-tooltip"
+                                matTooltipPosition="right" 
                                 matTooltip="Eliminar este registro">
                                 <p>Eliminar</p>
                             </i>
@@ -85,23 +85,23 @@
             </table>
         </div>
         <mat-paginator class="d-flex justify-content-end" [length]="empresas.length" [pageSize]="tamanio_pagina"
-            [pageSizeOptions]="pageSizeOptions" id="estilo" (page)="ManejarPagina($event)" showFirstLastButtons>
+            [pageSizeOptions]="pageSizeOptions" id="pagina" (page)="ManejarPagina($event)" showFirstLastButtons>
         </mat-paginator>
         <div class="d-flex justify-content-end" style="margin-right: 5%;">
             <i (click)="generarPdf('download')" id="pdf" class="fas fa-file-pdf" matSuffix matTooltipPosition="right"
-                matTooltipClass="departamento-tooltip" matTooltip="Descargar Lista de Empresas en formato PDF">
+                 matTooltip="Descargar Lista de Empresas en formato PDF">
                 <p>PDF</p>
             </i>
             <i (click)="exportToExcel()" id="excel" class="fas fa-file-excel" matSuffix matTooltipPosition="right"
-                matTooltipClass="departamento-tooltip" matTooltip="Descargar Lista de Empresas en formato EXCEL">
+                 matTooltip="Descargar Lista de Empresas en formato EXCEL">
                 <p>XLSL</p>
             </i>
             <i (click)="exportToCVS()" id="csv" class="fas fa-file-csv" matSuffix matTooltipPosition="right"
-                matTooltipClass="departamento-tooltip" matTooltip="Descargar Lista de Empresas en formato CSV">
+                 matTooltip="Descargar Lista de Empresas en formato CSV">
                 <p>CSV</p>
             </i>
             <i (click)="exportToXML()" id="xml" class="fas fa-file-code" matSuffix matTooltipPosition="right"
-                matTooltipClass="departamento-tooltip" matTooltip="Descargar Lista de Empresas en formato XML">
+                 matTooltip="Descargar Lista de Empresas en formato XML">
                 <p>XML</p>
             </i>
         </div>

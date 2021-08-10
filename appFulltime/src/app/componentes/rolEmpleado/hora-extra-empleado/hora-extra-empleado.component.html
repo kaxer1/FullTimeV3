@@ -49,11 +49,11 @@
             </div>
             <div style="text-align: right;" *ngIf="h.estado === 'Pendiente'">
                 <i class="fas fa-edit" id="edit" (click)="EditarHoraExtra(h)" matSuffix matTooltipPosition="right"
-                    matTooltipClass="departamento-tooltip" matTooltip="Modificar los datos generales de este registro">
+                     matTooltip="Modificar los datos generales de este registro">
                     <p>Editar</p>
                 </i>
                 <i class="fas fa-backspace" id="cancel" (click)="CancelarHoraExtra(h)" matSuffix
-                    matTooltipPosition="right" matTooltipClass="departamento-tooltip"
+                    matTooltipPosition="right" 
                     matTooltip="Cancelar solicitud de horas extras">
                     <p>Cancelar</p>
                 </i>
@@ -61,7 +61,7 @@
             <mat-divider></mat-divider>
         </div>
         <mat-paginator [length]="hora_extra.length" [pageSize]="tamanio_pagina" [pageSizeOptions]="pageSizeOptions"
-            id="estilo" (page)="ManejarPagina($event)" showFirstLastButtons>
+            id="pagina" (page)="ManejarPagina($event)" showFirstLastButtons>
         </mat-paginator>
         <!-- <div class="card-footer pb-0 pt-3">
             <jw-pagination [items]="hora_extra" (changePage)="onChangePage($event)"></jw-pagination>

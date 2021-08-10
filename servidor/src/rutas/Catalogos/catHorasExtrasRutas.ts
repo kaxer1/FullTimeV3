@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import horasExtrasControlador from '../../controlador/catalogos/catHorasExtrasControlador';
 import { TokenValidation } from '../../libs/verificarToken';
+import { ModuloHoraExtraValidation } from '../../libs/Modulos/verificarHoraExtra'
 
 class HorasExtrasRutas {
     public router: Router = Router();
@@ -11,13 +12,13 @@ class HorasExtrasRutas {
     }
 
     configuracion(): void {
-        this.router.get('/', TokenValidation, horasExtrasControlador.ListarHorasExtras);
-        this.router.get('/:id', TokenValidation, horasExtrasControlador.ObtenerUnaHoraExtra);
-        this.router.post('/', TokenValidation, horasExtrasControlador.CrearHoraExtra);
-        this.router.delete('/eliminar/:id', TokenValidation, horasExtrasControlador.EliminarRegistros);
-        this.router.post('/xmlDownload/', TokenValidation, horasExtrasControlador.FileXML);
+        this.router.get('/', [TokenValidation, ModuloHoraExtraValidation], horasExtrasControlador.ListarHorasExtras);
+        this.router.get('/:id', [TokenValidation, ModuloHoraExtraValidation], horasExtrasControlador.ObtenerUnaHoraExtra);
+        this.router.post('/', [TokenValidation, ModuloHoraExtraValidation], horasExtrasControlador.CrearHoraExtra);
+        this.router.delete('/eliminar/:id', [TokenValidation, ModuloHoraExtraValidation], horasExtrasControlador.EliminarRegistros);
+        this.router.post('/xmlDownload/', [TokenValidation, ModuloHoraExtraValidation], horasExtrasControlador.FileXML);
         this.router.get('/download/:nameXML', horasExtrasControlador.downloadXML);
-        this.router.put('/', TokenValidation, horasExtrasControlador.ActualizarHoraExtra);
+        this.router.put('/', [TokenValidation, ModuloHoraExtraValidation], horasExtrasControlador.ActualizarHoraExtra);
     }
 }
 

@@ -142,8 +142,8 @@ export class VerEmpresaComponent implements OnInit {
       });
   }
 
-  AbrirVentanaColores() {
-    this.vistaRegistrarDatos.open(ColoresEmpresaComponent, { width: '300', data: parseInt(this.idEmpresa) })
+  AbrirVentanaReportes(datos_empresa, ventana) {
+    this.vistaRegistrarDatos.open(ColoresEmpresaComponent, { width: '350', data: {datos: datos_empresa, ventana: ventana} })
       .afterClosed().subscribe((items: any) => {
         if (items.actualizar === true) {
           this.ObtenerSucursal();

@@ -30,31 +30,31 @@ export class ListaReportesComponent implements OnInit {
 
   treeControl = new NestedTreeControl<CategoriasReportes>(node => node.children);
   dataSource = new MatTreeNestedDataSource<CategoriasReportes>();
-  
+
   hasChild = (_: number, node: CategoriasReportes) => !!node.children && node.children.length > 0;
-  
+
   constructor(
     private rest: EmpresaService,
     private toast: ToastrService,
     private router: Router,
     private route: ActivatedRoute
-  ) { 
+  ) {
     this.dataSource.data = TREE_DATA;
   }
 
   ngOnInit(): void {
     this.idEmpresa = parseInt(localStorage.getItem('empresa'))
-    this.LlamarDatos();    
+    this.LlamarDatos();
   }
 
   LlamarDatos() {
     this.rest.ConsultarDatosEmpresa(this.idEmpresa).subscribe(datos => {
       this.datosEmpresa = datos;
       if (this.datosEmpresa[0].logo === null || this.datosEmpresa[0].color_p === null || this.datosEmpresa[0].color_s === null) {
-        this.toast.error('Falta agregar estilo o logotipo de la empresa para imprimir PDFs','Error configuración', {timeOut: 10000})
-        .onTap.subscribe(obj => {
-          this.IrInfoEmpresa()
-        })
+        this.toast.error('Falta agregar estilo o logotipo de la empresa para imprimir PDFs', 'Error configuración', { timeOut: 10000 })
+          .onTap.subscribe(obj => {
+            this.IrInfoEmpresa()
+          })
         this.mensaje = true;
       } else {
         this.habilitarReportes = 'visible';
@@ -63,7 +63,7 @@ export class ListaReportesComponent implements OnInit {
   }
 
   IrInfoEmpresa() {
-    this.router.navigate(['/vistaEmpresa', this.idEmpresa], {relativeTo: this.route, skipLocationChange: false})
+    this.router.navigate(['/vistaEmpresa', this.idEmpresa], { relativeTo: this.route, skipLocationChange: false })
   }
 
 }
@@ -107,14 +107,23 @@ const TREE_DATA: CategoriasReportes[] = [
     children: [
       { name: 'Kardex', url: '/reporteKardex' },
       { name: 'Timbres', url: '/reporteTimbres' },
+      { name: 'Timbre Abierto', url: '/reporte-timbre-abierto' },
       { name: 'Atrasos', url: '/reporteAtrasos' },
       { name: 'Permisos', url: '/reportePermisos' },
       { name: 'Empleados', url: '/reporteEmpleados' },
       { name: 'Entradas Salidas', url: '/reporteEntradaSalida' },
       { name: 'Empleados Inactivos', url: '/reporte-emp-inactivos' },
-      { name: 'Horas Extras calculados', url: '/horas/extras' },
+      { name: 'Solicitudes Horas Extras', url: '/horas/extras' },
       { name: 'Horas Extras Autorizaciones', url: '/reporteHorasExtras' },
       { name: 'Asistencia Detalle Consolidado', url: '/reporteAsistenciaConsolidado' },
+    ]
+  },
+  {
+    name: 'Reportes Notificaciones',
+    icono: 'notifications',
+    children: [
+      { name: 'Todos', url: '/listaAllNotificaciones' },
+      { name: 'Usuarios', url: '/listaNotifacionUsuario' },
     ]
   }
 ];

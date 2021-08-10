@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { environment } from '../../../../environments/environment'
 
 @Injectable({
@@ -22,11 +22,15 @@ export class HorarioService {
   }
 
   postHorarioRest(data: any) {
-    return this.http.post(`${environment.url}/horario`, data);
+    return this.http.post<any>(`${environment.url}/horario`, data);
   }
 
   putHorarioRest(id: number, data: any) {
     return this.http.put(`${environment.url}/horario/editar/${id}`, data);
+  }
+
+  updateHorasTrabajaByDetalleHorario(id: number, data: any) {
+    return this.http.put(`${environment.url}/horario/update-horas-trabaja/${id}`, data);
   }
 
   DownloadXMLRest(data: any) {
@@ -46,11 +50,16 @@ export class HorarioService {
   }
 
   VerificarDuplicados(nombre: string) {
-    return this.http.get(`${environment.url}/horario/verificarDuplicados/${nombre}`);
+    const params = new HttpParams()
+      .set('nombre', nombre)
+    return this.http.get(`${environment.url}/horario/verificarDuplicados/registro`, { params });
   }
 
   VerificarDuplicadosEdicion(id: number, nombre: string) {
-    return this.http.get(`${environment.url}/horario/verificarDuplicados/edicion/${id}/${nombre}`);
+    const params = new HttpParams()
+      .set('id', id.toString())
+      .set('nombre', nombre)
+    return this.http.get<any>(`${environment.url}/horario/verificarDuplicados/edicion`, { params });
   }
 
   // Verificar datos de la plantilla de catálogo horario y cargar al sistema

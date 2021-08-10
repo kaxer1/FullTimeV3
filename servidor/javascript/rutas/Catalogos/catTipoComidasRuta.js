@@ -31,9 +31,9 @@ class TipoComidasRuta {
         this.router.put('/detalle/menu', verificarToken_1.TokenValidation, catTipoComidasControlador_1.default.ActualizarDetalleMenu);
         this.router.delete('/detalle/menu/eliminar/:id', verificarToken_1.TokenValidation, catTipoComidasControlador_1.default.EliminarDetalle);
         // Validaciones de datos antes de registrar los datos de la plantilla indicada
-        this.router.post('/verificar_datos/upload', verificarToken_1.TokenValidation, multipartMiddleware, catTipoComidasControlador_1.default.RevisarDatos);
-        this.router.post('/verificar_plantilla/upload', verificarToken_1.TokenValidation, multipartMiddleware, catTipoComidasControlador_1.default.RevisarDatos_Duplicados);
-        this.router.post('/upload', verificarToken_1.TokenValidation, multipartMiddleware, catTipoComidasControlador_1.default.CrearTipoComidasPlantilla);
+        /*this.router.post('/verificar_datos/upload', TokenValidation, multipartMiddleware, TIPO_COMIDAS_CONTROLADOR.RevisarDatos);
+        this.router.post('/verificar_plantilla/upload', TokenValidation, multipartMiddleware, TIPO_COMIDAS_CONTROLADOR.RevisarDatos_Duplicados);
+        this.router.post('/upload', TokenValidation, multipartMiddleware, TIPO_COMIDAS_CONTROLADOR.CrearTipoComidasPlantilla);*/
     }
 }
 const TIPO_COMIDAS_RUTA = new TipoComidasRuta();

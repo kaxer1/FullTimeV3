@@ -9,6 +9,7 @@ import { DocumentosService } from 'src/app/servicios/documentos/documentos.servi
 import { EditarDocumentoComponent } from 'src/app/componentes/documentos/editar-documento/editar-documento.component'
 import { SubirDocumentoComponent } from 'src/app/componentes/documentos/subir-documento/subir-documento.component'
 import { MetodosComponent } from 'src/app/componentes/metodoEliminar/metodos.component';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-ver-documentos',
@@ -39,6 +40,9 @@ export class VerDocumentosComponent implements OnInit {
 
   // Array de carpetas
   array_carpetas: any = [];
+
+  hipervinculo: string = environment.url
+
   constructor(
     private rest: DocumentosService,
     private toastr: ToastrService,

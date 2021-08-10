@@ -54,7 +54,7 @@
                             <label id="datosF">Documento:</label>
                             <a matSuffix matTooltipPosition="right"
                                 matTooltip="Dar click para descargar contrato de trabajo"
-                                href="http://localhost:3000/empleadoPermiso/documentos/{{pt.documento}}"
+                                href="{{hipervinculo}}/empleadoPermiso/documentos/{{pt.documento}}"
                                 target="_blank">
                                 <label style="font-size: 13px;">{{pt.docu_nombre}}</label>
                             </a>
@@ -73,11 +73,11 @@
             </div>
             <div style="text-align: right;" *ngIf="pt.estado === 1">
                 <i class="fas fa-edit" id="edit" (click)="EditarPermiso(pt)" matSuffix matTooltipPosition="right"
-                    matTooltipClass="departamento-tooltip" matTooltip="Modificar los datos generales de este registro">
+                     matTooltip="Modificar los datos generales de este registro">
                     <p>Editar</p>
                 </i>
                 <i class="fas fa-backspace" id="cancel" (click)="CancelarPermiso(pt)" matSuffix
-                    matTooltipPosition="right" matTooltipClass="departamento-tooltip"
+                    matTooltipPosition="right" 
                     matTooltip="Cancelar solicitud de permiso">
                     <p>Cancelar</p>
                 </i>
@@ -85,7 +85,7 @@
             <mat-divider></mat-divider>
         </div>
         <mat-paginator [length]="permisosTotales.length" [pageSize]="tamanio_pagina" [pageSizeOptions]="pageSizeOptions"
-            id="estilo" (page)="ManejarPagina($event)" showFirstLastButtons>
+            id="pagina" (page)="ManejarPagina($event)" showFirstLastButtons>
         </mat-paginator>
     </div>
 </div>

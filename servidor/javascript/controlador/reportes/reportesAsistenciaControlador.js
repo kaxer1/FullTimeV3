@@ -465,6 +465,31 @@ class ReportesAsistenciaControlador {
             return res.status(200).jsonp(nuevo);
         });
     }
+    ReporteTimbresAbiertos(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { data, desde, hasta } = req.query;
+            try {
+                const array = JSON.parse(data);
+                if (array.length === 0)
+                    return res.status(400).jsonp({ message: 'no existe datos de consulta' });
+                const resultado = yield Promise.all(array.map((o) => __awaiter(this, void 0, void 0, function* () {
+                    return {
+                        id: o.id,
+                        codigo: o.codigo,
+                        fullname: o.fullname,
+                        cedula: o.cedula,
+                        timbres: yield database_1.default.query('SELECT CAST(fec_hora_timbre AS VARCHAR), accion, observacion, latitud, longitud, CAST(fec_hora_timbre_servidor AS VARCHAR), dispositivo_timbre FROM timbres WHERE id_empleado = $1 AND accion = \'HA\' AND fec_hora_timbre BETWEEN $2 AND $3 ORDER BY fec_hora_timbre DESC ', [parseInt(o.codigo), new Date(desde), new Date(hasta)])
+                            .then(result => { return result.rows; })
+                    };
+                })));
+                const nuevo = resultado.filter((obj) => { return obj.timbres.length > 0; });
+                return res.status(200).jsonp(nuevo);
+            }
+            catch (error) {
+                return res.status(500).jsonp({ message: error });
+            }
+        });
+    }
 }
 const REPORTE_A_CONTROLADOR = new ReportesAsistenciaControlador();
 exports.default = REPORTE_A_CONTROLADOR;
@@ -578,7 +603,7 @@ const BuscarTimbresSinAccionesDeEntrada = function (fec_inicio, fec_final, codig
 };
 const BuscarTimbres = function (fec_inicio, fec_final, codigo) {
     return __awaiter(this, void 0, void 0, function* () {
-        return yield database_1.default.query('SELECT CAST(fec_hora_timbre AS VARCHAR), id_reloj, accion, observacion, latitud, longitud FROM timbres WHERE CAST(fec_hora_timbre AS VARCHAR) between $1 || \'%\' AND $2 || \'%\' AND id_empleado = $3 ORDER BY fec_hora_timbre ASC ', [fec_inicio, fec_final, codigo])
+        return yield database_1.default.query('SELECT CAST(fec_hora_timbre AS VARCHAR), id_reloj, accion, observacion, latitud, longitud, CAST(fec_hora_timbre_servidor AS VARCHAR)  FROM timbres WHERE CAST(fec_hora_timbre AS VARCHAR) between $1 || \'%\' AND $2 || \'%\' AND id_empleado = $3 ORDER BY fec_hora_timbre ASC ', [fec_inicio, fec_final, codigo])
             .then(res => {
             return res.rows;
         });

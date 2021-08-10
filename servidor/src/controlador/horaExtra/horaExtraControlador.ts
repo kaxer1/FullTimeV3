@@ -75,48 +75,57 @@ class HorasExtrasPedidasControlador {
   public async CrearHoraExtraPedida(req: Request, res: Response): Promise<any> {
     const { id_empl_cargo, id_usua_solicita, fec_inicio, fec_final, fec_solicita, num_hora,
       descripcion, estado, observacion, tipo_funcion, depa_user_loggin, codigo } = req.body;
-    await pool.query('INSERT INTO hora_extr_pedidos ( id_empl_cargo, id_usua_solicita, fec_inicio, fec_final, ' +
-      'fec_solicita, num_hora, descripcion, estado, observacion, tipo_funcion, codigo ) ' +
-      'VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)',
-      [id_empl_cargo, id_usua_solicita, fec_inicio, fec_final, fec_solicita, num_hora, descripcion, estado, observacion, tipo_funcion, codigo]);
 
-    const JefesDepartamentos = await pool.query('SELECT da.id, da.estado, cg.id AS id_dep, cg.depa_padre, cg.nivel, s.id AS id_suc, cg.nombre AS departamento, ' +
-      's.nombre AS sucursal, ecr.id AS cargo, ecn.id AS contrato, e.id AS empleado, e.nombre, e.apellido, e.cedula, e.correo, c.hora_extra_mail, c.hora_extra_noti ' +
-      'FROM depa_autorizaciones AS da, empl_cargos AS ecr, cg_departamentos AS cg, sucursales AS s, empl_contratos AS ecn, empleados AS e, config_noti AS c ' +
-      'WHERE da.id_departamento = $1 AND da.estado = true AND da.id_empl_cargo = ecr.id AND da.id_departamento = cg.id AND cg.id_sucursal = s.id AND ' +
-      'ecr.id_empl_contrato = ecn.id AND ecn.id_empleado = e.id AND e.id = c.id_empleado', [depa_user_loggin])
-      .then(result => {
-        return result.rows
-      })
+    try {
+      const [hora_extra] = await pool.query('INSERT INTO hora_extr_pedidos ( id_empl_cargo, id_usua_solicita, fec_inicio, fec_final, ' +
+        'fec_solicita, num_hora, descripcion, estado, observacion, tipo_funcion, codigo ) ' +
+        'VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING *',
+        [id_empl_cargo, id_usua_solicita, fec_inicio, fec_final, fec_solicita, num_hora, descripcion, estado, observacion, tipo_funcion, codigo])
+        .then(result => { return result.rows })
 
-    if (JefesDepartamentos.length === 0) return res.jsonp({ message: 'Departamento sin nadie a cargo' });
+      if (!hora_extra) return res.status(400).jsonp({ message: 'La hora extra no se a podido solicitar' })
 
-    let depa_padre = JefesDepartamentos[0].depa_padre;
-    let JefeDepaPadre;
+      const JefesDepartamentos = await pool.query('SELECT da.id, da.estado, cg.id AS id_dep, cg.depa_padre, cg.nivel, s.id AS id_suc, cg.nombre AS departamento, ' +
+        's.nombre AS sucursal, ecr.id AS cargo, ecn.id AS contrato, e.id AS empleado, e.nombre, e.apellido, e.cedula, e.correo, c.hora_extra_mail, c.hora_extra_noti ' +
+        'FROM depa_autorizaciones AS da, empl_cargos AS ecr, cg_departamentos AS cg, sucursales AS s, empl_contratos AS ecn, empleados AS e, config_noti AS c ' +
+        'WHERE da.id_departamento = $1 AND da.estado = true AND da.id_empl_cargo = ecr.id AND da.id_departamento = cg.id AND cg.id_sucursal = s.id AND ' +
+        'ecr.id_empl_contrato = ecn.id AND ecn.id_empleado = e.id AND e.id = c.id_empleado', [depa_user_loggin])
+        .then(result => {
+          return result.rows
+        })
 
-    if (depa_padre !== null) {
-      do {
-        JefeDepaPadre = await pool.query('SELECT da.id, da.estado, cg.id AS id_dep, cg.depa_padre, cg.nivel, ' +
-          's.id AS id_suc, cg.nombre AS departamento, s.nombre AS sucursal, ecr.id AS cargo, ecn.id AS contrato, ' +
-          'e.id AS empleado, e.nombre, e.apellido, e.cedula, e.correo, c.hora_extra_mail, c.hora_extra_noti ' +
-          'FROM depa_autorizaciones AS da, empl_cargos AS ecr, cg_departamentos AS cg, sucursales AS s, ' +
-          'empl_contratos AS ecn, empleados AS e, config_noti AS c WHERE da.id_departamento = $1 AND ' +
-          'da.id_empl_cargo = ecr.id AND da.id_departamento = cg.id AND cg.id_sucursal = s.id AND ' +
-          'ecr.id_empl_contrato = ecn.id AND ecn.id_empleado = e.id AND e.id = c.id_empleado', [depa_padre])
-          .then(result => {
-            return result.rows
-          });
-        if (JefeDepaPadre.length === 0) {
-          depa_padre = null;
-        } else {
-          depa_padre = JefeDepaPadre[0].depa_padre;
-          JefesDepartamentos.push(JefeDepaPadre[0]);
-        }
-      } while (depa_padre !== null);
+      if (JefesDepartamentos.length === 0) return res.status(400).jsonp({ message: 'Departamento sin nadie a cargo' });
 
-      return res.jsonp(JefesDepartamentos);
-    } else {
-      return res.jsonp(JefesDepartamentos);
+      let depa_padre = JefesDepartamentos[0].depa_padre;
+      let JefeDepaPadre;
+
+      if (depa_padre !== null) {
+        do {
+          JefeDepaPadre = await pool.query('SELECT da.id, da.estado, cg.id AS id_dep, cg.depa_padre, cg.nivel, ' +
+            's.id AS id_suc, cg.nombre AS departamento, s.nombre AS sucursal, ecr.id AS cargo, ecn.id AS contrato, ' +
+            'e.id AS empleado, e.nombre, e.apellido, e.cedula, e.correo, c.hora_extra_mail, c.hora_extra_noti ' +
+            'FROM depa_autorizaciones AS da, empl_cargos AS ecr, cg_departamentos AS cg, sucursales AS s, ' +
+            'empl_contratos AS ecn, empleados AS e, config_noti AS c WHERE da.id_departamento = $1 AND ' +
+            'da.id_empl_cargo = ecr.id AND da.id_departamento = cg.id AND cg.id_sucursal = s.id AND ' +
+            'ecr.id_empl_contrato = ecn.id AND ecn.id_empleado = e.id AND e.id = c.id_empleado', [depa_padre])
+            .then(result => {
+              return result.rows
+            });
+          if (JefeDepaPadre.length === 0) {
+            depa_padre = null;
+          } else {
+            depa_padre = JefeDepaPadre[0].depa_padre;
+            JefesDepartamentos.push(JefeDepaPadre[0]);
+          }
+        } while (depa_padre !== null);
+
+        return res.status(200).jsonp(JefesDepartamentos);
+      } else {
+        return res.status(200).jsonp(JefesDepartamentos);
+      }
+    } catch (error) {
+      console.log(error);
+      return res.status(500).jsonp({ message: 'Error en la BDD' })
     }
   }
 

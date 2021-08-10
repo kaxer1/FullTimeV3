@@ -27,13 +27,12 @@ class HorarioControlador {
     }
   }
 
-  public async CrearHorario(req: Request, res: Response): Promise<void> {
-    //HORA_TRABAJO --SOLO PERMITE 2 Nùmeros 1 entero, un decimal 
-    const { nombre, min_almuerzo, hora_trabajo, doc_nombre, nocturno } = req.body;
-    console.log({ nombre, min_almuerzo, hora_trabajo, nocturno });
-    await pool.query('INSERT INTO cg_horarios (nombre, min_almuerzo, hora_trabajo, doc_nombre, nocturno) VALUES ($1, $2, $3, $4, $5)', [nombre, min_almuerzo, hora_trabajo, doc_nombre, nocturno]);
+  public async CrearHorario(req: Request, res: Response) {
+    const { nombre, min_almuerzo, hora_trabajo, doc_nombre, nocturno, detalle } = req.body;
+    await pool.query('INSERT INTO cg_horarios (nombre, min_almuerzo, hora_trabajo, doc_nombre, ' +
+      'nocturno, detalle) VALUES ($1, $2, $3, $4, $5, $6)',
+      [nombre, min_almuerzo, hora_trabajo, doc_nombre, nocturno, detalle]);
     const ultimo = await pool.query('SELECT MAX(id) AS id FROM cg_horarios');
-
     res.jsonp({ message: 'El horario ha sido registrado', id: ultimo.rows[0].id });
   }
 
@@ -149,12 +148,37 @@ class HorarioControlador {
     fs.unlinkSync(filePath);
   }
 
-  public async EditarHorario(req: Request, res: Response): Promise<void> {
+  public async EditarHorario(req: Request, res: Response): Promise<any> {
     const id = req.params.id;
-    const { nombre, min_almuerzo, hora_trabajo, doc_nombre, nocturno } = req.body;
-    await pool.query('UPDATE cg_horarios SET nombre = $1, min_almuerzo = $2, hora_trabajo = $3, doc_nombre = $4, nocturno = $5 WHERE id = $6', [nombre, min_almuerzo, hora_trabajo, doc_nombre, nocturno, id]);
+    const { nombre, min_almuerzo, hora_trabajo, doc_nombre, nocturno, detalle } = req.body;
 
-    res.jsonp({ message: 'Tipo Permiso Actualizado' });
+    try {
+      const respuesta = await pool.query('UPDATE cg_horarios SET nombre = $1, min_almuerzo = $2, ' +
+        'hora_trabajo = $3, doc_nombre = $4, nocturno = $5, detalle = $6 WHERE id = $7 RETURNING *',
+        [nombre, min_almuerzo, hora_trabajo, doc_nombre, nocturno, detalle, id])
+        .then(result => { return result.rows })
+      console.log(respuesta);
+
+      if (respuesta.length === 0) return res.status(400).jsonp({ message: 'Horario no Actualizado' });
+
+      return res.status(200).jsonp(respuesta)
+    } catch (error) {
+      return res.status(400).jsonp({ message: error });
+    }
+  }
+
+  public async EditarHoraTrabajaByHorarioDetalle(req: Request, res: Response): Promise<any> {
+    const id = req.params.id;
+    const { hora_trabajo } = req.body;
+    try {
+      const respuesta = await pool.query('UPDATE cg_horarios SET hora_trabajo = $1 WHERE id = $2 RETURNING *', [hora_trabajo, id])
+        .then(result => { return result.rows })
+      if (respuesta.length === 0) return res.status(400).jsonp({ message: 'No Actualizado' });
+
+      return res.status(200).jsonp(respuesta)
+    } catch (error) {
+      return res.status(400).jsonp({ message: error });
+    }
   }
 
   public async FileXML(req: Request, res: Response): Promise<any> {
@@ -206,27 +230,31 @@ class HorarioControlador {
   }
 
   public async VerificarDuplicados(req: Request, res: Response) {
-    const { nombre } = req.params;
-    const HORARIOS = await pool.query('SELECT * FROM cg_horarios WHERE UPPER(nombre) = $1',
-      [nombre.toUpperCase()]);
-    if (HORARIOS.rowCount > 0) {
-      return res.jsonp(HORARIOS.rows)
-    }
-    else {
-      return res.status(404).jsonp({ text: 'No se encuentran registros' });
+    const { nombre } = req.query;
+    try {
+      const HORARIOS = await pool.query('SELECT * FROM cg_horarios WHERE UPPER(nombre) = $1',
+        [nombre.toUpperCase()]);
+      if (HORARIOS.rowCount > 0) return res.status(200).jsonp({ message: 'No se encuentran registros' });
+
+      return res.status(400).jsonp({ message: 'No existe horario. Continua.' })
+    } catch (error) {
+      return res.status(400).jsonp({ message: error });
     }
   }
 
   public async VerificarDuplicadosEdicion(req: Request, res: Response) {
-    const { nombre } = req.params;
-    const id = req.params.id;
-    const HORARIOS = await pool.query('SELECT * FROM cg_horarios WHERE NOT id = $1 AND UPPER(nombre) = $2',
-      [id, nombre.toUpperCase()]);
-    if (HORARIOS.rowCount > 0) {
-      return res.jsonp(HORARIOS.rows)
-    }
-    else {
-      return res.status(404).jsonp({ text: 'No se encuentran registros' });
+    const { id, nombre } = req.query;
+    console.log('+++++++++++++++++++++++++++++++++++++ llego aqui');
+    console.log(req.query);
+    try {
+      const HORARIOS = await pool.query('SELECT * FROM cg_horarios WHERE NOT id = $1 AND UPPER(nombre) = $2',
+        [parseInt(id), nombre.toUpperCase()]);
+      console.log(HORARIOS.rows);
+      if (HORARIOS.rowCount > 0) return res.status(200).jsonp({ message: 'El nombre de horario ya existe, ingresar un nuevo nombre.' });
+
+      return res.status(400).jsonp({ message: 'No existe horario. Continua.' })
+    } catch (error) {
+      return res.status(400).jsonp({ message: error });
     }
   }
 

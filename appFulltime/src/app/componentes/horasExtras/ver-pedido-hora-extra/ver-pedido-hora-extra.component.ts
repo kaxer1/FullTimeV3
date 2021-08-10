@@ -17,6 +17,7 @@ import { AutorizacionService } from 'src/app/servicios/autorizacion/autorizacion
 import { DepartamentosService } from 'src/app/servicios/catalogos/catDepartamentos/departamentos.service';
 import { PedHoraExtraService } from 'src/app/servicios/horaExtra/ped-hora-extra.service';
 import { DatosGeneralesService } from 'src/app/servicios/datosGenerales/datos-generales.service';
+import { ValidacionesService } from '../../../servicios/validaciones/validaciones.service';
 
 interface Estado {
   id: number,
@@ -66,7 +67,8 @@ export class VerPedidoHoraExtraComponent implements OnInit {
     private router: Router,
     private restA: AutorizacionService,
     private restD: DepartamentosService,
-    private vistaFolante: MatDialog
+    private vistaFolante: MatDialog,
+    private validacionesService: ValidacionesService
   ) {
     this.idEmpleado = parseInt(localStorage.getItem('empleado'));
     this.dataParams = this.router.routerState.snapshot.root.children[0].params;
@@ -76,7 +78,7 @@ export class VerPedidoHoraExtraComponent implements OnInit {
     console.log(this.dataParams.id);
     this.BuscarInfo();
     this.ObtenerLogo();
-    this.ObtnerColores();
+    this.ObtenerColores();
   }
 
   id_usua_solicita: number;
@@ -113,8 +115,11 @@ export class VerPedidoHoraExtraComponent implements OnInit {
         console.log(error);
         this.HabilitarAutorizacion = false;
       });
-    });
 
+    }, err => {
+      return this.validacionesService.RedireccionarMixto(err.error)
+    });
+    
     this.ObtenerEmpleados(this.idEmpleado);
     this.ObtenerSolicitud(this.dataParams.id);
     this.ObtenerAutorizacion(this.dataParams.id);
@@ -128,13 +133,15 @@ export class VerPedidoHoraExtraComponent implements OnInit {
     });
   }
 
-  // Método para obtener colores de empresa
+  // MÉTODO PARA OBTENER COLORES Y MARCA DE AGUA DE EMPRESA 
   p_color: any;
   s_color: any;
-  ObtnerColores() {
+  frase: any;
+  ObtenerColores() {
     this.restEmpre.ConsultarDatosEmpresa(parseInt(localStorage.getItem('empresa'))).subscribe(res => {
       this.p_color = res[0].color_p;
       this.s_color = res[0].color_s;
+      this.frase = res[0].marca_agua;
     });
   }
 
@@ -174,6 +181,8 @@ export class VerPedidoHoraExtraComponent implements OnInit {
           this.habilitarActualizar = true;
         }
       });
+    }, err => {
+      return this.validacionesService.RedireccionarMixto(err.error)
     })
   }
 
@@ -225,6 +234,8 @@ export class VerPedidoHoraExtraComponent implements OnInit {
         }
       })
       console.log('autorizacion', this.datosAutorizacion);
+    }, err => {
+      return this.validacionesService.RedireccionarMixto(err.error)
     })
   }
 
@@ -294,10 +305,10 @@ export class VerPedidoHoraExtraComponent implements OnInit {
   getDocumentDefinicion() {
     return {
       pageOrientation: 'landscape',
-      watermark: { text: 'Confidencial', color: 'blue', opacity: 0.1, bold: true, italics: false },
+      watermark: { text: this.frase, color: 'blue', opacity: 0.1, bold: true, italics: false },
       header: { text: 'Impreso por:  ' + this.empleado[0].nombre + ' ' + this.empleado[0].apellido, margin: 10, fontSize: 9, opacity: 0.3, alignment: 'right' },
 
-      footer: function (currentPage, pageCount, fecha) {
+      footer: function (currentPage: any, pageCount: any, fecha: any, hora: any) {
         var f = moment();
         fecha = f.format('YYYY-MM-DD');
 

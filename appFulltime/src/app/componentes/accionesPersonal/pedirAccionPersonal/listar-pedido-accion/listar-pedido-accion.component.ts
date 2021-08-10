@@ -1,48 +1,47 @@
-import { Component, OnInit } from '@angular/core';
 import { Validators, FormControl } from '@angular/forms';
 import { PageEvent } from '@angular/material/paginator';
+import { Component, OnInit } from '@angular/core';
+import pdfFonts from 'pdfmake/build/vfs_fonts';
+import pdfMake from 'pdfmake/build/pdfmake';
 import { ToastrService } from 'ngx-toastr';
-// Librería para manejar formatos de fechas
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
+// LIBRERÍA PARA FORMATO DE FECHAS
 import * as moment from 'moment';
 moment.locale('es');
-
-import pdfMake from 'pdfmake/build/pdfmake';
-import pdfFonts from 'pdfmake/build/vfs_fonts';
-import { AccionPersonalService } from 'src/app/servicios/accionPersonal/accion-personal.service';
+// LLAMADO DE SERVICIOS
+import { EmpleadoProcesosService } from 'src/app/servicios/empleado/empleadoProcesos/empleado-procesos.service';
 import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
 import { EmplCargosService } from 'src/app/servicios/empleado/empleadoCargo/empl-cargos.service';
-import { EmpleadoProcesosService } from 'src/app/servicios/empleado/empleadoProcesos/empleado-procesos.service';
-pdfMake.vfs = pdfFonts.pdfMake.vfs;
+import { AccionPersonalService } from 'src/app/servicios/accionPersonal/accion-personal.service';
 
 @Component({
   selector: 'app-listar-pedido-accion',
   templateUrl: './listar-pedido-accion.component.html',
   styleUrls: ['./listar-pedido-accion.component.css']
 })
+
 export class ListarPedidoAccionComponent implements OnInit {
 
-  // Items de paginación de la tabla
+  // ITEMS DE PAGINACIÓN DE LA TABLA
   tamanio_pagina: number = 5;
   numero_pagina: number = 1;
   pageSizeOptions = [5, 10, 20, 50];
-
-  // Datos de filtros de búsqueda
+  // DATOS FILTROS DE BÚSQUEDA
   filtroCodigo: number;
   filtroCedula: '';
   filtroNombre: '';
   filtroApellido: '';
-
-  // Datos del Formulario de búsqueda
+  // DATOS DEL FORMULARIO DE BÚSQUEDA
   codigo = new FormControl('');
   cedula = new FormControl('', [Validators.minLength(2)]);
   nombre = new FormControl('', [Validators.minLength(2)]);
   apellido = new FormControl('', [Validators.minLength(2)]);
 
   constructor(
-    public restAccion: AccionPersonalService,
-    public restEmpre: EmpresaService,
-    public restCargo: EmplCargosService,
     public restEmpleadoProcesos: EmpleadoProcesosService,
+    public restAccion: AccionPersonalService,
+    public restCargo: EmplCargosService,
+    public restEmpre: EmpresaService,
     private toastr: ToastrService,
   ) { }
 
@@ -73,11 +72,10 @@ export class ListarPedidoAccionComponent implements OnInit {
     this.listaPedidos = [];
     this.restAccion.BuscarDatosPedido().subscribe(data => {
       this.listaPedidos = data;
-      console.log('datos_actuales', this.listaPedidos)
     });
   }
 
-  // Método para obtener colores de empresa
+  // MÉTODO PARA OBTENER DATOS DE COLORES DE LA EMPRESA
   empresa: any = [];
   ObtenerEmpresa() {
     this.empresa = [];
@@ -97,8 +95,7 @@ export class ListarPedidoAccionComponent implements OnInit {
   empleado_1: any = [];
   empleado_2: any = [];
   empleado_3: any = [];
-  contar: number = 0;
-  /** Método para mostrar datos de los procesos del empleado */
+
   buscarProcesos: any = [];
   empleadoProcesos: any = [];
   idCargo: any = [];
@@ -120,98 +117,114 @@ export class ListarPedidoAccionComponent implements OnInit {
     this.empleadoProcesos = [];
     this.idCargo = [];
     this.contador = 0;
-    this.contar = 0;
     this.restAccion.BuscarDatosPedidoId(id).subscribe(data => {
       this.datosPedido = data;
-      console.log('1', this.datosPedido);
-      this.restAccion.BuscarDatosPedidoEmpleados(this.datosPedido[0].id_empleado).subscribe(data1 => {
-        this.empleado_1 = data1;
-        console.log('2', this.empleado_1);
-        this.restCargo.BuscarIDCargo(this.datosPedido[0].id_empleado).subscribe(datos => {
-          this.idCargo = datos;
-          console.log("idCargo Procesos", this.idCargo[0].id);
-          for (let i = 0; i <= this.idCargo.length - 1; i++) {
-            this.contar++;
-            this.restEmpleadoProcesos.ObtenerProcesoPorIdCargo(this.idCargo[i]['id']).subscribe(datos => {
-              this.buscarProcesos = datos;
-              if (this.buscarProcesos.length != 0) {
-                if (this.contador === 0) {
-                  this.empleadoProcesos = datos
-                  this.contador++;
-                  console.log("Datos procesos1" + i + '', this.empleadoProcesos);
-                }
-                else {
-                  this.empleadoProcesos = this.empleadoProcesos.concat(datos);
-                  console.log("Datos procesos2" + i + '', this.empleadoProcesos);
-                }
-              }
-              if (this.contar === this.idCargo.length) {
-                this.restAccion.Buscarprocesos(this.empleadoProcesos[this.empleadoProcesos.length - 1].id).subscribe(proc_a => {
-                  this.procesoActual = proc_a;
-                  console.log('5', this.procesoActual);
-                  this.EscribirProcesosActuales(this.procesoActual);
-                  this.BusquedaInformacion();
-                });
-              }
-            },
-              error => {
-                this.EscribirProcesosActuales_Vacios();
-                this.BusquedaInformacion();
-                this.toastr.info('El reporte no refleja informácion de procesos actuales del colaborador seleccionado.', 'Cargar la información respectiva.', {
-                  timeOut: 6000,
-                })
-              });
-          }
-        });
-      });
+      this.BuscarPedidoEmpleado(this.datosPedido);
     });
   }
 
+  /** MÉTODO PARA MOSTRAR DATOS DE LOS EMPLEADOS SELECCIONADOS EN EL PEDIDO */
+  BuscarPedidoEmpleado(pedido: any) {
+    this.restAccion.BuscarDatosPedidoEmpleados(pedido[0].id_empleado).subscribe(datos1 => {
+      this.empleado_1 = datos1;
+      this.ListarProcesosEmpleado(pedido);
+    })
+  }
+
+  /** MÉTODO PARA MOSTRAR LA INFORMACIÓN DE LOS PROCESOS DEL EMPLEADO */
+  ListarProcesosEmpleado(pedido: any) {
+    this.restCargo.BuscarIDCargo(pedido[0].id_empleado).subscribe(datos => {
+      this.idCargo = datos;
+      var contar = 0;
+      for (let i = 0; i <= this.idCargo.length - 1; i++) {
+        contar = contar + 1;
+        this.BuscarProcesosCargo(this.idCargo, i, contar);
+      }
+    });
+  }
+
+  /** MÉTODO PARA BUSCAR PROCESOS QUE TIENE EL EMPLEADO DE ACUERDO AL CARGO */
+  BuscarProcesosCargo(id_cargo: any, valor: any, contar: any) {
+    this.restEmpleadoProcesos.ObtenerProcesoPorIdCargo(id_cargo[valor]['id']).subscribe(datos => {
+      this.buscarProcesos = datos;
+      if (this.buscarProcesos.length != 0) {
+        if (this.contador === 0) {
+          this.empleadoProcesos = datos
+          this.contador++;
+        }
+        else {
+          this.empleadoProcesos = this.empleadoProcesos.concat(datos);
+        }
+      }
+      if (contar === this.idCargo.length) {
+        this.restAccion.Buscarprocesos(this.empleadoProcesos[this.empleadoProcesos.length - 1].id).subscribe(proc_a => {
+          this.procesoActual = proc_a;
+          this.EscribirProcesosActuales(this.procesoActual);
+          this.BusquedaInformacion();
+        });
+      }
+    }, error => {
+      if (contar === this.idCargo.length) {
+        if (this.empleadoProcesos.length === 0) {
+          this.EscribirProcesosActuales_Vacios();
+          this.BusquedaInformacion();
+          this.toastr.info('El reporte no refleja informácion de procesos actuales del colaborador seleccionado.', 'Cargar la información respectiva.', {
+            timeOut: 6000,
+          })
+        }
+      }
+    });
+  }
+
+  /** MÉTODO PARA BUSCAR INFORMACIÓN DE LOS EMPLEADOS RESPONSABLES / FIRMAS */
   BusquedaInformacion() {
     this.restAccion.BuscarDatosPedidoEmpleados(this.datosPedido[0].firma_empl_uno).subscribe(data2 => {
       this.empleado_2 = data2;
-      console.log('3', this.empleado_2);
       this.restAccion.BuscarDatosPedidoEmpleados(this.datosPedido[0].firma_empl_dos).subscribe(data3 => {
         this.empleado_3 = data3;
-        console.log('4', this.empleado_3)
-        if (this.datosPedido[0].proceso_propuesto === null && this.datosPedido[0].cargo_propuesto === null) {
-          this.DefinirColor(this.datosPedido, '');
-          this.generarPdf('download');
-        } else if (this.datosPedido[0].proceso_propuesto != null && this.datosPedido[0].cargo_propuesto != null) {
-          this.restAccion.Buscarprocesos(this.datosPedido[0].proceso_propuesto).subscribe(proc1 => {
-            this.procesoPropuesto = proc1;
-            console.log('5', this.procesoPropuesto);
-            this.EscribirProcesosPropuestos(this.procesoPropuesto);
-            this.restAccion.ConsultarUnCargoPropuesto(this.datosPedido[0].cargo_propuesto).subscribe(carg => {
-              this.DefinirColor(this.datosPedido, carg[0].descripcion.toUpperCase())
-              this.generarPdf('download');
-            })
-          });
-        }
-        else if (this.datosPedido[0].proceso_propuesto != null && this.datosPedido[0].cargo_propuesto === null) {
-          this.restAccion.Buscarprocesos(this.datosPedido[0].proceso_propuesto).subscribe(proc => {
-            this.procesoPropuesto = proc;
-            console.log('5', this.procesoPropuesto);
-            this.EscribirProcesosPropuestos(this.procesoPropuesto);
-            this.DefinirColor(this.datosPedido, '')
-            this.generarPdf('download');
-          });
-        }
-        else if (this.datosPedido[0].proceso_propuesto === null && this.datosPedido[0].cargo_propuesto != null) {
-          this.restAccion.ConsultarUnCargoPropuesto(this.datosPedido[0].cargo_propuesto).subscribe(carg => {
-            this.DefinirColor(this.datosPedido, carg[0].descripcion.toUpperCase())
-            this.generarPdf('download');
-          })
-        }
+        this.VerificarDatos();
       });
     });
   }
 
+  /** MÉTODO PARA VERIFICAR DATOS INGRESADO Y NO INGRESADO */
+  VerificarDatos() {
+    if (this.datosPedido[0].proceso_propuesto === null && this.datosPedido[0].cargo_propuesto === null) {
+      this.DefinirColor(this.datosPedido, '');
+      this.generarPdf('download');
+    }
+    else if (this.datosPedido[0].proceso_propuesto != null && this.datosPedido[0].cargo_propuesto != null) {
+      this.restAccion.Buscarprocesos(this.datosPedido[0].proceso_propuesto).subscribe(proc1 => {
+        this.procesoPropuesto = proc1;
+        this.EscribirProcesosPropuestos(this.procesoPropuesto);
+        this.restAccion.ConsultarUnCargoPropuesto(this.datosPedido[0].cargo_propuesto).subscribe(carg => {
+          this.DefinirColor(this.datosPedido, carg[0].descripcion.toUpperCase())
+          this.generarPdf('download');
+        })
+      });
+    }
+    else if (this.datosPedido[0].proceso_propuesto != null && this.datosPedido[0].cargo_propuesto === null) {
+      this.restAccion.Buscarprocesos(this.datosPedido[0].proceso_propuesto).subscribe(proc => {
+        this.procesoPropuesto = proc;
+        this.EscribirProcesosPropuestos(this.procesoPropuesto);
+        this.DefinirColor(this.datosPedido, '')
+        this.generarPdf('download');
+      });
+    }
+    else if (this.datosPedido[0].proceso_propuesto === null && this.datosPedido[0].cargo_propuesto != null) {
+      this.restAccion.ConsultarUnCargoPropuesto(this.datosPedido[0].cargo_propuesto).subscribe(carg => {
+        this.DefinirColor(this.datosPedido, carg[0].descripcion.toUpperCase())
+        this.generarPdf('download');
+      })
+    }
+  }
+
+  /** MÉTODO PARA DEFINIR COLORES DE TEXTO / IMPRIMIR ESPACIOS */
   cargo_propuesto: string = '';
   proceso_propuesto: string = '';
   salario_propuesto: string = '';
   num_partida: string = '';
-  DefinirColor(array, nombre_cargo) {
+  DefinirColor(array: any, nombre_cargo: any) {
     this.cargo_propuesto = '';
     this.proceso_propuesto = '';
     this.salario_propuesto = '';
@@ -239,6 +252,7 @@ export class ListarPedidoAccionComponent implements OnInit {
     }
   }
 
+  /** MÉTODO PARA REALIZAR BÚSQUEDA DE PROCESOS QUE TIENEN REGISTRADOS EL EMPLEADO */
   nombre_procesos_a: string = '';
   proceso_padre_a: string = '';
   EscribirProcesosActuales(array) {
@@ -254,6 +268,7 @@ export class ListarPedidoAccionComponent implements OnInit {
     })
   }
 
+  /** M+ETODO PARA IMPRIMIR ESPACIOS CUANDO EL EMPLEADO NO REGISTRA PROCESOS */
   texto_color_proceso_actual: string = '';
   EscribirProcesosActuales_Vacios() {
     this.proceso_padre_a = '';
@@ -261,6 +276,7 @@ export class ListarPedidoAccionComponent implements OnInit {
     this.texto_color_proceso_actual = 'white';
   }
 
+  /** MÉTODO PARA IMPRIMIR PROCESOS PROPUESTOS */
   nombre_procesos_p: string = '';
   proceso_padre_p: string = '';
   EscribirProcesosPropuestos(array) {

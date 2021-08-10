@@ -16,7 +16,7 @@
                         <mat-label id="fec">Fecha inicio de actividades</mat-label>
                         <input matInput [matDatepicker]="picker" placeholder="dd/mm/aaaa" [formControl]="fechaF"
                             required>
-                        <mat-datepicker-toggle matSuffix [for]="picker" id="icono" matTooltipClass="contratoE-tooltip"
+                        <mat-datepicker-toggle matSuffix [for]="picker" id="icono" 
                             matTooltipPosition="right"
                             matTooltip="Ingresar la fecha de inicio de actividades. Seleccione la fecha dando click en el icono de calendario o puede escribir la fecha con el formato  día/mes/año. Ejemplo: 12/04/1993">
                         </mat-datepicker-toggle>
@@ -33,12 +33,12 @@
                                 {{d.viewValue}}
                             </mat-option>
                         </mat-select>
-                    </mat-form-field>
+                    </mat-form-field >
                     <br>
                     <mat-form-field>
                         <mat-label>Seleccionar Horario</mat-label>
                         <mat-icon id="icono" matSuffix matTooltipClass="sucursalR-tooltip" matTooltipPosition="right"
-                            matTooltip="Lista de países del continente seleccionado">
+                            matTooltip="Seleccionar un horario ">
                             help_outline</mat-icon>
                         <mat-select [formControl]="horarioF" required>
                             <mat-option *ngFor="let h of vista_horarios" [value]="h.id" id="letra"

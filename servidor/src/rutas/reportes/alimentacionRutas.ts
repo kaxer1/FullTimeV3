@@ -1,6 +1,8 @@
 import { Router } from 'express';
 
 import ALIMENTACION_CONTROLADOR from '../../controlador/reportes/alimentacionControlador';
+import { ModuloAlimentacionValidation } from '../../libs/Modulos/verificarAlimentacion';
+import { TokenValidation } from '../../libs/verificarToken';
 
 class CiudadRutas {
     public router: Router = Router();
@@ -10,16 +12,16 @@ class CiudadRutas {
     }
 
     configuracion(): void {
-        this.router.post('/planificados', ALIMENTACION_CONTROLADOR.ListarPlanificadosConsumidos);
-        this.router.post('/solicitados', ALIMENTACION_CONTROLADOR.ListarSolicitadosConsumidos);
-        this.router.post('/extras/plan', ALIMENTACION_CONTROLADOR.ListarExtrasPlanConsumidos);
-        this.router.post('/extras/solicita', ALIMENTACION_CONTROLADOR.ListarExtrasSolConsumidos);
+        this.router.post('/planificados', [TokenValidation, ModuloAlimentacionValidation], ALIMENTACION_CONTROLADOR.ListarPlanificadosConsumidos);
+        this.router.post('/solicitados', [TokenValidation, ModuloAlimentacionValidation], ALIMENTACION_CONTROLADOR.ListarSolicitadosConsumidos);
+        this.router.post('/extras/plan', [TokenValidation, ModuloAlimentacionValidation], ALIMENTACION_CONTROLADOR.ListarExtrasPlanConsumidos);
+        this.router.post('/extras/solicita', [TokenValidation, ModuloAlimentacionValidation], ALIMENTACION_CONTROLADOR.ListarExtrasSolConsumidos);
 
         // Detalle de servicio de alimentación
-        this.router.post('/planificados/detalle', ALIMENTACION_CONTROLADOR.DetallarPlanificadosConsumidos);
-        this.router.post('/solicitados/detalle', ALIMENTACION_CONTROLADOR.DetallarSolicitudConsumidos);
-        this.router.post('/extras/detalle/plan', ALIMENTACION_CONTROLADOR.DetallarExtrasPlanConsumidos);
-        this.router.post('/extras/detalle/solicita', ALIMENTACION_CONTROLADOR.DetallarExtrasSolConsumidos);
+        this.router.post('/planificados/detalle', [TokenValidation, ModuloAlimentacionValidation], ALIMENTACION_CONTROLADOR.DetallarPlanificadosConsumidos);
+        this.router.post('/solicitados/detalle', [TokenValidation, ModuloAlimentacionValidation], ALIMENTACION_CONTROLADOR.DetallarSolicitudConsumidos);
+        this.router.post('/extras/detalle/plan', [TokenValidation, ModuloAlimentacionValidation], ALIMENTACION_CONTROLADOR.DetallarExtrasPlanConsumidos);
+        this.router.post('/extras/detalle/solicita', [TokenValidation, ModuloAlimentacionValidation], ALIMENTACION_CONTROLADOR.DetallarExtrasSolConsumidos);
     }
 }
 

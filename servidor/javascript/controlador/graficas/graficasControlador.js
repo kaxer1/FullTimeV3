@@ -9,7 +9,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.GRAFICAS_CONTROLADOR = void 0;
 const MetodosGraficas_1 = require("../../libs/MetodosGraficas");
 class GraficasControlador {
     AdminHorasExtrasMicro(req, res) {
@@ -59,6 +58,7 @@ class GraficasControlador {
             }
             else {
                 // Resultados de timbres sin acciones
+                console.log('entro aqui en sin acciones');
                 resultado = yield MetodosGraficas_1.GraficaAtrasosSinAcciones(id_empresa, fec_inicio, fec_final);
             }
             res.status(200).jsonp(resultado);

@@ -39,7 +39,7 @@ export class InasistenciaMacroComponent implements OnInit {
   habilitar: boolean = false;
   f_inicio_req: string = '';
   f_final_req: string = '';
-  
+
   inasistencia: any;
   datos_inasis: any = [];
   constructor(
@@ -49,8 +49,8 @@ export class InasistenciaMacroComponent implements OnInit {
   ) {
     this.ObtenerLogo();
     this.ObtenerColores();
-    
-   }
+
+  }
 
   ngOnInit(): void {
     echarts.use(
@@ -64,7 +64,7 @@ export class InasistenciaMacroComponent implements OnInit {
   llamarGraficaOriginal() {
     let local = sessionStorage.getItem('inasistencia');
     this.chartDom = document.getElementById('charts_inasistencia_macro') as HTMLCanvasElement;
-    this.thisChart = echarts.init(this.chartDom, 'light', {width: 1050, renderer: 'svg',devicePixelRatio: 5 });
+    this.thisChart = echarts.init(this.chartDom, 'light', { width: 1050, renderer: 'svg', devicePixelRatio: 5 });
 
     if (local === null) {
       this.restGraficas.MetricaInasistenciaMicro().subscribe(res => {
@@ -80,7 +80,7 @@ export class InasistenciaMacroComponent implements OnInit {
       this.datos_inasis = data_JSON.datos;
       this.thisChart.setOption(data_JSON.datos_grafica);
     }
-    
+
     this.llenarFecha();
   }
 
@@ -100,7 +100,7 @@ export class InasistenciaMacroComponent implements OnInit {
     if (f_i < f_f) {
 
       if (f_i.getFullYear() === f_f.getFullYear()) {
-        this.toastr.success('Fechas validas','', {
+        this.toastr.success('Fechas validas', '', {
           timeOut: 6000,
         });
 
@@ -116,18 +116,18 @@ export class InasistenciaMacroComponent implements OnInit {
           this.thisChart.setOption(res.datos_grafica);
         });
       } else {
-        this.toastr.error('Años de consulta diferente','Solo puede consultar datos de un año en concreto', {
+        this.toastr.error('Años de consulta diferente', 'Solo puede consultar datos de un año en concreto', {
           timeOut: 6000,
         });
       }
-      
+
     } else if (f_i > f_f) {
-      this.toastr.info('Fecha final es menor a la fecha inicial','', {
+      this.toastr.info('Fecha final es menor a la fecha inicial', '', {
         timeOut: 6000,
       });
       this.fechasConsultaForm.reset();
     } else if (f_i.toLocaleDateString() === f_f.toLocaleDateString()) {
-      this.toastr.info('Fecha inicial es igual a la fecha final','', {
+      this.toastr.info('Fecha inicial es igual a la fecha final', '', {
         timeOut: 6000,
       });
       this.fechasConsultaForm.reset();
@@ -143,19 +143,22 @@ export class InasistenciaMacroComponent implements OnInit {
     });
   }
 
+  // MÉTODO PARA OBTENER COLORES Y MARCA DE AGUA DE EMPRESA 
   p_color: any;
   s_color: any;
+  frase: any;
   ObtenerColores() {
     this.restEmpre.ConsultarDatosEmpresa(parseInt(localStorage.getItem('empresa'))).subscribe(res => {
       this.p_color = res[0].color_p;
       this.s_color = res[0].color_s;
+      this.frase = res[0].marca_agua;
     });
   }
 
   graficaBase64: any;
-  metodosPDF(accion){  
-    this.graficaBase64 = this.thisChart.getDataURL({type: 'jpg' , pixelRatio: 5 });
-    this.generarPdf(accion) 
+  metodosPDF(accion) {
+    this.graficaBase64 = this.thisChart.getDataURL({ type: 'jpg', pixelRatio: 5 });
+    this.generarPdf(accion)
   }
 
   generarPdf(action) {
@@ -175,22 +178,23 @@ export class InasistenciaMacroComponent implements OnInit {
     return {
       pageSize: 'A4',
       pageOrientation: 'portrait',
-      pageMargins: [ 30, 60, 30, 40 ],
-      watermark: { text: 'Confidencial', color: 'blue', opacity: 0.1, bold: true, italics: false },
+      pageMargins: [30, 60, 30, 40],
+      watermark: { text: this.frase, color: 'blue', opacity: 0.1, bold: true, italics: false },
       header: { text: 'Impreso por:  ' + localStorage.getItem('fullname_print'), margin: 10, fontSize: 9, opacity: 0.3, alignment: 'right' },
 
-      footer: function (currentPage, pageCount, fecha) {
+      footer: function (currentPage: any, pageCount: any, fecha: any, hora: any) {
         var h = new Date();
         var f = moment();
         fecha = f.format('YYYY-MM-DD');
         h.setUTCHours(h.getHours());
         var time = h.toJSON().split("T")[1].split(".")[0];
-        
+
         return {
           margin: 10,
           columns: [
             { text: 'Fecha: ' + fecha + ' Hora: ' + time, opacity: 0.3 },
-            { text: [
+            {
+              text: [
                 {
                   text: '© Pag ' + currentPage.toString() + ' of ' + pageCount,
                   alignment: 'right', opacity: 0.3
@@ -221,46 +225,46 @@ export class InasistenciaMacroComponent implements OnInit {
     const datos = this.datos_inasis.filter(obj => {
       return this.inasistencia.xAxis.data.includes(obj.mes)
     })
-    
+
     let colums = [], colums1 = [], colums2 = [], colums3 = [];
     const border = [true, true, true, true]
     for (let i = 0; i < datos.length; i++) { // Ciclo For para crear celdas de la tabla
 
       if (i >= 0 && i <= 2) { // Rango para colocar las celdas de máximo 3 meses
-        colums.push({ text: datos[i].mes, margin: [0,3,0,3], fillColor: this.p_color, border: border });
-        colums.push({ text: datos[i].valor, margin: [0,3,0,3], alignment: 'center', border: border });
+        colums.push({ text: datos[i].mes, margin: [0, 3, 0, 3], fillColor: this.p_color, border: border });
+        colums.push({ text: datos[i].valor, margin: [0, 3, 0, 3], alignment: 'center', border: border });
       };
       if (i >= 3 && i <= 5) { // Rango para colocar las celdas de máximo 3 meses
-        colums1.push({ text: datos[i].mes, margin: [0,3,0,3], fillColor: this.p_color, border: border });
-        colums1.push({ text: datos[i].valor, margin: [0,3,0,3], alignment: 'center', border: border });
+        colums1.push({ text: datos[i].mes, margin: [0, 3, 0, 3], fillColor: this.p_color, border: border });
+        colums1.push({ text: datos[i].valor, margin: [0, 3, 0, 3], alignment: 'center', border: border });
       };
       if (i >= 6 && i <= 8) { // Rango para colocar las celdas de máximo 3 meses
-        colums2.push({ text: datos[i].mes, margin: [0,3,0,3], fillColor: this.p_color, border: border });
-        colums2.push({ text: datos[i].valor, margin: [0,3,0,3], alignment: 'center', border: border });
-      }; 
+        colums2.push({ text: datos[i].mes, margin: [0, 3, 0, 3], fillColor: this.p_color, border: border });
+        colums2.push({ text: datos[i].valor, margin: [0, 3, 0, 3], alignment: 'center', border: border });
+      };
       if (i >= 9 && i <= 11) { // Rango para colocar las celdas de máximo 3 meses
-        colums3.push({ text: datos[i].mes, margin: [0,3,0,3], fillColor: this.p_color, border: border });
-        colums3.push({ text: datos[i].valor, margin: [0,3,0,3], alignment: 'center', border: border });
+        colums3.push({ text: datos[i].mes, margin: [0, 3, 0, 3], fillColor: this.p_color, border: border });
+        colums3.push({ text: datos[i].valor, margin: [0, 3, 0, 3], alignment: 'center', border: border });
       }
     }
 
     var other = [];
 
     switch (colums.length) {
-      case 2: other = ['auto',40]; break;
-      case 4: other = ['auto',40,'auto',40]; break;
-      case 6: other = ['auto',40,'auto',40,'auto',40]; break;
+      case 2: other = ['auto', 40]; break;
+      case 4: other = ['auto', 40, 'auto', 40]; break;
+      case 6: other = ['auto', 40, 'auto', 40, 'auto', 40]; break;
       default: other = []; break;
     }
 
     let tabla = {
-			table: {
+      table: {
         widths: other,
-				body: []
-			}
-		}
+        body: []
+      }
+    }
 
-    const texto_push = {text: '', border: [false, false, false, false] };
+    const texto_push = { text: '', border: [false, false, false, false] };
 
     switch (colums1.length) { // Agrega celdas faltantes en blanco. para q no exista conflicto en la generación del PDF
       case 2: for (let i = 0; i < 4; i++) { colums1.push(texto_push); } break;
@@ -279,21 +283,21 @@ export class InasistenciaMacroComponent implements OnInit {
       case 4: for (let i = 0; i < 2; i++) { colums3.push(texto_push); } break;
       default: break;
     }
-    
+
     if (colums.length > 0) { tabla.table.body.push(colums); }
     if (colums1.length > 0) { tabla.table.body.push(colums1); }
     if (colums2.length > 0) { tabla.table.body.push(colums2); }
-    if (colums3.length > 0) { tabla.table.body.push(colums3); } 
+    if (colums3.length > 0) { tabla.table.body.push(colums3); }
     // console.log(tabla);
 
     const columnas = {
       alignment: 'justify',
-			columns: [
-				{ width: 95, text: '' },
-				tabla,
-				{ width: 95, text: '' }
-			]
-		}
+      columns: [
+        { width: 95, text: '' },
+        tabla,
+        { width: 95, text: '' }
+      ]
+    }
 
     return columnas
   }
@@ -304,12 +308,11 @@ export class InasistenciaMacroComponent implements OnInit {
     this.llamarGraficaOriginal();
   }
 
-  texto_grafica: string = 
-  "Este indicador permite ver el rendimiento de los trabajadores mes por mes. Al tener esta información " +
-  "se puede identificar de mejor manera los casos más recurentes de inasistencias, ademas de determinar " +
-  "las tendencias tanto del trabajador como del funcionamiento de la empresa. \n" +
-  "Con esta información puede tambien precisar los costos y pérdidas en funcion del valor de la hora de " +
-  "trabajo de la persona."
-  
+  texto_grafica: string =
+    "Indicador que permite ver el rendimiento de los trabajadores mes por mes. Esta información " +
+    "ayuda a identificar de mejor manera los casos más recurentes de inasistencias, ademas de determinar " +
+    "las tendencias tanto del trabajador como del funcionamiento de la empresa. \n" +
+    "Con esta información es posible precisar los costos y pérdidas en funcion del valor de la hora de " +
+    "trabajo de un colaborador."
 
 }

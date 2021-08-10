@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { NgModule, LOCALE_ID } from '@angular/core';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -46,7 +46,7 @@ import { ListarRelojesComponent } from './componentes/catalogos/catRelojes/lista
 import { TituloEmpleadoComponent } from './componentes/empleado/titulo-empleado/titulo-empleado.component';
 import { ListarCiudadComponent } from './componentes/ciudades/listar-ciudad/listar-ciudad.component';
 import { RegistrarCiudadComponent } from './componentes/ciudades/registrar-ciudad/registrar-ciudad.component';
-import { VistaElementosComponent } from './componentes/catalogos/catTipoPermisos/listarTipoPermisos/vista-elementos/vista-elementos.component';
+import { VistaElementosComponent } from './componentes/catalogos/catTipoPermisos/listarTipoPermisos/vista-elementos.component';
 import { AsignarCiudadComponent } from './componentes/catalogos/catFeriados/asignar-ciudad/asignar-ciudad.component';
 import { RegistroContratoComponent } from './componentes/empleadoContrato/registro-contrato/registro-contrato.component';
 import { EmplCargosComponent } from './componentes/empleadoCargos/empl-cargos/empl-cargos.component';
@@ -171,6 +171,11 @@ import { EditarHoraExtraEmpleadoComponent } from './componentes/rolEmpleado/hora
 import { CancelarVacacionesComponent } from './componentes/rolEmpleado/vacaciones-empleado/cancelar-vacaciones/cancelar-vacaciones.component';
 import { EditarVacacionesEmpleadoComponent } from './componentes/rolEmpleado/vacaciones-empleado/editar-vacaciones-empleado/editar-vacaciones-empleado.component';
 
+// Cambiar el local de la APP
+import localEsEC from '@angular/common/locales/es-EC'
+import { registerLocaleData } from '@angular/common'
+registerLocaleData( localEsEC )
+
 // PIE DE PÁGINA Y NAVEGABILIDAD
 import { FooterComponent } from './share/footer/footer.component';
 import { MainNavComponent } from './share/main-nav/main-nav.component';
@@ -196,6 +201,8 @@ import { EmplCargosService } from './servicios/empleado/empleadoCargo/empl-cargo
 import { CiudadService } from './servicios/ciudad/ciudad.service';
 import { TokenInterceptorService } from './servicios/login/token-interceptor.service';
 import { GraficasService } from './servicios/graficas/graficas.service';
+import { ProgressService } from './share/progress/progress.service';
+import { MainNavService } from './share/main-nav/main-nav.service';
 
 // SEGURIDAD
 import { AuthGuard } from "./guards/auth.guard";
@@ -225,11 +232,10 @@ import { JornadaVsHoraExtraMacroComponent } from './componentes/graficas-macro/j
 import { MarcacionesEmpMacroComponent } from './componentes/graficas-macro/marcaciones-emp-macro/marcaciones-emp-macro.component';
 import { RetrasosMacroComponent } from './componentes/graficas-macro/retrasos-macro/retrasos-macro.component';
 import { TiempoJornadaVsHoraExtMacroComponent } from './componentes/graficas-macro/tiempo-jornada-vs-hora-ext-macro/tiempo-jornada-vs-hora-ext-macro.component';
-import { SeguridadComponent } from './componentes/seguridad/seguridad.component';
+import { SeguridadComponent } from './componentes/frase-administrar/seguridad/seguridad.component';
 import { TipoSeguridadComponent } from './componentes/catalogos/catEmpresa/tipo-seguridad/tipo-seguridad.component';
-import { FraseSeguridadComponent } from './componentes/frase-seguridad/frase-seguridad.component';
+import { FraseSeguridadComponent } from './componentes/frase-administrar/frase-seguridad/frase-seguridad.component';
 import { PlanComidasComponent } from './componentes/planificacionComidas/plan-comidas/plan-comidas.component';
-import { TicketsComponent } from './componentes/planificacionComidas/tickets/tickets.component';
 import { SalidasAntesMacroComponent } from './componentes/graficas-macro/salidas-antes-macro/salidas-antes-macro.component';
 import { MetricaVacacionesComponent } from './componentes/rolEmpleado/grafica-empl-macro/metrica-vacaciones/metrica-vacaciones.component';
 import { MetricaHorasExtrasComponent } from './componentes/rolEmpleado/grafica-empl-macro/metrica-horas-extras/metrica-horas-extras.component';
@@ -238,7 +244,7 @@ import { MetricaPermisosComponent } from './componentes/rolEmpleado/grafica-empl
 import { DetalleMenuComponent } from './componentes/catalogos/catTipoComidas/detalle-menu/detalle-menu.component';
 import { VistaMenuComponent } from './componentes/catalogos/catTipoComidas/vista-menu/vista-menu.component';
 import { EditarDetalleMenuComponent } from './componentes/catalogos/catTipoComidas/editar-detalle-menu/editar-detalle-menu.component';
-import { FuncionesComponent } from './componentes/funciones/funciones/funciones.component';
+
 import { ConfigReportFirmasHorasExtrasComponent } from './componentes/reportes-Configuracion/config-report-firmas-horas-extras/config-report-firmas-horas-extras.component';
 import { SolicitaComidaComponent } from './componentes/planificacionComidas/solicita-comida/solicita-comida.component';
 import { AdministraComidaComponent } from './componentes/administra-comida/administra-comida.component';
@@ -272,6 +278,26 @@ import { ReportesModule } from './componentes/reportes/reportes.module';
 import { environment } from 'src/environments/environment';
 import { AutorizaSolicitudComponent } from './componentes/planificacionComidas/autoriza-solicitud/autoriza-solicitud.component';
 import { ListarSolicitudComponent } from './componentes/planificacionComidas/listar-solicitud/listar-solicitud.component';
+import { EditarSolicitudComidaComponent } from './componentes/planificacionComidas/editar-solicitud-comida/editar-solicitud-comida.component';
+import { ListarPlanificacionComponent } from './componentes/planificacionComidas/listar-planificacion/listar-planificacion.component';
+import { NavbarComponent } from './share/main-nav/navbar/navbar.component';
+import { SearchComponent } from './share/main-nav/search/search.component';
+import { ButtonNotificacionComponent } from './share/main-nav/button-notificacion/button-notificacion.component';
+import { ButtonAvisosComponent } from './share/main-nav/button-avisos/button-avisos.component';
+import { ProgressComponent } from './share/progress/progress.component';
+import { ButtonOpcionesComponent } from './share/main-nav/button-opciones/button-opciones.component';
+import { PlantillaReportesService } from './componentes/reportes/plantilla-reportes.service';
+
+import { CrearVacunaComponent } from './componentes/empleado/vacunacion/crear-vacuna/crear-vacuna.component';
+import { EditarVacunaComponent } from './componentes/empleado/vacunacion/editar-vacuna/editar-vacuna.component';
+import { TimbreMultipleComponent } from './componentes/timbre-web/timbre-multiple/timbre-multiple.component';
+import { CambiarFraseComponent } from './componentes/frase-administrar/cambiar-frase/cambiar-frase.component';
+import { RecuperarFraseComponent } from './componentes/frase-administrar/recuperar-frase/recuperar-frase.component';
+
+import { ListaAppComponent } from './componentes/appMovil/lista-app/lista-app.component';
+import { UpdateEstadoAppComponent } from './componentes/appMovil/update-estado-app/update-estado-app.component';
+import { OlvidarFraseComponent } from './componentes/frase-administrar/olvidar-frase/olvidar-frase.component';
+
 
 const config: SocketIoConfig = { url: environment.url, options: {} };
 
@@ -466,7 +492,6 @@ const config: SocketIoConfig = { url: environment.url, options: {} };
     TipoSeguridadComponent,
     FraseSeguridadComponent,
     PlanComidasComponent,
-    TicketsComponent,
     SalidasAntesMacroComponent,
     MetricaVacacionesComponent,
     MetricaHorasExtrasComponent,
@@ -475,7 +500,7 @@ const config: SocketIoConfig = { url: environment.url, options: {} };
     DetalleMenuComponent,
     VistaMenuComponent,
     EditarDetalleMenuComponent,
-    FuncionesComponent,
+
     ConfigReportFirmasHorasExtrasComponent,
     SolicitaComidaComponent,
     AdministraComidaComponent,
@@ -494,6 +519,25 @@ const config: SocketIoConfig = { url: environment.url, options: {} };
     HorarioMultipleEmpleadoComponent,
     AutorizaSolicitudComponent,
     ListarSolicitudComponent,
+    EditarSolicitudComidaComponent,
+    ListarPlanificacionComponent,
+    NavbarComponent,
+    SearchComponent,
+    ButtonNotificacionComponent,
+    ButtonAvisosComponent,
+    ProgressComponent,
+    ButtonOpcionesComponent,
+
+    CrearVacunaComponent,
+    EditarVacunaComponent,
+    TimbreMultipleComponent,
+    CambiarFraseComponent,
+    RecuperarFraseComponent,
+
+    ListaAppComponent,
+    UpdateEstadoAppComponent,
+    OlvidarFraseComponent,
+
   ],
 
   imports: [
@@ -520,6 +564,9 @@ const config: SocketIoConfig = { url: environment.url, options: {} };
       useClass: TokenInterceptorService,
       multi: true
     },
+    {
+      provide: LOCALE_ID, useValue: 'es-EC'
+    },
     LoginService,
     RolesService,
     TituloService,
@@ -537,7 +584,10 @@ const config: SocketIoConfig = { url: environment.url, options: {} };
     CiudadService,
     EmpleadoHorariosService,
     EmplCargosService,
-    GraficasService
+    GraficasService,
+    ProgressService,
+    MainNavService,
+    PlantillaReportesService,
   ],
 
   bootstrap: [AppComponent]

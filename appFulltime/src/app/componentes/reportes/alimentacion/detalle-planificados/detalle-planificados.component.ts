@@ -21,6 +21,7 @@ import { ReportesService } from 'src/app/servicios/reportes/reportes.service';
 import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
 import { DatosGeneralesService } from 'src/app/servicios/datosGenerales/datos-generales.service';
 import { AlimentacionService } from 'src/app/servicios/reportes/alimentacion/alimentacion.service';
+import { ValidacionesService } from '../../../../servicios/validaciones/validaciones.service';
 
 @Component({
   selector: 'app-detalle-planificados',
@@ -88,6 +89,7 @@ export class DetallePlanificadosComponent implements OnInit {
     public restA: AlimentacionService,
     public router: Router,
     private toastr: ToastrService,
+    private validacionesService: ValidacionesService
   ) {
     this.idEmpleado = parseInt(localStorage.getItem('empleado'));
   }
@@ -96,7 +98,7 @@ export class DetallePlanificadosComponent implements OnInit {
     this.ObtenerEmpleadoLogueado(this.idEmpleado);
     this.VerDatosEmpleado();
     this.ObtenerLogo();
-    this.ObtnerColores();
+    this.ObtenerColores();
   }
 
   // Método para ver la información del empleado 
@@ -120,11 +122,13 @@ export class DetallePlanificadosComponent implements OnInit {
   p_color: any;
   s_color: any;
   empresa: any;
-  ObtnerColores() {
+  frase: any;
+  ObtenerColores() {
     this.restEmpre.ConsultarDatosEmpresa(parseInt(localStorage.getItem('empresa'))).subscribe(res => {
       this.p_color = res[0].color_p;
       this.s_color = res[0].color_s;
       this.empresa = res[0].nombre;
+      this.frase = res[0].marca_agua;
     });
   }
 
@@ -171,20 +175,24 @@ export class DetallePlanificadosComponent implements OnInit {
           this.solicitados = sol;
           // 3. Método de búsqueda de registros de servicios extras 
           this.ObtenerExtrasConsumidos(fechas, archivo, form);
-        }, error => {
+        }, err => {
           // 4. Método de búsqueda de registros de servicios extras 
           this.ObtenerExtrasConsumidos(fechas, archivo, form);
+          return this.validacionesService.RedireccionarHomeAdmin(err.error)
         });
-      }, error => {
+      }, err => {
         // 5. Buscamos registros de servicios solicitados
         this.restA.ObtenerDetallesSolicitadosConsumidos(fechas).subscribe(sol => {
           this.solicitados = sol;
           // 6. Método de búsqueda de registros de servicios extras 
           this.ObtenerExtrasConsumidos(fechas, archivo, form);
-        }, error => {
+        }, err => {
           // 7. Método de búsqueda de registros de servicios extras 
           this.ObtenerExtrasConsumidos(fechas, archivo, form);
+          return this.validacionesService.RedireccionarHomeAdmin(err.error)
         });
+
+        return this.validacionesService.RedireccionarHomeAdmin(err.error)
       });
     }
     else {
@@ -206,18 +214,19 @@ export class DetallePlanificadosComponent implements OnInit {
         console.log('comidas 2', this.extras);
         // Llamado a método de impresión de archivos
         this.ImprimirArchivo(archivo, form);
-      }, error => {
+      }, err => {
         // Llamado a método de impresión de archivos
         this.ImprimirArchivo(archivo, form);
+        return this.validacionesService.RedireccionarHomeAdmin(err.error)
       });
-    }, error => {
+    }, err => {
       // 3. Búsqueda de servicios extras solicitados
       this.restA.ObtenerDetallesExtrasSolConsumidos(fecha).subscribe(sol2 => {
         this.extras = sol2;
         console.log('comidas 3', this.extras);
         // Llamado a método de impresión de archivos
         this.ImprimirArchivo(archivo, form);
-      }, error => {
+      }, err => {
         // Revisamos si todos los datos son vacios
         if (this.planificados.length === 0 && this.solicitados.length === 0 && this.extras.length === 0) {
           // Mensaje indicando que no existen registros
@@ -233,7 +242,11 @@ export class DetallePlanificadosComponent implements OnInit {
           // Llamado a método de impresión de archivos
           this.ImprimirArchivo(archivo, form);
         }
+        
+        return this.validacionesService.RedireccionarHomeAdmin(err.error)
       });
+
+      return this.validacionesService.RedireccionarHomeAdmin(err.error)
     });
   }
 
@@ -336,10 +349,10 @@ export class DetallePlanificadosComponent implements OnInit {
     return {
       // Encabezado de la página
       pageOrientation: 'landscape',
-      watermark: { text: 'Confidencial', color: 'blue', opacity: 0.1, bold: true, italics: false },
+      watermark: { text: this.frase, color: 'blue', opacity: 0.1, bold: true, italics: false },
       header: { text: 'Impreso por:  ' + this.empleadoLogueado[0].nombre + ' ' + this.empleadoLogueado[0].apellido, margin: 10, fontSize: 9, opacity: 0.3, alignment: 'right' },
       // Pie de la página
-      footer: function (currentPage, pageCount, fecha) {
+      footer: function (currentPage: any, pageCount: any, fecha: any, hora: any) {
         var h = new Date();
         var f = moment();
         fecha = f.format('YYYY-MM-DD');
@@ -492,9 +505,10 @@ export class DetallePlanificadosComponent implements OnInit {
         widths: ['*', '*', '*', '*', '*', '*', '*', '*', '*', '*'],
         body: [
           [
-            { colSpan: 9, text: 'SUMATORIA TOTAL DE ALIMENTOS CONSUMIDOS: ', style: 'itemsTableT', fillColor: this.s_color, fontSize: 12 },
-            '', '', '', '', '', '', '', '',
-            { text: '$ ' + suma_total.toFixed(2), style: 'itemsTableT', fillColor: this.s_color, fontSize: 11 }
+            { colSpan: 8, text: 'SUMATORIA TOTAL DE ALIMENTOS CONSUMIDOS: ', style: 'itemsTableT', fillColor: this.s_color, fontSize: 12 },
+            '', '', '', '', '', '', '',
+            { colSpan: 2, text: '$ ' + suma_total.toFixed(2), style: 'itemsTableT', fillColor: this.s_color, fontSize: 11 },
+            '',
           ]
         ]
       },
@@ -566,11 +580,11 @@ export class DetallePlanificadosComponent implements OnInit {
 
       // Encabezado de la página
       //pageOrientation: 'landscape',
-      watermark: { text: 'Confidencial', color: 'blue', opacity: 0.1, bold: true, italics: false },
+      watermark: { text: this.frase, color: 'blue', opacity: 0.1, bold: true, italics: false },
       header: { text: 'Impreso por:  ' + this.empleadoLogueado[0].nombre + ' ' + this.empleadoLogueado[0].apellido, margin: 10, fontSize: 9, opacity: 0.3, alignment: 'right' },
 
       // Pie de la página
-      footer: function (currentPage, pageCount, fecha) {
+      footer: function (currentPage: any, pageCount: any, fecha: any, hora: any) {
         var h = new Date();
         var f = moment();
         fecha = f.format('YYYY-MM-DD');

@@ -12,7 +12,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.DETALLE_CATALOGO_HORARIO_CONTROLADOR = void 0;
 const database_1 = __importDefault(require("../../../database"));
 const xlsx_1 = __importDefault(require("xlsx"));
 const fs_1 = __importDefault(require("fs"));
@@ -38,9 +37,38 @@ class DetalleCatalogoHorarioControlador {
     ListarUnDetalleHorario(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { id_horario } = req.params;
-            const HORARIO = yield database_1.default.query('SELECT * FROM deta_horarios WHERE id_horario = $1', [id_horario]);
-            if (HORARIO.rowCount > 0) {
-                return res.jsonp(HORARIO.rows);
+            const HORARIO = yield database_1.default.query('SELECT * FROM deta_horarios WHERE id_horario = $1 ORDER BY orden ASC', [id_horario])
+                .then(result => {
+                if (result.rowCount === 0)
+                    return [];
+                return result.rows.map(o => {
+                    switch (o.tipo_accion) {
+                        case 'E':
+                            o.tipo_accion_show = 'Entrada';
+                            o.tipo_accion = 'E';
+                            break;
+                        case 'S/A':
+                            o.tipo_accion_show = 'Inicio Alimentación';
+                            o.tipo_accion = 'S/A';
+                            break;
+                        case 'E/A':
+                            o.tipo_accion_show = 'Fin Alimentación';
+                            o.tipo_accion = 'E/A';
+                            break;
+                        case 'S':
+                            o.tipo_accion_show = 'Salida';
+                            o.tipo_accion = 'S';
+                            break;
+                        default:
+                            o.tipo_accion_show = 'codigo 99';
+                            o.tipo_accion = 'codigo 99';
+                            break;
+                    }
+                    return o;
+                });
+            });
+            if (HORARIO.length > 0) {
+                return res.jsonp(HORARIO);
             }
             else {
                 return res.status(404).jsonp({ text: 'No se encuentran registros' });

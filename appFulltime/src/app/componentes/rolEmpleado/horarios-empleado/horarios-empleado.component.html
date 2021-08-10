@@ -22,13 +22,13 @@
                             [formControl]="archivoHorarioForm" id="file"
                             accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
                         <label for="file" class="btn-2" matSuffix matTooltipPosition="right"
-                            matTooltipClass="departamento-tooltip"
+                            
                             matTooltip="Presionar para cargar plantilla con nombre Horario Empleado">Subir
                             Horario</label>
                     </form>
                     <a mat-button type="submit" id="descargar" class="btn btn-sm" matSuffix
                         matTooltipPosition="right" matTooltip="Dar click para ver o descargar el documento"
-                        href="http://localhost:3000/plantillaD/documento/Horario Empleado.xlsx">
+                        href="{{hipervinculo}}/plantillaD/documento/Horario Empleado.xlsx">
                         <span class="material-icons">cloud_download</span> Descargar Plantilla Horario
                         Empleado
                     </a>
@@ -78,7 +78,7 @@
                         <td *ngIf="h.domingo == false">Normal</td>
                         <td class="d-flex justify-content-center">
                             <i class="fas fa-edit" id="edit" (click)="AbrirEditarHorario(h)" matSuffix
-                                matTooltipPosition="right" matTooltipClass="departamento-tooltip"
+                                matTooltipPosition="right" 
                                 matTooltip="Modificar los datos generales de este registro">
                                 <p>Editar</p>
                             </i>
@@ -94,7 +94,7 @@
             </table>
         </div>
         <mat-paginator [length]="horariosEmpleadoTotales.length" [pageSize]="tamanio_pagina"
-            [pageSizeOptions]="pageSizeOptions" id="estilo" (page)="ManejarPagina($event)" showFirstLastButtons>
+            [pageSizeOptions]="pageSizeOptions" id="pagina" (page)="ManejarPagina($event)" showFirstLastButtons>
         </mat-paginator>
     </div>
 </div>

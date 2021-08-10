@@ -139,8 +139,12 @@ export class EditarHorasExtrasComponent implements OnInit {
           timeOut: 6000,
         });
         this.CerrarVentana();
-      }, error => {
-        console.log(error);
+      }, err => {
+        const { access, message } = err.error.message;
+        if (access === false) {
+          this.toastr.error(message)
+          this.dialogRef.close();
+        }
       });
 
   }
@@ -170,6 +174,12 @@ export class EditarHorasExtrasComponent implements OnInit {
       }
       else {
         this.selec2 = true;
+      }
+    }, err => {
+      const { access, message } = err.error.message;
+      if (access === false) {
+        this.toastr.error(message)
+        this.dialogRef.close();
       }
     })
   }

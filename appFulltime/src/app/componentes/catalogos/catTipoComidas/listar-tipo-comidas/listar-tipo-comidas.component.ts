@@ -1,25 +1,28 @@
-import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { MatDialog } from '@angular/material/dialog';
+// IMPORTACIÓN DE LIBRERIAS
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { environment } from 'src/environments/environment';
 import { PageEvent } from '@angular/material/paginator';
-import { ToastrService } from 'ngx-toastr';
-import * as moment from 'moment';
-
-import pdfMake from 'pdfmake/build/pdfmake';
+import { MatDialog } from '@angular/material/dialog';
+import { Component, OnInit } from '@angular/core';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
-pdfMake.vfs = pdfFonts.pdfMake.vfs;
-import * as xlsx from 'xlsx';
+import pdfMake from 'pdfmake/build/pdfmake';
+import { ToastrService } from 'ngx-toastr';
+import { Router } from '@angular/router';
 import * as FileSaver from 'file-saver';
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
+import * as moment from 'moment';
+import * as xlsx from 'xlsx';
 
-import { TipoComidasComponent } from 'src/app/componentes/catalogos/catTipoComidas/tipo-comidas/tipo-comidas.component';
+// IMPORTAR COMPONENTES
 import { EditarTipoComidasComponent } from 'src/app/componentes/catalogos/catTipoComidas/editar-tipo-comidas/editar-tipo-comidas.component';
+import { TipoComidasComponent } from 'src/app/componentes/catalogos/catTipoComidas/tipo-comidas/tipo-comidas.component';
 import { MetodosComponent } from 'src/app/componentes/metodoEliminar/metodos.component';
-
-import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
-import { TipoComidasService } from 'src/app/servicios/catalogos/catTipoComidas/tipo-comidas.service';
-import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
 import { DetalleMenuComponent } from '../detalle-menu/detalle-menu.component';
+
+// IMPORTAR SERVICIOS
+import { PlantillaReportesService } from 'src/app/componentes/reportes/plantilla-reportes.service';
+import { TipoComidasService } from 'src/app/servicios/catalogos/catTipoComidas/tipo-comidas.service';
+import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 
 @Component({
   selector: 'app-listar-tipo-comidas',
@@ -29,46 +32,56 @@ import { DetalleMenuComponent } from '../detalle-menu/detalle-menu.component';
 
 export class ListarTipoComidasComponent implements OnInit {
 
-  // Control de campos y validaciones del formulario
+  // CONTROL DE CAMPOS Y VALIDACIONES DEL FORMULARIO
   nombreF = new FormControl('', [Validators.minLength(2)]);
+  tipoF = new FormControl('', [Validators.minLength(1)]);
   archivoForm = new FormControl('', Validators.required);
 
-  // Asignación de validaciones a inputs del formulario
+  // ASIGNACIÓN DE VALIDACIONES A INPUTS DEL FORMULARIO
   public BuscarTipoComidaForm = new FormGroup({
     nombreForm: this.nombreF,
+    tipoForm: this.tipoF
   });
 
-  // Almacenamiento de datos consultados  
+  // ALMACENAMIENTO DE DATOS CONSULTADOS  
   tipoComidas: any = [];
-  filtroNombre = '';
+  empleado: any = [];
 
-  // Items de paginación de la tabla
+  idEmpleado: number; // VARIABLE DE ALMACENAMIENTO DE ID DE EMPLEADO QUE INICIA SESIÓN
+  filtroNombre = ''; // VARIABLE DE BÚSQUEDA FILTRO DE DATOS
+  filtroTipo = ''; // VARIABLE DE BÚSQUEDA DE FILTRO DE DATOS TIPO SERVICIO
+
+  // ITEMS DE PAGINACIÓN DE LA TABLA
+  pageSizeOptions = [5, 10, 20, 50];
   tamanio_pagina: number = 5;
   numero_pagina: number = 1;
-  pageSizeOptions = [5, 10, 20, 50];
 
-  empleado: any = [];
-  idEmpleado: number;
+  // VARIABLE DE NAVEGACION ENTRE RUTAS
+  hipervinculo: string = environment.url
+
+  // MÉTODO DE LLAMADO DE DATOS DE EMPRESA COLORES - LOGO - MARCA DE AGUA
+  get s_color(): string { return this.plantillaPDF.color_Secundary }
+  get p_color(): string { return this.plantillaPDF.color_Primary }
+  get frase(): string { return this.plantillaPDF.marca_Agua }
+  get logo(): string { return this.plantillaPDF.logoBase64 }
 
   constructor(
-    private rest: TipoComidasService,
-    public restE: EmpleadoService,
-    public restEmpre: EmpresaService,
-    public router: Router,
-    private toastr: ToastrService,
-    public vistaRegistrarDatos: MatDialog,
+    private plantillaPDF: PlantillaReportesService, // SERVICIO DATOS DE EMPRESA
+    public vistaRegistrarDatos: MatDialog, // VARIABLE DE MANEJO DE VENTANAS
+    private rest: TipoComidasService, // SERVICIO DATOS DE TIPOS DE SERVICIOS DE COMIDAS
+    public restE: EmpleadoService, // SERVICIO DATOS DE EMPLEADO
+    private toastr: ToastrService, // VARIABLE DE MANEJO DE MENSAJES DE NOTIFICACIONES
+    public router: Router, // VARIABLE DE MANEJO DE RUTAS URL
   ) {
     this.idEmpleado = parseInt(localStorage.getItem('empleado'));
   }
 
   ngOnInit(): void {
-    this.ObtenerTipoComidas();
     this.ObtenerEmpleados(this.idEmpleado);
-    this.ObtenerLogo();
-    this.ObtnerColores();
+    this.ObtenerTipoComidas();
   }
 
-  // Método para ver la información del empleado 
+  // MÉTODO PARA VER LA INFORMACIÓN DEL EMPLEADO 
   ObtenerEmpleados(idemploy: any) {
     this.empleado = [];
     this.restE.getOneEmpleadoRest(idemploy).subscribe(data => {
@@ -76,34 +89,18 @@ export class ListarTipoComidasComponent implements OnInit {
     })
   }
 
-  // Método para obtener el logo de la empresa
-  logo: any = String;
-  ObtenerLogo() {
-    this.restEmpre.LogoEmpresaImagenBase64(localStorage.getItem('empresa')).subscribe(res => {
-      this.logo = 'data:image/jpeg;base64,' + res.imagen;
-    });
-  }
-
-  // Método para obtener colores de empresa
-  p_color: any;
-  s_color: any;
-  ObtnerColores() {
-    this.restEmpre.ConsultarDatosEmpresa(parseInt(localStorage.getItem('empresa'))).subscribe(res => {
-      this.p_color = res[0].color_p;
-      this.s_color = res[0].color_s;
-    });
-  }
-
+  // EVENTO QUE MUESTRA FILAS DETERMINADAS DE LA TABLA
   ManejarPagina(e: PageEvent) {
     this.tamanio_pagina = e.pageSize;
     this.numero_pagina = e.pageIndex + 1;
   }
 
-  // Lectura de datos
+  // LECTURA DE DATOS
   ObtenerTipoComidas() {
     this.tipoComidas = [];
     this.rest.ConsultarTipoComida().subscribe(datos => {
       this.tipoComidas = datos;
+      console.log('tipo_comidas', this.tipoComidas)
     })
   }
 
@@ -130,13 +127,13 @@ export class ListarTipoComidasComponent implements OnInit {
   LimpiarCampos() {
     this.BuscarTipoComidaForm.setValue({
       nombreForm: '',
+      tipoForm: ''
     });
     this.ObtenerTipoComidas();
   }
 
-  /** Función para eliminar registro seleccionado */
+  // FUNCIÓN PARA ELIMINAR REGISTRO SELECCIONADO 
   Eliminar(id_tipo: number) {
-    //console.log("probando id", id_prov)
     this.rest.EliminarRegistro(id_tipo).subscribe(res => {
       this.toastr.error('Registro eliminado', '', {
         timeOut: 6000,
@@ -145,7 +142,7 @@ export class ListarTipoComidasComponent implements OnInit {
     });
   }
 
-  /** Función para confirmar si se elimina o no un registro */
+  // FUNCIÓN PARA CONFIRMAR SI SE ELIMINA O NO UN REGISTRO 
   ConfirmarDelete(datos: any) {
     this.vistaRegistrarDatos.open(MetodosComponent, { width: '450px' }).afterClosed()
       .subscribe((confirmado: Boolean) => {
@@ -161,44 +158,31 @@ export class ListarTipoComidasComponent implements OnInit {
   /****************************************************************************************************** 
    *                                         MÉTODO PARA EXPORTAR A PDF
    ******************************************************************************************************/
-  generarPdf(action = 'open') {
-    const documentDefinition = this.getDocumentDefinicion();
-
+  GenerarPdf(action = 'open') {
+    const documentDefinition = this.GetDocumentDefinicion();
     switch (action) {
       case 'open': pdfMake.createPdf(documentDefinition).open(); break;
       case 'print': pdfMake.createPdf(documentDefinition).print(); break;
       case 'download': pdfMake.createPdf(documentDefinition).download(); break;
-
       default: pdfMake.createPdf(documentDefinition).open(); break;
     }
-
   }
 
-  getDocumentDefinicion() {
+  GetDocumentDefinicion() {
     sessionStorage.setItem('Comidas', this.tipoComidas);
     return {
-
-      // Encabezado de la página
-      pageOrientation: 'landscape',
-      watermark: { text: 'Confidencial', color: 'blue', opacity: 0.1, bold: true, italics: false },
+      // ENCABEZADO DE LA PÁGINA
+      watermark: { text: this.frase, color: 'blue', opacity: 0.1, bold: true, italics: false },
       header: { text: 'Impreso por:  ' + this.empleado[0].nombre + ' ' + this.empleado[0].apellido, margin: 10, fontSize: 9, opacity: 0.3, alignment: 'right' },
-
-      // Pie de página
-      footer: function (currentPage, pageCount, fecha) {
-        var h = new Date();
+      // PIE DE PÁGINA
+      footer: function (currentPage: any, pageCount: any, fecha: any, hora: any) {
         var f = moment();
         fecha = f.format('YYYY-MM-DD');
-        // Formato de hora actual
-        if (h.getMinutes() < 10) {
-          var time = h.getHours() + ':0' + h.getMinutes();
-        }
-        else {
-          var time = h.getHours() + ':' + h.getMinutes();
-        }
+        hora = f.format('HH:mm:ss');
         return {
           margin: 10,
           columns: [
-            { text: 'Fecha: ' + fecha + ' Hora: ' + time, opacity: 0.3 },
+            { text: 'Fecha: ' + fecha + ' Hora: ' + hora, opacity: 0.3 },
             {
               text: [
                 {
@@ -212,8 +196,8 @@ export class ListarTipoComidasComponent implements OnInit {
       },
       content: [
         { image: this.logo, width: 150, margin: [10, -25, 0, 5] },
-        { text: 'Lista Tipos de Comidas', bold: true, fontSize: 20, alignment: 'center', margin: [0, -30, 0, 10] },
-        this.presentarDataPDFAlmuerzos(),
+        { text: 'Lista Servicios de Alimentación', bold: true, fontSize: 20, alignment: 'center', margin: [0, -5, 0, 10] },
+        this.PresentarDataPDFAlmuerzos(),
       ],
       styles: {
         tableHeader: { fontSize: 12, bold: true, alignment: 'center', fillColor: this.p_color },
@@ -223,28 +207,38 @@ export class ListarTipoComidasComponent implements OnInit {
     };
   }
 
-  presentarDataPDFAlmuerzos() {
+  PresentarDataPDFAlmuerzos() {
     return {
       columns: [
         { width: '*', text: '' },
         {
           width: 'auto',
           table: {
-            widths: [30, 'auto', 'auto'],
+            widths: ['auto', 'auto', 'auto', 'auto', 'auto'],
             body: [
               [
-                { text: 'Id', style: 'tableHeader' },
-                { text: 'Tipo de Servicio', style: 'tableHeader' },
+                { text: 'Código', style: 'tableHeader' },
+                { text: 'Servicio', style: 'tableHeader' },
                 { text: 'Menú', style: 'tableHeader' },
+                { text: 'Hora Inicia', style: 'tableHeader' },
+                { text: 'Hora Finaliza', style: 'tableHeader' },
               ],
               ...this.tipoComidas.map(obj => {
                 return [
                   { text: obj.id, style: 'itemsTableD' },
                   { text: obj.tipo, style: 'itemsTable' },
                   { text: obj.nombre, style: 'itemsTable' },
+                  { text: obj.hora_inicio, style: 'itemsTable' },
+                  { text: obj.hora_fin, style: 'itemsTable' },
                 ];
               })
             ]
+          },
+          // ESTILO DE COLORES FORMATO ZEBRA
+          layout: {
+            fillColor: function (i: any) {
+              return (i % 2 === 0) ? '#CCD1D1' : null;
+            }
           }
         },
         { width: '*', text: '' },
@@ -255,18 +249,32 @@ export class ListarTipoComidasComponent implements OnInit {
   /****************************************************************************************************** 
    *                                       MÉTODO PARA EXPORTAR A EXCEL
    ******************************************************************************************************/
-  exportToExcel() {
-    const wsr: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.tipoComidas);
+  ExportToExcel() {
+    const wsc: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.tipoComidas.map(obj => {
+      return {
+        CODIGO: obj.id,
+        SERVICIO: obj.tipo,
+        MENU: obj.nombre,
+        HORA_INICIA: obj.hora_inicio,
+        HORA_FINALIZA: obj.hora_fin
+      }
+    }));
+    // MÉTODO PARA DEFINIR TAMAÑO DE LAS COLUMNAS DEL REPORTE
+    const header = Object.keys(this.tipoComidas[0]); // NOMBRE DE CABECERAS DE COLUMNAS
+    var wscols = [];
+    for (var i = 0; i < header.length; i++) {  // CABECERAS AÑADIDAS CON ESPACIOS
+      wscols.push({ wpx: 100 })
+    }
+    wsc["!cols"] = wscols;
     const wb: xlsx.WorkBook = xlsx.utils.book_new();
-    xlsx.utils.book_append_sheet(wb, wsr, 'TipoComidas');
+    xlsx.utils.book_append_sheet(wb, wsc, 'SERVICIOS COMIDAS');
     xlsx.writeFile(wb, "Comidas" + new Date().getTime() + '.xlsx');
   }
 
   /****************************************************************************************************** 
    *                                        MÉTODO PARA EXPORTAR A CSV 
    ******************************************************************************************************/
-
-  exportToCVS() {
+  ExportToCVS() {
     const wse: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.tipoComidas);
     const csvDataH = xlsx.utils.sheet_to_csv(wse);
     const data: Blob = new Blob([csvDataH], { type: 'text/csv;charset=utf-8;' });
@@ -276,96 +284,27 @@ export class ListarTipoComidasComponent implements OnInit {
   /* ****************************************************************************************************
    *                                 PARA LA EXPORTACIÓN DE ARCHIVOS XML
    * ****************************************************************************************************/
-
   urlxml: string;
   data: any = [];
-  exportToXML() {
+  ExportToXML() {
     var objeto;
     var arregloComidas = [];
     this.tipoComidas.forEach(obj => {
       objeto = {
         "tipo_comida": {
           '@id': obj.id,
-          "tipo_servicio": obj.tipo,
+          "servicio": obj.tipo,
           "menu": obj.nombre,
+          "hora_inicia": obj.hora_inicio,
+          "hora_finaliza": obj.hora_fin
         }
       }
       arregloComidas.push(objeto)
     });
-
     this.rest.DownloadXMLRest(arregloComidas).subscribe(res => {
       this.data = res;
-      console.log("prueba data", res)
-      this.urlxml = 'http://localhost:3000/tipoComidas/download/' + this.data.name;
+      this.urlxml = `${environment.url}/tipoComidas/download/` + this.data.name;
       window.open(this.urlxml, "_blank");
-    });
-  }
-
-  /* ****************************************************************************************************
-   *                                 PARA LA EXPORTACIÓN DE ARCHIVOS XML
-   * ****************************************************************************************************/
-  nameFile: string;
-  archivoSubido: Array<File>;
-  fileChange(element) {
-    this.archivoSubido = element.target.files;
-    this.nameFile = this.archivoSubido[0].name;
-    let arrayItems = this.nameFile.split(".");
-    let itemExtencion = arrayItems[arrayItems.length - 1];
-    let itemName = arrayItems[0].slice(0, 15);
-    console.log(itemName.toLowerCase());
-    if (itemExtencion == 'xlsx' || itemExtencion == 'xls') {
-      if (itemName.toLowerCase() == 'tipo comidas') {
-        this.plantilla();
-      } else {
-        this.toastr.error('Solo se acepta Tipo Comidas', 'Plantilla seleccionada incorrecta', {
-          timeOut: 6000,
-        });
-      }
-    } else {
-      this.toastr.error('Error en el formato del documento', 'Plantilla no aceptada', {
-        timeOut: 6000,
-      });
-    }
-  }
-
-  plantilla() {
-    let formData = new FormData();
-    for (var i = 0; i < this.archivoSubido.length; i++) {
-      formData.append("uploads[]", this.archivoSubido[i], this.archivoSubido[i].name);
-    }
-    this.rest.Verificar_Datos_ArchivoExcel(formData).subscribe(res => {
-      if (res.message === 'error') {
-        this.toastr.error('Para asegurar el buen funcionamiento del sistema es necesario que verifique los datos ' +
-          'de la plantilla ingresada, recuerde que los datos no pueden estar duplicados el valor debe ' +
-          'ser ingresado con datos númericos  y todos los datos son obligatorios.',
-          'Verificar los datos ingresados en la plantilla', {
-          timeOut: 10000,
-        });
-        this.archivoForm.reset();
-        this.nameFile = '';
-      } else {
-        this.rest.VerificarArchivoExcel(formData).subscribe(response => {
-          if (response.message === 'error') {
-            this.toastr.error('Para asegurar el buen funcionamiento del sistema es necesario que verifique los datos ' +
-              'de la plantilla ingresada, recuerde que los datos no pueden estar duplicados el valor debe ' +
-              'ser ingresado con datos númericos  y todos los datos son obligatorios.',
-              'Verificar los datos ingresados en la plantilla', {
-              timeOut: 10000,
-            });
-            this.archivoForm.reset();
-            this.nameFile = '';
-          } else {
-            this.rest.subirArchivoExcel(formData).subscribe(res => {
-              this.toastr.success('Operación Exitosa', 'Plantilla de Alimentación importada.', {
-                timeOut: 6000,
-              });
-              this.archivoForm.reset();
-              this.nameFile = '';
-              window.location.reload();
-            });
-          }
-        });
-      }
     });
   }
 

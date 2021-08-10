@@ -45,11 +45,11 @@ export class FeriadosService {
     return this.http.post<any>(environment.url + '/feriados/upload', formData);
   }
 
-  RevisarArchivo(formData) {
+  RevisarFormato(formData) {
     return this.http.post<any>(environment.url + '/feriados/upload/revision', formData);
   }
 
-  RevisarArchivoDatos(formData) {
+  RevisarDuplicidad(formData) {
     return this.http.post<any>(environment.url + '/feriados/upload/revision_data', formData);
   }
 

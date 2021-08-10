@@ -9,7 +9,7 @@
                         Críterios de Búsqueda
                         </mat-panel-title>
                         <mat-icon class="flex-shrink-1 bd-highlight" matTooltipPosition="right"
-                        matTooltip="Se puede filtra deacuerdo al campo que escriba">search</mat-icon>
+                        matTooltip="Se puede filtra de acuerdo al campo que escriba">search</mat-icon>
                     </mat-expansion-panel-header>
             
                     <form [formGroup]="">
@@ -97,6 +97,6 @@
             </tbody>
         </table>
         <mat-paginator [length]="timbres_noti.length" [pageSize]="tamanio_pagina" [pageSizeOptions]="pageSizeOptions"
-            id="estilo" (page)="ManejarPagina($event)" showFirstLastButtons></mat-paginator>
+            id="pagina" (page)="ManejarPagina($event)" showFirstLastButtons></mat-paginator>
     </div>
 </div>

@@ -12,33 +12,32 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.GenerarHoraExtraCalulo = exports.CalcularHoraExtra = void 0;
 const database_1 = __importDefault(require("../database"));
+const SubMetodosGraficas_1 = require("./SubMetodosGraficas");
 const DIAS_MES = 30;
-const CalcularHoraExtra = function (id_empleado, fec_desde, fec_hasta) {
+exports.CalcularHoraExtra = function (id_empleado, fec_desde, fec_hasta) {
     return __awaiter(this, void 0, void 0, function* () {
         console.log(id_empleado, fec_desde, fec_hasta);
         let codigo;
         try {
-            var code = yield database_1.default.query('SELECT codigo FROM empleados WHERE id = $1', [id_empleado]).then(result => { return result.rows; });
-            // console.log('Codigo: ',code);
-            if (code.length === 0)
+            let [code] = yield database_1.default.query('SELECT codigo FROM empleados WHERE id = $1', [id_empleado]).then(result => { return result.rows; });
+            if (code === undefined)
                 return { mensaje: 'El empleado no tiene un codigo asignado.' };
-            codigo = parseInt(code[0].codigo);
-            // console.log('Codigo: ',codigo);
+            codigo = parseInt(code.codigo);
+            console.log('Codigo: ', codigo);
             let ids = yield CargoContratoByFecha(id_empleado, fec_desde, fec_hasta);
-            // console.log('Contrato y cargo', ids);
+            console.log('Contrato y cargo', ids);
             if (ids[0].message) {
                 return ids[0];
             }
             let cg_horas_extras = yield CatalogoHorasExtras();
-            // console.log('Catalgo Horas Extras', cg_horas_extras);
+            console.log('Catalgo Horas Extras', cg_horas_extras);
             let horas_extras = yield Promise.all(ids.map((obj) => __awaiter(this, void 0, void 0, function* () {
                 return yield ListaHorasExtras(cg_horas_extras, codigo, obj.id_cargo, fec_desde, fec_hasta, parseInt(obj.sueldo), obj.hora_trabaja);
             })));
-            let feriados = yield Promise.all(ids.map((obj) => __awaiter(this, void 0, void 0, function* () {
-                return yield FeriadosPorIdCargo(obj.id_cargo, fec_desde, fec_hasta);
-            })));
+            // let feriados = await Promise.all(ids.map(async(obj) => {
+            //     return await FeriadosPorIdCargo(obj.id_cargo, fec_desde, fec_hasta)
+            // }))
             console.log('Lista de horas extras ===', horas_extras[0]);
             // console.log('Lista de feriados ===', feriados[0]);
             let ArrayDatos = {
@@ -68,7 +67,6 @@ const CalcularHoraExtra = function (id_empleado, fec_desde, fec_hasta) {
         }
     });
 };
-exports.CalcularHoraExtra = CalcularHoraExtra;
 function FeriadosPorIdCargo(id_cargo, fec_desde, fec_hasta) {
     return __awaiter(this, void 0, void 0, function* () {
         return yield database_1.default.query('SELECT f.fecha, f.fec_recuperacion, f.descripcion FROM empl_cargos AS ec, sucursales AS s, ciudades AS c, ' +
@@ -89,7 +87,8 @@ function ListaHorasExtras(cg_horas_extras, codigo, id_cargo, fec_desde, fec_hast
     return __awaiter(this, void 0, void 0, function* () {
         let arrayUno = yield HorasExtrasSolicitadas(codigo, id_cargo, fec_desde, fec_hasta);
         let arrayDos = yield PlanificacionHorasExtrasSolicitadas(codigo, id_cargo, fec_desde, fec_hasta);
-        // console.log('array uno ===', arrayUno); console.log('array dos ===', arrayDos);
+        console.log('array uno ===', arrayUno);
+        console.log('array dos ===', arrayDos);
         let arrayUnido = arrayUno.concat(arrayDos);
         for (let j = 0; j < arrayUnido.length; j++) {
             let numMin;
@@ -163,8 +162,8 @@ function HorasExtrasSolicitadas(id_empleado, id_cargo, fec_desde, fec_hasta) {
                 var f2 = new Date(obj.fec_final);
                 f1.setUTCHours(f1.getUTCHours() - 5);
                 f2.setUTCHours(f2.getUTCHours() - 5);
-                const hora_inicio = HHMMtoHorasDecimal(f1.toJSON().split('T')[1].split('.')[0]);
-                const hora_final = HHMMtoHorasDecimal(f2.toJSON().split('T')[1].split('.')[0]);
+                const hora_inicio = SubMetodosGraficas_1.HHMMtoSegundos(f1.toJSON().split('T')[1].split('.')[0]);
+                const hora_final = SubMetodosGraficas_1.HHMMtoSegundos(f2.toJSON().split('T')[1].split('.')[0]);
                 const dia = f1.getUTCDay();
                 f1.setUTCHours(f1.getUTCHours() - 5);
                 f2.setUTCHours(f2.getUTCHours() - 5);
@@ -175,8 +174,8 @@ function HorasExtrasSolicitadas(id_empleado, id_cargo, fec_desde, fec_hasta) {
                     fec_inicio: new Date(f1.toJSON().split('.')[0]),
                     fec_final: new Date(f2.toJSON().split('.')[0]),
                     descripcion: obj.descripcion,
-                    num_hora: HHMMtoHorasDecimal(obj.num_hora),
-                    tiempo_autorizado: HHMMtoHorasDecimal(obj.tiempo_autorizado),
+                    num_hora: SubMetodosGraficas_1.HHMMtoSegundos(obj.num_hora),
+                    tiempo_autorizado: SubMetodosGraficas_1.HHMMtoSegundos(obj.tiempo_autorizado),
                     valores_calculos: new Array,
                     calculos: new Array,
                     nocturno: false,
@@ -197,8 +196,8 @@ function PlanificacionHorasExtrasSolicitadas(id_empleado, id_cargo, fec_desde, f
                 var f2 = new Date(obj.fecha_hasta.toJSON().split('T')[0] + 'T' + obj.hora_fin);
                 f1.setUTCHours(f1.getUTCHours() - 5);
                 f2.setUTCHours(f2.getUTCHours() - 5);
-                const hora_inicio = HHMMtoHorasDecimal(f1.toJSON().split('T')[1].split('.')[0]);
-                const hora_final = HHMMtoHorasDecimal(f2.toJSON().split('T')[1].split('.')[0]);
+                const hora_inicio = SubMetodosGraficas_1.HHMMtoSegundos(f1.toJSON().split('T')[1].split('.')[0]);
+                const hora_final = SubMetodosGraficas_1.HHMMtoSegundos(f2.toJSON().split('T')[1].split('.')[0]);
                 const dia = f1.getUTCDay();
                 f1.setUTCHours(f1.getUTCHours() - 5);
                 f2.setUTCHours(f2.getUTCHours() - 5);
@@ -209,7 +208,7 @@ function PlanificacionHorasExtrasSolicitadas(id_empleado, id_cargo, fec_desde, f
                     fec_inicio: new Date(f1.toJSON().split('.')[0]),
                     fec_final: new Date(f2.toJSON().split('.')[0]),
                     descripcion: obj.descripcion,
-                    num_hora: HHMMtoHorasDecimal(obj.horas_totales),
+                    num_hora: SubMetodosGraficas_1.HHMMtoSegundos(obj.horas_totales),
                     tiempo_autorizado: obj.tiempo_autorizado,
                     valores_calculos: [],
                     calculos: [],
@@ -238,32 +237,30 @@ function ObtenerTimbres(id_empleado, fec_desde, fec_hasta) {
 function CargoContratoByFecha(id_empleado, fec_desde, fec_hasta) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            let cargo_contrato = yield database_1.default.query('SELECT e.nombre, e.apellido, e.codigo, e.cedula, ca.id AS id_cargo, ca.fec_inicio, ca.fec_final, co.id AS id_contrato, ca.sueldo, ca.hora_trabaja FROM empleados AS e, empl_contratos AS co, empl_cargos AS ca ' +
-                'WHERE e.id = co.id_empleado AND co.id_empleado = $1 AND ca.id_empl_contrato = co.id', [id_empleado])
+            const cargo_contrato = yield database_1.default.query('SELECT (e.nombre || \' \' || e.apellido) as nombre, e.codigo, e.cedula, ca.id AS id_cargo, ca.fec_inicio, ca.fec_final, co.id AS id_contrato, ca.sueldo, ca.hora_trabaja FROM empleados AS e, empl_contratos AS co, empl_cargos AS ca ' +
+                'WHERE e.id = co.id_empleado AND co.id_empleado = $1 AND ca.id_empl_contrato = co.id OR ca.fec_inicio BETWEEN $2 AND $3 OR ca.fec_final BETWEEN $2 AND $3 ', [id_empleado, fec_desde, fec_hasta])
                 .then(result => {
                 return result.rows;
             });
+            console.log(cargo_contrato);
             if (cargo_contrato.length === 0)
                 return [{ message: 'No tiene contratos ni cargos asignados' }];
-            let datos_limpios = cargo_contrato.filter(obj => {
-                // console.log('Objeto sin filtrar UNO:',obj);
-                return (obj.fec_inicio <= fec_desde && obj.fec_final >= fec_desde);
-            }).filter(obj => {
-                // console.log('Objeto sin filtrar DOS:',obj);
-                return (obj.fec_inicio <= fec_hasta && obj.fec_final >= fec_hasta);
-            }).map(obj => {
-                // console.log('limpio: ',obj);
-                return {
-                    nombre: obj.nombre + ' ' + obj.apellido,
-                    codigo: obj.codigo,
-                    cedula: obj.cedula,
-                    id_cargo: obj.id_cargo,
-                    id_contrato: obj.id_contrato,
-                    sueldo: obj.sueldo,
-                    hora_trabaja: obj.hora_trabaja
-                };
-            });
-            return datos_limpios;
+            return cargo_contrato;
+            // let datos_limpios = cargo_contrato.filter(obj => {
+            //     console.log('Objeto sin filtrar UNO:',obj);
+            //     return (obj.fec_inicio <= fec_desde && obj.fec_final >= fec_desde )
+            // }).filter(obj => {
+            //     console.log('Objeto sin filtrar DOS:',obj);
+            //     return (obj.fec_inicio <= fec_hasta && obj.fec_final >= fec_hasta )
+            // }).map(obj => {
+            //     console.log('limpio: ',obj);
+            //     return obj
+            // })
+            // if (datos_limpios.length === 0) return [{message: 'No tiene contratos ni cargos asignados en la fecha de consulta.'}]
+            // console.log('*******************');
+            // console.log(datos_limpios);
+            // console.log('*******************');
+            // return datos_limpios
         }
         catch (error) {
             return [{ message: error }];
@@ -280,8 +277,8 @@ function CatalogoHorasExtras() {
     return __awaiter(this, void 0, void 0, function* () {
         return yield database_1.default.query('SELECT id, descripcion, tipo_descuento, reca_porcentaje, hora_inicio, hora_final, hora_jornada, tipo_dia, tipo_funcion FROM cg_hora_extras').then(result => {
             return result.rows.map(obj => {
-                obj.hora_inicio = HHMMtoHorasDecimal(obj.hora_inicio);
-                obj.hora_final = HHMMtoHorasDecimal(obj.hora_final);
+                obj.hora_inicio = SubMetodosGraficas_1.HHMMtoSegundos(obj.hora_inicio);
+                obj.hora_final = SubMetodosGraficas_1.HHMMtoSegundos(obj.hora_final);
                 (obj.tipo_descuento === 1) ? obj.tipo_descuento = 'HE' : obj.tipo_descuento = 'RN';
                 obj.reca_porcentaje = parseInt(obj.reca_porcentaje) / 100;
                 (obj.hora_jornada === 1) ? obj.hora_jornada = 'Diurna' : obj.hora_jornada = 'Nocturna';
@@ -290,17 +287,6 @@ function CatalogoHorasExtras() {
             });
         });
     });
-}
-function HHMMtoHorasDecimal(dato) {
-    if (dato === '')
-        return 0;
-    // if (dato === 0) return 0
-    // console.log(dato);
-    var h = parseInt(dato.split(':')[0]);
-    var m = parseInt(dato.split(':')[1]) / 60;
-    var s = parseInt(dato.split(':')[2]) / 3600;
-    // console.log(h, '>>>>>', m);
-    return h + m + s;
 }
 /**************************************************************************
  *        /\                     _______________  _________
@@ -312,9 +298,8 @@ function HHMMtoHorasDecimal(dato) {
  *  /            \  |          |        |        |         |
  * /              \ |__________|        |        |_________|
  ***************************************************************************/
-const GenerarHoraExtraCalulo = function (id_hora_extr_pedido) {
+exports.GenerarHoraExtraCalulo = function (id_hora_extr_pedido) {
     return __awaiter(this, void 0, void 0, function* () {
         // let hora_extra_pedida = await pool.query('SELECT fec_inicio, fec_final')
     });
 };
-exports.GenerarHoraExtraCalulo = GenerarHoraExtraCalulo;

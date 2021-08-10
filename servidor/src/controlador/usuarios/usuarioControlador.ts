@@ -1,6 +1,11 @@
+import { email, enviarMail, Credenciales } from '../../libs/settingsMail';
 import { Request, Response } from 'express';
 import pool from '../../database';
-import { stream } from 'xlsx/types';
+import jwt from 'jsonwebtoken';
+
+interface IPayload {
+  _id: number,
+}
 
 class UsuarioControlador {
   public async list(req: Request, res: Response) {
@@ -10,6 +15,47 @@ class UsuarioControlador {
     }
     else {
       return res.status(404).jsonp({ text: 'No se encuentran registros' });
+    }
+  }
+
+  public async usersEmpleados(req: Request, res: Response) {
+    try {
+      const USUARIOS = await pool.query('SELECT (e.nombre || \' \' || e.apellido) AS nombre, e.cedula, e.codigo, u.usuario, u.app_habilita, u.id AS userId ' +
+        'FROM usuarios AS u, empleados AS e WHERE e.id = u.id_empleado ORDER BY nombre')
+        .then(result => { return result.rows });
+
+      if (USUARIOS.length === 0) return res.status(404).jsonp({ message: 'No se encuentran registros' });
+
+      return res.status(200).jsonp(USUARIOS)
+
+    } catch (error) {
+      return res.status(500).jsonp({ message: error })
+    }
+  }
+
+  public async updateUsersEmpleados(req: Request, res: Response) {
+    try {
+      console.log(req.body);
+      const array = req.body;
+
+      if (array.length === 0) return res.status(400).jsonp({ message: 'No llego datos para actualizar' })
+
+      const nuevo = await Promise.all(array.map(async (o: any) => {
+
+        try {
+          const [result] = await pool.query('UPDATE usuarios SET app_habilita = $1 WHERE id = $2 RETURNING id', [!o.app_habilita, o.userid])
+            .then(result => { return result.rows })
+          return result
+        } catch (error) {
+          return { error: error.toString() }
+        }
+
+      }))
+
+      return res.status(200).jsonp({ message: 'Datos actualizados exitosamente', nuevo })
+
+    } catch (error) {
+      return res.status(500).jsonp({ message: error })
     }
   }
 
@@ -83,17 +129,62 @@ class UsuarioControlador {
     }
   }
 
+  // ADMINISTRACIÓN DEL MÓDULO DE ALIMENTACIÓN
+  public async RegistrarAdminComida(req: Request, res: Response): Promise<void> {
+    const { admin_comida, id_empleado } = req.body;
+    await pool.query('UPDATE usuarios SET admin_comida = $1 WHERE id_empleado = $2', [admin_comida, id_empleado]);
+    res.jsonp({ message: 'Registro exitoso' });
+  }
+
+  /** ************************************************************************************** *
+   **                MÉTODO FRASE DE SEGURIDAD ADMINISTRADOR                                 *
+   ** ************************************************************************************** */
+  // MÉTODO PARA GUARDAR FRASE DE SEGURIDAD
   public async ActualizarFrase(req: Request, res: Response): Promise<void> {
     const { frase, id_empleado } = req.body;
     await pool.query('UPDATE usuarios SET frase = $1 WHERE id_empleado = $2', [frase, id_empleado]);
     res.jsonp({ message: 'Frase exitosa' });
   }
 
-  // ADMINISTRACIÓN DEL MÓDULO DE ALIMENTACIÓN
-  public async RegistrarAdminComida(req: Request, res: Response): Promise<void> {
-    const { admin_comida, id_empleado } = req.body;
-    await pool.query('UPDATE usuarios SET admin_comida = $1 WHERE id_empleado = $2', [admin_comida, id_empleado]);
-    res.jsonp({ message: 'Registro exitoso' });
+  public async RestablecerFrase(req: Request, res: Response) {
+    const correo = req.body.correo;
+    Credenciales(1);
+    const correoValido = await pool.query('SELECT e.id, e.nombre, e.apellido, e.correo, u.usuario, ' +
+      'u.contrasena FROM empleados AS e, usuarios AS u WHERE correo = $1 AND u.id_empleado = e.id AND ' +
+      'e.estado = 1', [correo]);
+
+    if (correoValido.rows[0] == undefined) return res.status(401).send('Correo no registrado en el sistema.');
+
+    const token = jwt.sign({ _id: correoValido.rows[0].id }, process.env.TOKEN_SECRET_MAIL || 'llaveEmail', { expiresIn: 60 * 5, algorithm: 'HS512' });
+
+    var url = 'http://localhost:4200/recuperar-frase';
+    var data = {
+      to: correoValido.rows[0].correo,
+      from: email,
+      template: 'forgot-password-frase',
+      subject: 'Recuperar frase de seguridad!',
+      html: `<p>Hola <b>${correoValido.rows[0].nombre.split(' ')[0] + ' ' + correoValido.rows[0].apellido.split(' ')[0]}</b>
+       ingresar al siguiente link y registrar una nueva frase que le sea fácil de recordar.: </p>
+        <a href="${url}/${token}">
+        ${url}/${token}
+        </a>
+      `
+    };
+    enviarMail(data);
+    res.jsonp({ mail: 'si', message: 'Mail enviado.' })
+  }
+
+  public async CambiarFrase(req: Request, res: Response) {
+    var token = req.body.token;
+    var frase = req.body.frase;
+    try {
+      const payload = jwt.verify(token, process.env.TOKEN_SECRET_MAIL || 'llaveEmail') as IPayload;
+      const id_empleado = payload._id;
+      await pool.query('UPDATE usuarios SET frase = $2 WHERE id_empleado = $1 ', [id_empleado, frase]);
+      return res.jsonp({ expiro: 'no', message: "Frase de Seguridad Actualizada." });
+    } catch (error) {
+      return res.jsonp({ expiro: 'si', message: "Tiempo para cambiar la frase ha expirado." });
+    }
   }
 
   //ACCESOS AL SISTEMA

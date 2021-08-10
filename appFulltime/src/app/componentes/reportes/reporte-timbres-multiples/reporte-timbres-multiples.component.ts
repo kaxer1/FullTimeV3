@@ -26,6 +26,8 @@ export class ReporteTimbresMultiplesComponent implements OnInit, OnDestroy {
 
   get bool() { return this.reporteService.criteriosBusqueda };
 
+  get timbreServidor() { return this.reporteService.mostrarTimbreServidor };
+
   respuesta: any [];
   sucursales: any = [];
   departamentos: any = [];
@@ -366,12 +368,15 @@ export class ReporteTimbresMultiplesComponent implements OnInit, OnDestroy {
     });
   }
 
+  // MÉTODO PARA OBTENER COLORES Y MARCA DE AGUA DE EMPRESA 
   p_color: any;
   s_color: any;
+  frase: any;
   ObtenerColores() {
     this.restEmpre.ConsultarDatosEmpresa(parseInt(localStorage.getItem('empresa'))).subscribe(res => {
       this.p_color = res[0].color_p;
       this.s_color = res[0].color_s;
+      this.frase = res[0].marca_agua;
     });
   }
 
@@ -408,10 +413,10 @@ export class ReporteTimbresMultiplesComponent implements OnInit, OnDestroy {
       pageSize: 'A4',
       pageOrientation: 'portrait',
       pageMargins: [ 40, 50, 40, 50 ],
-      watermark: { text: 'Confidencial', color: 'blue', opacity: 0.1, bold: true, italics: false },
+      watermark: { text: this.frase, color: 'blue', opacity: 0.1, bold: true, italics: false },
       header: { text: 'Impreso por:  ' + localStorage.getItem('fullname_print'), margin: 10, fontSize: 9, opacity: 0.3, alignment: 'right' },
 
-      footer: function (currentPage, pageCount, fecha) {
+      footer: function (currentPage: any, pageCount: any, fecha: any, hora: any) {
         var h = new Date();
         var f = moment();
         fecha = f.format('YYYY-MM-DD');
@@ -541,41 +546,82 @@ export class ReporteTimbresMultiplesComponent implements OnInit, OnDestroy {
             }
           });
 
-          n.push({
-            style: 'tableMargin',
-            table: {
-              widths: ['auto', '*', 'auto', 'auto', 'auto', '*', '*'],
-              body: [
-                [
-                  { text: 'N°', style: 'tableHeader' },
-                  { text: 'Timbre', style: 'tableHeader' },
-                  { text: 'Reloj', style: 'tableHeader' },
-                  { text: 'Accion', style: 'tableHeader' },
-                  { text: 'Observacion', style: 'tableHeader' },
-                  { text: 'Longuitud', style: 'tableHeader' },
-                  { text: 'Latitud', style: 'tableHeader' }
-                ],                  
-                ...obj2.timbres.map(obj3 => {
-                  c = c + 1
-                  return [
-                    { style: 'itemsTableCentrado', text: c },
-                    { style: 'itemsTable', text: obj3.fec_hora_timbre },
-                    { style: 'itemsTable', text: obj3.id_reloj },
-                    { style: 'itemsTable', text: obj3.accion },
-                    { style: 'itemsTable', text: obj3.observacion },
-                    { style: 'itemsTable', text: obj3.longitud },
-                    { style: 'itemsTable', text: obj3.latitud },
-                  ]
-                })
-
-              ]
-            },
-            layout: {
-              fillColor: function (rowIndex) {
-                return (rowIndex % 2 === 0) ? '#E5E7E9' : null;
+          if ( this.timbreServidor === true ) {
+            n.push({
+              style: 'tableMargin',
+              table: {
+                widths: ['auto', '*', 'auto', 'auto', 'auto', 'auto', '*', '*'],
+                body: [
+                  [
+                    { text: 'N°', style: 'tableHeader' },
+                    { text: 'Timbre', style: 'tableHeader' },
+                    { text: 'Timbre Servidor', style: 'tableHeader' },
+                    { text: 'Reloj', style: 'tableHeader' },
+                    { text: 'Accion', style: 'tableHeader' },
+                    { text: 'Observacion', style: 'tableHeader' },
+                    { text: 'Longuitud', style: 'tableHeader' },
+                    { text: 'Latitud', style: 'tableHeader' }
+                  ],                  
+                  ...obj2.timbres.map(obj3 => {
+                    c = c + 1
+                    return [
+                      { style: 'itemsTableCentrado', text: c },
+                      { style: 'itemsTable', text: obj3.fec_hora_timbre },
+                      { style: 'itemsTable', text: obj3.fec_hora_timbre_servidor },
+                      { style: 'itemsTable', text: obj3.id_reloj },
+                      { style: 'itemsTable', text: obj3.accion },
+                      { style: 'itemsTable', text: obj3.observacion },
+                      { style: 'itemsTable', text: obj3.longitud },
+                      { style: 'itemsTable', text: obj3.latitud },
+                    ]
+                  })
+  
+                ]
+              },
+              layout: {
+                fillColor: function (rowIndex) {
+                  return (rowIndex % 2 === 0) ? '#E5E7E9' : null;
+                }
               }
-            }
-          })
+            })
+          } else {
+            n.push({
+              style: 'tableMargin',
+              table: {
+                widths: ['auto', '*', 'auto', 'auto', 'auto', '*', '*'],
+                body: [
+                  [
+                    { text: 'N°', style: 'tableHeader' },
+                    { text: 'Timbre', style: 'tableHeader' },
+                    { text: 'Reloj', style: 'tableHeader' },
+                    { text: 'Accion', style: 'tableHeader' },
+                    { text: 'Observacion', style: 'tableHeader' },
+                    { text: 'Longuitud', style: 'tableHeader' },
+                    { text: 'Latitud', style: 'tableHeader' }
+                  ],                  
+                  ...obj2.timbres.map(obj3 => {
+                    c = c + 1
+                    return [
+                      { style: 'itemsTableCentrado', text: c },
+                      { style: 'itemsTable', text: obj3.fec_hora_timbre },
+                      { style: 'itemsTable', text: obj3.id_reloj },
+                      { style: 'itemsTable', text: obj3.accion },
+                      { style: 'itemsTable', text: obj3.observacion },
+                      { style: 'itemsTable', text: obj3.longitud },
+                      { style: 'itemsTable', text: obj3.latitud },
+                    ]
+                  })
+  
+                ]
+              },
+              layout: {
+                fillColor: function (rowIndex) {
+                  return (rowIndex % 2 === 0) ? '#E5E7E9' : null;
+                }
+              }
+            })
+          }
+          
         });
 
       });
@@ -590,10 +636,10 @@ export class ReporteTimbresMultiplesComponent implements OnInit, OnDestroy {
       pageSize: 'A4',
       pageOrientation: 'landscape',
       pageMargins: [ 40, 50, 40, 50 ],
-      watermark: { text: 'Confidencial', color: 'blue', opacity: 0.1, bold: true, italics: false },
+      watermark: { text: this.frase, color: 'blue', opacity: 0.1, bold: true, italics: false },
       header: { text: 'Impreso por:  ' + localStorage.getItem('fullname_print'), margin: 10, fontSize: 9, opacity: 0.3, alignment: 'right' },
 
-      footer: function (currentPage, pageCount, fecha) {
+      footer: function (currentPage: any, pageCount: any, fecha: any, hora: any) {
         var h = new Date();
         var f = moment();
         fecha = f.format('YYYY-MM-DD');
@@ -735,10 +781,10 @@ export class ReporteTimbresMultiplesComponent implements OnInit, OnDestroy {
       pageSize: 'A4',
       pageOrientation: 'landscape',
       pageMargins: [ 40, 50, 40, 50 ],
-      watermark: { text: 'Confidencial', color: 'blue', opacity: 0.1, bold: true, italics: false },
+      watermark: { text: this.frase, color: 'blue', opacity: 0.1, bold: true, italics: false },
       header: { text: 'Impreso por:  ' + localStorage.getItem('fullname_print'), margin: 10, fontSize: 9, opacity: 0.3, alignment: 'right' },
 
-      footer: function (currentPage, pageCount, fecha) {
+      footer: function (currentPage: any, pageCount: any, fecha: any, hora: any) {
         var h = new Date();
         var f = moment();
         fecha = f.format('YYYY-MM-DD');

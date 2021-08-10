@@ -1,3 +1,4 @@
+// IMPORTACIÓN DE LIBRERIAS
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { PageEvent } from '@angular/material/paginator';
@@ -18,6 +19,8 @@ import { MetodosComponent } from 'src/app/componentes/metodoEliminar/metodos.com
 import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
 import { HorasExtrasService } from 'src/app/servicios/catalogos/catHorasExtras/horas-extras.service';
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
+import { ValidacionesService } from '../../../../servicios/validaciones/validaciones.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-lista-horas-extras',
@@ -53,6 +56,7 @@ export class ListaHorasExtrasComponent implements OnInit {
     public vistaRegistrarDatos: MatDialog,
     private toastr: ToastrService,
     private router: Router,
+    private validacionesService: ValidacionesService
   ) {
     this.idEmpleado = parseInt(localStorage.getItem('empleado'));
   }
@@ -61,7 +65,7 @@ export class ListaHorasExtrasComponent implements OnInit {
     this.ObtenerHorasExtras();
     this.ObtenerEmpleados(this.idEmpleado);
        this.ObtenerLogo();
-    this.ObtnerColores();
+    this.ObtenerColores();
   }
 
   // Método para ver la información del empleado 
@@ -80,13 +84,15 @@ export class ListaHorasExtrasComponent implements OnInit {
     });
   }
 
-  // Método para obtener colores de empresa
+  // MÉTODO PARA OBTENER COLORES Y MARCA DE AGUA DE EMPRESA 
   p_color: any;
   s_color: any;
-  ObtnerColores() {
+  frase: any;
+  ObtenerColores() {
     this.restEmpre.ConsultarDatosEmpresa(parseInt(localStorage.getItem('empresa'))).subscribe(res => {
       this.p_color = res[0].color_p;
       this.s_color = res[0].color_s;
+      this.frase = res[0].marca_agua;
     });
   }
 
@@ -121,7 +127,9 @@ export class ListaHorasExtrasComponent implements OnInit {
           this.horasExtras[i].tipo_dia = 'Normal';
         }
       }
-    }, error => { });
+    }, err => {
+      return this.validacionesService.RedireccionarHomeAdmin(err.error) 
+    });
   }
 
   LimpiarCampos() {
@@ -148,6 +156,8 @@ export class ListaHorasExtrasComponent implements OnInit {
         timeOut: 6000,
       });
       this.ObtenerHorasExtras();
+    }, err => {
+      return this.validacionesService.RedireccionarHomeAdmin(err.error) 
     });
   }
 
@@ -185,11 +195,11 @@ export class ListaHorasExtrasComponent implements OnInit {
 
       // Encabezado de la página
       pageOrientation: 'landscape',
-      watermark: { text: 'Confidencial', color: 'blue', opacity: 0.1, bold: true, italics: false },
+      watermark: { text: this.frase, color: 'blue', opacity: 0.1, bold: true, italics: false },
       header: { text: 'Impreso por:  ' + this.empleado[0].nombre + ' ' + this.empleado[0].apellido, margin: 10, fontSize: 9, opacity: 0.3, alignment: 'right' },
 
       // Pie de página
-      footer: function (currentPage, pageCount, fecha) {
+      footer: function (currentPage: any, pageCount: any, fecha: any, hora: any) {
         var f = moment();
         fecha = f.format('YYYY-MM-DD');
 
@@ -264,6 +274,12 @@ export class ListaHorasExtrasComponent implements OnInit {
                 ];
               })
             ]
+          },
+          // ESTILO DE COLORES FORMATO ZEBRA
+          layout: {
+            fillColor: function (i: any) {
+              return (i % 2 === 0) ? '#CCD1D1' : null;
+            }
           }
         },
         { width: '*', text: '' },
@@ -322,8 +338,10 @@ export class ListaHorasExtrasComponent implements OnInit {
     this.rest.DownloadXMLRest(arreglohorasExtras).subscribe(res => {
       this.data = res;
       console.log("prueba data", res)
-      this.urlxml = 'http://localhost:3000/horasExtras/download/' + this.data.name;
+      this.urlxml = `${environment.url}/horasExtras/download/` + this.data.name;
       window.open(this.urlxml, "_blank");
+    }, err => {
+      return this.validacionesService.RedireccionarHomeAdmin(err.error) 
     });
   }
 

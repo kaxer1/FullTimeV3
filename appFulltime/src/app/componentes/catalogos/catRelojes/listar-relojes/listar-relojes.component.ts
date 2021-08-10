@@ -1,3 +1,5 @@
+// IMPORTACIÓN DE LIBRERIAS
+import { environment } from 'src/environments/environment';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
@@ -63,6 +65,8 @@ export class ListarRelojesComponent implements OnInit {
   numero_pagina: number = 1;
   pageSizeOptions = [5, 10, 20, 50];
 
+  hipervinculo: string = environment.url;
+
   constructor(
     private rest: RelojesService,
     public restE: EmpleadoService,
@@ -78,7 +82,7 @@ export class ListarRelojesComponent implements OnInit {
     this.ObtenerReloj();
     this.ObtenerEmpleados(this.idEmpleado);
     this.ObtenerLogo();
-    this.ObtnerColores();
+    this.ObtenerColores();
   }
 
   // Método para ver la información del empleado 
@@ -97,13 +101,15 @@ export class ListarRelojesComponent implements OnInit {
     });
   }
 
-  // Método para obtener colores de empresa
+  // MÉTODO PARA OBTENER COLORES Y MARCA DE AGUA DE EMPRESA 
   p_color: any;
   s_color: any;
-  ObtnerColores() {
+  frase: any;
+  ObtenerColores() {
     this.restEmpre.ConsultarDatosEmpresa(parseInt(localStorage.getItem('empresa'))).subscribe(res => {
       this.p_color = res[0].color_p;
       this.s_color = res[0].color_s;
+      this.frase = res[0].marca_agua;
     });
   }
 
@@ -215,14 +221,18 @@ export class ListarRelojesComponent implements OnInit {
       if (itemName.toLowerCase() == 'dispositivos') {
         this.plantilla();
       } else {
-        this.toastr.error('Solo se acepta Dispositvos', 'Plantilla seleccionada incorrecta', {
+        this.toastr.error('Solo se acepta plantilla con nombre Dispositivos.', 'Plantilla seleccionada incorrecta.', {
           timeOut: 6000,
         });
+        this.archivoForm.reset();
+        this.nameFile = '';
       }
     } else {
-      this.toastr.error('Error en el formato del documento', 'Plantilla no aceptada', {
+      this.toastr.error('Error en el formato del documento.', 'Plantilla no aceptada.', {
         timeOut: 6000,
       });
+      this.archivoForm.reset();
+      this.nameFile = '';
     }
   }
 
@@ -291,11 +301,11 @@ export class ListarRelojesComponent implements OnInit {
 
       // Encabezado de la página
       pageOrientation: 'landscape',
-      watermark: { text: 'Confidencial', color: 'blue', opacity: 0.1, bold: true, italics: false },
+      watermark: { text: this.frase, color: 'blue', opacity: 0.1, bold: true, italics: false },
       header: { text: 'Impreso por:  ' + this.empleado[0].nombre + ' ' + this.empleado[0].apellido, margin: 10, fontSize: 9, opacity: 0.3, alignment: 'right' },
 
       // Pie de la página
-      footer: function (currentPage, pageCount, fecha) {
+      footer: function (currentPage: any, pageCount: any, fecha: any, hora: any) {
         var f = moment();
         fecha = f.format('YYYY-MM-DD');
 
@@ -379,6 +389,12 @@ export class ListarRelojesComponent implements OnInit {
                 ];
               })
             ]
+          },
+          // ESTILO DE COLORES FORMATO ZEBRA
+          layout: {
+            fillColor: function (i: any) {
+              return (i % 2 === 0) ? '#CCD1D1' : null;
+            }
           }
         },
         { width: '*', text: '' },
@@ -442,7 +458,7 @@ export class ListarRelojesComponent implements OnInit {
     this.rest.DownloadXMLRest(arregloDispositivos).subscribe(res => {
       this.data = res;
       console.log("prueba data", res)
-      this.urlxml = 'http://localhost:3000/relojes/download/' + this.data.name;
+      this.urlxml = `${environment.url}/relojes/download/` + this.data.name;
       window.open(this.urlxml, "_blank");
     });
   }

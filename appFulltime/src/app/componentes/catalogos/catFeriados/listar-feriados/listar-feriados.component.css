@@ -6,12 +6,6 @@ p { font-size: x-small;}
 
 .btn { background-color: rgb(80,87,97); color: white; }
 
-.fas { color:green; margin-left: 25px; cursor: pointer;}
-
-.far {cursor: pointer;}
-
-mat-form-field { padding: 10px 15px 0px 15px; width: 220px; }
-
 .button {margin: 5px 10px 5px 10px;}
 
 .upload {cursor: pointer; }
@@ -25,12 +19,6 @@ mat-form-field { padding: 10px 15px 0px 15px; width: 220px; }
     padding-bottom: 6px; 
 }
 
-#ciudad { color: rgb(38, 0, 255); }
-
-#ver { color: indianred; }
-
-#feriado { cursor: pointer; }
-
 #resultados { 
     font-size: 17px; 
     text-align: center; 
@@ -42,17 +30,9 @@ mat-form-field { padding: 10px 15px 0px 15px; width: 220px; }
 
 table {width: 100%;}
 
-#estilo { color: rgb(0, 0, 0); font-size: 13px; }
 
-#desc { text-align: center; }
 
-#pdf { color:red; font-size: 20px; text-align: center; margin-left: 20px; cursor: pointer; }
-
-#excel { color:green; font-size: 20px; text-align: center; margin-left: 20px; cursor: pointer; }
-
-#csv { color:blue; font-size: 20px; text-align: center; margin-left: 20px; cursor: pointer; }
-
-#xml { color:orangered; font-size: 20px; text-align: center; margin-left: 20px; cursor: pointer; }
+#desc { text-align: center; font-size: 14px;}
 
 [type="file"] {
     height: 0;

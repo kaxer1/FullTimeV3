@@ -243,4 +243,74 @@
             </div>
         </div>
     </mat-tab>
+
+    <!-- REGISTRO DE VACUNACION -->
+    <mat-tab>
+        <ng-template mat-tab-label>
+            <mat-icon class="example-tab-icon">local_pharmacy</mat-icon>
+            Vacunación
+        </ng-template>
+        <div class="container" style="padding-top: 15px; padding-bottom: 25px;">
+            <div class="row">
+                <div class="col-md">
+                    <mat-card class="mat-elevation-z8" style="padding-bottom: 5px;">
+                        <div class="d-flex bd-highlight barraTitulo1">
+                            <div class="w-100 bd-highlight">
+                                <h5>Registro de Vacunación</h5>
+                            </div>
+                            <div class="flex-shrink-1 bd-highlight" style="margin-right: 10px;">
+                                <!--     <button type="submit" class="btn btn-outline-light btn-sm" style="margin-top: -3px;"
+                                    [disabled]="!btnHabilitadoVacuna"
+                                    (click)="MostrarVentanaVacuna()">{{btnVacuna}}</button>-->
+                            </div>
+                        </div>
+                        <mat-card-content>
+                            <div class="container" style="padding-top: 15px;" *ngFor="let dv of datosVacuna">
+                                <div class="row">
+                                    <div class="col-lg">
+                                        <label><b>Vacuna:</b> {{dv.vacuna}}</label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg">
+                                        <label *ngIf="dv.dosis === 1"><b>Dosis:</b> Primera dosis</label>
+                                        <label *ngIf="dv.dosis === 2"><b>Dosis:</b> Segunda dosis</label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg">
+                                        <label><b>Carnet:</b> <a *ngIf="dv.nom_carnet != null && dv.nom_carnet != ''"
+                                                class="fas fa-file-alt"
+                                                style="color:rgb(11, 70, 197); text-align: center; margin-left: 20px;"
+                                                matSuffix matTooltipPosition="right"
+                                                matTooltip="Dar click para descargar carnet de vacunación."
+                                                href="{{hipervinculo}}/vacunas/documentos/{{dv.carnet}}"
+                                                target="_blank">
+                                                <p>{{dv.nom_carnet}}</p>
+                                            </a></label>
+                                    </div>
+                                </div>
+                                <!--    <div class="row" style="margin-top: 5px;">
+                                    <div class="col" style="text-align: right;">
+                                        <a mat-button type="submit" (click)="ConfirmarEliminarVacuna(dv.id)" matSuffix>
+                                            <i class="far fa-trash-alt" matTooltipPosition="right" id="delete"
+                                                matTooltip="Eliminar registro">
+                                                <p>Eliminar</p>
+                                            </i>
+                                        </a>
+                                    </div>
+                                </div>-->
+                            </div>
+                        </mat-card-content>
+                    </mat-card>
+                    <div style="padding-bottom: 35px; padding-top: 35px;">
+                        <app-crear-vacuna [idEmploy]="idEmpleado" *ngIf="!mostrarVacuna">
+                        </app-crear-vacuna>
+                        <app-editar-vacuna [idEmploy]="idEmpleado" [dvacuna]="datosVacuna" *ngIf="!mostrarVacunaEditar">
+                        </app-editar-vacuna>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </mat-tab>
 </mat-tab-group>

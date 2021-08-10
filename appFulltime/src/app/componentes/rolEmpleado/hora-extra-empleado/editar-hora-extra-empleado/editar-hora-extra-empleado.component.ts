@@ -105,6 +105,12 @@ export class EditarHoraExtraEmpleadoComponent implements OnInit {
       });
       this.dialogRef.close(true);
       console.log(response);
+    }, err => {
+      const { access, message } = err.error.message;
+      if (access === false) {
+        this.toastr.error(message)
+        this.dialogRef.close();
+      }
     });
 
   }

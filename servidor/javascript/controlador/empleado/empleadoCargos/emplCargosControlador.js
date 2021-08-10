@@ -12,7 +12,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.EMPLEADO_CARGO_CONTROLADOR = void 0;
 const database_1 = __importDefault(require("../../../database"));
 class EmpleadoCargosControlador {
     list(req, res) {
@@ -84,7 +83,7 @@ class EmpleadoCargosControlador {
     EncontrarIdCargoActual(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { id_empleado } = req.params;
-            const CARGO = yield database_1.default.query('SELECT MAX(e_cargo.id) FROM empl_cargos AS e_cargo, empl_contratos AS contrato_e, empleados AS e WHERE contrato_e.id_empleado = e.id AND e_cargo.id_empl_contrato = contrato_e.id AND e.id = $1', [id_empleado]);
+            const CARGO = yield database_1.default.query('SELECT MAX(e_cargo.id), e_cargo.hora_trabaja FROM empl_cargos AS e_cargo, empl_contratos AS contrato_e, empleados AS e WHERE contrato_e.id_empleado = e.id AND e_cargo.id_empl_contrato = contrato_e.id AND e.id = $1 GROUP BY e_cargo.id', [id_empleado]);
             if (CARGO.rowCount > 0) {
                 if (CARGO.rows[0]['max'] != null) {
                     return res.jsonp(CARGO.rows);

@@ -206,7 +206,7 @@ export const BuscarTimbresEntradasSinAcciones = async function (fec_inicio: stri
     .then(result => { return result.rows })
 
     if (horarioEntrada.length === 0) return [0];
-    // console.log(horarioEntrada);
+    console.log(horarioEntrada);
 
     let nuevo: Array<any> = [];
 
@@ -219,23 +219,30 @@ export const BuscarTimbresEntradasSinAcciones = async function (fec_inicio: stri
             var f_inicio = o.fecha + ' ' + SegundosToHHMM(hora_seg);
             var f_final = o.fecha + ' ' + SegundosToHHMM( hora_seg + HHMMtoSegundos('02:00:00') );
             // console.log( f_inicio, ' || ', f_final, ' || ', codigo);
-            const query = 'SELECT CAST(fec_hora_timbre AS VARCHAR) from timbres where fec_hora_timbre >= TO_TIMESTAMP(\'' + f_inicio + '\'' + ', \'YYYY-MM-DD HH:MI:SS\') ' +
-                    'and fec_hora_timbre <= TO_TIMESTAMP(\'' + f_final + '\'' + ', \'YYYY-MM-DD HH:MI:SS\') and id_empleado = ' + obj.codigo +' order by fec_hora_timbre'
+            const query = 'SELECT CAST(fec_hora_timbre AS VARCHAR) from timbres where fec_hora_timbre >= TO_TIMESTAMP(\'' + f_inicio + '\'' + ', \'YYYY-MM-DD HH24:MI:SS\') ' +
+                    'and fec_hora_timbre <= TO_TIMESTAMP(\'' + f_final + '\'' + ', \'YYYY-MM-DD HH24:MI:SS\') and id_empleado = ' + obj.codigo +' order by fec_hora_timbre'
             // console.log(query);
-            return await pool.query(query)
-            .then(res => { 
-                if (res.rowCount === 0) {
-                    return 0
-                } else {
-                    const h_timbre = res.rows[0].fec_hora_timbre.split(' ')[1];
-                    const t_tim = HHMMtoSegundos(h_timbre);
-                    // console.log(f_timbre);
-                    return {
-                        fecha: res.rows[0].fec_hora_timbre.split(' ')[0],
-                        tiempo_atraso: (t_tim - hora_seg) / 3600
-                    }                    
-                }
-            })
+            try {
+                return await pool.query(query)
+                .then(res => { 
+                    if (res.rowCount === 0) {
+                        return 0
+                    } else {
+                        const h_timbre = res.rows[0].fec_hora_timbre.split(' ')[1];
+                        const t_tim = HHMMtoSegundos(h_timbre);
+                        // console.log(f_timbre);
+                        return {
+                            fecha: res.rows[0].fec_hora_timbre.split(' ')[0],
+                            tiempo_atraso: (t_tim - hora_seg) / 3600
+                        }                    
+                    }
+                })
+            } catch (error) {
+                console.log('********************* METODO BuscarTimbresEntradasSinAcciones ********************');
+                console.log(error);
+                console.log('***************************************************************************');
+                return 0
+            }
         }));
 
         return timbres
@@ -511,28 +518,37 @@ export const BuscarTimbresEoSModelado = async function (fec_inicio: string, fec_
 
 export const ModelarAtrasos = async function (obj: any, fec_inicio: string, fec_final: string) {
     // console.log(obj);
+    try {
+        let array = await pool.query('SELECT dh.hora, dh.minu_espera FROM empl_horarios AS eh, cg_horarios AS h, deta_horarios AS dh ' + 
+        'WHERE eh.codigo = $1 AND h.id = eh.id_horarios AND dh.id_horario = h.id AND CAST(eh.fec_inicio AS VARCHAR) between $2 || \'%\' AND $3 || \'%\' ' + 
+        'AND CAST(eh.fec_final AS VARCHAR) between $2 || \'%\' AND $3 || \'%\' AND dh.orden = 1 limit 1',[obj.id_empleado, fec_inicio, fec_final])
+        .then(res => { return res.rows})
+        console.log('Array del resultado',array);
     
-    let array = await pool.query('SELECT dh.hora, dh.minu_espera FROM empl_horarios AS eh, cg_horarios AS h, deta_horarios AS dh ' + 
-    'WHERE eh.codigo = $1 AND h.id = eh.id_horarios AND dh.id_horario = h.id AND CAST(eh.fec_inicio AS VARCHAR) between $2 || \'%\' AND $3 || \'%\' ' + 
-    'AND CAST(eh.fec_final AS VARCHAR) between $2 || \'%\' AND $3 || \'%\' AND dh.orden = 1 limit 1',[obj.id_empleado, fec_inicio, fec_final])
-    .then(res => { return res.rows})
-    // console.log('Array del resultado',array);
-
-    if (array.length === 0) {
+        if (array.length === 0) {
+            return {
+                fecha: obj.fec_hora_timbre,
+                tiempo_atraso: 0,
+            }
+        }
+        return array.map(ele => {
+            var timbre = HHMMtoSegundos(obj.fec_hora_timbre.split(' ')[1]) 
+            var hora = HHMMtoSegundos(ele.hora) + ele.minu_espera*60;
+    
+            return {
+                fecha: obj.fec_hora_timbre,
+                tiempo_atraso: (timbre - hora) / 3600
+            }
+        })[0]
+        
+    } catch (error) {
+        console.log(error);
         return {
             fecha: obj.fec_hora_timbre,
             tiempo_atraso: 0,
         }
     }
-    return array.map(ele => {
-        var timbre = HHMMtoSegundos(obj.fec_hora_timbre.split(' ')[1]) 
-        var hora = HHMMtoSegundos(ele.hora) + ele.minu_espera*60;
 
-        return {
-            fecha: obj.fec_hora_timbre,
-            tiempo_atraso: (timbre - hora) / 3600
-        }
-    })[0]
 }
 
 export const ModelarTiempoJornada = async function (obj: any, fec_inicio: string, fec_final: string) {
@@ -944,8 +960,8 @@ export const Empleado_Atrasos_ModelarDatos_SinAcciones = async function(codigo: 
             var f_inicio = o.fecha + ' ' + SegundosToHHMM(hora_seg);
             var f_final = o.fecha + ' ' + SegundosToHHMM( hora_seg + HHMMtoSegundos('02:00:00') );
             // console.log( f_inicio, ' || ', f_final, ' || ', codigo);
-            const query = 'SELECT CAST(fec_hora_timbre AS VARCHAR) from timbres where fec_hora_timbre >= TO_TIMESTAMP(\'' + f_inicio + '\'' + ', \'YYYY-MM-DD HH:MI:SS\') ' +
-                    'and fec_hora_timbre <= TO_TIMESTAMP(\'' + f_final + '\'' + ', \'YYYY-MM-DD HH:MI:SS\') and id_empleado = ' + codigo +' order by fec_hora_timbre'
+            const query = 'SELECT CAST(fec_hora_timbre AS VARCHAR) from timbres where fec_hora_timbre >= TO_TIMESTAMP(\'' + f_inicio + '\'' + ', \'YYYY-MM-DD HH24:MI:SS\') ' +
+                    'and fec_hora_timbre <= TO_TIMESTAMP(\'' + f_final + '\'' + ', \'YYYY-MM-DD HH24:MI:SS\') and id_empleado = ' + codigo +' order by fec_hora_timbre'
             // console.log(query);
             return await pool.query(query)
             .then(res => { 

@@ -12,7 +12,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.EMPRESA_CONTROLADOR = void 0;
 const fs_1 = __importDefault(require("fs"));
 const ImagenCodificacion_1 = require("../../libs/ImagenCodificacion");
 const builder = require('xmlbuilder');
@@ -20,7 +19,7 @@ const database_1 = __importDefault(require("../../database"));
 class EmpresaControlador {
     ListarEmpresa(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const EMPRESA = yield database_1.default.query('SELECT id, nombre, ruc, direccion, telefono, correo, representante, tipo_empresa, establecimiento, logo, color_p, color_s, num_partida FROM cg_empresa ORDER BY nombre ASC');
+            const EMPRESA = yield database_1.default.query('SELECT id, nombre, ruc, direccion, telefono, correo, representante, tipo_empresa, establecimiento, logo, color_p, color_s, num_partida, marca_agua FROM cg_empresa ORDER BY nombre ASC');
             if (EMPRESA.rowCount > 0) {
                 return res.jsonp(EMPRESA.rows);
             }
@@ -32,7 +31,7 @@ class EmpresaControlador {
     ListarUnaEmpresa(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { nombre } = req.params;
-            const EMPRESA = yield database_1.default.query('SELECT id, nombre, ruc, direccion, telefono, correo, representante, tipo_empresa, establecimiento, logo, color_p, color_s, num_partida FROM cg_empresa WHERE nombre = $1', [nombre]);
+            const EMPRESA = yield database_1.default.query('SELECT id, nombre, ruc, direccion, telefono, correo, representante, tipo_empresa, establecimiento, logo, color_p, color_s, num_partida, marca_agua FROM cg_empresa WHERE nombre = $1', [nombre]);
             if (EMPRESA.rowCount > 0) {
                 return res.jsonp(EMPRESA.rows);
             }
@@ -106,10 +105,10 @@ class EmpresaControlador {
             });
             const codificado = yield ImagenCodificacion_1.ImagenBase64LogosEmpresas(file_name.logo);
             if (codificado === 0) {
-                res.send({ imagen: 0, nom_empresa: file_name.nombre });
+                res.status(200).jsonp({ imagen: 0, nom_empresa: file_name.nombre });
             }
             else {
-                res.send({ imagen: codificado, nom_empresa: file_name.nombre });
+                res.status(200).jsonp({ imagen: codificado, nom_empresa: file_name.nombre });
             }
         });
     }
@@ -155,6 +154,13 @@ class EmpresaControlador {
             const { seg_contrasena, seg_frase, seg_ninguna, id } = req.body;
             yield database_1.default.query('UPDATE cg_empresa SET seg_contrasena = $1, seg_frase = $2, seg_ninguna = $3 WHERE id = $4', [seg_contrasena, seg_frase, seg_ninguna, id]);
             res.jsonp({ message: 'Seguridad exitosamente' });
+        });
+    }
+    ActualizarMarcaAgua(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { marca_agua, id } = req.body;
+            yield database_1.default.query('UPDATE cg_empresa SET marca_agua = $1 WHERE id = $2', [marca_agua, id]);
+            res.jsonp({ message: 'Registro guardado' });
         });
     }
     EditarPassword(req, res) {

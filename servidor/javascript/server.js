@@ -68,6 +68,10 @@ const alimentacionRutas_1 = __importDefault(require("./rutas/reportes/alimentaci
 const reportesAsistenciaRutas_1 = __importDefault(require("./rutas/reportes/reportesAsistenciaRutas"));
 const funcionRutas_1 = __importDefault(require("./rutas/funciones/funcionRutas"));
 const accionPersonalRutas_1 = __importDefault(require("./rutas/accionPersonal/accionPersonalRutas"));
+const reportesNotificacionRutas_1 = __importDefault(require("./rutas/reportes/reportesNotificacionRutas"));
+const licencias_1 = __importDefault(require("./utils/licencias"));
+const reloj_virtual_1 = __importDefault(require("./utils/reloj_virtual"));
+const vacunasRutas_1 = __importDefault(require("./rutas/empleado/empleadoVacuna/vacunasRutas"));
 const http_1 = require("http");
 const socketIo = require('socket.io');
 class Servidor {
@@ -80,7 +84,7 @@ class Servidor {
         this.app.use(cors_1.default());
     }
     configuracion() {
-        this.app.set('puerto', process.env.PORT || 3000);
+        this.app.set('puerto', process.env.PORT || 3001);
         this.app.use(morgan_1.default('dev'));
         this.app.use(cors_1.default());
         this.app.use(express_1.default.json());
@@ -98,12 +102,12 @@ class Servidor {
         this.app.use('/empleadoCargos', emplCargosRutas_1.default);
         this.app.use('/perVacacion', periodoVacacionRutas_1.default);
         this.app.use('/vacaciones', vacacionesRutas_1.default);
-        this.app.use('/horas-extras-pedidas', horaExtraRutas_1.default);
+        this.app.use('/horas-extras-pedidas', horaExtraRutas_1.default); // acceso controlado por ModuloHoraExtraValidation
         this.app.use('/empleadoProcesos', empleProcesosRutas_1.default);
         // Autorizaciones
         this.app.use('/autorizaDepartamento', autorizaDepartamentoRutas_1.default);
         // Permisos
-        this.app.use('/empleadoPermiso', permisosRutas_1.default);
+        this.app.use('/empleadoPermiso', permisosRutas_1.default); // acceso controlado por ModuloPermisosValidation
         // Almuerzo
         this.app.use('/planComidas', planComidasRutas_1.default);
         // Horarios
@@ -127,7 +131,7 @@ class Servidor {
         this.app.use('/proceso', catProcesoRutas_1.default);
         this.app.use('/horario', catHorarioRutas_1.default);
         this.app.use('/usuarios', usuarioRutas_1.default);
-        this.app.use('/horasExtras', catHorasExtrasRutas_1.default);
+        this.app.use('/horasExtras', catHorasExtrasRutas_1.default); // acceso controlado por ModuloHoraExtraValidation
         this.app.use('/rolPermisos', catRolPermisosRutas_1.default);
         this.app.use('/tipoPermisos', catTipoPermisosRutas_1.default);
         this.app.use('/ciudades', ciudadesRutas_1.default);
@@ -152,13 +156,13 @@ class Servidor {
         this.app.use('/asistencia', asistenciaRutas_1.default);
         // Reportes
         this.app.use('/reportes/vacacion', kardexVacacionesRutas_1.default);
-        this.app.use('/reportes/hora-extra', reporteHoraExtraRutas_1.default);
+        this.app.use('/reportes/hora-extra', reporteHoraExtraRutas_1.default); //acceso controlado por
         this.app.use('/reporte', reportesRutas_1.default);
         this.app.use('/reportes-asistencias/', reportesAsistenciaRutas_1.default);
         // Modulo Alimentación
-        this.app.use('/alimentacion', alimentacionRutas_1.default);
+        this.app.use('/alimentacion', alimentacionRutas_1.default); // acceso controlado por ModuloAlimentacionValidation
         // HORAS EXTRAS
-        this.app.use('/planificacionHoraExtra', planHoraExtraRutas_1.default);
+        this.app.use('/planificacionHoraExtra', planHoraExtraRutas_1.default); // acceso controlado por ModuloHoraExtraValidation
         // CARGA MULTIPLE
         this.app.use('/cargaMultiple', cargaMultipleRutas_1.default);
         // DATOS GENERALES QUE COMPARTEN VARIOS ARCHIVOS
@@ -168,7 +172,15 @@ class Servidor {
         // FUNCIONES
         this.app.use('/administracion', funcionRutas_1.default);
         // ACCIONES DE PERSONAL
-        this.app.use('/accionPersonal', accionPersonalRutas_1.default);
+        this.app.use('/accionPersonal', accionPersonalRutas_1.default); // Falta ========== acceso controlado por ModuloAccionesPersonalValidation
+        // LICENCIAS
+        this.app.use('/licencias', licencias_1.default);
+        // APP RELOJ VIRTUAL
+        this.app.use('/reloj-virtual', reloj_virtual_1.default);
+        // NOTIFICACIONES
+        this.app.use('/notificacionSistema', reportesNotificacionRutas_1.default);
+        // VACUNACIÓN
+        this.app.use('/vacunas', vacunasRutas_1.default);
     }
     start() {
         this.server.listen(this.app.get('puerto'), () => {
@@ -214,5 +226,3 @@ ContarHoras_1.RegistrarAsistenciaByTimbres();
 NotiTimbres_1.NotificacionTimbreAutomatica();
 SinTimbres_1.NotificacionSinTimbres();
 DesactivarEmpleado_1.DesactivarFinContratoEmpleado();
-//generarTimbres(1);
-//ModificarTimbresEntrada();

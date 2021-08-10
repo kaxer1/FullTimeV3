@@ -14,7 +14,7 @@
                                 <mat-label>Nombre</mat-label>
                                 <input matInput name="filtroNombreDocumento" placeholder="Nombre Documento"
                                     [formControl]="nombreDocF" [(ngModel)]="filtroNombreDocumento">
-                                <mat-icon id="iHorL" matSuffix matTooltipClass="horarioL-tooltip"
+                                <mat-icon id="iHorL" matSuffix 
                                     matTooltipPosition="right" matTooltip="Búsqueda del documento por el nombre">
                                     help_outline</mat-icon>
                                 <mat-error *ngIf="nombreDocF.invalid">Indispensable ingresar dos letras
@@ -51,18 +51,18 @@
                             <a class="fas fa-file-alt"
                                 style="color:rgb(197, 95, 11); margin-left: 15px; text-align: center;" matSuffix
                                 matTooltipPosition="right" matTooltip="Dar click para ver o descargar el documento"
-                                href="http://localhost:3000/archivosCargados/documentos/{{ld.documento}}" target="_blank">
+                                href="{{hipervinculo}}/archivosCargados/documentos/{{ld.documento}}" target="_blank">
                                 <p>Documento</p>
                             </a>
                         </td>
                         <!--   <td>
                             <i class="fas fa-edit" matSuffix matTooltipPosition="right"
-                                matTooltipClass="departamento-tooltip" (click)="AbrirVentanaEditarDocumento(ld)"
+                                 (click)="AbrirVentanaEditarDocumento(ld)"
                                 matTooltip="Modificar los datos generales de este registro">
                                 <p>Editar</p>
                             </i>
                             <i class="far fa-trash-alt" matSuffix matTooltipPosition="right"
-                                matTooltipClass="departamento-tooltip" matTooltip="Eliminar este registro">
+                                 matTooltip="Eliminar este registro">
                                 <p>Eliminar</p>
                             </i>
                         </td>-->
@@ -71,7 +71,7 @@
             </table>
         </div>
         <mat-paginator [length]="listaDocumentos.length" [pageSize]="tamanio_pagina" [pageSizeOptions]="pageSizeOptions"
-            id="estilo" (page)="ManejarPagina($event)" showFirstLastButtons>
+            id="pagina" (page)="ManejarPagina($event)" showFirstLastButtons>
         </mat-paginator>
     </div>
 </div>

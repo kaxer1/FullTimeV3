@@ -17,6 +17,11 @@ import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/emp
 import { HorasExtrasRealesService } from 'src/app/servicios/reportes/horasExtrasReales/horas-extras-reales.service';
 import { DatosGeneralesService } from 'src/app/servicios/datosGenerales/datos-generales.service';
 
+import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
+
+import { environment } from 'src/environments/environment';
+
+
 @Component({
   selector: 'app-hora-extra-real',
   templateUrl: './hora-extra-real.component.html',
@@ -75,6 +80,7 @@ export class HoraExtraRealComponent implements OnInit {
   constructor(
     public rest: EmpleadoService,
     public restH: HorasExtrasRealesService,
+    public restEmpre: EmpresaService,
     public router: Router,
     public restD: DatosGeneralesService,
     private toastr: ToastrService,
@@ -86,7 +92,7 @@ export class HoraExtraRealComponent implements OnInit {
     this.getEmpleados();
     this.obtenerNacionalidades();
     this.ObtenerEmpleados(this.idEmpleado);
-
+    this.ObtenerColores();
     this.VerDatosContratoA();
 
   }
@@ -98,6 +104,18 @@ export class HoraExtraRealComponent implements OnInit {
       this.empleadoD = data;
     })
   }
+
+    // MÉTODO PARA OBTENER COLORES Y MARCA DE AGUA DE EMPRESA 
+    p_color: any;
+    s_color: any;
+    frase: any;
+    ObtenerColores() {
+      this.restEmpre.ConsultarDatosEmpresa(parseInt(localStorage.getItem('empresa'))).subscribe(res => {
+        this.p_color = res[0].color_p;
+        this.s_color = res[0].color_s;
+        this.frase = res[0].marca_agua;
+      });
+    }
 
   ManejarPagina(e: PageEvent) {
     this.tamanio_pagina = e.pageSize;
@@ -337,10 +355,10 @@ export class HoraExtraRealComponent implements OnInit {
     sessionStorage.setItem('Empleados', this.empleado);
     return {
       pageOrientation: 'landscape',
-      watermark: { text: 'Confidencial', color: 'blue', opacity: 0.1, bold: true, italics: false },
+      watermark: { text: this.frase, color: 'blue', opacity: 0.1, bold: true, italics: false },
       header: { text: 'Impreso por:  ' + this.empleadoD[0].nombre + ' ' + this.empleadoD[0].apellido, margin: 10, fontSize: 9, opacity: 0.3 },
 
-      footer: function (currentPage, pageCount, fecha) {
+      footer: function (currentPage: any, pageCount: any, fecha: any, hora: any) {
         var f = new Date();
         if (f.getMonth() < 10 && f.getDate() < 10) {
           fecha = f.getFullYear() + "-0" + [f.getMonth() + 1] + "-0" + f.getDate();
@@ -534,7 +552,7 @@ export class HoraExtraRealComponent implements OnInit {
       console.log(arregloEmpleado)
       this.data = res;
       console.log("prueba-empleado", res)
-      this.urlxml = 'http://localhost:3000/empleado/download/' + this.data.name;
+      this.urlxml = `${environment.url}/empleado/download/` + this.data.name;
       window.open(this.urlxml, "_blank");
     });
   }
@@ -588,10 +606,10 @@ export class HoraExtraRealComponent implements OnInit {
     sessionStorage.setItem('Timbres Empleado', this.empleado);
     return {
       pageOrientation: 'landscape',
-      watermark: { text: 'Confidencial', color: 'blue', opacity: 0.1, bold: true, italics: false },
+      watermark: { text: this.frase, color: 'blue', opacity: 0.1, bold: true, italics: false },
       header: { text: 'Impreso por:  ' + this.empleadoD[0].nombre + ' ' + this.empleadoD[0].apellido, margin: 10, fontSize: 9, opacity: 0.3 },
 
-      footer: function (currentPage, pageCount, fecha) {
+      footer: function (currentPage: any, pageCount: any, fecha: any, hora: any) {
         var f = new Date();
         if (f.getMonth() < 10 && f.getDate() < 10) {
           fecha = f.getFullYear() + "-0" + [f.getMonth() + 1] + "-0" + f.getDate();

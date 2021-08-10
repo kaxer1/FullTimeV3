@@ -17,6 +17,7 @@ import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.s
 import { Router } from '@angular/router';
 import { PedHoraExtraService } from 'src/app/servicios/horaExtra/ped-hora-extra.service';
 import { DatosGeneralesService } from 'src/app/servicios/datosGenerales/datos-generales.service';
+import { ValidacionesService } from '../../../servicios/validaciones/validaciones.service';
 
 @Component({
   selector: 'app-reporte-horas-pedidas',
@@ -34,7 +35,6 @@ export class ReporteHorasPedidasComponent implements OnInit {
   codigo = new FormControl('');
   cedula = new FormControl('', [Validators.minLength(2)]);
   nombre = new FormControl('', [Validators.minLength(2)]);
-  apellido = new FormControl('', [Validators.minLength(2)]);
   departamentoF = new FormControl('', [Validators.minLength(2)]);
   regimenF = new FormControl('', [Validators.minLength(2)]);
   cargoF = new FormControl('', [Validators.minLength(2)]);
@@ -42,8 +42,7 @@ export class ReporteHorasPedidasComponent implements OnInit {
   // Datos de filtros de búsqueda
   filtroCodigo: number;
   filtroCedula: '';
-  filtroNombre: '';
-  filtroApellido: '';
+  filtroEmpleado = '';
   filtroDepartamento: '';
   filtroRegimen: '';
   filtroCargo: '';
@@ -67,6 +66,7 @@ export class ReporteHorasPedidasComponent implements OnInit {
     public restD: DatosGeneralesService,
     public router: Router,
     private toastr: ToastrService,
+    private validacionesService: ValidacionesService
   ) {
     this.idEmpleado = parseInt(localStorage.getItem('empleado'));
   }
@@ -75,7 +75,7 @@ export class ReporteHorasPedidasComponent implements OnInit {
     this.ObtenerEmpleadoLogueado(this.idEmpleado);
     this.VerDatosEmpleado();
     this.ObtenerLogo();
-    this.ObtnerColores();
+    this.ObtenerColores();
     this.VerPedidosHorasAutorizadas();
     this.VerPedidosHorasExtras();
   }
@@ -100,11 +100,13 @@ export class ReporteHorasPedidasComponent implements OnInit {
   p_color: any;
   s_color: any;
   nombreEmpresa: any;
-  ObtnerColores() {
+  frase: any;
+  ObtenerColores() {
     this.restEmpre.ConsultarDatosEmpresa(parseInt(localStorage.getItem('empresa'))).subscribe(res => {
       this.p_color = res[0].color_p;
       this.s_color = res[0].color_s;
       this.nombreEmpresa = res[0].nombre;
+      this.frase = res[0].marca_agua;
     });
   }
 
@@ -128,10 +130,10 @@ export class ReporteHorasPedidasComponent implements OnInit {
     this.codigo.reset();
     this.cedula.reset();
     this.nombre.reset();
-    this.apellido.reset();
     this.departamentoF.reset();
     this.regimenF.reset();
     this.cargoF.reset();
+    this.filtroEmpleado = '';
   }
 
   // Método para ingresar solo letras
@@ -185,6 +187,8 @@ export class ReporteHorasPedidasComponent implements OnInit {
     this.restPedido.ListarPedidosHE().subscribe(data => {
       this.solicitudHoras = data;
       console.log('horas autorizadas', this.solicitudHoras)
+    }, err => {
+      return this.validacionesService.RedireccionarHomeAdmin(err.error) 
     });
   }
 
@@ -196,6 +200,8 @@ export class ReporteHorasPedidasComponent implements OnInit {
     this.restPedido.ListarPedidosHEAutorizadas().subscribe(data => {
       this.horasAutorizadas = data;
       console.log('horas autorizadas', this.horasAutorizadas)
+    }, err => {
+      return this.validacionesService.RedireccionarHomeAdmin(err.error) 
     });
   }
 
@@ -213,20 +219,24 @@ export class ReporteHorasPedidasComponent implements OnInit {
         this.solicitudes_empleado = data;
         this.GenerarPdfEmpleado(action, 'autorizadas', id_seleccionado);
         this.reporte = false;
-      }, error => {
+      }, err => {
         this.toastr.info('No se encuentran registros de solicitudes de horas extras','', {
           timeOut: 6000,
         })
+        
+        return this.validacionesService.RedireccionarHomeAdmin(err.error)
       });
     }
     else {
       this.restPedido.ListarPedidosHE_Empleado(id_seleccionado).subscribe(data => {
         this.solicitudes_empleado = data;
         this.GenerarPdfEmpleado(action, 'solicitudes', id_seleccionado);
-      }, error => {
+      }, err => {
         this.toastr.info('No se encuentran registros de solicitudes de horas extras','', {
           timeOut: 6000,
         })
+
+        return this.validacionesService.RedireccionarHomeAdmin(err.error)
       });
     }
   }
@@ -238,20 +248,24 @@ export class ReporteHorasPedidasComponent implements OnInit {
         this.solicitudes_empleado = data;
         this.GenerarExcelEmpleado('autorizadas', id_seleccionado);
         this.reporte = false;
-      }, error => {
+      }, err => {
         this.toastr.info('No se encuentran registros de solicitudes de horas extras','', {
           timeOut: 6000,
-        })
+        });
+
+        return this.validacionesService.RedireccionarHomeAdmin(err.error)
       });
     }
     else {
       this.restPedido.ListarPedidosHE_Empleado(id_seleccionado).subscribe(data => {
         this.solicitudes_empleado = data;
         this.GenerarExcelEmpleado('solicitudes', id_seleccionado);
-      }, error => {
+      }, err => {
         this.toastr.info('No se encuentran registros de solicitudes de horas extras','', {
           timeOut: 6000,
-        })
+        });
+
+        return this.validacionesService.RedireccionarHomeAdmin(err.error)
       });
     }
   }
@@ -282,10 +296,10 @@ export class ReporteHorasPedidasComponent implements OnInit {
     return {
       // Encabezado de la página
       pageOrientation: 'landscape',
-      watermark: { text: 'Confidencial', color: 'blue', opacity: 0.1, bold: true, italics: false },
+      watermark: { text: this.frase, color: 'blue', opacity: 0.1, bold: true, italics: false },
       header: { text: 'Impreso por:  ' + this.empleadoLogueado[0].nombre + ' ' + this.empleadoLogueado[0].apellido, margin: 10, fontSize: 9, opacity: 0.3, alignment: 'right' },
       // Pie de página
-      footer: function (currentPage, pageCount, fecha) {
+      footer: function (currentPage: any, pageCount: any, fecha: any, hora: any) {
         // Obtener fecha y hora actual
         var h = new Date();
         var f = moment();
@@ -430,10 +444,10 @@ export class ReporteHorasPedidasComponent implements OnInit {
     return {
       // Encabezado de la página
       pageOrientation: 'landscape',
-      watermark: { text: 'Confidencial', color: 'blue', opacity: 0.1, bold: true, italics: false },
+      watermark: { text: this.frase, color: 'blue', opacity: 0.1, bold: true, italics: false },
       header: { text: 'Impreso por:  ' + this.empleadoLogueado[0].nombre + ' ' + this.empleadoLogueado[0].apellido, margin: 10, fontSize: 9, opacity: 0.3, alignment: 'right' },
       // Pie de página
-      footer: function (currentPage, pageCount, fecha) {
+      footer: function (currentPage: any, pageCount: any, fecha: any, hora: any) {
         // Obtener fecha y hora actual
         var h = new Date();
         var f = moment();
@@ -594,10 +608,10 @@ export class ReporteHorasPedidasComponent implements OnInit {
     return {
       // Encabezado de la página
       pageOrientation: 'landscape',
-      watermark: { text: 'Confidencial', color: 'blue', opacity: 0.1, bold: true, italics: false },
+      watermark: { text: this.frase, color: 'blue', opacity: 0.1, bold: true, italics: false },
       header: { text: 'Impreso por:  ' + this.empleadoLogueado[0].nombre + ' ' + this.empleadoLogueado[0].apellido, margin: 10, fontSize: 9, opacity: 0.3, alignment: 'right' },
       // Pie de página
-      footer: function (currentPage, pageCount, fecha) {
+      footer: function (currentPage: any, pageCount: any, fecha: any, hora: any) {
         // Obtener fecha y hora actual
         var h = new Date();
         var f = moment();
@@ -827,10 +841,10 @@ export class ReporteHorasPedidasComponent implements OnInit {
     return {
       // Encabezado de la página
       pageOrientation: 'landscape',
-      watermark: { text: 'Confidencial', color: 'blue', opacity: 0.1, bold: true, italics: false },
+      watermark: { text: this.frase, color: 'blue', opacity: 0.1, bold: true, italics: false },
       header: { text: 'Impreso por:  ' + this.empleadoLogueado[0].nombre + ' ' + this.empleadoLogueado[0].apellido, margin: 10, fontSize: 9, opacity: 0.3, alignment: 'right' },
       // Pie de página
-      footer: function (currentPage, pageCount, fecha) {
+      footer: function (currentPage: any, pageCount: any, fecha: any, hora: any) {
         // Obtener fecha y hora actual
         var h = new Date();
         var f = moment();

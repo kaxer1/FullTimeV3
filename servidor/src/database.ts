@@ -8,8 +8,8 @@ const pool = new Pool({
   port: 5432,
   database: 'fulltime',
   password: 'admin'
-
 })
+
 pool.query('SELECT NOW()', (err, res) => {
   if (err) {
     console.log("Error durante la conexión", err)

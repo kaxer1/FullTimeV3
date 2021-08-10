@@ -30,14 +30,19 @@ import { RegistrarVacacionesComponent } from 'src/app/componentes/vacaciones/reg
 import { RegistroPlanHorarioComponent } from 'src/app/componentes/planHorarios/registro-plan-horario/registro-plan-horario.component';
 import { RegistroEmpleadoPermisoComponent } from 'src/app/componentes/empleadoPermisos/registro-empleado-permiso/registro-empleado-permiso.component';
 import { CambiarContrasenaComponent } from 'src/app/componentes/rolEmpleado/cambiar-contrasena/cambiar-contrasena.component';
-import { MainNavComponent } from 'src/app/share/main-nav/main-nav.component';
+// import { NavbarComponent } from '../../../share/main-nav/navbar/navbar.component';
+import { environment } from 'src/environments/environment';
+import { VacunacionService } from 'src/app/servicios/empleado/empleadoVacunas/vacunacion.service';
+import { MetodosComponent } from '../../metodoEliminar/metodos.component';
 
 @Component({
   selector: 'app-datos-empleado',
   templateUrl: './datos-empleado.component.html',
   styleUrls: ['./datos-empleado.component.css']
 })
+
 export class DatosEmpleadoComponent implements OnInit {
+
 
   iniciales: string;
   urlImagen: any;
@@ -73,6 +78,8 @@ export class DatosEmpleadoComponent implements OnInit {
   numero_pagina: number = 1;
   pageSizeOptions = [5, 10, 20, 50];
 
+  hipervinculo: string = environment.url; // VARIABLE DE MANEJO DE RUTAS CON URL
+
   constructor(
     public restTitulo: TituloService,
     public restEmpleado: EmpleadoService,
@@ -91,7 +98,8 @@ export class DatosEmpleadoComponent implements OnInit {
     public restEmpre: EmpresaService,
     private toastr: ToastrService,
     private scriptService: ScriptService,
-    public Main: MainNavComponent,
+    public restVacuna: VacunacionService,
+    // public Main: NavbarComponent,
   ) {
     this.idEmpleado = localStorage.getItem('empleado');
     this.obtenerTituloEmpleado(parseInt(this.idEmpleado));
@@ -108,10 +116,10 @@ export class DatosEmpleadoComponent implements OnInit {
     this.ObtenerHorariosEmpleado(parseInt(this.idEmpleado));
     this.obtenerCargoEmpleado(parseInt(this.idEmpleado));
     this.obtenerEmpleadoProcesos(parseInt(this.idEmpleado));
-    this.obtenerPeriodoVacaciones(parseInt(this.idEmpleado));
     this.obtenerVacaciones(parseInt(this.idEmpleado));
+    this.ObtenerDatosVacunas();
     this.ObtenerLogo();
-    this.ObtnerColores();
+    this.ObtenerColores();
   }
 
   // Método para obtener el logo de la empresa
@@ -122,13 +130,15 @@ export class DatosEmpleadoComponent implements OnInit {
     });
   }
 
-  // Método para obtener colores de empresa
+  // MÉTODO PARA OBTENER COLORES Y MARCA DE AGUA DE EMPRESA 
   p_color: any;
   s_color: any;
-  ObtnerColores() {
+  frase: any;
+  ObtenerColores() {
     this.restEmpre.ConsultarDatosEmpresa(parseInt(localStorage.getItem('empresa'))).subscribe(res => {
       this.p_color = res[0].color_p;
       this.s_color = res[0].color_s;
+      this.frase = res[0].marca_agua;
     });
   }
 
@@ -150,12 +160,12 @@ export class DatosEmpleadoComponent implements OnInit {
       this.empleadoUno = data;
       this.fechaNacimiento = data[0]['fec_nacimiento'].split("T")[0];
       if (data[0]['imagen'] != null) {
-        this.urlImagen = 'http://localhost:3000/empleado/img/' + data[0]['imagen'];
+        this.urlImagen = `${environment.url}/empleado/img/` + data[0]['imagen'];
         this.mostrarImagen = true;
         this.mostrarIniciales = false;
         this.textoBoton = 'Editar Foto';
         if (idEmpleadoActivo === idemploy) {
-          this.Main.urlImagen = this.urlImagen;
+          // this.Main.urlImagen = this.urlImagen;
         }
       } else {
         this.iniciales = data[0].nombre.split(" ")[0].slice(0, 1) + data[0].apellido.split(" ")[0].slice(0, 1);
@@ -234,6 +244,11 @@ export class DatosEmpleadoComponent implements OnInit {
               this.permisosTotales = this.permisosTotales.concat(datos);
               console.log("Datos Permisos" + i + '', this.permisosTotales)
             }
+          }
+        }, err => {
+          const { access, message } = err.error.message;
+          if (access === false) {
+            this.toastr.error(message)
           }
         })
       }
@@ -317,35 +332,7 @@ export class DatosEmpleadoComponent implements OnInit {
     });
   }
 
-  /* Método para imprimir datos del periodo de vacaciones */
-  buscarPeriodosVacaciones: any;
-  peridoVacaciones: any;
-  obtenerPeriodoVacaciones(id_empleado: number) {
-    this.buscarPeriodosVacaciones = [];
-    this.peridoVacaciones = [];
-    this.restEmpleado.BuscarIDContrato(id_empleado).subscribe(datos => {
-      this.idContrato = datos;
-      console.log("idContrato ", this.idContrato[0].id);
-      for (let i = 0; i <= this.idContrato.length - 1; i++) {
-        this.restPerV.getInfoPeriodoVacacionesPorIdContrato(this.idContrato[i]['id']).subscribe(datos => {
-          this.buscarPeriodosVacaciones = datos;
-          if (this.buscarPeriodosVacaciones.length === 0) {
-            console.log("No se encuentran registros")
-          }
-          else {
-            if (this.cont === 0) {
-              this.peridoVacaciones = datos
-              this.cont++;
-            }
-            else {
-              this.peridoVacaciones = this.peridoVacaciones.concat(datos);
-              console.log("Datos Periodo Vacaciones" + i + '', this.peridoVacaciones)
-            }
-          }
-        })
-      }
-    });
-  }
+
 
   /* Método para mostrar datos de autoridad departamentos */
   autorizacionEmpleado: any;
@@ -498,25 +485,18 @@ export class DatosEmpleadoComponent implements OnInit {
     return {
       // Encabezado de la página
       pageOrientation: 'landscape',
-      watermark: { text: 'Confidencial', color: 'blue', opacity: 0.1, bold: true, italics: false },
+      watermark: { text: this.frase, color: 'blue', opacity: 0.1, bold: true, italics: false },
       header: { text: 'Impreso por:  ' + this.empleadoUno[0].nombre + ' ' + this.empleadoUno[0].apellido, margin: 10, fontSize: 9, opacity: 0.3, alignment: 'right' },
 
       // Pie de página
-      footer: function (currentPage, pageCount, fecha) {
-        var h = new Date();
+      footer: function (currentPage: any, pageCount: any, fecha: any, hora: any) {
         var f = moment();
         fecha = f.format('YYYY-MM-DD');
-        // Formato de hora actual
-        if (h.getMinutes() < 10) {
-          var time = h.getHours() + ':0' + h.getMinutes();
-        }
-        else {
-          var time = h.getHours() + ':' + h.getMinutes();
-        }
+        hora = f.format('HH:mm:ss');
         return {
           margin: 10,
           columns: [
-            { text: 'Fecha: ' + fecha + ' Hora: ' + time, opacity: 0.3 },
+            { text: 'Fecha: ' + fecha + ' Hora: ' + hora, opacity: 0.3 },
             {
               text: [
                 {
@@ -744,9 +724,79 @@ export class DatosEmpleadoComponent implements OnInit {
 
     this.restEmpleado.DownloadXMLRest(arregloEmpleado).subscribe(res => {
       this.data = res;
-      this.urlxml = 'http://localhost:3000/empleado/download/' + this.data.name;
+      this.urlxml = `${environment.url}/empleado/download/` + this.data.name;
       window.open(this.urlxml, "_blank");
     });
+  }
+
+
+  /* ************************************************************************************************** *
+ *                               REGISTRO DE VACUNACIÓN                                               *
+ * ************************************************************************************************** */
+  // MÉTODO PARA CONSULTAR DATOS DE REGISTRO DE VACUNACIÓN
+  mostrarVacuna = true;
+  btnHabilitadoVacuna = true;
+  datosVacuna: any = [];
+  ObtenerDatosVacunas() {
+    this.datosVacuna = [];
+    this.restVacuna.ObtenerVacunaEmpleado(parseInt(this.idEmpleado)).subscribe(data => {
+      this.datosVacuna = data;
+      this.HabilitarBotonesVacuna();
+    });
+  }
+
+  btnVacuna = 'Añadir';
+  mostrarVacunaEditar: boolean = true;
+  HabilitarBotonesVacuna() {
+    if (this.datosVacuna.length == 0) {
+      this.btnVacuna = 'Añadir';
+    } else {
+      this.btnVacuna = 'Editar';
+    }
+  }
+
+  // LÓGICA DE BOTÓN PARA MOSTRAR COMPONENTE DEL REGISTRO DE VACUNACION 
+  MostrarVentanaVacuna() {
+    if (this.btnVacuna != 'Editar' && this.btnVacuna != 'Cancelar') {
+      if (this.mostrarVacuna == true) {
+        this.mostrarVacuna = false;
+        this.btnVacuna = 'No Añadir';
+      } else {
+        this.mostrarVacuna = true;
+        this.btnVacuna = 'Añadir';
+      }
+    } else {
+      if (this.mostrarVacunaEditar == false) {
+        this.mostrarVacunaEditar = true;
+        this.btnVacuna = 'Editar';
+      } else {
+        this.mostrarVacunaEditar = false;
+        this.btnVacuna = 'Cancelar';
+      }
+    }
+  }
+
+  // ELIMINAR REGISTRO DE VACUNA
+  EliminarVacuna(id: number) {
+    this.restVacuna.EliminarRegistroVacuna(id).subscribe(res => {
+      this.ObtenerDatosVacunas();
+      this.btnVacuna = 'Añadir';
+      this.toastr.error('Registro eliminado', '', {
+        timeOut: 6000,
+      });
+    });
+  }
+
+  // FUNCIÓN PARA CONFIRMAR SI SE ELIMINA O NO UN REGISTRO 
+  ConfirmarEliminarVacuna(id: number) {
+    this.vistaRegistrarDatos.open(MetodosComponent, { width: '450px' }).afterClosed()
+      .subscribe((confirmado: Boolean) => {
+        if (confirmado) {
+          this.EliminarVacuna(id);
+        } else {
+          // this.router.navigate(['/verEmpleado/', this.idEmpleado]);
+        }
+      });
   }
 
 }

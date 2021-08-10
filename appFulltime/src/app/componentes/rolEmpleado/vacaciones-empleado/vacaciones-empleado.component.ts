@@ -41,13 +41,23 @@ export class VacacionesEmpleadoComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.obtenerPeriodoVacaciones(parseInt(this.idEmpleado));
     this.obtenerVacaciones(parseInt(this.idEmpleado));
+    this.verEmpleado(parseInt(this.idEmpleado));
   }
 
   ManejarPagina(e: PageEvent) {
     this.tamanio_pagina = e.pageSize;
     this.numero_pagina = e.pageIndex + 1;
+  }
+
+  /** Método para ver la información del empleado */
+  empleadoUno: any = [];
+  verEmpleado(idemploy: any) {
+    this.empleadoUno = [];
+    this.restEmpleado.getOneEmpleadoRest(idemploy).subscribe(data => {
+      this.empleadoUno = data;
+      this.obtenerPeriodoVacaciones();
+    })
   }
 
   /* 
@@ -68,28 +78,12 @@ export class VacacionesEmpleadoComponent implements OnInit {
   }
 
   /* Método para imprimir datos del periodo de vacaciones */
-  buscarPeriodosVacaciones: any;
   peridoVacaciones: any;
-  obtenerPeriodoVacaciones(id_empleado: number) {
-    this.buscarPeriodosVacaciones = [];
+  obtenerPeriodoVacaciones() {
     this.peridoVacaciones = [];
-    this.restEmpleado.BuscarIDContrato(id_empleado).subscribe(datos => {
-      this.idContrato = datos;
-      for (let i = 0; i <= this.idContrato.length - 1; i++) {
-        this.restPerV.getInfoPeriodoVacacionesPorIdContrato(this.idContrato[i]['id']).subscribe(datos => {
-          this.buscarPeriodosVacaciones = datos;
-          if (this.buscarPeriodosVacaciones.length != 0) {
-            if (this.cont === 0) {
-              this.peridoVacaciones = datos
-              this.cont++;
-            }
-            else {
-              this.peridoVacaciones = this.peridoVacaciones.concat(datos);
-            }
-          }
-        })
-      }
-    });
+    this.restPerV.ObtenerPeriodoVacaciones(this.empleadoUno[0].codigo).subscribe(datos => {
+      this.peridoVacaciones = datos;
+    })
   }
 
   /* 

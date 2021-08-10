@@ -3,13 +3,14 @@ import { Validators, FormGroup, FormControl } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import * as moment from 'moment';
 import { MatDialogRef } from '@angular/material/dialog';
-import { MAT_MOMENT_DATE_FORMATS, MAT_MOMENT_DATE_ADAPTER_OPTIONS, MomentDateAdapter } from '@angular/material-moment-adapter';
-import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
+// import { MAT_MOMENT_DATE_FORMATS, MAT_MOMENT_DATE_ADAPTER_OPTIONS, MomentDateAdapter } from '@angular/material-moment-adapter';
+// import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 
 import { TipoPermisosService } from 'src/app/servicios/catalogos/catTipoPermisos/tipo-permisos.service';
 import { PedHoraExtraService } from 'src/app/servicios/horaExtra/ped-hora-extra.service';
 import { RealTimeService } from 'src/app/servicios/notificaciones/real-time.service';
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
+import { ValidacionesService } from '../../../servicios/validaciones/validaciones.service';
 
 // Interface que permite definir los datos de estado de la solicitu de horas extras
 interface Estado {
@@ -21,12 +22,12 @@ interface Estado {
   selector: 'app-pedido-hora-extra',
   templateUrl: './pedido-hora-extra.component.html',
   styleUrls: ['./pedido-hora-extra.component.css'],
-  providers: [
-    { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
-    { provide: MAT_DATE_FORMATS, useValue: MAT_MOMENT_DATE_FORMATS },
-    { provide: MAT_DATE_LOCALE, useValue: 'es' },
-    { provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: { useUtc: true } },
-  ]
+  // providers: [
+  //   { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
+  //   { provide: MAT_DATE_FORMATS, useValue: MAT_MOMENT_DATE_FORMATS },
+  //   { provide: MAT_DATE_LOCALE, useValue: 'es' },
+  //   { provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: { useUtc: true } },
+  // ]
 })
 
 export class PedidoHoraExtraComponent implements OnInit {
@@ -74,6 +75,7 @@ export class PedidoHoraExtraComponent implements OnInit {
     private restHE: PedHoraExtraService,
     private toastr: ToastrService,
     private realTime: RealTimeService,
+    private validacionesService: ValidacionesService,
     public dialogRef: MatDialogRef<PedidoHoraExtraComponent>,
   ) { }
 
@@ -108,6 +110,12 @@ export class PedidoHoraExtraComponent implements OnInit {
   HorarioEmpleadoSemanal(id_cargo: number) {
     this.restHE.HorarioEmpleadoSemanal(id_cargo).subscribe(res => {
       this.Horario = res;
+    }, err => {
+      const { access, message } = err.error.message;
+      if (access === false) {
+        this.toastr.error(message)
+        this.dialogRef.close();
+      }
     });
   }
 
@@ -165,8 +173,11 @@ export class PedidoHoraExtraComponent implements OnInit {
   NotifiRes: any;
   arrayNivelesDepa: any = [];
   insertarTipoPermiso(form1) {
-    let horaI = form1.fechaInicioForm._i.year + "/" + form1.fechaInicioForm._i.month + "/" + form1.fechaInicioForm._i.date + "T" + form1.horaInicioForm + ":00"
-    let horaF = form1.FechaFinForm._i.year + "/" + form1.FechaFinForm._i.month + "/" + form1.FechaFinForm._i.date + "T" + form1.horaFinForm + ":00"
+    console.log(form1.fechaInicioForm, form1.horaInicioForm);
+    console.log(form1.FechaFinForm, form1.horaFinForm);
+    
+    let horaI = form1.fechaInicioForm._i.year + "-" + form1.fechaInicioForm._i.month + "-" + form1.fechaInicioForm._i.date + "T" + form1.horaInicioForm + ":00"
+    let horaF = form1.FechaFinForm._i.year + "-" + form1.FechaFinForm._i.month + "-" + form1.FechaFinForm._i.date + "T" + form1.horaFinForm + ":00"
     let dataPedirHoraExtra = {
       id_empl_cargo: this.id_cargo_loggin,
       id_usua_solicita: this.id_user_loggin,
@@ -182,113 +193,86 @@ export class PedidoHoraExtraComponent implements OnInit {
       codigo: this.empleados[0].codigo
     }
     this.restHE.GuardarHoraExtra(dataPedirHoraExtra).subscribe(response => {
-      if (response.message) {
-        this.toastr.error(response.message, '', {
-          timeOut: 6000,
-        });
-      } else {
-        this.toastr.success('Operación Exitosa', 'Hora extra solicitada', {
-          timeOut: 6000,
-        });
-        this.dialogRef.close()
-        this.arrayNivelesDepa = response;
-        console.log(this.arrayNivelesDepa);
-        this.arrayNivelesDepa.forEach(obj => {
+      this.toastr.success('Operación Exitosa', 'Hora extra solicitada', {
+        timeOut: 6000,
+      });
+      this.dialogRef.close()
+      this.arrayNivelesDepa = response;
+      console.log(this.arrayNivelesDepa);
+      this.arrayNivelesDepa.forEach(obj => {
 
-          let datosHoraExtraCreada = {
-            id_empl_cargo: dataPedirHoraExtra.id_empl_cargo,
-            id_usua_solicita: dataPedirHoraExtra.id_usua_solicita,
-            fec_inicio: dataPedirHoraExtra.fec_inicio,
-            fec_final: dataPedirHoraExtra.fec_final,
-            fec_solicita: dataPedirHoraExtra.fec_solicita,
-            id: obj.id,
-            estado: obj.estado,
-            id_dep: obj.id_dep,
-            depa_padre: obj.depa_padre,
-            nivel: obj.nivel,
-            id_suc: obj.id_suc,
-            departamento: obj.departamento,
-            sucursal: obj.sucursal,
-            cargo: obj.cargo,
-            contrato: obj.contrato,
-            empleado: obj.empleado,
-            nombre: obj.nombre,
-            apellido: obj.apellido,
-            cedula: obj.cedula,
-            correo: obj.correo,
-            hora_extra_mail: obj.hora_extra_mail,
-            hora_extra_noti: obj.hora_extra_noti
+        let datosHoraExtraCreada = {
+          id_empl_cargo: dataPedirHoraExtra.id_empl_cargo,
+          id_usua_solicita: dataPedirHoraExtra.id_usua_solicita,
+          fec_inicio: dataPedirHoraExtra.fec_inicio,
+          fec_final: dataPedirHoraExtra.fec_final,
+          fec_solicita: dataPedirHoraExtra.fec_solicita,
+          id: obj.id,
+          estado: obj.estado,
+          id_dep: obj.id_dep,
+          depa_padre: obj.depa_padre,
+          nivel: obj.nivel,
+          id_suc: obj.id_suc,
+          departamento: obj.departamento,
+          sucursal: obj.sucursal,
+          cargo: obj.cargo,
+          contrato: obj.contrato,
+          empleado: obj.empleado,
+          nombre: obj.nombre,
+          apellido: obj.apellido,
+          cedula: obj.cedula,
+          correo: obj.correo,
+          hora_extra_mail: obj.hora_extra_mail,
+          hora_extra_noti: obj.hora_extra_noti
+        }
+        this.restHE.SendMailNoti(datosHoraExtraCreada).subscribe(res => {
+          this.HoraExtraResponse = res;
+          console.log(this.HoraExtraResponse);
+          var f = new Date();
+          let notificacion = {
+            id: null,
+            id_send_empl: this.id_user_loggin,
+            id_receives_empl: this.HoraExtraResponse.id_empleado_autoriza,
+            id_receives_depa: this.HoraExtraResponse.id_departamento_autoriza,
+            estado: this.HoraExtraResponse.estado,
+            create_at: `${this.FechaActual}T${f.toLocaleTimeString()}.000Z`,
+            id_permiso: null,
+            id_vacaciones: null,
+            id_hora_extra: this.HoraExtraResponse.id
           }
-          this.restHE.SendMailNoti(datosHoraExtraCreada).subscribe(res => {
-            this.HoraExtraResponse = res;
-            console.log(this.HoraExtraResponse);
-            var f = new Date();
-            let notificacion = {
-              id: null,
-              id_send_empl: this.id_user_loggin,
-              id_receives_empl: this.HoraExtraResponse.id_empleado_autoriza,
-              id_receives_depa: this.HoraExtraResponse.id_departamento_autoriza,
-              estado: this.HoraExtraResponse.estado,
-              create_at: `${this.FechaActual}T${f.toLocaleTimeString()}.000Z`,
-              id_permiso: null,
-              id_vacaciones: null,
-              id_hora_extra: this.HoraExtraResponse.id
+          this.realTime.IngresarNotificacionEmpleado(notificacion).subscribe(resN => {
+            console.log(resN);
+            this.NotifiRes = resN;
+            notificacion.id = this.NotifiRes._id;
+            if (this.NotifiRes._id > 0 && this.HoraExtraResponse.notificacion === true) {
+              this.restHE.sendNotiRealTime(notificacion);
             }
-            this.realTime.IngresarNotificacionEmpleado(notificacion).subscribe(resN => {
-              console.log(resN);
-              this.NotifiRes = resN;
-              notificacion.id = this.NotifiRes._id;
-              if (this.NotifiRes._id > 0 && this.HoraExtraResponse.notificacion === true) {
-                this.restHE.sendNotiRealTime(notificacion);
-              }
-            });
-          })
-        });
+          });
+        }, err => {
+          const { access, message } = err.error.message;
+          if (message) return this.toastr.error(message)
+          if (access === false) {
+            this.dialogRef.close();
+          }
+        })
+      });
+    }, err => {
+      const { access, message } = err.error.message;
+      if (message) return this.toastr.error(message)
+      if (access === false) {
+        this.dialogRef.close();
       }
     });
   }
 
   /** Método para validar el ingreso de letras */
   IngresarSoloLetras(e) {
-    let key = e.keyCode || e.which;
-    let tecla = String.fromCharCode(key).toString();
-    //Se define todo el abecedario que se va a usar.
-    let letras = " áéíóúabcdefghijklmnñopqrstuvwxyzÁÉÍÓÚABCDEFGHIJKLMNÑOPQRSTUVWXYZ";
-    //Es la validación del KeyCodes, que teclas recibe el campo de texto.
-    let especiales = [8, 37, 39, 46, 6, 13];
-    let tecla_especial = false
-    for (var i in especiales) {
-      if (key == especiales[i]) {
-        tecla_especial = true;
-        break;
-      }
-    }
-    if (letras.indexOf(tecla) == -1 && !tecla_especial) {
-      this.toastr.info('No se admite datos numéricos', 'Usar solo letras', {
-        timeOut: 6000,
-      })
-      return false;
-    }
+    return this.validacionesService.IngresarSoloLetras(e)
   }
 
   /** Método para validar el ingreso de números */
   IngresarSoloNumeros(evt) {
-    if (window.event) {
-      var keynum = evt.keyCode;
-    }
-    else {
-      keynum = evt.which;
-    }
-    // Comprobamos si se encuentra en el rango numérico y que teclas no recibirá.
-    if ((keynum > 47 && keynum < 58) || keynum == 8 || keynum == 13 || keynum == 6) {
-      return true;
-    }
-    else {
-      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números', {
-        timeOut: 6000,
-      })
-      return false;
-    }
+    return this.validacionesService.IngresarSoloNumeros(evt)
   }
 
   /** Método para calcular el número de horas solicitadas  */

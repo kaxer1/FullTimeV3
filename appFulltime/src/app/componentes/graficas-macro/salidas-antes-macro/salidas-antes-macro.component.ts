@@ -39,14 +39,14 @@ export class SalidasAntesMacroComponent implements OnInit {
   habilitar: boolean = false;
   f_inicio_req: string = '';
   f_final_req: string = '';
-  
+
   salidas_antes: any;
   datos_sali_antes: any = [];
   constructor(
     private restGraficas: GraficasService,
     private toastr: ToastrService,
     private restEmpre: EmpresaService,
-  ) { 
+  ) {
     this.ObtenerLogo();
     this.ObtenerColores();
   }
@@ -63,9 +63,9 @@ export class SalidasAntesMacroComponent implements OnInit {
   llamarGraficaOriginal() {
     let local = sessionStorage.getItem('salida_antes');
     this.chartDom = document.getElementById('charts_salidas_antes_macro') as HTMLCanvasElement;
-    this.thisChart = echarts.init(this.chartDom, 'light', {width: 1050, renderer: 'svg',devicePixelRatio: 5 });
+    this.thisChart = echarts.init(this.chartDom, 'light', { width: 1050, renderer: 'svg', devicePixelRatio: 5 });
 
-    
+
     if (local === null) {
       this.restGraficas.MetricaSalidasAntesMicro().subscribe(res => {
         // console.log('************* Salida antes Micro **************');
@@ -100,7 +100,7 @@ export class SalidasAntesMacroComponent implements OnInit {
     if (f_i < f_f) {
 
       if (f_i.getFullYear() === f_f.getFullYear()) {
-        this.toastr.success('Fechas validas','', {
+        this.toastr.success('Fechas validas', '', {
           timeOut: 6000,
         });
 
@@ -116,18 +116,18 @@ export class SalidasAntesMacroComponent implements OnInit {
           this.thisChart.setOption(res.datos_grafica);
         });
       } else {
-        this.toastr.error('Años de consulta diferente','Solo puede consultar datos de un año en concreto', {
+        this.toastr.error('Años de consulta diferente', 'Solo puede consultar datos de un año en concreto', {
           timeOut: 6000,
         });
       }
 
     } else if (f_i > f_f) {
-      this.toastr.info('Fecha final es menor a la fecha inicial','', {
+      this.toastr.info('Fecha final es menor a la fecha inicial', '', {
         timeOut: 6000,
       });
       this.fechasConsultaForm.reset();
     } else if (f_i.toLocaleDateString() === f_f.toLocaleDateString()) {
-      this.toastr.info('Fecha inicial es igual a la fecha final','', {
+      this.toastr.info('Fecha inicial es igual a la fecha final', '', {
         timeOut: 6000,
       });
       this.fechasConsultaForm.reset();
@@ -143,19 +143,22 @@ export class SalidasAntesMacroComponent implements OnInit {
     });
   }
 
+  // MÉTODO PARA OBTENER COLORES Y MARCA DE AGUA DE EMPRESA 
   p_color: any;
   s_color: any;
+  frase: any;
   ObtenerColores() {
     this.restEmpre.ConsultarDatosEmpresa(parseInt(localStorage.getItem('empresa'))).subscribe(res => {
       this.p_color = res[0].color_p;
       this.s_color = res[0].color_s;
+      this.frase = res[0].marca_agua;
     });
   }
 
   graficaBase64: any;
-  metodosPDF(accion){  
-    this.graficaBase64 = this.thisChart.getDataURL({type: 'jpg' , pixelRatio: 5 });
-    this.generarPdf(accion) 
+  metodosPDF(accion) {
+    this.graficaBase64 = this.thisChart.getDataURL({ type: 'jpg', pixelRatio: 5 });
+    this.generarPdf(accion)
   }
 
   generarPdf(action) {
@@ -175,22 +178,23 @@ export class SalidasAntesMacroComponent implements OnInit {
     return {
       pageSize: 'A4',
       pageOrientation: 'portrait',
-      pageMargins: [ 30, 60, 30, 40 ],
-      watermark: { text: 'Confidencial', color: 'blue', opacity: 0.1, bold: true, italics: false },
+      pageMargins: [30, 60, 30, 40],
+      watermark: { text: this.frase, color: 'blue', opacity: 0.1, bold: true, italics: false },
       header: { text: 'Impreso por:  ' + localStorage.getItem('fullname_print'), margin: 10, fontSize: 9, opacity: 0.3, alignment: 'right' },
 
-      footer: function (currentPage, pageCount, fecha) {
+      footer: function (currentPage: any, pageCount: any, fecha: any, hora: any) {
         var h = new Date();
         var f = moment();
         fecha = f.format('YYYY-MM-DD');
         h.setUTCHours(h.getHours());
         var time = h.toJSON().split("T")[1].split(".")[0];
-        
+
         return {
           margin: 10,
           columns: [
             { text: 'Fecha: ' + fecha + ' Hora: ' + time, opacity: 0.3 },
-            { text: [
+            {
+              text: [
                 {
                   text: '© Pag ' + currentPage.toString() + ' of ' + pageCount,
                   alignment: 'right', opacity: 0.3
@@ -221,46 +225,46 @@ export class SalidasAntesMacroComponent implements OnInit {
     const datos = this.datos_sali_antes.filter(obj => {
       return this.salidas_antes.xAxis.data.includes(obj.mes)
     });
-    
+
     let colums = [], colums1 = [], colums2 = [], colums3 = [];
     const border = [true, true, true, true]
     for (let i = 0; i < datos.length; i++) { // Ciclo For para crear celdas de la tabla
 
       if (i >= 0 && i <= 2) { // Rango para colocar las celdas de máximo 3 meses
-        colums.push({ text: datos[i].mes, margin: [0,3,0,3], fillColor: this.p_color, border: border });
-        colums.push({ text: datos[i].valor, margin: [0,3,0,3], alignment: 'center', border: border });
+        colums.push({ text: datos[i].mes, margin: [0, 3, 0, 3], fillColor: this.p_color, border: border });
+        colums.push({ text: datos[i].valor, margin: [0, 3, 0, 3], alignment: 'center', border: border });
       };
       if (i >= 3 && i <= 5) { // Rango para colocar las celdas de máximo 3 meses
-        colums1.push({ text: datos[i].mes, margin: [0,3,0,3], fillColor: this.p_color, border: border });
-        colums1.push({ text: datos[i].valor, margin: [0,3,0,3], alignment: 'center', border: border });
+        colums1.push({ text: datos[i].mes, margin: [0, 3, 0, 3], fillColor: this.p_color, border: border });
+        colums1.push({ text: datos[i].valor, margin: [0, 3, 0, 3], alignment: 'center', border: border });
       };
       if (i >= 6 && i <= 8) { // Rango para colocar las celdas de máximo 3 meses
-        colums2.push({ text: datos[i].mes, margin: [0,3,0,3], fillColor: this.p_color, border: border });
-        colums2.push({ text: datos[i].valor, margin: [0,3,0,3], alignment: 'center', border: border });
-      }; 
+        colums2.push({ text: datos[i].mes, margin: [0, 3, 0, 3], fillColor: this.p_color, border: border });
+        colums2.push({ text: datos[i].valor, margin: [0, 3, 0, 3], alignment: 'center', border: border });
+      };
       if (i >= 9 && i <= 11) { // Rango para colocar las celdas de máximo 3 meses
-        colums3.push({ text: datos[i].mes, margin: [0,3,0,3], fillColor: this.p_color, border: border });
-        colums3.push({ text: datos[i].valor, margin: [0,3,0,3], alignment: 'center', border: border });
+        colums3.push({ text: datos[i].mes, margin: [0, 3, 0, 3], fillColor: this.p_color, border: border });
+        colums3.push({ text: datos[i].valor, margin: [0, 3, 0, 3], alignment: 'center', border: border });
       }
     }
 
     var other = [];
 
     switch (colums.length) {
-      case 2: other = ['auto',40]; break;
-      case 4: other = ['auto',40,'auto',40]; break;
-      case 6: other = ['auto',40,'auto',40,'auto',40]; break;
+      case 2: other = ['auto', 40]; break;
+      case 4: other = ['auto', 40, 'auto', 40]; break;
+      case 6: other = ['auto', 40, 'auto', 40, 'auto', 40]; break;
       default: other = []; break;
     }
 
     let tabla = {
-			table: {
+      table: {
         widths: other,
-				body: []
-			}
-		}
+        body: []
+      }
+    }
 
-    const texto_push = {text: '', border: [false, false, false, false] };
+    const texto_push = { text: '', border: [false, false, false, false] };
 
     switch (colums1.length) { // Agrega celdas faltantes en blanco. para q no exista conflicto en la generación del PDF
       case 2: for (let i = 0; i < 4; i++) { colums1.push(texto_push); } break;
@@ -279,21 +283,21 @@ export class SalidasAntesMacroComponent implements OnInit {
       case 4: for (let i = 0; i < 2; i++) { colums3.push(texto_push); } break;
       default: break;
     }
-    
+
     if (colums.length > 0) { tabla.table.body.push(colums); }
     if (colums1.length > 0) { tabla.table.body.push(colums1); }
     if (colums2.length > 0) { tabla.table.body.push(colums2); }
-    if (colums3.length > 0) { tabla.table.body.push(colums3); } 
+    if (colums3.length > 0) { tabla.table.body.push(colums3); }
     // console.log(tabla);
 
     const columnas = {
       alignment: 'justify',
-			columns: [
-				{ width: 95, text: '' },
-				tabla,
-				{ width: 95, text: '' }
-			]
-		}
+      columns: [
+        { width: 95, text: '' },
+        tabla,
+        { width: 95, text: '' }
+      ]
+    }
 
     return columnas
   }
@@ -304,8 +308,8 @@ export class SalidasAntesMacroComponent implements OnInit {
     this.llamarGraficaOriginal();
   }
 
-  texto_grafica: string = 
-  "Esta gráfica determina el tiempo mensual acumulado de salidas anticipadas de los empleados, " +
-  "de acuerdo a su horario laboral. ";
+  texto_grafica: string =
+    "Esta gráfica determina el tiempo mensual acumulado de salidas anticipadas de los empleados, " +
+    "de acuerdo a su horario laboral. ";
 
 }

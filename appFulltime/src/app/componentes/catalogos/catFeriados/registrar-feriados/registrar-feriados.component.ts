@@ -1,14 +1,16 @@
-import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+// IMPORTAR LIBRERIAS
 import { MAT_MOMENT_DATE_FORMATS, MAT_MOMENT_DATE_ADAPTER_OPTIONS, MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE, ThemePalette } from '@angular/material/core';
+import { ProgressSpinnerMode } from '@angular/material/progress-spinner';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
+import { Component, OnInit } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
 import * as moment from 'moment';
 
+// IMPORTAR SERVICIOS
 import { FeriadosService } from 'src/app/servicios/catalogos/catFeriados/feriados.service';
-import { ProgressSpinnerMode } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-registrar-feriados',
@@ -16,42 +18,41 @@ import { ProgressSpinnerMode } from '@angular/material/progress-spinner';
   styleUrls: ['./registrar-feriados.component.css'],
   providers: [
     { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
+    { provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: { useUtc: true } },
     { provide: MAT_DATE_FORMATS, useValue: MAT_MOMENT_DATE_FORMATS },
     { provide: MAT_DATE_LOCALE, useValue: 'es' },
-    { provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: { useUtc: true } },
   ]
 })
 
 export class RegistrarFeriadosComponent implements OnInit {
 
+  // VARIABLE DE ALMACENAMIENTO DE REGISTROS
   idUltimoFeriado: any = [];
   salir: boolean = false;
 
-  // Control de campos y validaciones del formulario
-  fechaF = new FormControl('', Validators.required);
+  // CONTROL DE CAMPOS Y VALIDACIONES DEL FORMULARIO
   descripcionF = new FormControl('', [Validators.required, Validators.pattern("[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]{4,48}")]);
+  fechaF = new FormControl('', Validators.required);
   fechaRecuperacionF = new FormControl('');
 
-  // Asignación de validaciones a inputs del formulario
+  // ASIGNACIÓN DE VALIDACIONES A INPUTS DEL FORMULARIO
   public FeriadosForm = new FormGroup({
-    fechaForm: this.fechaF,
+    fechaRecuperacionForm: this.fechaRecuperacionF,
     descripcionForm: this.descripcionF,
-    fechaRecuperacionForm: this.fechaRecuperacionF
+    fechaForm: this.fechaF,
   });
 
-  /**
-   * Variables progress spinner
-   */
-  color: ThemePalette = 'primary';
+  // VARIABLES PROGRESS SPINNER
   mode: ProgressSpinnerMode = 'indeterminate';
-  value = 10;
   habilitarprogress: boolean = false;
-  
+  color: ThemePalette = 'primary';
+  value = 10;
+
   constructor(
+    public ventana: MatDialogRef<RegistrarFeriadosComponent>,
     private rest: FeriadosService,
     private toastr: ToastrService,
     private router: Router,
-    public dialogRef: MatDialogRef<RegistrarFeriadosComponent>,
   ) { }
 
   ngOnInit(): void {
@@ -136,7 +137,7 @@ export class RegistrarFeriadosComponent implements OnInit {
           this.idUltimoFeriado = response;
           this.LimpiarCampos();
           this.salir = true;
-          this.dialogRef.close(this.salir)
+          this.ventana.close(this.salir)
           this.router.navigate(['/verFeriados/', this.idUltimoFeriado[0].max]);
         });
       }
@@ -156,7 +157,7 @@ export class RegistrarFeriadosComponent implements OnInit {
 
   CerrarVentanaRegistroFeriado() {
     this.LimpiarCampos();
-    this.dialogRef.close(this.salir);
+    this.ventana.close(this.salir);
   }
 
   IngresarSoloLetras(e) {

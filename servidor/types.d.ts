@@ -6,6 +6,7 @@ declare namespace Express {
         userRol: number,
         userIdCargo: number,
         userCodigo: number | string,
-        acciones_timbres: boolean
+        acciones_timbres: boolean,
+        modulos: any,
     }
 }

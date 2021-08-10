@@ -106,6 +106,12 @@ export class AutorizacionesComponent implements OnInit {
               this.departamentos = res;
               this.ActualizarDatos(form, documento, obj.id, this.departamentos[0].id_departamento, obj.id_emple_solicita);
             })
+          }, err => {
+            const { access, message } = err.error.message;
+            if (access === false) {
+              this.toastr.error(message)
+              this.dialogRef.close();
+            }
           })
         }
         else {
@@ -215,6 +221,12 @@ export class AutorizacionesComponent implements OnInit {
           this.restP.sendNotiRealTime(notificacion);
         }
       });
+    }, err => {
+      const { access, message } = err.error.message;
+      if (access === false) {
+        this.toastr.error(message)
+        this.dialogRef.close();
+      }
     });
     console.log('contador', this.contador);
     this.contador = this.contador + 1;

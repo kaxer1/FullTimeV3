@@ -2,13 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { ToastrService } from 'ngx-toastr';
-import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 import { KardexService } from 'src/app/servicios/reportes/kardex.service';
 import pdfMake from 'pdfmake/build/pdfmake';
 import * as moment from 'moment';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfigReportFirmasHorasExtrasComponent } from '../../reportes-Configuracion/config-report-firmas-horas-extras/config-report-firmas-horas-extras.component';
+import { PlantillaReportesService } from '../plantilla-reportes.service';
 
 @Component({
   selector: 'app-reporte-horas-extras',
@@ -17,8 +17,8 @@ import { ConfigReportFirmasHorasExtrasComponent } from '../../reportes-Configura
 })
 export class ReporteHorasExtrasComponent implements OnInit {
 
-  fec_inicia: string = '2020-12-01';
-  fec_fin: string = '2020-12-31';
+  fec_inicia: string = '2021-12-01';
+  fec_fin: string = '2021-12-31';
   horas_extras: any;
 
   Lista_empleados: any = [];
@@ -28,26 +28,32 @@ export class ReporteHorasExtrasComponent implements OnInit {
   numero_pagina: number = 1;
   pageSizeOptions = [5, 10, 20, 50];
 
-   /**
-   * Variables Tabla de datos
-   */
-  dataSource: any;  
+  /**
+  * Variables Tabla de datos
+  */
+  dataSource: any;
   filtroEmpleados = '';
 
   idEmpleado: number;
   empleadoD: any = [];
+  frase = 'reporte';
+  // Getters de colores, nombre empresa y logo para colocar en reporte 
+  get p_color(): string { return this.plantillaPDF.color_Primary }
+  get s_color(): string { return this.plantillaPDF.color_Secundary }
+  get urlImagen(): string { return this.plantillaPDF.logoBase64 }
+  get nombreEmpresa(): string { return this.plantillaPDF.nameEmpresa }
 
   constructor(
     private restEmpleado: EmpleadoService,
     private restReporte: KardexService,
     private toastr: ToastrService,
-    private restEmpre: EmpresaService,
+    private plantillaPDF: PlantillaReportesService,
     public vistaFlotante: MatDialog,
   ) { }
 
   ngOnInit(): void {
     this.idEmpleado = parseInt(localStorage.getItem('empleado'));
-    this.ObtnerColores();
+
     this.ObtenerEmpleados();
     this.ObtenerEmpleadoSolicitaKardex(this.idEmpleado);
   }
@@ -56,7 +62,7 @@ export class ReporteHorasExtrasComponent implements OnInit {
   firma_resp: boolean = false;
   firma_empl: boolean = false;
   AbrirSettings() {
-    this.vistaFlotante.open(ConfigReportFirmasHorasExtrasComponent, { width: '350px' }).afterClosed().subscribe(res => { 
+    this.vistaFlotante.open(ConfigReportFirmasHorasExtrasComponent, { width: '350px' }).afterClosed().subscribe(res => {
       this.toastr.success('Configuración de Firmas guardada')
       let data = JSON.parse(sessionStorage.getItem('Firmas_hora_extra'));
       console.log(data);
@@ -83,29 +89,12 @@ export class ReporteHorasExtrasComponent implements OnInit {
   }
 
   // Método para ver la informacion del empleado 
-  urlImagen: string;
-  nombreEmpresa: string;
   ObtenerEmpleadoSolicitaKardex(idemploy: any) {
     this.empleadoD = [];
     this.restEmpleado.getOneEmpleadoRest(idemploy).subscribe(data => {
       this.empleadoD = data;
     });
-    this.restReporte.LogoEmpresaImagenBase64(localStorage.getItem('empresa')).subscribe(res => {
-      this.urlImagen = 'data:image/jpeg;base64,' + res.imagen;
-      this.nombreEmpresa = res.nom_empresa;
-    });
-  }
 
-  // Método para obtener colores de empresa
-  p_color: any;
-  s_color: any;
-  ObtnerColores() {
-    this.restEmpre.ConsultarDatosEmpresa(parseInt(localStorage.getItem('empresa'))).subscribe(res => {
-      console.log(res);
-      
-      this.p_color = res[0].color_p;
-      this.s_color = res[0].color_s;
-    });
   }
 
   ObtenerReporte(id_empleado, palabra: string) {
@@ -120,31 +109,31 @@ export class ReporteHorasExtrasComponent implements OnInit {
     });
   }
 
-   /* ****************************************************************************************************
-  *                               PARA LA EXPORTACIÓN DE ARCHIVOS PDF 
-  * ****************************************************************************************************/
- fechaHoy: string;
+  /* ****************************************************************************************************
+ *                               PARA LA EXPORTACIÓN DE ARCHIVOS PDF 
+ * ****************************************************************************************************/
+  fechaHoy: string;
 
- generarPdf(action = 'open', pdf: number) {
+  generarPdf(action = 'open', pdf: number) {
 
-   let documentDefinition;
+    let documentDefinition;
 
-   if (pdf === 2) {
-    documentDefinition = this.getDocumentHorasExtras();
-  }
+    if (pdf === 2) {
+      documentDefinition = this.getDocumentHorasExtras();
+    }
     let name_document = 'reporte horas extras'
-   switch (action) {
-     case 'open': pdfMake.createPdf(documentDefinition).open(); break;
-     case 'print': pdfMake.createPdf(documentDefinition).print(); break;
-     case 'download': pdfMake.createPdf(documentDefinition).download(name_document); break;
+    switch (action) {
+      case 'open': pdfMake.createPdf(documentDefinition).open(); break;
+      case 'print': pdfMake.createPdf(documentDefinition).print(); break;
+      case 'download': pdfMake.createPdf(documentDefinition).download(name_document); break;
 
-     default: pdfMake.createPdf(documentDefinition).open(); break;
-   }
- }
+      default: pdfMake.createPdf(documentDefinition).open(); break;
+    }
+  }
 
- /**********************************************
-   *  METODOS PARA IMPRIMIR REPORTE DE HORAS EXTRAS
-   **********************************************/
+  /**********************************************
+    *  METODOS PARA IMPRIMIR REPORTE DE HORAS EXTRAS
+    **********************************************/
   getDocumentHorasExtras() {
     var f = new Date();
     f.setUTCHours(f.getHours())
@@ -152,11 +141,11 @@ export class ReporteHorasExtrasComponent implements OnInit {
     return {
       pageSize: 'A4',
       pageOrientation: 'portrait',
-      pageMargins: [ 25, 60, 25, 40 ],
-      watermark: { text: 'Confidencial', color: 'blue', opacity: 0.1, bold: true, italics: false },
+      pageMargins: [25, 60, 25, 40],
+      watermark: { text: this.frase, color: 'blue', opacity: 0.1, bold: true, italics: false },
       header: { text: 'Impreso por:  ' + this.empleadoD[0].nombre + ' ' + this.empleadoD[0].apellido, margin: 10, fontSize: 9, opacity: 0.3 },
 
-      footer: function (currentPage, pageCount, fecha) {
+      footer: function (currentPage: any, pageCount: any, fecha: any, hora: any) {
         fecha = f.toJSON().split("T")[0];
         var timer = f.toJSON().split("T")[1].slice(0, 5);
         return {
@@ -213,7 +202,7 @@ export class ReporteHorasExtrasComponent implements OnInit {
         itemsTableInfo: { fontSize: 10, margin: [0, 5, 0, 5] },
         tableMargin: { margin: [0, 20, 0, 0] },
         MarginTable: { margin: [0, 10, 0, 10] },
-        CabeceraTabla: { fontSize: 12, alignment: 'center', margin: [0, 8, 0, 8], fillColor: this.p_color},
+        CabeceraTabla: { fontSize: 12, alignment: 'center', margin: [0, 8, 0, 8], fillColor: this.p_color },
         quote: { margin: [5, -2, 0, -2], italics: true },
         small: { fontSize: 8, color: 'blue', opacity: 0.5 }
       }
@@ -285,14 +274,14 @@ export class ReporteHorasExtrasComponent implements OnInit {
       }
     }
   }
-  
-  ImpresionDetalle(datosRest: any[] ) {
+
+  ImpresionDetalle(datosRest: any[]) {
     let contador = 0;
     return {
       style: 'MarginTable',
       table: {
         headerRows: 1,
-        widths: ['auto','auto','auto','auto','auto','auto','auto','auto','auto','auto','auto'],
+        widths: ['auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
         body: [
           this.FuncionTituloColumna(),
           ...datosRest.map((obj) => {
@@ -304,13 +293,13 @@ export class ReporteHorasExtrasComponent implements OnInit {
               { style: 'itemsTableDetalle', text: obj.fec_inicio.split('T')[1].split('.')[0] },
               { style: 'itemsTableDetalle', text: obj.fec_final.split('T')[0] },
               { style: 'itemsTableDetalle', text: obj.fec_final.split('T')[1].split('.')[0] },
-              { style: 'itemsTableDetalle', text: obj.total_horas},
-              { style: 'itemsTableDetalle', text: obj.porcentaje},
-              { style: 'itemsTableDetalle', text: obj.valor_recargo.toString().slice(0,6) },
-              { style: 'itemsTableDetalle', text: obj.valor_hora_total},
-              { style: 'itemsTableDetalle', text: obj.valor_pago}
+              { style: 'itemsTableDetalle', text: obj.total_horas },
+              { style: 'itemsTableDetalle', text: obj.porcentaje },
+              { style: 'itemsTableDetalle', text: obj.valor_recargo.toString().slice(0, 6) },
+              { style: 'itemsTableDetalle', text: obj.valor_hora_total },
+              { style: 'itemsTableDetalle', text: obj.valor_pago }
             ]
-            return array 
+            return array
           })
         ]
       },
@@ -340,13 +329,13 @@ export class ReporteHorasExtrasComponent implements OnInit {
     return arrayTitulos
   }
 
-  ImprimirTotal(t:any) {
-    
+  ImprimirTotal(t: any) {
+
     var arrayTitulos = [
-      { text: 'VALOR HORAS EXTRAS: $ ' + t.total_pago_hx , style: 'tableTotal' },
-      { text: 'TOTAL SUELDO: $ ' + t.total_sueldo , style: 'tableTotal' },
+      { text: 'VALOR HORAS EXTRAS: $ ' + t.total_pago_hx, style: 'tableTotal' },
+      { text: 'TOTAL SUELDO: $ ' + t.total_sueldo, style: 'tableTotal' },
     ]
-    
+
     return arrayTitulos
   }
 
@@ -403,7 +392,7 @@ export class ReporteHorasExtrasComponent implements OnInit {
       )
     }
 
-    if(this.firma_empl === true) {
+    if (this.firma_empl === true) {
       n[0].columns.push(
         {
           columns: [

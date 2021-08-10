@@ -55,16 +55,18 @@ export class TimbreWebComponent implements OnInit {
 
   AbrirRegistrarTimbre() {
     this.openView.open(RegistrarTimbreComponent, {width: '500px'}).afterClosed().subscribe(data => {
-      console.log(data);
-      if (!data.close) {
-        this.restTimbres.PostTimbreWeb(data).subscribe(res => {
-          console.log(res);
-          this.ObtenerListaTimbres()
-          this.toastr.success(res.message)
-        }, err => {
-          console.log(err);
-          this.toastr.error(err)
-        })
+      console.log('333333333333333333333', data);
+      if (data !== undefined) {
+        if (!data.close) {
+          this.restTimbres.PostTimbreWeb(data).subscribe(res => {
+            console.log('res',  res);
+            this.ObtenerListaTimbres()
+            this.toastr.success(res.message)
+          }, err => {
+            console.log('error', err);
+            this.toastr.error(err.message)
+          })
+        }
       }
     })
   }
@@ -73,5 +75,13 @@ export class TimbreWebComponent implements OnInit {
     const filterValue = (event.target as HTMLInputElement).value;
     this.filtroFechaTimbre = filterValue.trim().toLowerCase();
     this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
+
+  abrirMapa(latitud, longitud) {
+    
+    if (!latitud || !longitud) return this.toastr.warning('Timbre seleccionado no tiene registro de coordenadas de ubicación.')
+
+    const rutaMapa = "https://www.google.com/maps/search/+" + latitud + "+" + longitud;
+    window.open(rutaMapa);
   }
 }

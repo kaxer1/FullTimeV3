@@ -103,8 +103,10 @@ export class SolicitaComidaComponent implements OnInit {
   ObtenerPlatosComidas(form) {
     this.idComidaF.reset();
     this.platosF.reset();
+    this.horaInicioF.reset();
+    this.horaFinF.reset();
     this.tipoComidas = [];
-    this.rest.ConsultarMenu(form.tipoForm).subscribe(datos => {
+    this.rest.ConsultarUnServicio(form.tipoForm).subscribe(datos => {
       this.tipoComidas = datos;
     }, error => {
       this.toastr.info('Verificar la información.', 'No existen registrados Menús para esta tipo de servicio.', {
@@ -116,9 +118,15 @@ export class SolicitaComidaComponent implements OnInit {
   detalle: any = [];
   ObtenerDetalleMenu(form) {
     this.platosF.reset();
+    this.horaInicioF.reset();
+    this.horaFinF.reset();
     this.detalle = [];
     this.rest.ConsultarUnDetalleMenu(form.idComidaForm).subscribe(datos => {
       this.detalle = datos;
+      this.PlanificacionComidasForm.patchValue({
+        horaInicioForm: this.detalle[0].hora_inicio,
+        horaFinForm: this.detalle[0].hora_fin
+      })
     }, error => {
       this.toastr.info('Verificar la información.', 'No existen registros de Alimentación para este Menú.', {
         timeOut: 6000,
@@ -134,7 +142,8 @@ export class SolicitaComidaComponent implements OnInit {
       console.log(this.empleados)
       this.PlanificacionComidasForm.patchValue({
         idEmpleadoForm: this.empleados[0].nombre + ' ' + this.empleados[0].apellido,
-        fechaForm: this.FechaActual
+        fechaForm: this.FechaActual,
+        extraForm: 'false'
       })
     })
   }
@@ -152,12 +161,25 @@ export class SolicitaComidaComponent implements OnInit {
       extra: form.extraForm,
       verificar: 'NO'
     };
-    this.restPlan.CrearSolicitudComida(datosPlanComida).subscribe(response => {
-      this.EnviarNotificaciones(form.fechaPlanificacionForm);
-      this.toastr.success('Operación Exitosa', 'Servicio de Alimentación Registrado.', {
+
+    let datosDuplicados = {
+      id: this.data.idEmpleado,
+      fecha_inicio: form.fechaPlanificacionForm,
+      fecha_fin: form.fechaPlanificacionForm
+    }
+    this.restPlan.BuscarDuplicadosFechas(datosDuplicados).subscribe(plan => {
+      console.log('datos fechas', plan)
+      this.toastr.info(this.empleados[0].nombre + ' ' + this.empleados[0].apellido + ' ya tiene registrada una planificación de alimentación en la fecha solicitada.', '', {
         timeOut: 6000,
       })
-      this.CerrarRegistroPlanificacion();
+    }, error => {
+      this.restPlan.CrearSolicitudComida(datosPlanComida).subscribe(response => {
+        this.EnviarNotificaciones(form.fechaPlanificacionForm);
+        this.toastr.success('Operación Exitosa', 'Servicio de Alimentación Registrado.', {
+          timeOut: 6000,
+        })
+        this.CerrarRegistroPlanificacion();
+      });
     });
   }
 

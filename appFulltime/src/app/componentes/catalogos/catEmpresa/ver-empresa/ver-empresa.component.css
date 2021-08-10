@@ -13,15 +13,13 @@ p { font-size: x-small; text-align: center; }
 
 #editarF { color:green; cursor: pointer; text-align: center; margin-left: 15px; }
 
-#eliminar { color:red; cursor: pointer; margin-left: 20px; }
-
-#editarI { color:green; margin-left: 25px; cursor: pointer; }
-
 #datosF { font-weight: bold; font-size: 18px; padding-right: 5px; }
+
+#num { padding-right: 5px; font-size: 11px; }
 
 #verticalLine { border-left: 1px solid rgb(52,65,84); }
 
-#ver { color: rgb(78, 20, 238); margin-left: 20px; }
+#ver { color: rgb(78, 20, 238); cursor: pointer;}
 
 #resulSucursales { 
     font-size: 17px; 
@@ -32,7 +30,7 @@ p { font-size: x-small; text-align: center; }
     padding-bottom: 6px; 
 }
 
-#estilo { color: rgb(0, 0, 0); font-size: 13px; }
+
 
 td { padding-top: 10px; text-align: center; }
 

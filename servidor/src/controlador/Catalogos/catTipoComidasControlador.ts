@@ -8,9 +8,9 @@ import pool from '../../database';
 class TipoComidasControlador {
 
     public async ListarTipoComidas(req: Request, res: Response) {
-        const TIPO_COMIDAS = await pool.query('SELECT ctc.id, ctc.nombre, ctc.tipo_comida, tc.nombre AS tipo ' +
-            'FROM cg_tipo_comidas AS ctc, tipo_comida AS tc ' +
-            'WHERE ctc.tipo_comida = tc.id ORDER BY tc.nombre ASC');
+        const TIPO_COMIDAS = await pool.query('SELECT ctc.id, ctc.nombre, ctc.tipo_comida, ctc.hora_inicio, ' +
+            'ctc.hora_fin, tc.nombre AS tipo FROM cg_tipo_comidas AS ctc, tipo_comida AS tc ' +
+            'WHERE ctc.tipo_comida = tc.id ORDER BY tc.nombre ASC, ctc.id ASC');
         if (TIPO_COMIDAS.rowCount > 0) {
             return res.jsonp(TIPO_COMIDAS.rows)
         }
@@ -21,8 +21,9 @@ class TipoComidasControlador {
 
     public async VerUnMenu(req: Request, res: Response): Promise<any> {
         const { id } = req.params;
-        const TIPO_COMIDAS = await pool.query('SELECT ctc.id, ctc.nombre, ctc.tipo_comida, tc.nombre AS tipo ' +
-            'FROM cg_tipo_comidas AS ctc, tipo_comida AS tc WHERE ctc.tipo_comida = tc.id AND ctc.id = $1', [id]);
+        const TIPO_COMIDAS = await pool.query('SELECT ctc.id, ctc.nombre, ctc.tipo_comida, ctc.hora_inicio, ' +
+            'ctc.hora_fin, tc.nombre AS tipo FROM cg_tipo_comidas AS ctc, tipo_comida AS tc ' +
+            'WHERE ctc.tipo_comida = tc.id AND ctc.id = $1', [id]);
         if (TIPO_COMIDAS.rowCount > 0) {
             return res.jsonp(TIPO_COMIDAS.rows)
         }
@@ -33,8 +34,8 @@ class TipoComidasControlador {
 
     public async ListarUnTipoComida(req: Request, res: Response): Promise<any> {
         const { id } = req.params;
-        const TIPO_COMIDAS = await pool.query('SELECT ctc.id, ctc.nombre, ctc.tipo_comida, tc.nombre AS tipo ' +
-            'FROM cg_tipo_comidas AS ctc, tipo_comida AS tc ' +
+        const TIPO_COMIDAS = await pool.query('SELECT ctc.id, ctc.nombre, ctc.tipo_comida, ctc.hora_inicio, ' +
+            'ctc.hora_fin, tc.nombre AS tipo FROM cg_tipo_comidas AS ctc, tipo_comida AS tc ' +
             ' WHERE ctc.tipo_comida = tc.id AND tc.id = $1 ORDER BY tc.nombre ASC', [id]);
         if (TIPO_COMIDAS.rowCount > 0) {
             return res.jsonp(TIPO_COMIDAS.rows)
@@ -45,16 +46,16 @@ class TipoComidasControlador {
     }
 
     public async CrearTipoComidas(req: Request, res: Response): Promise<void> {
-        const { nombre, tipo_comida } = req.body;
-        await pool.query('INSERT INTO cg_tipo_comidas (nombre, tipo_comida) VALUES ($1, $2)',
-            [nombre, tipo_comida]);
+        const { nombre, tipo_comida, hora_inicio, hora_fin } = req.body;
+        await pool.query('INSERT INTO cg_tipo_comidas (nombre, tipo_comida, hora_inicio, hora_fin) ' +
+            'VALUES ($1, $2, $3, $4)', [nombre, tipo_comida, hora_inicio, hora_fin]);
         res.jsonp({ message: 'Tipo de comida registrada' });
     }
 
     public async ActualizarComida(req: Request, res: Response): Promise<void> {
-        const { nombre, tipo_comida, id } = req.body;
-        await pool.query('UPDATE cg_tipo_comidas SET nombre = $1, tipo_comida = $2 WHERE id = $3',
-            [nombre, tipo_comida, id]);
+        const { nombre, tipo_comida, hora_inicio, hora_fin, id } = req.body;
+        await pool.query('UPDATE cg_tipo_comidas SET nombre = $1, tipo_comida = $2, hora_inicio = $3, hora_fin = $4 ' +
+            'WHERE id = $5', [nombre, tipo_comida, hora_inicio, hora_fin, id]);
         res.jsonp({ message: 'Registro actualizado exitosamente' });
     }
 
@@ -75,115 +76,6 @@ class TipoComidasControlador {
         const name = req.params.nameXML;
         let filePath = `servidor\\xmlDownload\\${name}`
         res.sendFile(__dirname.split("servidor")[0] + filePath);
-    }
-
-    public async CrearTipoComidasPlantilla(req: Request, res: Response): Promise<void> {
-        let list: any = req.files;
-        let cadena = list.uploads[0].path;
-        let filename = cadena.split("\\")[1];
-        var filePath = `./plantillas/${filename}`
-
-        const workbook = excel.readFile(filePath);
-        const sheet_name_list = workbook.SheetNames;
-        const plantilla = excel.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]);
-
-        plantilla.forEach(async (data: any) => {
-            const { nombre, tipo_comida } = data;
-            if (nombre != undefined) {
-                await pool.query('INSERT INTO cg_tipo_comidas (nombre, tipo_comida) VALUES ($1, $2)',
-                    [nombre, tipo_comida]);
-            } else {
-                res.jsonp({ error: 'plantilla equivocada' });
-            }
-        });
-
-        res.jsonp({ message: 'La plantilla a sido receptada' });
-        fs.unlinkSync(filePath);
-    }
-
-    public async RevisarDatos(req: Request, res: Response): Promise<void> {
-        let list: any = req.files;
-        let cadena = list.uploads[0].path;
-        let filename = cadena.split("\\")[1];
-        var filePath = `./plantillas/${filename}`
-
-        const workbook = excel.readFile(filePath);
-        const sheet_name_list = workbook.SheetNames;
-        const plantilla = excel.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]);
-        var contarDatos = 0;
-        var contarLlenos = 0;
-        var contador = 1;
-
-        plantilla.forEach(async (data: any) => {
-            const { nombre, tipo_comida } = data;
-            if (nombre != undefined && tipo_comida != undefined) {
-                contarLlenos = contarLlenos + 1;
-            }
-
-            const VERIFICAR_DATOS = await pool.query('SELECT * FROM cg_tipo_comidas WHERE UPPER(nombre) = $1 AND ' +
-                'tipo_comida = $2',
-                [nombre.toUpperCase(), tipo_comida]);
-            if (VERIFICAR_DATOS.rowCount === 0) {
-                contarDatos = contarDatos + 1;
-            }
-            // Verificación cuando se ha leido todos los datos de la plantilla
-            console.log('datos', contarDatos, plantilla.length, contador);
-            console.log('llenos', contarLlenos, plantilla.length, contador);
-            if (contador === plantilla.length) {
-                if (contarDatos === plantilla.length && contarLlenos === plantilla.length) {
-                    return res.jsonp({ message: 'correcto' });
-                }
-                else {
-                    return res.jsonp({ message: 'error' });
-                }
-            }
-            contador = contador + 1;
-        });
-        fs.unlinkSync(filePath);
-    }
-
-    public async RevisarDatos_Duplicados(req: Request, res: Response) {
-        let list: any = req.files;
-        let cadena = list.uploads[0].path;
-        let filename = cadena.split("\\")[1];
-        var filePath = `./plantillas/${filename}`
-
-        const workbook = excel.readFile(filePath);
-        const sheet_name_list = workbook.SheetNames;
-        const plantilla = excel.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]);
-        var contador = 1;
-        var contarDatosData = 0;
-        var array_datos: any = [];
-        plantilla.forEach(async (data: any) => {
-            const { nombre, valor, observacion } = data;
-            let datos_array = {
-                nombre: nombre,
-                valor: valor,
-                observacion: observacion
-            }
-            array_datos.push(datos_array);
-        });
-        console.log('array', array_datos)
-        for (var i = 0; i <= array_datos.length - 1; i++) {
-            for (var j = 0; j <= array_datos.length - 1; j++) {
-                if (array_datos[i].nombre.toUpperCase() === array_datos[j].nombre.toUpperCase() &&
-                    array_datos[i].valor === array_datos[j].valor
-                    && array_datos[i].observacion.toUpperCase() === array_datos[j].observacion.toUpperCase()) {
-                    contarDatosData = contarDatosData + 1;
-                }
-            }
-            contador = contador + 1;
-        }
-        console.log('datos', contarDatosData, plantilla.length, contador);
-        if ((contador - 1) === plantilla.length) {
-            if (contarDatosData === plantilla.length) {
-                return res.jsonp({ message: 'correcto' });
-            }
-            else {
-                return res.jsonp({ message: 'error' });
-            }
-        }
-        fs.unlinkSync(filePath);
     }
 
     public async EliminarRegistros(req: Request, res: Response): Promise<void> {
@@ -214,7 +106,11 @@ class TipoComidasControlador {
 
     public async VerUnDetalleMenu(req: Request, res: Response): Promise<any> {
         const { id } = req.params;
-        const TIPO_COMIDAS = await pool.query('SELECT * FROM detalle_menu WHERE id_menu = $1', [id]);
+        const TIPO_COMIDAS = await pool.query('SELECT tc.id AS id_servicio, tc.nombre AS servicio, ' +
+            'menu.id AS id_menu, menu.nombre AS menu, dm.id AS id_detalle, dm.nombre AS plato, dm.valor, ' +
+            'dm.observacion, menu.hora_inicio, menu.hora_fin ' +
+            'FROM tipo_comida AS tc, cg_tipo_comidas AS menu, detalle_menu AS dm ' +
+            'WHERE tc.id = menu.tipo_comida AND dm.id_menu = menu.id AND menu.id = $1', [id]);
         if (TIPO_COMIDAS.rowCount > 0) {
             return res.jsonp(TIPO_COMIDAS.rows)
         }

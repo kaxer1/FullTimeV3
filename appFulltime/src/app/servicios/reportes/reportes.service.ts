@@ -102,7 +102,7 @@ export class ReportesService {
   }
 
   /**
-   * PARA MOSTRAR LOS FORMS DEACUERDO A LA OPCION SELECCIONADA
+   * PARA MOSTRAR LOS FORMS DE ACUERDO A LA OPCION SELECCIONADA
    */
   private _formCriteriosBusqueda: FormCriteriosBusqueda = {
     bool_suc: false,
@@ -201,5 +201,20 @@ export class ReportesService {
     this._filtroCodigo_tab = null;
     this._filtroCodigo_inc = null;
   }
+
+
+  /**********************************************************************
+   * 
+   * VALIDACION DE FUNCIONALIDAD DE MOSTRAR O NO EL CAMPO DE LOS TIMBRES DEL SERVIDOR.
+   * 
+   **********************************************************************/
+
+  private _valueTimbreServidor: Boolean = false;
+
+  get mostrarTimbreServidor() { return this._valueTimbreServidor }
+  setMostrarTimbreServidor(value) { this._valueTimbreServidor = value; }
+
+  DefaultTimbreServidor() { this._valueTimbreServidor = false; }
+
 
 }

@@ -18,7 +18,7 @@
                                             <div class="col">
                                                 <mat-radio-button ngDefaultControl [(ngModel)]="automaticoF"
                                                     [checked]="automaticoF" [ngModelOptions]="{standalone: true}"
-                                                     (click)="VerCampo()">Registro Automático
+                                                    (click)="VerCampo()">Registro Automático
                                                 </mat-radio-button>
                                             </div>
                                             <div class="col">
@@ -36,7 +36,7 @@
                                 <input matInput placeholder="1000" [formControl]="inicioF" [ngStyle]="estilo"
                                     maxlength="10" (keypress)="IngresarSoloNumeros($event)"
                                     oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
-                                <mat-icon id="iHorL" matSuffix matTooltipClass="horarioL-tooltip"
+                                <mat-icon id="iHorL" matSuffix 
                                     matTooltipPosition="right"
                                     matTooltip="Indicar desde que valor se generará el código del empleado">
                                     help_outline</mat-icon>
@@ -44,9 +44,11 @@
                         </div>
                     </mat-card-content>
                 </form>
-                <mat-card-actions style="text-align: center">
+                <mat-card-actions class="d-flex flex-wrap justify-content-center">
                     <button mat-button type="submit" class="btn btn-sm"
                         (click)="RegistrarConfiguracion(configuracionForm.value)">Guardar</button>
+                    <button mat-button type="submit" class="btn btn-sm"
+                        [routerLink]="['/home']">Cancelar</button>
                 </mat-card-actions>
             </mat-card>
         </div>

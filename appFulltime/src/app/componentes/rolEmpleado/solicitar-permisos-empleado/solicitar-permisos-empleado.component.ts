@@ -11,6 +11,8 @@ import { RegistroEmpleadoPermisoComponent } from 'src/app/componentes/empleadoPe
 import { CancelarPermisoComponent } from './cancelar-permiso/cancelar-permiso.component';
 import { EditarPermisoEmpleadoComponent } from './editar-permiso-empleado/editar-permiso-empleado.component';
 import { EmplCargosService } from 'src/app/servicios/empleado/empleadoCargo/empl-cargos.service';
+import { ValidacionesService } from '../../../servicios/validaciones/validaciones.service';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-solicitar-permisos-empleado',
@@ -30,6 +32,8 @@ export class SolicitarPermisosEmpleadoComponent implements OnInit {
   numero_pagina: number = 1;
   pageSizeOptions = [5, 10, 20, 50];
 
+  hipervinculo: string = environment.url
+
   constructor(
     public restEmpleado: EmpleadoService,
     public restPerV: PeriodoVacacionesService,
@@ -37,7 +41,7 @@ export class SolicitarPermisosEmpleadoComponent implements OnInit {
     public restPermiso: PermisosService,
     public restCargo: EmplCargosService,
     private toastr: ToastrService,
-
+    private validacionesService: ValidacionesService
   ) {
     this.idEmpleado = localStorage.getItem('empleado');
   }
@@ -64,6 +68,8 @@ export class SolicitarPermisosEmpleadoComponent implements OnInit {
     this.restEmpleado.getOneEmpleadoRest(id_empleado).subscribe(datos => {
       this.restPermiso.BuscarPermisoCodigo(datos[0].codigo).subscribe(datos => {
         this.permisosTotales = datos;
+      }, err => {
+        return this.validacionesService.RedireccionarEstadisticas(err.error) 
       })
     });
   }

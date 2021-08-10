@@ -12,16 +12,24 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.PLAN_GENERAL_CONTROLADOR = void 0;
 const database_1 = __importDefault(require("../../database"));
 class PlanGeneralControlador {
     CrearPlanificacion(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { fec_hora_horario, maxi_min_espera, estado, id_det_horario, fec_horario, id_empl_cargo, tipo_entr_salida, codigo, id_horario } = req.body;
-            yield database_1.default.query('INSERT INTO plan_general (fec_hora_horario, maxi_min_espera, estado, id_det_horario, ' +
-                'fec_horario, id_empl_cargo, tipo_entr_salida, codigo, id_horario) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)', [fec_hora_horario, maxi_min_espera, estado, id_det_horario,
-                fec_horario, id_empl_cargo, tipo_entr_salida, codigo, id_horario]);
-            res.jsonp({ message: 'Planificación ha sido guardado con éxito' });
+            try {
+                console.log(req.body);
+                const [result] = yield database_1.default.query('INSERT INTO plan_general (fec_hora_horario, maxi_min_espera, estado, id_det_horario, ' +
+                    'fec_horario, id_empl_cargo, tipo_entr_salida, codigo, id_horario) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *', [fec_hora_horario, maxi_min_espera, estado, id_det_horario, fec_horario, id_empl_cargo, tipo_entr_salida, codigo, id_horario])
+                    .then(result => { return result.rows; });
+                if (result === undefined)
+                    return res.status(404).jsonp({ message: 'Planificacion no creada' });
+                return res.jsonp({ message: 'Planificación ha sido guardado con éxito' });
+            }
+            catch (error) {
+                console.log(error);
+                return res.status(500).jsonp({ message: 'Registros no encontrados' });
+            }
         });
     }
     EliminarRegistros(req, res) {

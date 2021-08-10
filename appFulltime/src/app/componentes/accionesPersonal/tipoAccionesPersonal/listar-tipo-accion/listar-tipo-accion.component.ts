@@ -1,3 +1,5 @@
+// IMPORTACIÓN DE LIBRERIAS
+import { environment } from 'src/environments/environment';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { PageEvent } from '@angular/material/paginator';
@@ -20,6 +22,7 @@ import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.s
 import { AccionPersonalService } from 'src/app/servicios/accionPersonal/accion-personal.service';
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 import { CrearTipoaccionComponent } from '../crear-tipoaccion/crear-tipoaccion.component';
+
 
 @Component({
   selector: 'app-listar-tipo-accion',
@@ -61,7 +64,7 @@ export class ListarTipoAccionComponent implements OnInit {
     this.ObtenerTipoAccionesPersonal();
     this.ObtenerEmpleados(this.idEmpleado);
     this.ObtenerLogo();
-    this.ObtnerColores();
+    this.ObtenerColores();
   }
 
   // Método para ver la información del empleado 
@@ -80,13 +83,15 @@ export class ListarTipoAccionComponent implements OnInit {
     });
   }
 
-  // Método para obtener colores de empresa
+  // MÉTODO PARA OBTENER COLORES Y MARCA DE AGUA DE EMPRESA 
   p_color: any;
   s_color: any;
-  ObtnerColores() {
+  frase: any;
+  ObtenerColores() {
     this.restEmpre.ConsultarDatosEmpresa(parseInt(localStorage.getItem('empresa'))).subscribe(res => {
       this.p_color = res[0].color_p;
       this.s_color = res[0].color_s;
+      this.frase = res[0].marca_agua;
     });
   }
 
@@ -170,25 +175,18 @@ export class ListarTipoAccionComponent implements OnInit {
 
       // Encabezado de la página
       pageOrientation: 'landscape',
-      watermark: { text: 'Confidencial', color: 'blue', opacity: 0.1, bold: true, italics: false },
+      watermark: { text: this.frase, color: 'blue', opacity: 0.1, bold: true, italics: false },
       header: { text: 'Impreso por:  ' + this.empleado[0].nombre + ' ' + this.empleado[0].apellido, margin: 10, fontSize: 9, opacity: 0.3, alignment: 'right' },
 
       // Pie de página
-      footer: function (currentPage, pageCount, fecha) {
-        var h = new Date();
-        var f = moment();
+      footer: function (currentPage: any, pageCount: any, fecha: any, hora: any) {
+   var f = moment();
         fecha = f.format('YYYY-MM-DD');
-        // Formato de hora actual
-        if (h.getMinutes() < 10) {
-          var time = h.getHours() + ':0' + h.getMinutes();
-        }
-        else {
-          var time = h.getHours() + ':' + h.getMinutes();
-        }
+        hora = f.format('HH:mm:ss');
         return {
           margin: 10,
           columns: [
-            { text: 'Fecha: ' + fecha + ' Hora: ' + time, opacity: 0.3 },
+            { text: 'Fecha: ' + fecha + ' Hora: ' + hora, opacity: 0.3 },
             {
               text: [
                 {
@@ -206,8 +204,8 @@ export class ListarTipoAccionComponent implements OnInit {
         this.presentarDataPDFTipoPermisos(),
       ],
       styles: {
-        tableHeader: { fontSize: 9, bold: true, alignment: 'center', fillColor: this.p_color },
-        itemsTable: { fontSize: 8, alignment: 'center', }
+        tableHeader: { fontSize: 12, bold: true, alignment: 'center', fillColor: this.p_color },
+        itemsTable: { fontSize: 10, alignment: 'center', }
       }
     };
   }
@@ -266,6 +264,12 @@ export class ListarTipoAccionComponent implements OnInit {
                 ];
               })
             ]
+          },
+          // ESTILO DE COLORES FORMATO ZEBRA
+          layout: {
+            fillColor: function (i: any) {
+              return (i % 2 === 0) ? '#CCD1D1' : null;
+            }
           }
         },
         { width: '*', text: '' },
@@ -330,12 +334,11 @@ export class ListarTipoAccionComponent implements OnInit {
       }
       arregloTipoPermisos.push(objeto)
     });
-
-    /*this.rest.DownloadXMLRest(arregloTipoPermisos).subscribe(res => {
-      this.data = res;
-      console.log("prueba data", res)
-      this.urlxml = 'http://localhost:3000/departamento/download/' + this.data.name;
-      window.open(this.urlxml, "_blank");
-    });*/
+    // this.rest.DownloadXMLRest(arregloTipoPermisos).subscribe(res => {
+    //   this.data = res;
+    //   console.log("prueba data", res)
+    //   this.urlxml = `${environment.url}/departamento/download/` + this.data.name;
+    //   window.open(this.urlxml, "_blank");
+    // });
   }
 }

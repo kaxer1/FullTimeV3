@@ -26,6 +26,7 @@ import { SucursalService } from 'src/app/servicios/sucursales/sucursal.service';
 import { DepartamentosService } from 'src/app/servicios/catalogos/catDepartamentos/departamentos.service';
 import { EmplCargosService } from 'src/app/servicios/empleado/empleadoCargo/empl-cargos.service';
 import { RegimenService } from 'src/app/servicios/catalogos/catRegimen/regimen.service';
+import { environment } from 'src/environments/environment';
 
 export interface PlanificacionHorasExtrasElemento {
   apellido: string;
@@ -80,7 +81,6 @@ export class ListaEmplePlanHoraEComponent implements OnInit {
   codigo = new FormControl('');
   cedula = new FormControl('', [Validators.minLength(2)]);
   nombre = new FormControl('', [Validators.minLength(2)]);
-  apellido = new FormControl('', [Validators.minLength(2)]);
   departamentoF = new FormControl('', [Validators.minLength(2)]);
   regimenF = new FormControl('', [Validators.minLength(2)]);
   cargoF = new FormControl('', [Validators.minLength(2)]);
@@ -98,8 +98,7 @@ export class ListaEmplePlanHoraEComponent implements OnInit {
   // Datos de filtros de búsqueda
   filtroCodigo: number;
   filtroCedula: '';
-  filtroNombre: '';
-  filtroApellido: '';
+  filtroEmpleado = '';
   filtroDepartamento: '';
   filtroRegimen: '';
   filtroCargo: '';
@@ -281,10 +280,10 @@ export class ListaEmplePlanHoraEComponent implements OnInit {
     this.codigo.reset();
     this.cedula.reset();
     this.nombre.reset();
-    this.apellido.reset();
     this.departamentoF.reset();
     this.regimenF.reset();
     this.cargoF.reset();
+    this.filtroEmpleado = '';
   }
 
   LimpiarFechas() {
@@ -371,7 +370,7 @@ export class ListaEmplePlanHoraEComponent implements OnInit {
       console.log(arregloEmpleado)
       this.data = res;
       console.log("prueba-empleado", res)
-      this.urlxml = 'http://localhost:3000/empleado/download/' + this.data.name;
+      this.urlxml = `${environment.url}/empleado/download/` + this.data.name;
       window.open(this.urlxml, "_blank");
     });
   }

@@ -54,6 +54,12 @@ export class TiempoAutorizadoComponent implements OnInit {
           timeOut: 6000,
         });
         this.dialogRef.close(true)
+      }, err => {
+        const { access, message } = err.error.message;
+        if (access === false) {
+          this.toastr.error(message)
+          this.dialogRef.close(false);
+        }
       })
     }
     else {
@@ -64,6 +70,12 @@ export class TiempoAutorizadoComponent implements OnInit {
           timeOut: 6000,
         });
         this.dialogRef.close(true)
+      }, err => {
+        const { access, message } = err.error.message;
+        if (access === false) {
+          this.toastr.error(message)
+          this.dialogRef.close(false);
+        }
       })
     }
   }
@@ -80,6 +92,12 @@ export class TiempoAutorizadoComponent implements OnInit {
           timeOut: 6000,
         });
         this.dialogRef.close(true)
+      }, err => {
+        const { access, message } = err.error.message;
+        if (access === false) {
+          this.toastr.error(message)
+          this.dialogRef.close(false);
+        }
       })
     }
     else {
@@ -90,6 +108,12 @@ export class TiempoAutorizadoComponent implements OnInit {
           timeOut: 6000,
         });
         this.dialogRef.close(true)
+      }, err => {
+        const { access, message } = err.error.message;
+        if (access === false) {
+          this.toastr.error(message)
+          this.dialogRef.close(false);
+        }
       })
     }
   }
@@ -135,11 +159,23 @@ export class TiempoAutorizadoComponent implements OnInit {
     // Si el empleador emite una observacion entonces actualizamos el estado de la observacion de false a true
     if (this.data.pagina === 'plan_hora_extra') {
       this.restPlanH.EditarObservacion(this.data.horas_calculadas.id, datos).subscribe(res => {
+      }, err => {
+        const { access, message } = err.error.message;
+        if (access === false) {
+          this.toastr.error(message)
+          this.dialogRef.close(false);
+        }
       });
       this.NotificarObservacion(form);
     }
     else {
       this.restPH.EditarObservacionPedido(this.data.horas_calculadas.id_hora, datos).subscribe(res => {
+      }, err => {
+        const { access, message } = err.error.message;
+        if (access === false) {
+          this.toastr.error(message)
+          this.dialogRef.close(false);
+        }
       });
       this.NotificarObservacion(form);
     }
@@ -158,6 +194,12 @@ export class TiempoAutorizadoComponent implements OnInit {
         timeOut: 6000,
       });
       this.dialogRef.close(false);
+    }, err => {
+      const { access, message } = err.error.message;
+      if (access === false) {
+        this.toastr.error(message)
+        this.dialogRef.close(false);
+      }
     })
   }
 }

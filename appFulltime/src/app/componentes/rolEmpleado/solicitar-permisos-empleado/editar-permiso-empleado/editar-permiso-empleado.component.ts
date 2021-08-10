@@ -737,6 +737,12 @@ export class EditarPermisoEmpleadoComponent implements OnInit {
             this.LimpiarCampos();
             console.log(response);
             this.SubirRespaldo(this.info.dataPermiso.id)
+          }, err => {
+            const { access, message } = err.error.message;
+            if (access === false) {
+              this.toastr.error(message)
+              this.dialogRef.close();
+            }
           });
         }
         else {
@@ -759,6 +765,12 @@ export class EditarPermisoEmpleadoComponent implements OnInit {
         this.LimpiarCampos();
         this.dialogRef.close(true)
         console.log(response);
+      }, err => {
+        const { access, message } = err.error.message;
+        if (access === false) {
+          this.toastr.error(message)
+          this.dialogRef.close();
+        }
       });
     }
   }
@@ -818,6 +830,12 @@ export class EditarPermisoEmpleadoComponent implements OnInit {
       this.archivoForm.reset();
       this.nameFile = '';
       this.dialogRef.close(true);
+    }, err => {
+      const { access, message } = err.error.message;
+      if (access === false) {
+        this.toastr.error(message)
+        this.dialogRef.close();
+      }
     });
   }
 

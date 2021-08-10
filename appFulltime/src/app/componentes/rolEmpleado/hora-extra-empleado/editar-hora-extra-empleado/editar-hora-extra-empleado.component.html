@@ -12,13 +12,13 @@
             <mat-form-field>
                 <mat-label>Descripción</mat-label>
                 <input matInput [formControl]="descripcionF">
-                <mat-icon id="permiso" matSuffix matTooltipClass="color-tooltip" matTooltipPosition="right"
+                <mat-icon id="permiso" matSuffix  matTooltipPosition="right"
                     matTooltip="Indicar una observación de solicitud de horas extras">
                     help_outline</mat-icon>
             </mat-form-field>
             <mat-form-field>
                 <mat-label>Estado</mat-label>
-                <mat-icon id="permiso" matSuffix matTooltipClass="color-tooltip" matTooltipPosition="right"
+                <mat-icon id="permiso" matSuffix  matTooltipPosition="right"
                     matTooltip="Indica atraso o puntualidad de ingreso a trabajar">
                     help_outline</mat-icon>
                 <mat-select [formControl]="estadoF" required disabled>
@@ -40,7 +40,7 @@
                 <mat-label>Hora de Inicio</mat-label>
                 <input matInput [formControl]="horaInicioF" type="time" (keypress)="IngresarSoloNumeros($event)"
                     (click)="LimpiarCampoHoras()">
-                <mat-icon id="permiso" matSuffix matTooltipClass="color-tooltip" matTooltipPosition="right"
+                <mat-icon id="permiso" matSuffix  matTooltipPosition="right"
                     matTooltip="Hora en la que inicia actividades de horas extras">
                     help_outline</mat-icon>
             </mat-form-field>
@@ -57,7 +57,7 @@
                 <mat-label>Hora de Finalización</mat-label>
                 <input matInput [formControl]="horaFinF" type="time" (keypress)="IngresarSoloNumeros($event)"
                     (click)="LimpiarCampoHoras()">
-                <mat-icon id="permiso" matSuffix matTooltipClass="color-tooltip" matTooltipPosition="right"
+                <mat-icon id="permiso" matSuffix  matTooltipPosition="right"
                     matTooltip="Hora en la que finaliza las actividades de horas extras">
                     help_outline</mat-icon>
             </mat-form-field>
@@ -65,14 +65,14 @@
                 <mat-label>Número de horas y minutos</mat-label>
                 <input matInput [formControl]="horasF" type="time" (keypress)="IngresarSoloNumeros($event)" readonly>
                 <mat-icon (click)="CalcularTiempo(PedirHoraExtraForm.value)" id="permiso" matSuffix
-                    matTooltipClass="color-tooltip" matTooltipPosition="right"
+                     matTooltipPosition="right"
                     matTooltip="Dar click para calcular total de horas extras a solicitar" style="color:blue">
                     touch_app</mat-icon>
             </mat-form-field>
             <mat-form-field>
                 <mat-label>Tipo de Función</mat-label>
                 <input matInput [formControl]="funcionF">
-                <mat-icon id="permiso" matSuffix matTooltipClass="color-tooltip" matTooltipPosition="right"
+                <mat-icon id="permiso" matSuffix  matTooltipPosition="right"
                     matTooltip="Indicar si hay control de entrada y salida">
                     help_outline</mat-icon>
             </mat-form-field>

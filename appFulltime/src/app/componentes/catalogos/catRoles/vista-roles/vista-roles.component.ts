@@ -1,26 +1,27 @@
-import { Component, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
-import { ToastrService } from 'ngx-toastr';
+// IMPORTACIÓN DE LIBRERIAS
+import { environment } from 'src/environments/environment';
 import { FormControl, Validators } from '@angular/forms';
 import { PageEvent } from '@angular/material/paginator';
-import { Router } from '@angular/router';
-import * as moment from 'moment';
-
-import pdfMake from 'pdfmake/build/pdfmake';
+import { MatDialog } from '@angular/material/dialog';
+import { Component, OnInit } from '@angular/core';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
-pdfMake.vfs = pdfFonts.pdfMake.vfs;
-import * as xlsx from 'xlsx';
+import pdfMake from 'pdfmake/build/pdfmake';
+import { ToastrService } from 'ngx-toastr';
+import { Router } from '@angular/router';
 import * as FileSaver from 'file-saver';
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
+import * as moment from 'moment';
+import * as xlsx from 'xlsx';
 
-
+// IMPORTACION DE COMPONENTES
 import { RegistroRolComponent } from 'src/app/componentes/catalogos/catRoles/registro-rol/registro-rol.component';
 import { EditarRolComponent } from 'src/app/componentes/catalogos/catRoles/editar-rol/editar-rol.component';
 import { MetodosComponent } from 'src/app/componentes/metodoEliminar/metodos.component';
 
-import { RolesService } from 'src/app/servicios/catalogos/catRoles/roles.service';
+// IMPORTACIÓN DE SERVICIOS
+import { PlantillaReportesService } from 'src/app/componentes/reportes/plantilla-reportes.service';
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
-import { ScriptService } from 'src/app/servicios/empleado/script.service';
-import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
+import { RolesService } from 'src/app/servicios/catalogos/catRoles/roles.service';
 
 @Component({
   selector: 'app-vista-roles',
@@ -30,65 +31,49 @@ import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.s
 
 export class VistaRolesComponent implements OnInit {
 
-  roles: any = [];
-  filtroRoles = '';
+  empleado: any = []; // VARIABLE DE ALMACENAMIENTO DE DATOS DE EMPLEADO
+  idEmpleado: number; // VARIABLE DE ID DE EMPLEADO QUE INICIA SESIÓN
+  filtroRoles = ''; // VARIABLE DE BÚSQUEDA DE DATOS
+  roles: any = []; // VARIABLE DE ALMACENAMIENTO DE DATOS DE ROLES
 
-  empleado: any = [];
-  idEmpleado: number;
-
-  // Items de paginación de la tabla
+  // ITEMS DE PAGINACIÓN DE LA TABLA
+  pageSizeOptions = [5, 10, 20, 50];
   tamanio_pagina: number = 5;
   numero_pagina: number = 1;
-  pageSizeOptions = [5, 10, 20, 50];
-  logo: any;
-  urlImagen: any;
 
+  // CAMPO DE BÚSQUEDA DE DATOS
   buscarDescripcion = new FormControl('', Validators.minLength(2));
 
+  // MÉTODO DE LLAMADO DE DATOS DE EMPRESA COLORES - LOGO - MARCA DE AGUA
+  get s_color(): string { return this.plantillaPDF.color_Secundary }
+  get p_color(): string { return this.plantillaPDF.color_Primary }
+  get logoE(): string { return this.plantillaPDF.logoBase64 }
+  get frase(): string { return this.plantillaPDF.marca_Agua }
+
   constructor(
-    private rest: RolesService,
-    private restE: EmpleadoService,
-    public restEmpre: EmpresaService,
-    private toastr: ToastrService,
-    public vistaRegistrarDatos: MatDialog,
-    private scriptService: ScriptService,
-    private router: Router,
+    private plantillaPDF: PlantillaReportesService, // SERVICIO DATOS DE EMPRESA
+    public vistaRegistrarDatos: MatDialog, // VARIABLE DE MANEJO DE VENTANAS
+    private restE: EmpleadoService, // SERVICIO DATOS DE EMPLEADO
+    private toastr: ToastrService, // VARIABLE DE MANEJO DE MENSAJES DE NOTIFICACIONES
+    private rest: RolesService, // SERVICIO DATOS DE ROLES
+    private router: Router, // VARAIBLE MANEJO DE RUTAS URL
   ) {
-    this.obtenerRoles();
     this.idEmpleado = parseInt(localStorage.getItem('empleado'));
-    this.scriptService.load('pdfMake', 'vfsFonts');
   }
 
   ngOnInit() {
     this.ObtenerEmpleados(this.idEmpleado);
-    this.ObtenerLogo();
-    this.ObtnerColores();
+    this.ObtenerRoles();
   }
 
-  // Método para obtener el logo de la empresa
-  logoE: any = String;
-  ObtenerLogo() {
-    this.restEmpre.LogoEmpresaImagenBase64(localStorage.getItem('empresa')).subscribe(res => {
-      this.logoE = 'data:image/jpeg;base64,' + res.imagen;
-    });
-  }
 
-  // Método para obtener colores de empresa
-  p_color: any;
-  s_color: any;
-  ObtnerColores() {
-    this.restEmpre.ConsultarDatosEmpresa(parseInt(localStorage.getItem('empresa'))).subscribe(res => {
-      this.p_color = res[0].color_p;
-      this.s_color = res[0].color_s;
-    });
-  }
-
+  // MÉTODO PARA MOSTRAR FILAS DETERMINADAS DE DATOS EN LA TABLA
   ManejarPagina(e: PageEvent) {
-    this.tamanio_pagina = e.pageSize;
     this.numero_pagina = e.pageIndex + 1;
+    this.tamanio_pagina = e.pageSize;
   }
 
-  // Método para ver la información del empleado 
+  // MÉTODO PARA VER LA INFORMACIÓN DEL EMPLEADO 
   ObtenerEmpleados(idemploy: any) {
     this.empleado = [];
     this.restE.getOneEmpleadoRest(idemploy).subscribe(data => {
@@ -96,12 +81,13 @@ export class VistaRolesComponent implements OnInit {
     })
   }
 
+  // MÉTODO PARA INGRESAR SOLO LETRAS
   IngresarSoloLetras(e) {
     let key = e.keyCode || e.which;
     let tecla = String.fromCharCode(key).toString();
-    //Se define todo el abecedario que se va a usar.
+    // SE DEFINE TODO EL ABECEDARIO QUE SE VA A USAR.
     let letras = " áéíóúabcdefghijklmnñopqrstuvwxyzÁÉÍÓÚABCDEFGHIJKLMNÑOPQRSTUVWXYZ";
-    //Es la validación del KeyCodes, que teclas recibe el campo de texto.
+    // ES LA VALIDACIÓN DEL KEYCODES, QUE TECLAS RECIBE EL CAMPO DE TEXTO.
     let especiales = [8, 37, 39, 46, 6, 13];
     let tecla_especial = false
     for (var i in especiales) {
@@ -118,24 +104,22 @@ export class VistaRolesComponent implements OnInit {
     }
   }
 
-  obtenerRoles() {
+  ObtenerRoles() {
     this.roles = [];
     this.rest.getRoles().subscribe(res => {
       this.roles = res;
-    },
-      err => console.error(err)
-    );
+    });
   }
 
-  /*****************************************************************************
-   * VENTANA PARA REGISTRAR Y EDITAR DATOS
-   *****************************************************************************/
+  /* **************************************************************************** *
+   *                     VENTANA PARA REGISTRAR Y EDITAR DATOS
+   * **************************************************************************** */
 
   AbrirVentanaEditar(datosSeleccionados: any): void {
     console.log(datosSeleccionados);
     this.vistaRegistrarDatos.open(EditarRolComponent, { width: '400px', data: { datosRol: datosSeleccionados, actualizar: true } }).afterClosed().subscribe(items => {
       if (items == true) {
-        this.obtenerRoles();
+        this.ObtenerRoles();
       }
     });
   }
@@ -143,26 +127,28 @@ export class VistaRolesComponent implements OnInit {
   AbrirVentanaRegistrarRol() {
     this.vistaRegistrarDatos.open(RegistroRolComponent, { width: '400px' }).afterClosed().subscribe(items => {
       if (items == true) {
-        this.obtenerRoles();
+        this.ObtenerRoles();
       }
     });
   }
 
-  limpiarCampoBuscar() {
+  // MÉTODO PARA LIMPIAR CAMPOS DE BÚSQUEDA
+  LimpiarCampoBuscar() {
     this.buscarDescripcion.reset();
   }
 
-  /** Función para eliminar registro seleccionado */
+
+  // FUNCIÓN PARA ELIMINAR REGISTRO SELECCIONADO 
   Eliminar(id_rol: number) {
     this.rest.EliminarRoles(id_rol).subscribe(res => {
       this.toastr.error('Registro eliminado', '', {
         timeOut: 6000,
       });
-      this.obtenerRoles();
+      this.ObtenerRoles();
     });
   }
 
-  /** Función para confirmar si se elimina o no un registro */
+  // FUNCIÓN PARA CONFIRMAR SI SE ELIMINA O NO UN REGISTRO 
   ConfirmarDelete(datos: any) {
     this.vistaRegistrarDatos.open(MetodosComponent, { width: '450px' }).afterClosed()
       .subscribe((confirmado: Boolean) => {
@@ -174,49 +160,51 @@ export class VistaRolesComponent implements OnInit {
       });
   }
 
+  // ORDENAR LOS DATOS SEGÚN EL ID 
+  OrdenarDatos(array: any) {
+    function compare(a: any, b: any) {
+      if (a.id < b.id) {
+        return -1;
+      }
+      if (a.id > b.id) {
+        return 1;
+      }
+      return 0;
+    }
+    array.sort(compare);
+  }
+
   /* ****************************************************************************************************
    *                               PARA LA EXPORTACIÓN DE ARCHIVOS PDF
    * ****************************************************************************************************/
 
-  generarPdf(action = 'open') {
-    const documentDefinition = this.getDocumentDefinicion();
-
+  GenerarPdf(action = 'open') {
+    this.OrdenarDatos(this.roles);
+    const documentDefinition = this.GetDocumentDefinicion();
     switch (action) {
       case 'open': pdfMake.createPdf(documentDefinition).open(); break;
       case 'print': pdfMake.createPdf(documentDefinition).print(); break;
       case 'download': pdfMake.createPdf(documentDefinition).download(); break;
-
       default: pdfMake.createPdf(documentDefinition).open(); break;
     }
-
+    this.ObtenerRoles();
   }
 
-
-  getDocumentDefinicion() {
+  GetDocumentDefinicion() {
     sessionStorage.setItem('Roles', this.roles);
     return {
-
-      // Encabezado de la página
-      pageOrientation: 'landscape',
-      watermark: { text: 'Confidencial', color: 'blue', opacity: 0.1, bold: true, italics: false },
+      // ENCABEZADO DE LA PÁGINA
+      watermark: { text: this.frase, color: 'blue', opacity: 0.1, bold: true, italics: false },
       header: { text: 'Impreso por: ' + this.empleado[0].nombre + ' ' + this.empleado[0].apellido, margin: 10, fontSize: 9, opacity: 0.3, alignment: 'right' },
-
-      // Pie de la página
-      footer: function (currentPage, pageCount, fecha) {
-        var h = new Date();
+      // PIE DE LA PÁGINA
+      footer: function (currentPage: any, pageCount: any, fecha: any, hora: any) {
         var f = moment();
         fecha = f.format('YYYY-MM-DD');
-        // Formato de hora actual
-        if (h.getMinutes() < 10) {
-          var time = h.getHours() + ':0' + h.getMinutes();
-        }
-        else {
-          var time = h.getHours() + ':' + h.getMinutes();
-        }
+        hora = f.format('HH:mm:ss');
         return {
           margin: 10,
           columns: [
-            { text: 'Fecha: ' + fecha + ' Hora: ' + time, opacity: 0.3 },
+            { text: 'Fecha: ' + fecha + ' Hora: ' + hora, opacity: 0.3 },
             {
               text: [
                 {
@@ -230,17 +218,17 @@ export class VistaRolesComponent implements OnInit {
       },
       content: [
         { image: this.logoE, width: 150, margin: [10, -25, 0, 5] },
-        { text: 'Lista de Roles', bold: true, fontSize: 20, alignment: 'center', margin: [0, -30, 0, 10] },
-        this.presentarDataPDFRoles(),
+        { text: 'Roles del Sistema', bold: true, fontSize: 16, alignment: 'center', margin: [0, -10, 0, 10] },
+        this.PresentarDataPDFRoles(),
       ],
       styles: {
-        tableHeader: { fontSize: 13, bold: true, alignment: 'center', fillColor: this.p_color },
-        itemsTable: { fontSize: 11, alignment: 'center' }
+        tableHeader: { fontSize: 12, bold: true, alignment: 'center', fillColor: this.p_color },
+        itemsTable: { fontSize: 10, alignment: 'center' }
       }
     };
   }
 
-  presentarDataPDFRoles() {
+  PresentarDataPDFRoles() {
     return {
       columns: [
         { width: '*', text: '' },
@@ -250,7 +238,7 @@ export class VistaRolesComponent implements OnInit {
             widths: [50, 150],
             body: [
               [
-                { text: 'Id', style: 'tableHeader' },
+                { text: 'Código', style: 'tableHeader' },
                 { text: 'Nombre', style: 'tableHeader' },
               ],
               ...this.roles.map(obj => {
@@ -261,6 +249,12 @@ export class VistaRolesComponent implements OnInit {
               })
             ],
           },
+          // ESTILO DE COLORES FORMATO ZEBRA
+          layout: {
+            fillColor: function (i: any) {
+              return (i % 2 === 0) ? '#CCD1D1' : null;
+            }
+          }
         },
         { width: '*', text: '' },
       ]
@@ -271,11 +265,25 @@ export class VistaRolesComponent implements OnInit {
    *                               PARA LA EXPORTACIÓN DE ARCHIVOS EXCEL
    * ****************************************************************************************************/
 
-  exportToExcel() {
-    const wsr: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.roles);
+  ExportToExcel() {
+    this.OrdenarDatos(this.roles);
+    const wsr: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.roles.map(obj => {
+      return {
+        CODIGO: obj.id,
+        NOMBRE_ROL: obj.nombre
+      }
+    }));
+    // MÉTODO PARA DEFINIR TAMAÑO DE LAS COLUMNAS DEL REPORTE
+    const header = Object.keys(this.roles[0]); // NOMBRE DE CABECERAS DE COLUMNAS
+    var wscols = [];
+    for (var i = 0; i < header.length; i++) {  // CABECERAS AÑADIDAS CON ESPACIOS
+      wscols.push({ wpx: 100 })
+    }
+    wsr["!cols"] = wscols;
     const wb: xlsx.WorkBook = xlsx.utils.book_new();
-    xlsx.utils.book_append_sheet(wb, wsr, 'roles');
+    xlsx.utils.book_append_sheet(wb, wsr, 'LISTA ROLES');
     xlsx.writeFile(wb, "RolesEXCEL" + new Date().getTime() + '.xlsx');
+    this.ObtenerRoles();
   }
 
   /* ****************************************************************************************************
@@ -284,8 +292,9 @@ export class VistaRolesComponent implements OnInit {
 
   urlxml: string;
   data: any = [];
-  exportToXML() {
-    var objeto;
+  ExportToXML() {
+    this.OrdenarDatos(this.roles);
+    var objeto: any;
     var arregloRoles = [];
     this.roles.forEach(obj => {
       objeto = {
@@ -296,23 +305,24 @@ export class VistaRolesComponent implements OnInit {
       }
       arregloRoles.push(objeto)
     });
-
     this.rest.DownloadXMLRest(arregloRoles).subscribe(res => {
       this.data = res;
-      console.log("prueba data", res)
-      this.urlxml = 'http://localhost:3000/rol/download/' + this.data.name;
+      this.urlxml = `${environment.url}/rol/download/` + this.data.name;
       window.open(this.urlxml, "_blank");
     });
+    this.ObtenerRoles();
   }
 
-  /****************************************************************************************************** 
-   * MÉTODO PARA EXPORTAR A CSV 
-   ******************************************************************************************************/
+  /* ***************************************************************************************************** 
+   *                                       MÉTODO PARA EXPORTAR A CSV 
+   * *****************************************************************************************************/
 
-  exportToCVS() {
-    const wse: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.roles);
-    const csvDataC = xlsx.utils.sheet_to_csv(wse);
+  ExportToCVS() {
+    this.OrdenarDatos(this.roles);
+    const wsr: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.roles);
+    const csvDataC = xlsx.utils.sheet_to_csv(wsr);
     const data: Blob = new Blob([csvDataC], { type: 'text/csv;charset=utf-8;' });
     FileSaver.saveAs(data, "RolesCSV" + new Date().getTime() + '.csv');
+    this.ObtenerRoles();
   }
 }

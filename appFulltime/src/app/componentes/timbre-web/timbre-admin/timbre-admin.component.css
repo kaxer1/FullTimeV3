@@ -1,39 +1,14 @@
-.btn { margin-left: 15px; background-color: rgb(80,87,97); color: white; } 
+.btn { background-color: rgb(80,87,97); color: white; } 
 
 td { padding-top: 10px; text-align: center; }
 
-mat-form-field { padding: 10px 15px 0px 15px;}
+table { width: 100%; font-size: 12px;}
 
-#TituloResultado { 
-    font-size: 17px; 
-    text-align: center; 
-    background: rgb(52,65,84); 
-    color: white; 
-    padding-top: 10px; 
-    padding-bottom: 6px; 
+h4 {
+    font-weight: bold;
 }
 
-table { width: 100%; font-size: 14px;}
+#accion { color: rgb(53, 95, 209); cursor: pointer; }
 
-#estilo { color: rgb(0, 0, 0); font-size: 13px; }
+#cerrar { cursor: pointer; margin-left: 25px;}
 
-mat-icon { cursor: pointer;}
-
-#SelectCheck {
-    cursor: pointer;
-    margin-left: 10px;
-}
-
-mat-expansion-panel-header { text-align: center; background: rgb(52,65,84); }
-
-mat-panel-title { color: white; }
-
-#icono { color: white; }
-
-.mat-expansion-panel-header.mat-expanded {
-    background: rgb(52,65,84);
-}
-
-.mat-expansion-panel-header.mat-expanded:hover {
-    background: rgb(52,65,84);
-}

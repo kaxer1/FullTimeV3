@@ -4,6 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 
 import { EditarHorasExtrasComponent } from 'src/app/componentes/catalogos/catHorasExtras/editar-horas-extras/editar-horas-extras.component';
 import { HorasExtrasService } from 'src/app/servicios/catalogos/catHorasExtras/horas-extras.service'
+import { ValidacionesService } from '../../../../servicios/validaciones/validaciones.service';
 
 @Component({
   selector: 'app-ver-horas-extras',
@@ -18,6 +19,7 @@ export class VerHorasExtrasComponent implements OnInit {
     public router: Router,
     public vistaRegistrarDatos: MatDialog,
     public rest: HorasExtrasService,
+    private validacionesService: ValidacionesService
   ) {
     var cadena = this.router.url;
     var aux = cadena.split("/");
@@ -57,6 +59,8 @@ export class VerHorasExtrasComponent implements OnInit {
         this.datosHoraExtra[0].tipo_dia = 'Normal';
       }
       console.log(this.datosHoraExtra)
+    }, err => {
+      return this.validacionesService.RedireccionarHomeAdmin(err.error) 
     })
   }
 

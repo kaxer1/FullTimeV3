@@ -12,11 +12,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ModelarFechas = exports.SegundosToHHMM = exports.Empleado_Atrasos_ModelarDatos_SinAcciones = exports.Empleado_Atrasos_ModelarDatos = exports.Empleado_Permisos_ModelarDatos = exports.Empleado_Vacaciones_ModelarDatos = exports.Empleado_HoraExtra_ModelarDatos = exports.ModelarSalidasAnticipadasSinAcciones = exports.ModelarSalidasAnticipadas = exports.ModelarTiempoJornada = exports.ModelarAtrasos = exports.BuscarTimbresEoSModelado = exports.BuscarTimbresEntradaSinAccionModelado = exports.BuscarTimbresEntradasSinAcciones = exports.BuscarTimbresEntradas = exports.SumarValoresArray = exports.HHMMtoSegundos = exports.HoraExtra_ModelarDatos = exports.BuscarHorasExtras = exports.BuscarPermisosJustificados = exports.BuscarTimbresByCodigo_Fecha = exports.BuscarHorariosActivos = exports.BuscarTimbresByFecha = void 0;
 const database_1 = __importDefault(require("../database"));
 const moment_1 = __importDefault(require("moment"));
 const MetodosHorario_1 = require("./MetodosHorario");
-const BuscarTimbresByFecha = function (fec_inicio, fec_final) {
+exports.BuscarTimbresByFecha = function (fec_inicio, fec_final) {
     return __awaiter(this, void 0, void 0, function* () {
         return yield database_1.default.query('SELECT fec_hora_timbre FROM timbres WHERE CAST(fec_hora_timbre AS VARCHAR) between $1 || \'%\' AND $2 || \'%\' ORDER BY fec_hora_timbre ASC', [fec_inicio, fec_final])
             .then(res => {
@@ -24,8 +23,7 @@ const BuscarTimbresByFecha = function (fec_inicio, fec_final) {
         });
     });
 };
-exports.BuscarTimbresByFecha = BuscarTimbresByFecha;
-const BuscarHorariosActivos = function (fec_inicio, fec_final) {
+exports.BuscarHorariosActivos = function (fec_inicio, fec_final) {
     return __awaiter(this, void 0, void 0, function* () {
         let lista_horarios = yield database_1.default.query('SELECT * FROM empl_horarios WHERE CAST(fec_inicio AS VARCHAR) between $1 || \'%\' AND $2 || \'%\' ORDER BY fec_inicio ASC', [fec_inicio, fec_final])
             .then(res => {
@@ -41,8 +39,7 @@ const BuscarHorariosActivos = function (fec_inicio, fec_final) {
         return array;
     });
 };
-exports.BuscarHorariosActivos = BuscarHorariosActivos;
-const BuscarTimbresByCodigo_Fecha = function (codigo, horario) {
+exports.BuscarTimbresByCodigo_Fecha = function (codigo, horario) {
     return __awaiter(this, void 0, void 0, function* () {
         return yield Promise.all(horario.map((obj) => __awaiter(this, void 0, void 0, function* () {
             return {
@@ -55,8 +52,7 @@ const BuscarTimbresByCodigo_Fecha = function (codigo, horario) {
         })));
     });
 };
-exports.BuscarTimbresByCodigo_Fecha = BuscarTimbresByCodigo_Fecha;
-const BuscarPermisosJustificados = function (codigo, fecha) {
+exports.BuscarPermisosJustificados = function (codigo, fecha) {
     return __awaiter(this, void 0, void 0, function* () {
         return yield database_1.default.query('SELECT fec_inicio, descripcion FROM permisos WHERE codigo = $1 AND fec_inicio::TIMESTAMP::DATE <= $2 AND fec_final::TIMESTAMP::DATE >= $2 AND estado = 3 ', [codigo, fecha + ''])
             .then(result => {
@@ -64,8 +60,7 @@ const BuscarPermisosJustificados = function (codigo, fecha) {
         });
     });
 };
-exports.BuscarPermisosJustificados = BuscarPermisosJustificados;
-const BuscarHorasExtras = function (fec_inicio, fec_final) {
+exports.BuscarHorasExtras = function (fec_inicio, fec_final) {
     return __awaiter(this, void 0, void 0, function* () {
         return yield database_1.default.query('SELECT fec_hora_timbre FROM timbres WHERE CAST(fec_hora_timbre AS VARCHAR) between $1 || \'%\' AND $2 || \'%\' ORDER BY fec_hora_timbre ASC', [fec_inicio, fec_final])
             .then(res => {
@@ -73,8 +68,7 @@ const BuscarHorasExtras = function (fec_inicio, fec_final) {
         });
     });
 };
-exports.BuscarHorasExtras = BuscarHorasExtras;
-const HoraExtra_ModelarDatos = function (fec_desde, fec_hasta) {
+exports.HoraExtra_ModelarDatos = function (fec_desde, fec_hasta) {
     return __awaiter(this, void 0, void 0, function* () {
         let horas_extras = yield ListaHorasExtrasGrafica(fec_desde, fec_hasta);
         // console.log('Lista de horas extras ===', horas_extras);
@@ -94,7 +88,6 @@ const HoraExtra_ModelarDatos = function (fec_desde, fec_hasta) {
         return nuevo;
     });
 };
-exports.HoraExtra_ModelarDatos = HoraExtra_ModelarDatos;
 function DiasIterados(inicio, final, tiempo_autorizado, id_empl_cargo, codigo) {
     var fec_aux = new Date(inicio);
     var fecha1 = moment_1.default(inicio.split("T")[0]);
@@ -180,7 +173,7 @@ function PlanificacionHorasExtrasSolicitadasGrafica(fec_desde, fec_hasta) {
         });
     });
 }
-const HHMMtoSegundos = function (dato) {
+exports.HHMMtoSegundos = function (dato) {
     if (dato === '')
         return 0;
     if (dato === null)
@@ -193,16 +186,14 @@ const HHMMtoSegundos = function (dato) {
     // console.log(h, '>>>>>', m);
     return h + m + s;
 };
-exports.HHMMtoSegundos = HHMMtoSegundos;
-const SumarValoresArray = function (array) {
+exports.SumarValoresArray = function (array) {
     let valor = 0;
     for (let i = 0; i < array.length; i++) {
         valor = valor + parseFloat(array[i]);
     }
     return valor.toFixed(2);
 };
-exports.SumarValoresArray = SumarValoresArray;
-const BuscarTimbresEntradas = function (fec_inicio, fec_final) {
+exports.BuscarTimbresEntradas = function (fec_inicio, fec_final) {
     return __awaiter(this, void 0, void 0, function* () {
         return yield database_1.default.query('SELECT CAST(fec_hora_timbre AS VARCHAR), id_empleado FROM timbres WHERE CAST(fec_hora_timbre AS VARCHAR) between $1 || \'%\' AND $2 || \'%\' AND accion in (\'EoS\', \'E\') ORDER BY fec_hora_timbre ASC ', [fec_inicio, fec_final])
             .then(res => {
@@ -210,8 +201,7 @@ const BuscarTimbresEntradas = function (fec_inicio, fec_final) {
         });
     });
 };
-exports.BuscarTimbresEntradas = BuscarTimbresEntradas;
-const BuscarTimbresEntradasSinAcciones = function (fec_inicio, fec_final) {
+exports.BuscarTimbresEntradasSinAcciones = function (fec_inicio, fec_final) {
     return __awaiter(this, void 0, void 0, function* () {
         const orden = 1;
         const horarioEntrada = yield database_1.default.query('SELECT eh.codigo, dt.hora, dt.minu_espera, CAST(eh.fec_inicio AS VARCHAR), CAST(eh.fec_final AS VARCHAR), ' +
@@ -222,7 +212,7 @@ const BuscarTimbresEntradasSinAcciones = function (fec_inicio, fec_final) {
             .then(result => { return result.rows; });
         if (horarioEntrada.length === 0)
             return [0];
-        // console.log(horarioEntrada);
+        console.log(horarioEntrada);
         let nuevo = [];
         let aux = yield Promise.all(horarioEntrada.map((obj) => __awaiter(this, void 0, void 0, function* () {
             let fechas = exports.ModelarFechas(obj.fec_inicio, obj.fec_final, obj);
@@ -231,24 +221,32 @@ const BuscarTimbresEntradasSinAcciones = function (fec_inicio, fec_final) {
                 var f_inicio = o.fecha + ' ' + exports.SegundosToHHMM(hora_seg);
                 var f_final = o.fecha + ' ' + exports.SegundosToHHMM(hora_seg + exports.HHMMtoSegundos('02:00:00'));
                 // console.log( f_inicio, ' || ', f_final, ' || ', codigo);
-                const query = 'SELECT CAST(fec_hora_timbre AS VARCHAR) from timbres where fec_hora_timbre >= TO_TIMESTAMP(\'' + f_inicio + '\'' + ', \'YYYY-MM-DD HH:MI:SS\') ' +
-                    'and fec_hora_timbre <= TO_TIMESTAMP(\'' + f_final + '\'' + ', \'YYYY-MM-DD HH:MI:SS\') and id_empleado = ' + obj.codigo + ' order by fec_hora_timbre';
+                const query = 'SELECT CAST(fec_hora_timbre AS VARCHAR) from timbres where fec_hora_timbre >= TO_TIMESTAMP(\'' + f_inicio + '\'' + ', \'YYYY-MM-DD HH24:MI:SS\') ' +
+                    'and fec_hora_timbre <= TO_TIMESTAMP(\'' + f_final + '\'' + ', \'YYYY-MM-DD HH24:MI:SS\') and id_empleado = ' + obj.codigo + ' order by fec_hora_timbre';
                 // console.log(query);
-                return yield database_1.default.query(query)
-                    .then(res => {
-                    if (res.rowCount === 0) {
-                        return 0;
-                    }
-                    else {
-                        const h_timbre = res.rows[0].fec_hora_timbre.split(' ')[1];
-                        const t_tim = exports.HHMMtoSegundos(h_timbre);
-                        // console.log(f_timbre);
-                        return {
-                            fecha: res.rows[0].fec_hora_timbre.split(' ')[0],
-                            tiempo_atraso: (t_tim - hora_seg) / 3600
-                        };
-                    }
-                });
+                try {
+                    return yield database_1.default.query(query)
+                        .then(res => {
+                        if (res.rowCount === 0) {
+                            return 0;
+                        }
+                        else {
+                            const h_timbre = res.rows[0].fec_hora_timbre.split(' ')[1];
+                            const t_tim = exports.HHMMtoSegundos(h_timbre);
+                            // console.log(f_timbre);
+                            return {
+                                fecha: res.rows[0].fec_hora_timbre.split(' ')[0],
+                                tiempo_atraso: (t_tim - hora_seg) / 3600
+                            };
+                        }
+                    });
+                }
+                catch (error) {
+                    console.log('********************* METODO BuscarTimbresEntradasSinAcciones ********************');
+                    console.log(error);
+                    console.log('***************************************************************************');
+                    return 0;
+                }
             })));
             return timbres;
         })));
@@ -264,8 +262,7 @@ const BuscarTimbresEntradasSinAcciones = function (fec_inicio, fec_final) {
         return nuevo;
     });
 };
-exports.BuscarTimbresEntradasSinAcciones = BuscarTimbresEntradasSinAcciones;
-const BuscarTimbresEntradaSinAccionModelado = function (fec_inicio, fec_final) {
+exports.BuscarTimbresEntradaSinAccionModelado = function (fec_inicio, fec_final) {
     return __awaiter(this, void 0, void 0, function* () {
         let codigos = yield database_1.default.query('SELECT Distinct id_empleado FROM timbres WHERE CAST(fec_hora_timbre AS VARCHAR) between $1 || \'%\' AND $2 || \'%\' ORDER BY id_empleado ASC ', [fec_inicio, fec_final])
             .then(res => {
@@ -433,8 +430,7 @@ const BuscarTimbresEntradaSinAccionModelado = function (fec_inicio, fec_final) {
         return arr_respuesta;
     });
 };
-exports.BuscarTimbresEntradaSinAccionModelado = BuscarTimbresEntradaSinAccionModelado;
-const BuscarTimbresEoSModelado = function (fec_inicio, fec_final) {
+exports.BuscarTimbresEoSModelado = function (fec_inicio, fec_final) {
     return __awaiter(this, void 0, void 0, function* () {
         var fec_aux = new Date(fec_inicio);
         var fecha1 = moment_1.default(fec_inicio);
@@ -486,33 +482,40 @@ const BuscarTimbresEoSModelado = function (fec_inicio, fec_final) {
         return nuevo;
     });
 };
-exports.BuscarTimbresEoSModelado = BuscarTimbresEoSModelado;
-const ModelarAtrasos = function (obj, fec_inicio, fec_final) {
+exports.ModelarAtrasos = function (obj, fec_inicio, fec_final) {
     return __awaiter(this, void 0, void 0, function* () {
         // console.log(obj);
-        let array = yield database_1.default.query('SELECT dh.hora, dh.minu_espera FROM empl_horarios AS eh, cg_horarios AS h, deta_horarios AS dh ' +
-            'WHERE eh.codigo = $1 AND h.id = eh.id_horarios AND dh.id_horario = h.id AND CAST(eh.fec_inicio AS VARCHAR) between $2 || \'%\' AND $3 || \'%\' ' +
-            'AND CAST(eh.fec_final AS VARCHAR) between $2 || \'%\' AND $3 || \'%\' AND dh.orden = 1 limit 1', [obj.id_empleado, fec_inicio, fec_final])
-            .then(res => { return res.rows; });
-        // console.log('Array del resultado',array);
-        if (array.length === 0) {
+        try {
+            let array = yield database_1.default.query('SELECT dh.hora, dh.minu_espera FROM empl_horarios AS eh, cg_horarios AS h, deta_horarios AS dh ' +
+                'WHERE eh.codigo = $1 AND h.id = eh.id_horarios AND dh.id_horario = h.id AND CAST(eh.fec_inicio AS VARCHAR) between $2 || \'%\' AND $3 || \'%\' ' +
+                'AND CAST(eh.fec_final AS VARCHAR) between $2 || \'%\' AND $3 || \'%\' AND dh.orden = 1 limit 1', [obj.id_empleado, fec_inicio, fec_final])
+                .then(res => { return res.rows; });
+            console.log('Array del resultado', array);
+            if (array.length === 0) {
+                return {
+                    fecha: obj.fec_hora_timbre,
+                    tiempo_atraso: 0,
+                };
+            }
+            return array.map(ele => {
+                var timbre = exports.HHMMtoSegundos(obj.fec_hora_timbre.split(' ')[1]);
+                var hora = exports.HHMMtoSegundos(ele.hora) + ele.minu_espera * 60;
+                return {
+                    fecha: obj.fec_hora_timbre,
+                    tiempo_atraso: (timbre - hora) / 3600
+                };
+            })[0];
+        }
+        catch (error) {
+            console.log(error);
             return {
                 fecha: obj.fec_hora_timbre,
                 tiempo_atraso: 0,
             };
         }
-        return array.map(ele => {
-            var timbre = exports.HHMMtoSegundos(obj.fec_hora_timbre.split(' ')[1]);
-            var hora = exports.HHMMtoSegundos(ele.hora) + ele.minu_espera * 60;
-            return {
-                fecha: obj.fec_hora_timbre,
-                tiempo_atraso: (timbre - hora) / 3600
-            };
-        })[0];
     });
 };
-exports.ModelarAtrasos = ModelarAtrasos;
-const ModelarTiempoJornada = function (obj, fec_inicio, fec_final) {
+exports.ModelarTiempoJornada = function (obj, fec_inicio, fec_final) {
     return __awaiter(this, void 0, void 0, function* () {
         // console.log(obj);
         let array = yield database_1.default.query('SELECT dh.hora, dh.orden FROM empl_horarios AS eh, cg_horarios AS h, deta_horarios AS dh ' +
@@ -538,8 +541,7 @@ const ModelarTiempoJornada = function (obj, fec_inicio, fec_final) {
         })[0];
     });
 };
-exports.ModelarTiempoJornada = ModelarTiempoJornada;
-const ModelarSalidasAnticipadas = function (fec_inicio, fec_final) {
+exports.ModelarSalidasAnticipadas = function (fec_inicio, fec_final) {
     return __awaiter(this, void 0, void 0, function* () {
         // console.log(obj);
         let timbres = yield database_1.default.query('SELECT CAST(fec_hora_timbre AS VARCHAR), id_empleado FROM timbres WHERE CAST(fec_hora_timbre AS VARCHAR) between $1 || \'%\' AND $2 || \'%\' AND accion in (\'EoS\', \'S\') ORDER BY fec_hora_timbre ASC', [fec_inicio, fec_final])
@@ -577,8 +579,7 @@ const ModelarSalidasAnticipadas = function (fec_inicio, fec_final) {
         return array;
     });
 };
-exports.ModelarSalidasAnticipadas = ModelarSalidasAnticipadas;
-const ModelarSalidasAnticipadasSinAcciones = function (fec_inicio, fec_final) {
+exports.ModelarSalidasAnticipadasSinAcciones = function (fec_inicio, fec_final) {
     return __awaiter(this, void 0, void 0, function* () {
         // console.log(obj);
         let codigos = yield database_1.default.query('SELECT Distinct id_empleado FROM timbres WHERE CAST(fec_hora_timbre AS VARCHAR) between $1 || \'%\' AND $2 || \'%\' ORDER BY id_empleado ASC ', [fec_inicio, fec_final])
@@ -706,11 +707,10 @@ const ModelarSalidasAnticipadasSinAcciones = function (fec_inicio, fec_final) {
         return arr_respuesta;
     });
 };
-exports.ModelarSalidasAnticipadasSinAcciones = ModelarSalidasAnticipadasSinAcciones;
 /**
  * SUBMETODOS PARA LAS GRAFICAS DE EMPLEADOS INDIVIDUALEMTNE
  */
-const Empleado_HoraExtra_ModelarDatos = function (codigo, fec_desde, fec_hasta) {
+exports.Empleado_HoraExtra_ModelarDatos = function (codigo, fec_desde, fec_hasta) {
     return __awaiter(this, void 0, void 0, function* () {
         let horas_extras = yield EmpleadoHorasExtrasGrafica(codigo, fec_desde, fec_hasta);
         console.log('Lista de horas extras ===', horas_extras);
@@ -730,7 +730,6 @@ const Empleado_HoraExtra_ModelarDatos = function (codigo, fec_desde, fec_hasta) 
         return nuevo;
     });
 };
-exports.Empleado_HoraExtra_ModelarDatos = Empleado_HoraExtra_ModelarDatos;
 function EmpleadoHorasExtrasGrafica(codigo, fec_desde, fec_hasta) {
     return __awaiter(this, void 0, void 0, function* () {
         let arrayUno = yield EmpleadoHorasExtrasSolicitadasGrafica(codigo, fec_desde, fec_hasta);
@@ -810,7 +809,7 @@ function EmpleadoPlanificacionHorasExtrasSolicitadasGrafica(codigo, fec_desde, f
         });
     });
 }
-const Empleado_Vacaciones_ModelarDatos = function (codigo, fec_desde, fec_hasta) {
+exports.Empleado_Vacaciones_ModelarDatos = function (codigo, fec_desde, fec_hasta) {
     return __awaiter(this, void 0, void 0, function* () {
         let vacaciones = yield database_1.default.query('SELECT CAST(fec_inicio AS VARCHAR), CAST(fec_final AS VARCHAR) FROM vacaciones WHERE codigo = $1 AND fec_inicio between $2 and $3 AND estado = 3 ', [codigo, fec_desde, fec_hasta]).then(result => { return result.rows; });
         // console.log('Lista de vacaciones ===', vacaciones);
@@ -833,8 +832,7 @@ const Empleado_Vacaciones_ModelarDatos = function (codigo, fec_desde, fec_hasta)
         return aux_array;
     });
 };
-exports.Empleado_Vacaciones_ModelarDatos = Empleado_Vacaciones_ModelarDatos;
-const Empleado_Permisos_ModelarDatos = function (codigo, fec_desde, fec_hasta) {
+exports.Empleado_Permisos_ModelarDatos = function (codigo, fec_desde, fec_hasta) {
     return __awaiter(this, void 0, void 0, function* () {
         let permisos = yield database_1.default.query('SELECT CAST(fec_inicio AS VARCHAR), CAST(fec_final AS VARCHAR), hora_numero, dia FROM permisos WHERE codigo = $1 AND fec_inicio between $2 and $3 AND estado = 3 ', [codigo, fec_desde, fec_hasta]).then(result => { return result.rows; });
         // console.log('Lista de permisos ===', permisos);
@@ -857,8 +855,7 @@ const Empleado_Permisos_ModelarDatos = function (codigo, fec_desde, fec_hasta) {
         return aux_array;
     });
 };
-exports.Empleado_Permisos_ModelarDatos = Empleado_Permisos_ModelarDatos;
-const Empleado_Atrasos_ModelarDatos = function (codigo, fec_desde, fec_hasta) {
+exports.Empleado_Atrasos_ModelarDatos = function (codigo, fec_desde, fec_hasta) {
     return __awaiter(this, void 0, void 0, function* () {
         let timbres = yield database_1.default.query('SELECT CAST(fec_hora_timbre AS VARCHAR), id_empleado FROM timbres WHERE CAST(fec_hora_timbre AS VARCHAR) between $1 || \'%\' AND $2 || \'%\' AND accion in (\'EoS\',\'E\') AND id_empleado = $3 ORDER BY fec_hora_timbre ASC ', [fec_desde, fec_hasta, codigo])
             .then(res => {
@@ -872,8 +869,7 @@ const Empleado_Atrasos_ModelarDatos = function (codigo, fec_desde, fec_hasta) {
         return array;
     });
 };
-exports.Empleado_Atrasos_ModelarDatos = Empleado_Atrasos_ModelarDatos;
-const Empleado_Atrasos_ModelarDatos_SinAcciones = function (codigo, fec_desde, fec_hasta) {
+exports.Empleado_Atrasos_ModelarDatos_SinAcciones = function (codigo, fec_desde, fec_hasta) {
     return __awaiter(this, void 0, void 0, function* () {
         const orden = 1;
         const horarioEntrada = yield database_1.default.query('SELECT dt.hora, dt.minu_espera, CAST(eh.fec_inicio AS VARCHAR), CAST(eh.fec_final AS VARCHAR), ' +
@@ -893,8 +889,8 @@ const Empleado_Atrasos_ModelarDatos_SinAcciones = function (codigo, fec_desde, f
                 var f_inicio = o.fecha + ' ' + exports.SegundosToHHMM(hora_seg);
                 var f_final = o.fecha + ' ' + exports.SegundosToHHMM(hora_seg + exports.HHMMtoSegundos('02:00:00'));
                 // console.log( f_inicio, ' || ', f_final, ' || ', codigo);
-                const query = 'SELECT CAST(fec_hora_timbre AS VARCHAR) from timbres where fec_hora_timbre >= TO_TIMESTAMP(\'' + f_inicio + '\'' + ', \'YYYY-MM-DD HH:MI:SS\') ' +
-                    'and fec_hora_timbre <= TO_TIMESTAMP(\'' + f_final + '\'' + ', \'YYYY-MM-DD HH:MI:SS\') and id_empleado = ' + codigo + ' order by fec_hora_timbre';
+                const query = 'SELECT CAST(fec_hora_timbre AS VARCHAR) from timbres where fec_hora_timbre >= TO_TIMESTAMP(\'' + f_inicio + '\'' + ', \'YYYY-MM-DD HH24:MI:SS\') ' +
+                    'and fec_hora_timbre <= TO_TIMESTAMP(\'' + f_final + '\'' + ', \'YYYY-MM-DD HH24:MI:SS\') and id_empleado = ' + codigo + ' order by fec_hora_timbre';
                 // console.log(query);
                 return yield database_1.default.query(query)
                     .then(res => {
@@ -925,8 +921,7 @@ const Empleado_Atrasos_ModelarDatos_SinAcciones = function (codigo, fec_desde, f
         return nuevo;
     });
 };
-exports.Empleado_Atrasos_ModelarDatos_SinAcciones = Empleado_Atrasos_ModelarDatos_SinAcciones;
-const SegundosToHHMM = function (dato) {
+exports.SegundosToHHMM = function (dato) {
     // console.log('Hora decimal a HHMM ======>',dato);
     var h = Math.floor(dato / 3600);
     var m = Math.floor((dato % 3600) / 60);
@@ -939,8 +934,7 @@ const SegundosToHHMM = function (dato) {
     let seg = (s >= 10) ? s : '0' + s;
     return hora + ':' + min + ':' + seg;
 };
-exports.SegundosToHHMM = SegundosToHHMM;
-const ModelarFechas = function (desde, hasta, horario) {
+exports.ModelarFechas = function (desde, hasta, horario) {
     let fechasRango = {
         inicio: desde,
         final: hasta
@@ -949,7 +943,6 @@ const ModelarFechas = function (desde, hasta, horario) {
     // console.log('Objeto JSON: ', objeto);
     return objeto.filter(obj => { return (obj.estado === false); }).map(obj => { return { fecha: obj.fecha }; });
 };
-exports.ModelarFechas = ModelarFechas;
 /**
  * Mezcla el horario y las fechas para obtener los dias con su estado: TRUE=dia libre || FALSE=dia laborable
  * @param horario Es el horario del empleado

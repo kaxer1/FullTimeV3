@@ -16,6 +16,8 @@ import { AutorizacionService } from 'src/app/servicios/autorizacion/autorizacion
 import { DepartamentosService } from 'src/app/servicios/catalogos/catDepartamentos/departamentos.service';
 import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
 import { DatosGeneralesService } from 'src/app/servicios/datosGenerales/datos-generales.service';
+import { ValidacionesService } from '../../../servicios/validaciones/validaciones.service';
+import { environment } from '../../../../environments/environment';
 
 interface Estado {
   id: number,
@@ -54,6 +56,7 @@ export class VerEmpleadoPermisoComponent implements OnInit {
 
   fechaActual: any;
   habilitarActualizar: boolean = true;
+  hipervinculo: string = environment.url
 
   constructor(
     private restP: PermisosService,
@@ -63,7 +66,8 @@ export class VerEmpleadoPermisoComponent implements OnInit {
     public restGeneral: DatosGeneralesService,
     private router: Router,
     private restD: DepartamentosService,
-    public vistaFlotante: MatDialog
+    public vistaFlotante: MatDialog,
+    private validacionesService: ValidacionesService
   ) {
     this.idEmpleado = parseInt(localStorage.getItem('empleado'));
     this.id_permiso = this.router.url.split('/')[2];
@@ -72,7 +76,7 @@ export class VerEmpleadoPermisoComponent implements OnInit {
   ngOnInit(): void {
     this.BuscarDatos();
     this.ObtenerLogo();
-    this.ObtnerColores();
+    this.ObtenerColores();
   }
 
   BuscarDatos() {
@@ -97,6 +101,8 @@ export class VerEmpleadoPermisoComponent implements OnInit {
       }, error => {
         this.HabilitarAutorizacion = false;
       });
+    }, err => {
+      return this.validacionesService.RedireccionarMixto(err.error) 
     });
 
     this.ObtenerEmpleados(this.idEmpleado);
@@ -112,13 +118,15 @@ export class VerEmpleadoPermisoComponent implements OnInit {
     });
   }
 
-  // Método para obtener colores de empresa
+  // MÉTODO PARA OBTENER COLORES Y MARCA DE AGUA DE EMPRESA 
   p_color: any;
   s_color: any;
-  ObtnerColores() {
+  frase: any;
+  ObtenerColores() {
     this.restEmpre.ConsultarDatosEmpresa(parseInt(localStorage.getItem('empresa'))).subscribe(res => {
       this.p_color = res[0].color_p;
       this.s_color = res[0].color_s;
+      this.frase = res[0].marca_agua;
     });
   }
 
@@ -158,6 +166,8 @@ export class VerEmpleadoPermisoComponent implements OnInit {
           this.habilitarActualizar = true;
         }
       });
+    }, err => {
+      return this.validacionesService.RedireccionarMixto(err.error) 
     })
   }
 
@@ -208,6 +218,8 @@ export class VerEmpleadoPermisoComponent implements OnInit {
         }
       })
       console.log('autorizacion', this.datosAutorizacion);
+    }, err => {
+      return this.validacionesService.RedireccionarMixto(err.error) 
     })
   }
 
@@ -252,7 +264,7 @@ export class VerEmpleadoPermisoComponent implements OnInit {
     return {
       // Encabezado de la página
       pageOrientation: 'landscape',
-      watermark: { text: 'Confidencial', color: 'blue', opacity: 0.1, bold: true, italics: false },
+      watermark: { text: this.frase, color: 'blue', opacity: 0.1, bold: true, italics: false },
       header: { text: 'Impreso por:  ' + this.empleado[0].nombre + ' ' + this.empleado[0].apellido, margin: 10, fontSize: 9, opacity: 0.3, alignment: 'right' },
 
       // Pie de página
