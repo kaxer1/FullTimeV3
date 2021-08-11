@@ -3,8 +3,8 @@ import { Routes, RouterModule } from '@angular/router';
 
 // Componentes Administrador
 import { VistaRolesComponent } from './componentes/catalogos/catRoles/vista-roles/vista-roles.component';
-import { RegistroComponent } from './componentes/empleado/registro/registro.component';
-import { ListaEmpleadosComponent } from './componentes/empleado/lista-empleados/lista-empleados.component';
+import { RegistroComponent } from './componentes/empleado/datos-empleado/registro/registro.component';
+import { ListaEmpleadosComponent } from './componentes/empleado/datos-empleado/lista-empleados/lista-empleados.component';
 import { LoginComponent } from './componentes/login/login.component';
 import { HomeComponent } from './componentes/home/home.component';
 import { VerEmpleadoComponent } from './componentes/empleado/ver-empleado/ver-empleado.component';
@@ -29,7 +29,7 @@ import { ListarTipoComidasComponent } from './componentes/catalogos/catTipoComid
 import { ListarRelojesComponent } from './componentes/catalogos/catRelojes/listar-relojes/listar-relojes.component';
 import { ListarCiudadComponent } from './componentes/ciudades/listar-ciudad/listar-ciudad.component';
 import { VistaElementosComponent } from './componentes/catalogos/catTipoPermisos/listarTipoPermisos/vista-elementos.component';
-import { EmplCargosComponent } from './componentes/empleadoCargos/empl-cargos/empl-cargos.component';
+import { EmplCargosComponent } from './componentes/empleado/cargo/empl-cargos/empl-cargos.component';
 import { ListarTitulosComponent } from './componentes/catalogos/catTitulos/listar-titulos/listar-titulos.component';
 import { ListarCiudadFeriadosComponent } from './componentes/catalogos/catFeriados/listar-ciudad-feriados/listar-ciudad-feriados.component';
 import { ListaSucursalesComponent } from './componentes/sucursales/lista-sucursales/lista-sucursales.component';

@@ -15,12 +15,12 @@ import * as moment from 'moment';
 import * as xlsx from 'xlsx';
 
 // IMPORTAR COMPONENTES
-import { ConfirmarDesactivadosComponent } from './confirmar-desactivados/confirmar-desactivados.component';
+import { ConfirmarDesactivadosComponent } from '../confirmar-desactivados/confirmar-desactivados.component';
 
 // IMPORTAR SERVICIOS
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
-import { EmpleadoElemento } from '../../../model/empleado.model'
+import { EmpleadoElemento } from '../../../../model/empleado.model'
 
 @Component({
   selector: 'app-lista-empleados',

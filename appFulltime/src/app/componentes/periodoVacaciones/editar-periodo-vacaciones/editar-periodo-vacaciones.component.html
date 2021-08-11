@@ -16,7 +16,7 @@
                         <mat-label>Empleado</mat-label>
                         <input id="nomEmple" matInput placeholder="Empleado" [formControl]="nombreEmpleadoF"
                             readonly="readonly" required>
-                        <mat-icon id="contratoE" matSuffix 
+                        <mat-icon id="i-cursor" matSuffix 
                             matTooltipPosition="right" matTooltip="Nombre del empleado">
                             help_outline</mat-icon>
                     </mat-form-field>
@@ -31,7 +31,7 @@
                     <mat-radio-group aria-label="Select an option" [formControl]="estadoF" [value]="estadoF.value" required>
                         <label class="d-flex justify-content-between">
                             <span>Vacaciones usadas *</span>
-                            <mat-icon id="contratoE" matSuffix  matTooltipPosition="right"
+                            <mat-icon id="i-cursor" matSuffix  matTooltipPosition="right"
                                 matTooltip="Indicación de que el empleado hizo uso de sus vacaciones">help_outline
                             </mat-icon>
                         </label>
@@ -46,7 +46,7 @@
                         <mat-label id="fec">Fecha de inicio de período</mat-label>
                         <input matInput [matDatepicker]="picker" (dateInput)="validarFecha($event)"
                             placeholder="dd/mm/aaaa" [formControl]="fechaInicioF" required>
-                        <mat-datepicker-toggle matSuffix [for]="picker" id="contratoE"
+                        <mat-datepicker-toggle matSuffix [for]="picker" id="i-cursor"
                              matTooltipPosition="right"
                             matTooltip="Ingresar la fecha de inicio de período de vacaciones. Seleccione la fecha dando click en el icono de calendario o puede escribir la fecha con el formato  día/mes/año. Ejemplo: 12/04/1993">
                         </mat-datepicker-toggle>
@@ -56,7 +56,7 @@
                         <mat-label id="fec">Fecha de fin de período</mat-label>
                         <input matInput [matDatepicker]="picker2" placeholder="dd/mm/aaaa"
                             [formControl]="fechaFinF">
-                        <mat-datepicker-toggle matSuffix [for]="picker2" id="contratoE"
+                        <mat-datepicker-toggle matSuffix [for]="picker2" id="i-cursor"
                              matTooltipPosition="right"
                             matTooltip="Ingresar la fecha de finalización de período de vacaciones. Seleccione la fecha dando click en el icono de calendario o puede escribir la fecha con el formato  día/mes/año. Ejemplo: 12/04/1993">
                         </mat-datepicker-toggle>

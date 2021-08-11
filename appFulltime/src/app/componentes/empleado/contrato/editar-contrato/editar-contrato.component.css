@@ -1,18 +1,13 @@
+mat-form-field { width: 200px; margin: 10px;}
+
 .mat-radio-button ~ .mat-radio-button { margin-left: 16px; }
 
 .btn { margin-left: 15px; background-color: rgb(80,87,97); color: white; } 
-
-mat-radio-group { width: 210px; padding: 15px 20px 15px 20x; margin-bottom: 10px;}
-
-mat-form-field {padding: 10px 10px 0px 10px;}
-
-.separar {padding: 10px 10px 0px 10px}
 
 #movilidad { 
     cursor: grab;
     color: blue;
     font-size: 20px;
-    margin-left: 10px;
 }
 
 .barraTituloContratoE { 
@@ -22,13 +17,22 @@ mat-form-field {padding: 10px 10px 0px 10px;}
     padding-top: 14px; 
 }
 
-#contratoE { cursor: pointer; }
+
 
 #nomEmple { font-size: 13px; }
 
-#tamañoLetra { font-size: 14px; }
+.nota {
+    font-size: 12px; 
+    font-weight: bold; 
+    padding-left: 5px;  
+    text-align: justify;
+    padding-bottom: 10px; 
+    color: rgb(52,65,84);
+}
 
-#nomContrato { font-size: 14px; display: inline-block;}
+#nomContrato { font-size: 14px; display: inline-block; }
+
+#tamañoLetra { font-size: 14px; margin-right: 7px;}
 
 [type="file"] {
     height: 0;
@@ -56,7 +60,7 @@ mat-form-field {padding: 10px 10px 0px 10px;}
 }
 
 [type="file"] + label.btn-2 {
-    background-color: rgb(150, 243, 141);
+    background-color: #93a3c7;
     overflow: hidden;
 }
 
@@ -81,19 +85,4 @@ mat-form-field {padding: 10px 10px 0px 10px;}
 
 [type="file"] + label.btn-2:hover::before {
     right: 80%
-}
-
-.scrollbar {
-    float: left;
-    height: 550px;
-    width: 100%;
-    background: #fff;
-    overflow-y: scroll;
-    overflow-x: hidden;
-    margin-bottom: 25px;
-}
-
-.scrollbar-primary::-webkit-scrollbar {
-    width: 12px;
-    background-color: #F5F5F5; 
 }

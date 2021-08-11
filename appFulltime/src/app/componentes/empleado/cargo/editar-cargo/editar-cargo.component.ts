@@ -4,7 +4,7 @@ import { DepartamentosService } from 'src/app/servicios/catalogos/catDepartament
 import { EmplCargosService } from 'src/app/servicios/empleado/empleadoCargo/empl-cargos.service';
 import { SucursalService } from 'src/app/servicios/sucursales/sucursal.service';
 import { ToastrService } from 'ngx-toastr';
-import { VerEmpleadoComponent } from '../ver-empleado/ver-empleado.component';
+import { VerEmpleadoComponent } from '../../ver-empleado/ver-empleado.component';
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 
 @Component({

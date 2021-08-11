@@ -1,25 +1,39 @@
-import { FormControl, Validators, FormGroup } from '@angular/forms';
+// IMPORTAR LIBRERIAS
+import { ToastrService } from 'ngx-toastr';
+import { FormControl, FormGroup } from '@angular/forms';
 import { Component, OnInit, Input } from '@angular/core';
+import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
+import { MAT_MOMENT_DATE_FORMATS, MAT_MOMENT_DATE_ADAPTER_OPTIONS, MomentDateAdapter } from '@angular/material-moment-adapter';
+
+// IMPORTAR SERVICIOS
 import { VacunacionService } from 'src/app/servicios/empleado/empleadoVacunas/vacunacion.service';
 import { ValidacionesService } from 'src/app/servicios/validaciones/validaciones.service';
-import { ToastrService } from 'ngx-toastr';
+
+// IMPORTAR COMPONENTES
 import { VerEmpleadoComponent } from '../../ver-empleado/ver-empleado.component';
 
 @Component({
   selector: 'app-crear-vacuna',
   templateUrl: './crear-vacuna.component.html',
-  styleUrls: ['./crear-vacuna.component.css']
+  styleUrls: ['./crear-vacuna.component.css'],
+  providers: [
+    { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
+    { provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: { useUtc: true } },
+    { provide: MAT_DATE_FORMATS, useValue: MAT_MOMENT_DATE_FORMATS },
+    { provide: MAT_DATE_LOCALE, useValue: 'es' },
+  ]
 })
 
 export class CrearVacunaComponent implements OnInit {
 
+  // VARIABLE TOMADA DESDE EL COMPONENTE VER IMPORTADO
   @Input() idEmploy: string;
 
   constructor(
-    public restVacuna: VacunacionService,
-    public validar: ValidacionesService,
-    public toastr: ToastrService,
-    public metodos: VerEmpleadoComponent,
+    public toastr: ToastrService, // VARIABLE USADA PARA MENSAJES DE NOTIFICACIONES
+    public validar: ValidacionesService, // VARIABLE USADA PARA VALIDACIONES
+    public metodos: VerEmpleadoComponent, // VARIABLE USADA PARA EXTRAER MÉTODOS DEL COMPONENTEE IMPORTADO
+    public restVacuna: VacunacionService, // CONSULTA DE SERVICIOS DATOS DE VACUNACIÓN
   ) { }
 
   ngOnInit(): void {
@@ -30,17 +44,28 @@ export class CrearVacunaComponent implements OnInit {
 
   // VARIABLES VISUALIZACIÓN INGRESO DE TIPO DE VACUNA
   ingresarTipo: boolean = true;
-  estado: boolean = true;
   estilo: any;
+
+  // VARIABLES DE SLECCIÓN DE DOSIS
+  estado_1: boolean = false;
+  estado_2: boolean = false;
+  estado_3: boolean = false;
+
+  // VARIABLES PARA HABILITAR FECHAS
+  fecha_1: boolean = false;
+  fecha_2: boolean = false;
+  fecha_3: boolean = false;
 
   // VARIABLES DE ALMACENAMIENTO DE DATOS
   tipoVacuna: any = [];
 
   // VALIDACIONES DE CAMPOS DE FORMULARIO
   idTipoF = new FormControl('');
-  dosisF = new FormControl('', [Validators.required]);
-  archivoF = new FormControl('');
   nombreF = new FormControl('');
+  fecha1F = new FormControl('');
+  fecha2F = new FormControl('');
+  fecha3F = new FormControl('');
+  archivoF = new FormControl('');
   certificadoF = new FormControl('');
 
   // FORMULARIO DENTRO DE UN GRUPO
@@ -49,7 +74,9 @@ export class CrearVacunaComponent implements OnInit {
     archivoForm: this.archivoF,
     nombreForm: this.nombreF,
     idTipoForm: this.idTipoF,
-    dosisForm: this.dosisF,
+    fecha1Form: this.fecha1F,
+    fecha2Form: this.fecha2F,
+    fecha3Form: this.fecha3F,
   });
 
   // MÉTODO PARA CONSULTAR DATOS DE TIPO DE VACUNA
@@ -92,6 +119,12 @@ export class CrearVacunaComponent implements OnInit {
     this.vacunaForm.reset();
     this.HabilitarBtn = false;
     this.ingresarTipo = true;
+    this.estado_1 = false;
+    this.estado_2 = false;
+    this.estado_3 = false;
+    this.fecha_1 = false;
+    this.fecha_2 = false;
+    this.fecha_3 = false;
   }
 
   // MÉTODO PARA CERRAR VENTANA DE REGISTRO
@@ -140,18 +173,25 @@ export class CrearVacunaComponent implements OnInit {
   // MÉTODO PARA GUARDAR DATOS DE REGISTRO DE VACUNACIÓN 
   GuardarDatosCarnet(form, id_tipo) {
     let dataCarnet = {
-      id_empleado: parseInt(this.idEmploy),
+      dosis_1: this.estado_1,
+      dosis_2: this.estado_2,
+      dosis_3: this.estado_3,
       id_tipo_vacuna: id_tipo,
-      dosis: form.dosisForm,
+      fecha_1: form.fecha1Form,
+      fecha_2: form.fecha2Form,
+      fecha_3: form.fecha3Form,
       nom_carnet: form.certificadoForm,
+      id_empleado: parseInt(this.idEmploy),
     }
+    this.MensajeFechas(form, dataCarnet);
+    console.log('datos de entrada', dataCarnet);
     this.restVacuna.CrearRegistroVacunacion(dataCarnet).subscribe(response => {
-      this.toastr.success('Operacion Exitosa', 'Registro Vacunación guardado.', {
+      this.toastr.success(this.mensaje, 'Registro Vacunación guardado.', {
         timeOut: 6000,
       });
+      this.metodos.ObtenerDatosVacunas();
       if (form.certificadoForm === '' || form.certificadoForm === null || form.certificadoForm === undefined) {
         this.CerrarRegistro();
-        this.metodos.ObtenerDatosVacunas();
       }
     }, error => { });
   }
@@ -190,8 +230,8 @@ export class CrearVacunaComponent implements OnInit {
     if (this.archivoSubido[0].size <= 2e+6) {
       this.CrearRegistroVacuna(form);
       this.CargarDocumento(parseInt(this.idEmploy));
-      this.CerrarRegistro();
       this.metodos.ObtenerDatosVacunas();
+      this.CerrarRegistro();
     }
     else {
       this.toastr.warning('El archivo ha excedido el tamaño permitido.', 'Tamaño de archivos permitido máximo 2MB.', {
@@ -210,9 +250,73 @@ export class CrearVacunaComponent implements OnInit {
     }
   }
 
-  setAll(completed: boolean) {
-    this.estado = completed;
+  // MÉTODO PARA VER CAMPO FECHA 1
+  VerFecha_1(estado: boolean) {
+    this.estado_1 = estado;
+    if (this.estado_1 === true) {
+      this.fecha_1 = true;
+    }
+    else {
+      this.fecha_1 = false;
+      this.fecha1F.reset();
+    }
+  }
 
+  // MÉTODO PARA VER CAMPO FECHA 2
+  VerFecha_2(estado: boolean) {
+    this.estado_2 = estado;
+    if (this.estado_2 === true) {
+      this.fecha_2 = true;
+    }
+    else {
+      this.fecha_2 = false;
+      this.fecha2F.reset();
+    }
+  }
+
+  // MÉTODO PARA VER CAMPO FECHA 3
+  VerFecha_3(estado: boolean) {
+    this.estado_3 = estado;
+    if (this.estado_3 === true) {
+      this.fecha_3 = true;
+    }
+    else {
+      this.fecha_3 = false;
+      this.fecha3F.reset();
+    }
+  }
+
+  // MÉTODO PARA ENVIAR MENSAJE INDICANDO QUE DEBE ACTUALIZAR REGISTRO
+  mensaje: string = '';
+  MensajeFechas(form, datos: any) {
+    let frase = 'Recuerde actualizar su registro de vacunación e ingresar fechas correspondientes a cada dosis recibida.';
+    if (this.estado_1 === true) {
+      if (form.fecha1Form === '' || form.fecha1Form === null || form.fecha1Form === undefined) {
+        this.mensaje = frase;
+        datos.fecha_1 = null;
+      }
+    }
+    else {
+      datos.fecha_1 = null;
+    }
+    if (this.estado_2 === true) {
+      if (form.fecha2Form === '' || form.fecha2Form === null || form.fecha2Form === undefined) {
+        this.mensaje = frase;
+        datos.fecha_2 = null;
+      }
+    }
+    else {
+      datos.fecha_2 = null;
+    }
+    if (this.estado_3 === true) {
+      if (form.fecha3Form === '' || form.fecha3Form === null || form.fecha3Form === undefined) {
+        this.mensaje = frase;
+        datos.fecha_3 = null;
+      }
+    }
+    else {
+      datos.fecha_3 = null;
+    }
   }
 }
 
