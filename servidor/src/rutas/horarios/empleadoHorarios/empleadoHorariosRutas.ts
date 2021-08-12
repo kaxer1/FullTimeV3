@@ -30,6 +30,8 @@ class EmpleadoHorariosRutas {
 
         this.router.post('/busqueda-horarios/:codigo', TokenValidation, EMPLEADO_HORARIOS_CONTROLADOR.BuscarHorariosFechas);
 
+        this.router.post('/horarios-existentes/:empl_id', TokenValidation, EMPLEADO_HORARIOS_CONTROLADOR.VerificarHorariosExistentes);
+        
         // Verificar datos de la plantilla del horario de un empleado
         this.router.post('/revisarData/:id', [TokenValidation, multipartMiddleware], EMPLEADO_HORARIOS_CONTROLADOR.VerificarDatos_PlantillaEmpleado_Horario);
         this.router.post('/verificarPlantilla/upload', [TokenValidation, multipartMiddleware], EMPLEADO_HORARIOS_CONTROLADOR.VerificarPlantilla_HorarioEmpleado);

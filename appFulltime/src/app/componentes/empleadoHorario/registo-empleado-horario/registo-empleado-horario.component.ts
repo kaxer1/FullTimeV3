@@ -313,7 +313,7 @@ export class RegistoEmpleadoHorarioComponent implements OnInit {
       // VERIFICACIÓN DE FORMATO CORRECTO DE HORARIOS
       if (!this.StringTimeToSegundosTime(hora_trabajo)) {
         this.EmpleadoHorarioForm.patchValue({ horarioForm: 0 });
-        this.toastr.warning('Horas de horario no validas.', 'Dar click para verificar registro de detalle de horario.', {
+        this.toastr.warning('Formato de horas en horario seleccionado no son válidas.', 'Dar click para verificar registro de detalle de horario.', {
           timeOut: 6000,
         }).onTap.subscribe(obj => {
           this.dialogRef.close();
@@ -321,34 +321,27 @@ export class RegistoEmpleadoHorarioComponent implements OnInit {
         });
       }
       else {
-        /* let fechas = {
-           fechaInicio: form.fechaInicioForm,
-           fechaFinal: form.fechaFinalForm,
-           id_horario: form.horarioForm
-         };
-         this.rest.VerificarDuplicidadHorarios(this.datoEmpleado.idEmpleado, fechas).subscribe(existe => {
-           this.toastr.info('Las fechas ingresadas ya se encuentran registradas en otro horario.', '', {
-             timeOut: 6000,
-           });
-           this.EmpleadoHorarioForm.patchValue({
-             horarioForm: 0
-           })
-         }, error => {
-           this.toastr.info('Bien', '', {
-             timeOut: 6000,
-           });
-           this.ValidarHorarioByHorasTrabaja(form);
-           // this.InsertarEmpleadoHorario(form);
-         });
- 
- */
+        this.horariosEmpleado = [];
+        let fechas = {
+          fechaInicio: form.fechaInicioForm,
+          fechaFinal: form.fechaFinalForm,
+        };
+        this.rest.VerificarHorariosExistentes(this.datoEmpleado.idEmpleado, fechas).subscribe(existe => {
+          this.horariosEmpleado = existe;
+          console.log('ver horas horarios', this.horariosEmpleado);
+          this.horariosEmpleado.map(h => {
+            console.log('ver horas', h.hora_trabajo);
+          })
+        }, error => { });
 
-        if (this.StringTimeToSegundosTime(hora_trabajo) <= this.StringTimeToSegundosTime(seg)) {
-          return this.toastr.success('Seleccion de horario correcta.')
-        } else {
-          this.EmpleadoHorarioForm.patchValue({ horarioForm: 0 });
-          return this.toastr.warning('Mal horario')
-        }
+
+
+        /*  if (this.StringTimeToSegundosTime(hora_trabajo) <= this.StringTimeToSegundosTime(seg)) {
+            return this.toastr.success('Seleccion de horario correcta.')
+          } else {
+            this.EmpleadoHorarioForm.patchValue({ horarioForm: 0 });
+            return this.toastr.warning('Mal horario')
+          }*/
       }
 
     }
@@ -369,6 +362,12 @@ export class RegistoEmpleadoHorarioComponent implements OnInit {
     const m = parseInt(stringTime.split(':')[1]) * 60;
     const s = parseInt(stringTime.split(':')[2]);
     return h + m + s
+  }
+
+  // MÉTODO PARA LEER HORARIOS DEL EMPLEADO
+  horariosEmpleado: any = [];
+  HorariosEmpleado(form) {
+
   }
 
 }

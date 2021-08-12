@@ -12,7 +12,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.EMPLEADO_HORARIOS_CONTROLADOR = void 0;
 const database_1 = __importDefault(require("../../../database"));
 const xlsx_1 = __importDefault(require("xlsx"));
 const fs_1 = __importDefault(require("fs"));
@@ -402,6 +401,25 @@ class EmpleadoHorariosControlador {
                 'OR $2 BETWEEN fec_inicio AND fec_final OR fec_inicio BETWEEN $1 AND $2 ' +
                 'OR fec_final BETWEEN $1 AND $2) AND id_horarios = $4) AS h ' +
                 'ON h.id_empl_cargo = dc.cargo_id  AND dc.empl_id = $3 AND dc.estado_empl = 1', [fechaInicio, fechaFinal, empl_id, id_horario]);
+            if (HORARIO.rowCount > 0) {
+                return res.jsonp(HORARIO.rows);
+            }
+            else {
+                return res.status(404).jsonp({ text: 'Registros no encontrados' });
+            }
+        });
+    }
+    // MÉTODO PARA BUSCAR HORARIOS DEL EMPLEADO EN DETERMINADA FECHA
+    VerificarHorariosExistentes(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { fechaInicio, fechaFinal } = req.body;
+            const { empl_id } = req.params;
+            const HORARIO = yield database_1.default.query('SELECT ch.hora_trabajo, eh.fec_inicio, eh.fec_final ' +
+                'FROM empl_horarios AS eh, empleados AS e, cg_horarios AS ch ' +
+                'WHERE ($1 BETWEEN fec_inicio AND fec_final ' +
+                'OR $2 BETWEEN fec_inicio AND fec_final OR fec_inicio BETWEEN $1 AND $2 ' +
+                'OR fec_final BETWEEN $1 AND $2) AND eh.codigo = e.codigo::int AND e.estado = 1 ' +
+                'AND eh.id_horarios = ch.id AND e.id = $3', [fechaInicio, fechaFinal, empl_id]);
             if (HORARIO.rowCount > 0) {
                 return res.jsonp(HORARIO.rows);
             }

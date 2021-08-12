@@ -362,16 +362,16 @@ class EmpleadoHorariosControlador {
             jueves, viernes, sabado, domingo, id_horarios, estado, id } = req.body;
         try {
             // console.log(req.body);
-            const [result] = await pool.query('UPDATE empl_horarios SET id_empl_cargo = $1, id_hora = $2, fec_inicio = $3, fec_final = $4, lunes = $5, martes = $6, miercoles = $7, jueves = $8, viernes = $9, sabado = $10, domingo = $11, id_horarios = $12, estado = $13 WHERE id = $14 RETURNING *', 
-            [id_empl_cargo, id_hora, fec_inicio, fec_final, lunes, martes, miercoles, jueves, viernes, sabado, domingo, id_horarios, estado, id])
-            .then(result => { return result.rows });
-            
-            if ( result=== undefined ) return res.status(404).jsonp({message: 'Horario no actualizado'})
-            
+            const [result] = await pool.query('UPDATE empl_horarios SET id_empl_cargo = $1, id_hora = $2, fec_inicio = $3, fec_final = $4, lunes = $5, martes = $6, miercoles = $7, jueves = $8, viernes = $9, sabado = $10, domingo = $11, id_horarios = $12, estado = $13 WHERE id = $14 RETURNING *',
+                [id_empl_cargo, id_hora, fec_inicio, fec_final, lunes, martes, miercoles, jueves, viernes, sabado, domingo, id_horarios, estado, id])
+                .then(result => { return result.rows });
+
+            if (result === undefined) return res.status(404).jsonp({ message: 'Horario no actualizado' })
+
             return res.status(200).jsonp({ message: 'El horario del empleado se registró con éxito' });
         } catch (error) {
             console.log(error);
-            
+
             return res.status(500).jsonp({ message: 'Registros no encontrados' });
         }
     }
@@ -407,6 +407,25 @@ class EmpleadoHorariosControlador {
             'OR fec_final BETWEEN $1 AND $2) AND id_horarios = $4) AS h ' +
             'ON h.id_empl_cargo = dc.cargo_id  AND dc.empl_id = $3 AND dc.estado_empl = 1',
             [fechaInicio, fechaFinal, empl_id, id_horario]);
+        if (HORARIO.rowCount > 0) {
+            return res.jsonp(HORARIO.rows)
+        }
+        else {
+            return res.status(404).jsonp({ text: 'Registros no encontrados' });
+        }
+    }
+
+    // MÉTODO PARA BUSCAR HORARIOS DEL EMPLEADO EN DETERMINADA FECHA
+    public async VerificarHorariosExistentes(req: Request, res: Response): Promise<any> {
+        const { fechaInicio, fechaFinal } = req.body;
+        const { empl_id } = req.params;
+        const HORARIO = await pool.query('SELECT ch.hora_trabajo, eh.fec_inicio, eh.fec_final ' +
+            'FROM empl_horarios AS eh, empleados AS e, cg_horarios AS ch ' +
+            'WHERE ($1 BETWEEN fec_inicio AND fec_final ' +
+            'OR $2 BETWEEN fec_inicio AND fec_final OR fec_inicio BETWEEN $1 AND $2 ' +
+            'OR fec_final BETWEEN $1 AND $2) AND eh.codigo = e.codigo::int AND e.estado = 1 ' +
+            'AND eh.id_horarios = ch.id AND e.id = $3',
+            [fechaInicio, fechaFinal, empl_id]);
         if (HORARIO.rowCount > 0) {
             return res.jsonp(HORARIO.rows)
         }
