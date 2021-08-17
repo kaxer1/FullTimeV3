@@ -1297,12 +1297,18 @@ export class VerEmpleadoComponent implements OnInit {
   // VENTANA PARA EDITAR HORARIO DEL EMPLEADO 
   AbrirEditarHorario(datoSeleccionado: any): void {
     console.log(datoSeleccionado);
-    this.vistaRegistrarDatos.open(EditarHorarioEmpleadoComponent,
-      { width: '600px', data: { idEmpleado: this.idEmpleado, datosHorario: datoSeleccionado } })
-      .afterClosed().subscribe(item => {
-        console.log(item);
-        this.ObtenerHorariosEmpleado(parseInt(this.idEmpleado));
-      });
+    this.restCargo.BuscarIDCargoActual(parseInt(this.idEmpleado)).subscribe(datos => {
+      this.vistaRegistrarDatos.open(EditarHorarioEmpleadoComponent,
+        { width: '600px', data: { idEmpleado: this.idEmpleado, datosHorario: datoSeleccionado, horas_trabaja: datos[0].hora_trabaja } })
+        .afterClosed().subscribe(item => {
+          console.log(item);
+          this.ObtenerHorariosEmpleado(parseInt(this.idEmpleado));
+        });
+    }, error => {
+      this.toastr.info('El empleado no tiene registrado un Cargo', 'Primero Registrar Cargo', {
+        timeOut: 6000,
+      })
+    });
   }
 
   // VENTANA PARA REGISTRAR HORARIO 

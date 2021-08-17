@@ -429,6 +429,25 @@ class EmpleadoHorariosControlador {
             }
         });
     }
+    // MÉTODO PARA BUSCAR HORARIOS DEL EMPLEADO EN DETERMINADA FECHA PROCESO EDICIÓN
+    VerificarHorariosExistentesEdicion(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { fechaInicio, fechaFinal, id } = req.body;
+            const { empl_id } = req.params;
+            const HORARIO = yield database_1.default.query('SELECT ch.hora_trabajo, eh.fec_inicio, eh.fec_final ' +
+                'FROM empl_horarios AS eh, empleados AS e, cg_horarios AS ch ' +
+                'WHERE NOT eh.id = $4 AND ($1 BETWEEN fec_inicio AND fec_final ' +
+                'OR $2 BETWEEN fec_inicio AND fec_final OR fec_inicio BETWEEN $1 AND $2 ' +
+                'OR fec_final BETWEEN $1 AND $2) AND eh.codigo = e.codigo::int AND e.estado = 1 ' +
+                'AND eh.id_horarios = ch.id AND e.id = $3', [fechaInicio, fechaFinal, empl_id, id]);
+            if (HORARIO.rowCount > 0) {
+                return res.jsonp(HORARIO.rows);
+            }
+            else {
+                return res.status(404).jsonp({ text: 'Registros no encontrados' });
+            }
+        });
+    }
     VerificarFechasHorarioEdicion(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const id = req.params.id;

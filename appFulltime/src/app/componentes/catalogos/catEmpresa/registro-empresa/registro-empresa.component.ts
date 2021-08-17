@@ -1,11 +1,14 @@
-import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+// IMPORTAR LIBRERIAS
 import { ToastrService } from 'ngx-toastr';
-import { MatDialogRef } from '@angular/material/dialog';
-
-import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
+import { Component, OnInit } from '@angular/core';
 import { ThemePalette } from '@angular/material/core';
+import { MatDialogRef } from '@angular/material/dialog';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ProgressSpinnerMode } from '@angular/material/progress-spinner';
+
+// IMPORTAR SERVICIOS
+import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
+import { ValidacionesService } from 'src/app/servicios/validaciones/validaciones.service';
 
 @Component({
   selector: 'app-registro-empresa',
@@ -16,53 +19,53 @@ export class RegistroEmpresaComponent implements OnInit {
 
   valor = '';
 
-  // Control de campos y validaciones del formulario
-  nombreF = new FormControl('', [Validators.required, Validators.minLength(4)]);
-  direccionF = new FormControl('', [Validators.required, Validators.minLength(6)]);
-  rucF = new FormControl('', [Validators.required]);
-  correoF = new FormControl('', [Validators.required, Validators.email]);
-  telefonoF = new FormControl('', [Validators.required]);
-  tipoF = new FormControl('', [Validators.required]);
+  // CONTROL DE CAMPOS Y VALIDACIONES DEL FORMULARIO
   representanteF = new FormControl('', [Validators.required, Validators.pattern("[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]{4,48}")]);
-  otroF = new FormControl('', [Validators.minLength(3)]);
-  establecimientoF = new FormControl('', [Validators.required]);
-  otroE = new FormControl('', [Validators.minLength(3)]);
+  direccionF = new FormControl('', [Validators.required, Validators.minLength(6)]);
+  nombreF = new FormControl('', [Validators.required, Validators.minLength(4)]);
+  correoF = new FormControl('', [Validators.required, Validators.email]);
+  establecimientoF = new FormControl('', Validators.required);
+  telefonoF = new FormControl('', Validators.required);
+  otroF = new FormControl('', Validators.minLength(3));
+  otroE = new FormControl('', Validators.minLength(3));
+  tipoF = new FormControl('', Validators.required);
+  rucF = new FormControl('', Validators.required);
 
-  // Asignación de validaciones a inputs del formulario
+  // ASIGNACIÓN DE VALIDACIONES A INPUTS DEL FORMULARIO
   public RegistroEmpresaForm = new FormGroup({
-    nombreForm: this.nombreF,
-    rucForm: this.rucF,
-    telefonoForm: this.telefonoF,
-    direccionForm: this.direccionF,
-    correoForm: this.correoF,
-    tipoForm: this.tipoF,
-    representanteForm: this.representanteF,
-    otroForm: this.otroF,
     establecimientoForm: this.establecimientoF,
-    otroEForm: this.otroE
+    representanteForm: this.representanteF,
+    direccionForm: this.direccionF,
+    telefonoForm: this.telefonoF,
+    correoForm: this.correoF,
+    nombreForm: this.nombreF,
+    otroEForm: this.otroE,
+    tipoForm: this.tipoF,
+    otroForm: this.otroF,
+    rucForm: this.rucF,
   });
 
-  /**
-   * Variables progress spinner
-   */
+
+  //VARIABLES PROGRESS SPINNER
   color: ThemePalette = 'primary';
   mode: ProgressSpinnerMode = 'indeterminate';
   value = 10;
   habilitarprogress: boolean = false;
 
   constructor(
-    private toastr: ToastrService,
-    private rest: EmpresaService,
-    public dialogRef: MatDialogRef<RegistroEmpresaComponent>,
+    private rest: EmpresaService, // VARIABLE DE SERVICIOS DE DATOS DE EMPRESA
+    private toastr: ToastrService, // VARIABLE USADA PARA NOTIFICACIONES
+    public validar: ValidacionesService, // VARIABLE USADA PARA REALIZAR VALIDACIONES DE LETRAS Y NÚMEROS
+    public ventana: MatDialogRef<RegistroEmpresaComponent>, // VARIABLE PARA MOSTRAR VENTANAS
   ) { }
 
-
-  HabilitarOtro: boolean = true;
-  estiloOtro: any;
+  // VARAIBLES PARA MOSTRAR U OCULTAR OPCIONES
   HabilitarRepre: boolean = true;
   estiloRepre: any;
   HabilitarOtroE: boolean = true;
   estiloOtroE: any;
+  HabilitarOtro: boolean = true;
+  estiloOtro: any;
 
   ngOnInit(): void {
   }
@@ -105,22 +108,7 @@ export class RegistroEmpresaComponent implements OnInit {
   }
 
   IngresarSoloNumeros(evt) {
-    if (window.event) {
-      var keynum = evt.keyCode;
-    }
-    else {
-      keynum = evt.which;
-    }
-    // Comprobamos si se encuentra en el rango numérico y que teclas no recibirá.
-    if ((keynum > 47 && keynum < 58) || keynum == 8 || keynum == 13 || keynum == 6) {
-      return true;
-    }
-    else {
-      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números', {
-        timeOut: 6000,
-      })
-      return false;
-    }
+    this.validar.IngresarSoloNumeros(evt);
   }
 
   LimpiarCampos() {
@@ -130,14 +118,14 @@ export class RegistroEmpresaComponent implements OnInit {
   InsertarEmpresa(form) {
     this.habilitarprogress = true;
     let datosEmpresa = {
+      establecimiento: form.establecimientoForm,
+      representante: form.representanteForm,
+      correo_empresa: form.correoForm,
+      direccion: form.direccionForm,
+      tipo_empresa: form.tipoForm,
+      telefono: form.telefonoForm,
       nombre: form.nombreForm,
       ruc: form.rucForm,
-      direccion: form.direccionForm,
-      telefono: form.telefonoForm,
-      correo: form.correoForm,
-      tipo_empresa: form.tipoForm,
-      representante: form.representanteForm,
-      establecimiento: form.establecimientoForm,
       color_p: '#6495ED',
       color_s: '#00FF00'
     };
@@ -165,7 +153,7 @@ export class RegistroEmpresaComponent implements OnInit {
       }
       else {
         this.habilitarprogress = false;
-        this.toastr.info('Ingrese el nombre del tipo de empresa.','', {
+        this.toastr.info('Ingrese el nombre del tipo de empresa.', '', {
           timeOut: 6000,
         })
       }
@@ -183,7 +171,7 @@ export class RegistroEmpresaComponent implements OnInit {
         this.GuardarDatos(datos);
       }
       else {
-        this.toastr.info('Ingrese el nombre del establecimiento.','', {
+        this.toastr.info('Ingrese el nombre del establecimiento.', '', {
           timeOut: 6000,
         });
         this.habilitarprogress = false;
@@ -233,7 +221,7 @@ export class RegistroEmpresaComponent implements OnInit {
   CambiarNombreOtro() {
     this.estiloOtro = { 'visibility': 'visible' }; this.HabilitarOtro = false;
     this.estiloRepre = { 'visibility': 'visible' }; this.HabilitarRepre = false;
-    this.toastr.info('Ingresar el nombre del tipo de empresa.','', {
+    this.toastr.info('Ingresar el nombre del tipo de empresa.', '', {
       timeOut: 6000,
     })
     this.valor = 'Representante Legal'
@@ -251,7 +239,7 @@ export class RegistroEmpresaComponent implements OnInit {
 
   CambiarEstablecimiento() {
     this.estiloOtroE = { 'visibility': 'visible' }; this.HabilitarOtroE = false;
-    this.toastr.info('Ingresar el nombre del establecimiento que tiene la empresa.','', {
+    this.toastr.info('Ingresar el nombre del establecimiento que tiene la empresa.', '', {
       timeOut: 6000,
     })
     this.RegistroEmpresaForm.patchValue({
@@ -261,7 +249,7 @@ export class RegistroEmpresaComponent implements OnInit {
 
   CerrarVentanaRegistroEmpresa() {
     this.LimpiarCampos();
-    this.dialogRef.close();
+    this.ventana.close();
     window.location.reload();
     this.valor = '';
   }

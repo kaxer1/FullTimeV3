@@ -4,9 +4,11 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { HorarioService } from 'src/app/servicios/catalogos/catHorarios/horario.service';
-import { PrincipalHorarioComponent } from '../principal-horario/principal-horario.component';
+
 import { ThemePalette } from '@angular/material/core';
 import { ProgressSpinnerMode } from '@angular/material/progress-spinner';
+import { DetalleCatHorariosService } from 'src/app/servicios/horarios/detalleCatHorarios/detalle-cat-horarios.service';
+
 
 
 @Component({
@@ -55,6 +57,7 @@ export class EditarHorarioComponent implements OnInit {
     private rest: HorarioService,
     private toastr: ToastrService,
     public router: Router,
+    public restD: DetalleCatHorariosService,
     public dialogRef: MatDialogRef<EditarHorarioComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) { }
@@ -124,6 +127,9 @@ export class EditarHorarioComponent implements OnInit {
           this.toastr.success('Operación Exitosa', 'Horario actualizado.', {
             timeOut: 6000,
           });
+          if (dataHorario.min_almuerzo === 0) {
+            this.EliminarDetallesComida();
+          }
           this.SalirActualizar(dataHorario, response);
         }, error => {
           console.log(error);
@@ -143,7 +149,6 @@ export class EditarHorarioComponent implements OnInit {
           });
         }, error => {
           console.log(error);
-
           this.GuardarDatos(dataHorario);
         });
       }
@@ -170,6 +175,9 @@ export class EditarHorarioComponent implements OnInit {
         this.toastr.success('Operación Exitosa', 'Horario actualizado', {
           timeOut: 6000,
         });
+        if (datos.min_almuerzo === 0) {
+          this.EliminarDetallesComida();
+        }
         this.SubirRespaldo(this.data.horario.id);
         this.SalirActualizar(datos, response);
       }, error => {
@@ -237,6 +245,9 @@ export class EditarHorarioComponent implements OnInit {
       this.toastr.success('Operación Exitosa', 'Horario actualizado', {
         timeOut: 6000,
       });
+      if (datos.min_almuerzo === 0) {
+        this.EliminarDetallesComida();
+      }
       this.SalirActualizar(datos, response);
     }, error => {
       this.habilitarprogress = false;
@@ -382,6 +393,32 @@ export class EditarHorarioComponent implements OnInit {
         return hora;
       }
     }
+  }
+
+  // MÉTODO PARA BUSCAR DETALLES Y ELIMINAR SOLO DETALLES DE COMIDA
+  detalles_horarios: any = [];
+  EliminarDetallesComida() {
+    this.restD.ConsultarUnDetalleHorario(this.data.horario.id).subscribe(res => {
+      this.detalles_horarios = res;
+
+      this.detalles_horarios.map(det => {
+        console.log('ver det', det)
+        if (det.tipo_accion === 'E/A') {
+          this.EliminarDetalle(det.id);
+        }
+        if (det.tipo_accion === 'S/A') {
+          this.EliminarDetalle(det.id);
+        }
+      })
+
+    }, error => { })
+  }
+
+
+  // MÉTODO PARA ELIMINAR DETALLE DE COMIDAS
+  EliminarDetalle(id_detalle: number) {
+    this.restD.EliminarRegistro(id_detalle).subscribe(res => {
+    });
   }
 
 }

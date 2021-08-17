@@ -26,7 +26,7 @@
                     <mat-form-field>
                         <mat-label>Fecha de Finalización</mat-label>
                         <input matInput [matDatepicker]="picker2" placeholder="dd/mm/aaaa" [formControl]="fechaFinalF"
-                            required>
+                            required (click)="LimpiarHorario()" (dateInput)="LimpiarHorario()">
                         <mat-datepicker-toggle matSuffix [for]="picker2" id="i-cursor" matTooltipPosition="right"
                             matTooltip="Indicar la fecha de finalización de actividades. Seleccione la fecha dando click en el icono de calendario o puede escribir la fecha con el formato  día/mes/año. Ejemplo: 12/04/1993">
                         </mat-datepicker-toggle>

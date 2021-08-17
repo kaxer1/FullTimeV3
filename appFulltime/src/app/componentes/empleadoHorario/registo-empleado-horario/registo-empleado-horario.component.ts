@@ -394,7 +394,4 @@ export class RegistoEmpleadoHorarioComponent implements OnInit {
     this.EmpleadoHorarioForm.patchValue({ horarioForm: 0 });
   }
 
-
-
-
 }

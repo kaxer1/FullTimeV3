@@ -1,19 +1,24 @@
+// IMPORTAR LIBRERIAS
+import { ToastrService } from 'ngx-toastr';
+import { ThemePalette } from '@angular/material/core';
 import { Component, OnInit, Inject } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { ToastrService } from 'ngx-toastr';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-
-import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
-import { ThemePalette } from '@angular/material/core';
 import { ProgressSpinnerMode } from '@angular/material/progress-spinner';
+
+// IMPORTAR SERVICIOS
+import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
+import { ValidacionesService } from 'src/app/servicios/validaciones/validaciones.service';
 
 @Component({
   selector: 'app-editar-empresa',
   templateUrl: './editar-empresa.component.html',
   styleUrls: ['./editar-empresa.component.css']
 })
+
 export class EditarEmpresaComponent implements OnInit {
 
+  // VARIABLES USADAS PARA VER U OCULTAR OPCIONES
   valor = '';
   selec1 = false;
   selec2 = false;
@@ -26,61 +31,62 @@ export class EditarEmpresaComponent implements OnInit {
   selec9 = false;
   selec10 = false;
 
-  // Control de campos y validaciones del formulario
-  nombreF = new FormControl('', [Validators.required, Validators.minLength(4)]);
-  direccionF = new FormControl('', [Validators.required, Validators.minLength(6)]);
-  rucF = new FormControl('', [Validators.required]);
-  correoF = new FormControl('', [Validators.required, Validators.email]);
-  telefonoF = new FormControl('', [Validators.required]);
-  tipoF = new FormControl('', [Validators.required]);
+  // CONTROL DE CAMPOS Y VALIDACIONES DEL FORMULARIO
   representanteF = new FormControl('', [Validators.required, Validators.pattern("[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]{4,48}")]);
-  otroF = new FormControl('', [Validators.minLength(3)]);
-  establecimientoF = new FormControl('', [Validators.required]);
-  otroE = new FormControl('', [Validators.minLength(3)]);
+  direccionF = new FormControl('', [Validators.required, Validators.minLength(6)]);
+  nombreF = new FormControl('', [Validators.required, Validators.minLength(4)]);
+  correoF = new FormControl('', [Validators.required, Validators.email]);
+  establecimientoF = new FormControl('', Validators.required);
+  telefonoF = new FormControl('', Validators.required);
+  otroF = new FormControl('', Validators.minLength(3));
+  otroE = new FormControl('', Validators.minLength(3));
+  tipoF = new FormControl('', Validators.required);
+  rucF = new FormControl('', Validators.required);
   dias_cambioF = new FormControl('');
   cambiosF = new FormControl('');
   numeroF = new FormControl('');
 
-  // Asignación de validaciones a inputs del formulario
+  // ASIGNACIÓN DE VALIDACIONES A INPUTS DEL FORMULARIO
   public RegistroEmpresaForm = new FormGroup({
-    nombreForm: this.nombreF,
-    rucForm: this.rucF,
-    telefonoForm: this.telefonoF,
-    direccionForm: this.direccionF,
-    correoForm: this.correoF,
-    tipoForm: this.tipoF,
-    representanteForm: this.representanteF,
-    otroForm: this.otroF,
     establecimientoForm: this.establecimientoF,
-    otroEForm: this.otroE,
+    representanteForm: this.representanteF,
     dias_cambioForm: this.dias_cambioF,
+    direccionForm: this.direccionF,
+    telefonoForm: this.telefonoF,
     cambiosForm: this.cambiosF,
-    numeroForm: this.numeroF
+    nombreForm: this.nombreF,
+    numeroForm: this.numeroF,
+    correoForm: this.correoF,
+    otroEForm: this.otroE,
+    tipoForm: this.tipoF,
+    otroForm: this.otroF,
+    rucForm: this.rucF,
   });
 
-  /**
-   * Variables progress spinner
-   */
+
+  // VARIABLES PROGRESS SPINNER
   color: ThemePalette = 'primary';
+  habilitarprogress: boolean = false;
   mode: ProgressSpinnerMode = 'indeterminate';
   value = 10;
-  habilitarprogress: boolean = false;
 
   constructor(
-    private toastr: ToastrService,
     private rest: EmpresaService,
-    public dialogRef: MatDialogRef<EditarEmpresaComponent>,
+    private toastr: ToastrService,
+    public validar: ValidacionesService,
+    public ventana: MatDialogRef<EditarEmpresaComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) { }
 
-  HabilitarOtro: boolean = true;
-  estiloOtro: any;
+  // VARIABLES USADAS PARA MOSTRAR U OCULTAR OPCIONES
   HabilitarRepre: boolean = true;
   estiloRepre: any;
   HabilitarOtroE: boolean = true;
   estiloOtroE: any;
   habilitarDias: boolean = true;
   estiloDias: any;
+  HabilitarOtro: boolean = true;
+  estiloOtro: any;
 
   ngOnInit(): void {
     console.log('data', this.data)
@@ -177,36 +183,21 @@ export class EditarEmpresaComponent implements OnInit {
       this.RealizarCambiosNo();
     }
     this.RegistroEmpresaForm.patchValue({
+      establecimientoForm: this.data.establecimiento,
+      representanteForm: this.data.representante,
+      correoForm: this.data.correo_empresa,
+      direccionForm: this.data.direccion,
+      numeroForm: this.data.num_partida,
+      telefonoForm: this.data.telefono,
+      tipoForm: this.data.tipo_empresa,
+      cambiosForm: this.data.cambios,
       nombreForm: this.data.nombre,
       rucForm: this.data.ruc,
-      telefonoForm: this.data.telefono,
-      direccionForm: this.data.direccion,
-      correoForm: this.data.correo,
-      tipoForm: this.data.tipo_empresa,
-      representanteForm: this.data.representante,
-      establecimientoForm: this.data.establecimiento,
-      cambiosForm: this.data.cambios,
-      numeroForm: this.data.num_partida
     })
   }
 
   IngresarSoloNumeros(evt) {
-    if (window.event) {
-      var keynum = evt.keyCode;
-    }
-    else {
-      keynum = evt.which;
-    }
-    // Comprobamos si se encuentra en el rango numérico y que teclas no recibirá.
-    if ((keynum > 47 && keynum < 58) || keynum == 8 || keynum == 13 || keynum == 6) {
-      return true;
-    }
-    else {
-      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números', {
-        timeOut: 6000,
-      })
-      return false;
-    }
+    this.validar.IngresarSoloNumeros(evt);
   }
 
   LimpiarCampos() {
@@ -216,18 +207,18 @@ export class EditarEmpresaComponent implements OnInit {
   InsertarEmpresa(form) {
     this.habilitarprogress === true;
     let datosEmpresa = {
-      id: this.data.id,
+      establecimiento: form.establecimientoForm,
+      representante: form.representanteForm,
+      dias_cambio: form.dias_cambioForm,
+      correo_empresa: form.correoForm,
+      direccion: form.direccionForm,
+      num_partida: form.numeroForm,
+      telefono: form.telefonoForm,
+      tipo_empresa: form.tipoForm,
+      cambios: form.cambiosForm,
       nombre: form.nombreForm,
       ruc: form.rucForm,
-      direccion: form.direccionForm,
-      telefono: form.telefonoForm,
-      correo: form.correoForm,
-      tipo_empresa: form.tipoForm,
-      representante: form.representanteForm,
-      establecimiento: form.establecimientoForm,
-      dias_cambio: form.dias_cambioForm,
-      cambios: form.cambiosForm,
-      num_partida: form.numeroForm
+      id: this.data.id,
     };
     this.VerificarCambios(form, datosEmpresa);
   }
@@ -281,7 +272,7 @@ export class EditarEmpresaComponent implements OnInit {
     if (form.establecimientoForm === 'Otro') {
       if (form.otroEForm != '') {
         datos.establecimiento = form.otroEForm;
-        // this.GuardarDatos(datos);
+        this.GuardarDatos(datos);
       }
       else {
         this.toastr.info('Ingrese el nombre del establecimiento.', '', {
@@ -378,13 +369,13 @@ export class EditarEmpresaComponent implements OnInit {
 
   CerrarVentanaRegistroEmpresa() {
     this.LimpiarCampos();
-    this.dialogRef.close({ actualizar: true });
+    this.ventana.close({ actualizar: true });
     this.valor = '';
   }
 
   Salir() {
     this.LimpiarCampos();
-    this.dialogRef.close({ actualizar: false });
+    this.ventana.close({ actualizar: false });
     this.valor = '';
   }
 

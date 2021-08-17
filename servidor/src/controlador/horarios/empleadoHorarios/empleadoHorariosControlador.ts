@@ -29,7 +29,8 @@ class EmpleadoHorariosControlador {
 
     public async ListarHorarioCargo(req: Request, res: Response) {
         const { id_empl_cargo } = req.params;
-        const HORARIOS = await pool.query('SELECT * FROM VistaHorarioEmpleado WHERE id_empl_cargo = $1', [id_empl_cargo]);
+        const HORARIOS = await pool.query('SELECT * FROM VistaHorarioEmpleado WHERE id_empl_cargo = $1',
+            [id_empl_cargo]);
         if (HORARIOS.rowCount > 0) {
             return res.jsonp(HORARIOS.rows)
         }
@@ -426,6 +427,25 @@ class EmpleadoHorariosControlador {
             'OR fec_final BETWEEN $1 AND $2) AND eh.codigo = e.codigo::int AND e.estado = 1 ' +
             'AND eh.id_horarios = ch.id AND e.id = $3',
             [fechaInicio, fechaFinal, empl_id]);
+        if (HORARIO.rowCount > 0) {
+            return res.jsonp(HORARIO.rows)
+        }
+        else {
+            return res.status(404).jsonp({ text: 'Registros no encontrados' });
+        }
+    }
+
+    // MÉTODO PARA BUSCAR HORARIOS DEL EMPLEADO EN DETERMINADA FECHA PROCESO EDICIÓN
+    public async VerificarHorariosExistentesEdicion(req: Request, res: Response): Promise<any> {
+        const { fechaInicio, fechaFinal, id } = req.body;
+        const { empl_id } = req.params;
+        const HORARIO = await pool.query('SELECT ch.hora_trabajo, eh.fec_inicio, eh.fec_final ' +
+            'FROM empl_horarios AS eh, empleados AS e, cg_horarios AS ch ' +
+            'WHERE NOT eh.id = $4 AND ($1 BETWEEN fec_inicio AND fec_final ' +
+            'OR $2 BETWEEN fec_inicio AND fec_final OR fec_inicio BETWEEN $1 AND $2 ' +
+            'OR fec_final BETWEEN $1 AND $2) AND eh.codigo = e.codigo::int AND e.estado = 1 ' +
+            'AND eh.id_horarios = ch.id AND e.id = $3',
+            [fechaInicio, fechaFinal, empl_id, id]);
         if (HORARIO.rowCount > 0) {
             return res.jsonp(HORARIO.rows)
         }
