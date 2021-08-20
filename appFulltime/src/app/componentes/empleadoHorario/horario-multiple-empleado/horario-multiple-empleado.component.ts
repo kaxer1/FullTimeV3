@@ -193,6 +193,8 @@ export class HorarioMultipleEmpleadoComponent implements OnInit {
         { width: '600px', data: { datos: EmpleadosSeleccionados } })
         .afterClosed().subscribe(item => {
           this.ObtenerEmpleados();
+          this.selectionUno.clear();
+          this.HabilitarSeleccion();
         });
     }
   }
