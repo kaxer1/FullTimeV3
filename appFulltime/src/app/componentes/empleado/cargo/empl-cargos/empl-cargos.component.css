@@ -24,14 +24,7 @@ mat-form-field {width: 195px; padding: 10px 10px 0px 10px;}
 
 #selEmpre { font-size: 13px; }
 
-.nota {
-    font-size: 12px; 
-    font-weight: bold; 
-    padding-left: 5px;  
-    text-align: justify;
-    padding-bottom: 10px; 
-    color: rgb(52,65,84);
-}
+
 
 .scrollbar {
     float: left;

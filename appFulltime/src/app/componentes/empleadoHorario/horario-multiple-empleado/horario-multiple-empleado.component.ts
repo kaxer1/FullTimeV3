@@ -1,29 +1,31 @@
+// IMPORTAR LIBRERIAS
+import { ToastrService } from 'ngx-toastr';
 import { Component, OnInit } from '@angular/core';
-import { Validators, FormControl, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
 import { SelectionModel } from '@angular/cdk/collections';
-import { ToastrService } from 'ngx-toastr';
+import { Validators, FormControl, FormGroup } from '@angular/forms';
 
-// Servicios Filtros de búsqueda
-import { SucursalService } from 'src/app/servicios/sucursales/sucursal.service';
+// SERVICIOS FILTROS DE BÚSQUEDA
 import { DepartamentosService } from 'src/app/servicios/catalogos/catDepartamentos/departamentos.service';
 import { EmplCargosService } from 'src/app/servicios/empleado/empleadoCargo/empl-cargos.service';
 import { RegimenService } from 'src/app/servicios/catalogos/catRegimen/regimen.service';
+import { SucursalService } from 'src/app/servicios/sucursales/sucursal.service';
 
-
+// IMPORTAR SERVICIOS
+import { PeriodoVacacionesService } from 'src/app/servicios/periodoVacaciones/periodo-vacaciones.service';
 import { DatosGeneralesService } from 'src/app/servicios/datosGenerales/datos-generales.service';
-import { PlanificacionComidasComponent } from '../../planificacionComidas/planificacion-comidas/planificacion-comidas.component';
+import { ValidacionesService } from 'src/app/servicios/validaciones/validaciones.service';
+
+// IMPORTAR COMPONENTES
 import { RegistoEmpleadoHorarioComponent } from '../registo-empleado-horario/registo-empleado-horario.component';
 import { HorariosMultiplesComponent } from '../horarios-multiples/horarios-multiples.component';
-import { PeriodoVacacionesService } from 'src/app/servicios/periodoVacaciones/periodo-vacaciones.service';
-import { RegistroEmpleadoPermisoComponent } from '../../empleadoPermisos/registro-empleado-permiso/registro-empleado-permiso.component';
 
 export interface EmpleadoElemento {
   id: number;
+  codigo: number;
   nombre: string;
   apellido: string;
-  codigo: number;
   id_cargo: number;
 }
 
@@ -32,63 +34,62 @@ export interface EmpleadoElemento {
   templateUrl: './horario-multiple-empleado.component.html',
   styleUrls: ['./horario-multiple-empleado.component.css']
 })
+
 export class HorarioMultipleEmpleadoComponent implements OnInit {
 
-  Lista_empleados: any = [];
+  Lista_empleados: any = []; // VARIABLE USADA PARA ALMACENAR LISTA DE EMPLEADOS
 
-  // items de paginacion de la tabla
-  tamanio_pagina: number = 5;
+  // ITEMS DE PAGINACION DE LA TABLA
   numero_pagina: number = 1;
+  tamanio_pagina: number = 5;
   pageSizeOptions = [5, 10, 20, 50];
 
-  /**
-  * Variables Tabla de datos
-  */
+  // VARIABLES TABLA DE DATOS
   dataSource: any;
   filtroEmpleados = '';
   idEmpleadoLogueado: any;
 
-  /**FILTROS DE BÚSQUEDA */
+  // FILTROS DE BÚSQUEDA 
   sucursalF = new FormControl('');
-  depaF = new FormControl('');
-  cargosF = new FormControl('');
   laboralF = new FormControl('');
-  // Formulario de Búsquedas
+  cargosF = new FormControl('');
+  depaF = new FormControl('');
+
+  // FORMULARIO DE BÚSQUEDAS
   public busquedasForm = new FormGroup({
     sucursalForm: this.sucursalF,
-    depaForm: this.depaF,
-    cargosForm: this.cargosF,
     laboralForm: this.laboralF,
+    cargosForm: this.cargosF,
+    depaForm: this.depaF,
   });
 
-  /**BÚSQUEDA INMEDIATA */
-  // Datos del Formulario de búsqueda
+  // DATOS DEL FORMULARIO DE BÚSQUEDA INMEDIATA
+  departamentoF = new FormControl('', Validators.minLength(2));
+  regimenF = new FormControl('', Validators.minLength(2));
+  cedula = new FormControl('', Validators.minLength(2));
+  nombre = new FormControl('', Validators.minLength(2));
+  cargoF = new FormControl('', Validators.minLength(2));
   codigo = new FormControl('');
-  cedula = new FormControl('', [Validators.minLength(2)]);
-  nombre = new FormControl('', [Validators.minLength(2)]);
-  departamentoF = new FormControl('', [Validators.minLength(2)]);
-  regimenF = new FormControl('', [Validators.minLength(2)]);
-  cargoF = new FormControl('', [Validators.minLength(2)]);
 
-  // Datos de filtros de búsqueda
-  filtroCodigo: number;
-  filtroCedula: '';
-  filtroEmpleado = '';
+  // DATOS DE FILTROS DE BÚSQUEDA
   filtroDepartamento: '';
+  filtroCodigo: number;
+  filtroEmpleado = '';
   filtroRegimen: '';
+  filtroCedula: '';
   filtroCargo: '';
 
   constructor(
-
-    /** FILTROS DE BÚSQUEDA */
-    public restSucur: SucursalService,
+    // FILTROS DE BÚSQUEDA
     public restDepa: DepartamentosService,
     public restCargo: EmplCargosService,
     public restRegimen: RegimenService,
-    public restD: DatosGeneralesService,
-    private vistaFlotante: MatDialog,
-    public restPerV: PeriodoVacacionesService,
-    private toastr: ToastrService,
+    public restSucur: SucursalService,
+    public restPerV: PeriodoVacacionesService, // SERVICIO DATOS PERIODO DE VACACIONES
+    public restD: DatosGeneralesService, // SERVICIO DE DATOS INFORMATIVOS DE USUARIOS
+    public validar: ValidacionesService, // VARIABLE USADA PARA VALIDACIONES DE INGRESO DE LETRAS - NÚMEROS
+    private toastr: ToastrService, // VARIABLE PARA MANEJO DE NOTIFICACIONES
+    private ventana: MatDialog, // VARIABLE PARA MANEJO DE VENTANAS
   ) {
     this.idEmpleadoLogueado = parseInt(localStorage.getItem('empleado'));
   }
@@ -96,17 +97,19 @@ export class HorarioMultipleEmpleadoComponent implements OnInit {
   ngOnInit(): void {
     this.ObtenerEmpleados();
     //FILTROS DE BÚSQUEDA
-    this.ListarSucursales();
     this.ListarDepartamentos();
-    this.ListarCargos();
+    this.ListarSucursales();
     this.ListarRegimen();
+    this.ListarCargos();
   }
 
+  // MÉTODO PARA MANEJO DE PÁGINAS EN TABLAS
   ManejarPagina(e: PageEvent) {
     this.tamanio_pagina = e.pageSize;
     this.numero_pagina = e.pageIndex + 1;
   }
 
+  // MÉTODO PARA BÚSQUEDA DE EMPLEADOS
   ObtenerEmpleados() {
     this.Lista_empleados = [];
     this.restD.ListarInformacionActual().subscribe(data => {
@@ -121,34 +124,23 @@ export class HorarioMultipleEmpleadoComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  /* Ventana para ingresar planificación de comidas */
-  AbrirVentanaPlanificacion(empleado): void {
-    console.log(empleado);
-    this.vistaFlotante.open(PlanificacionComidasComponent, {
-      width: '600px',
-      data: { idEmpleado: empleado, modo: 'individual' }
-    }).afterClosed().subscribe(item => {
-      this.ObtenerEmpleados();
-    });
-  }
-
-
-  idCargo;
-  AbrirVentanaEmplHorario(id_empleado): void {
+  // MÉTODO PARA ABRI VENTANA DE ASIGNACIÓN DE HORARIO
+  idCargo: any;
+  AbrirVentanaEmplHorario(id_empleado: any): void {
     this.restCargo.BuscarIDCargoActual(parseInt(id_empleado)).subscribe(datos => {
       this.idCargo = datos;
-      console.log("idcargo ", this.idCargo[0].max)
-      this.vistaFlotante.open(RegistoEmpleadoHorarioComponent,
-        { width: '600px', data: { idEmpleado: id_empleado, idCargo: this.idCargo[0].max } }).afterClosed().subscribe(item => {
+      this.ventana.open(RegistoEmpleadoHorarioComponent,
+        { width: '600px', data: { idEmpleado: id_empleado, idCargo: this.idCargo[0].max, horas_trabaja: this.idCargo[0].hora_trabaja } }).afterClosed().subscribe(item => {
           this.ObtenerEmpleados();
         });
     }, error => {
-      this.toastr.info('El empleado no tiene registrado un Cargo', 'Primero Registrar Cargo', {
+      this.toastr.warning('El empleado no tiene registrado un Cargo', 'Primero Registrar Cargo', {
         timeOut: 6000,
       })
     });
   }
 
+  // MÉTODO PARA MOSTRAR SELECTORES DE USUARIOS
   selectionUno = new SelectionModel<EmpleadoElemento>(true, []);
   btnCheckHabilitar: boolean = false;
   auto_individual: boolean = true;
@@ -162,21 +154,21 @@ export class HorarioMultipleEmpleadoComponent implements OnInit {
     }
   }
 
-  /** Si el número de elementos seleccionados coincide con el número total de filas. */
+  // SI EL NÚMERO DE ELEMENTOS SELECCIONADOS COINCIDE CON EL NÚMERO TOTAL DE FILAS.
   isAllSelected() {
     const numSelected = this.selectionUno.selected.length;
     const numRows = this.Lista_empleados.length;
     return numSelected === numRows;
   }
 
-  /** Selecciona todas las filas si no están todas seleccionadas; de lo contrario, selección clara. */
+  // SELECCIONA TODAS LAS FILAS SI NO ESTÁN TODAS SELECCIONADAS; DE LO CONTRARIO, SELECCIÓN CLARA. 
   masterToggle() {
     this.isAllSelected() ?
       this.selectionUno.clear() :
       this.Lista_empleados.forEach(row => this.selectionUno.select(row));
   }
 
-  /** La etiqueta de la casilla de verificación en la fila pasada*/
+  // LA ETIQUETA DE LA CASILLA DE VERIFICACIÓN EN LA FILA PASADA
   checkboxLabel(row?: EmpleadoElemento): string {
     if (!row) {
       return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
@@ -184,20 +176,20 @@ export class HorarioMultipleEmpleadoComponent implements OnInit {
     return `${this.selectionUno.isSelected(row) ? 'deselect' : 'select'} row ${row.id + 1}`;
   }
 
+  // MÉTODO PARA INGRESAR PLANIFICACIÓN DE HORARIOS A VARIOS EMPLEADOS
   PlanificacionVarios() {
-    let EmpleadosSeleccionados;
+    let EmpleadosSeleccionados: any;
     EmpleadosSeleccionados = this.selectionUno.selected.map(obj => {
       return {
-        id: obj.id,
         empleado: obj.nombre + ' ' + obj.apellido,
+        id_cargo: obj.id_cargo,
         codigo: obj.codigo,
-        id_cargo: obj.id_cargo
+        id: obj.id,
       }
     })
     if (EmpleadosSeleccionados.length > 0) {
-
-      /* Ventana para ingresar planificación de comidas */
-      this.vistaFlotante.open(HorariosMultiplesComponent,
+      // VENTANA PARA INGRESAR DATOS DE HORARIOS MÚLTIPLES 
+      this.ventana.open(HorariosMultiplesComponent,
         { width: '600px', data: { datos: EmpleadosSeleccionados } })
         .afterClosed().subscribe(item => {
           this.ObtenerEmpleados();
@@ -205,58 +197,27 @@ export class HorarioMultipleEmpleadoComponent implements OnInit {
     }
   }
 
+  // MÉTODO DE VALIDACIÓN DE INGRESO DE LETRAS Y NÚMEROS
   IngresarSoloLetras(e) {
-    let key = e.keyCode || e.which;
-    let tecla = String.fromCharCode(key).toString();
-    //Se define todo el abecedario que se va a usar.
-    let letras = " áéíóúabcdefghijklmnñopqrstuvwxyzÁÉÍÓÚABCDEFGHIJKLMNÑOPQRSTUVWXYZ";
-    //Es la validación del KeyCodes, que teclas recibe el campo de texto.
-    let especiales = [8, 37, 39, 46, 6, 13];
-    let tecla_especial = false
-    for (var i in especiales) {
-      if (key == especiales[i]) {
-        tecla_especial = true;
-        break;
-      }
-    }
-    if (letras.indexOf(tecla) == -1 && !tecla_especial) {
-      this.toastr.info('No se admite datos numéricos', 'Usar solo letras', {
-        timeOut: 6000,
-      })
-      return false;
-    }
+    this.validar.IngresarSoloLetras(e);
   }
 
   IngresarSoloNumeros(evt) {
-    if (window.event) {
-      var keynum = evt.keyCode;
-    }
-    else {
-      keynum = evt.which;
-    }
-    // Comprobamos si se encuentra en el rango numérico y que teclas no recibirá.
-    if ((keynum > 47 && keynum < 58) || keynum == 8 || keynum == 13 || keynum == 6) {
-      return true;
-    }
-    else {
-      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números', {
-        timeOut: 6000,
-      })
-      return false;
-    }
+    this.validar.IngresarSoloNumeros(evt);
   }
 
+  // MÉTODO PARA LIMPIAR FORMULARIO
   LimpiarCampos() {
+    this.departamentoF.reset();
+    this.filtroEmpleado = '';
+    this.regimenF.reset();
     this.codigo.reset();
     this.cedula.reset();
     this.nombre.reset();
-    this.departamentoF.reset();
-    this.regimenF.reset();
     this.cargoF.reset();
-    this.filtroEmpleado = '';
   }
 
-  /*FILTROS DE BÚSQUEDA*/
+  // FILTROS DE BÚSQUEDA 
   sucursales: any = [];
   ListarSucursales() {
     this.sucursales = [];
@@ -292,10 +253,10 @@ export class HorarioMultipleEmpleadoComponent implements OnInit {
   LimpiarBusquedas() {
     this.busquedasForm.patchValue(
       {
+        sucursalForm: '',
         laboralForm: '',
-        depaForm: '',
         cargosForm: '',
-        sucursalForm: ''
+        depaForm: '',
       })
     this.ObtenerEmpleados();
     this.ListarSucursales();
@@ -609,7 +570,5 @@ export class HorarioMultipleEmpleadoComponent implements OnInit {
       this.VerInformacionCargo(form);
     }
   }
-
-
 
 }

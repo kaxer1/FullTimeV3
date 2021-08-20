@@ -16,7 +16,7 @@
                         <mat-label id="fec">Fecha inicio de actividades</mat-label>
                         <input matInput [matDatepicker]="picker" placeholder="dd/mm/aaaa" [formControl]="fechaF"
                             required>
-                        <mat-datepicker-toggle matSuffix [for]="picker" id="icono" 
+                        <mat-datepicker-toggle matSuffix [for]="picker" id="i-cursor" 
                             matTooltipPosition="right"
                             matTooltip="Ingresar la fecha de inicio de actividades. Seleccione la fecha dando click en el icono de calendario o puede escribir la fecha con el formato  día/mes/año. Ejemplo: 12/04/1993">
                         </mat-datepicker-toggle>
@@ -25,7 +25,7 @@
                     <br>
                     <mat-form-field>
                         <mat-label>Tipo de día</mat-label>
-                        <mat-icon id="icono" matSuffix matTooltipPosition="right" matTooltipClass="horaE-tooltip"
+                        <mat-icon id="i-cursor" matSuffix matTooltipPosition="right" matTooltipClass="horaE-tooltip"
                             matTooltip="Seleccionar el tipo de día en los que se podrá realizar horas extras">
                             help_outline</mat-icon>
                         <mat-select [formControl]="tipoDia" required>
@@ -37,7 +37,7 @@
                     <br>
                     <mat-form-field>
                         <mat-label>Seleccionar Horario</mat-label>
-                        <mat-icon id="icono" matSuffix matTooltipClass="sucursalR-tooltip" matTooltipPosition="right"
+                        <mat-icon id="i-cursor" matSuffix matTooltipClass="sucursalR-tooltip" matTooltipPosition="right"
                             matTooltip="Seleccionar un horario ">
                             help_outline</mat-icon>
                         <mat-select [formControl]="horarioF" required>

@@ -1,18 +1,18 @@
-import { Component, OnInit, Inject } from '@angular/core';
-import { FormControl, Validators, FormGroup } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+// IMPORTAR LIBRERIAS
 import { MAT_MOMENT_DATE_FORMATS, MAT_MOMENT_DATE_ADAPTER_OPTIONS, MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { FormControl, Validators, FormGroup } from '@angular/forms';
+import { Component, OnInit, Inject } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import * as moment from 'moment';
 
-import { EmpleadoHorariosService } from 'src/app/servicios/horarios/empleadoHorarios/empleado-horarios.service';
-import { HorarioService } from 'src/app/servicios/catalogos/catHorarios/horario.service';
-import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
+// IMPORTAR SERVICIOS
 import { DetalleCatHorariosService } from 'src/app/servicios/horarios/detalleCatHorarios/detalle-cat-horarios.service';
+import { EmpleadoHorariosService } from 'src/app/servicios/horarios/empleadoHorarios/empleado-horarios.service';
+import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
+import { HorarioService } from 'src/app/servicios/catalogos/catHorarios/horario.service';
 import { PlanGeneralService } from 'src/app/servicios/planGeneral/plan-general.service';
-
-
 
 @Component({
   selector: 'app-horarios-multiples',
@@ -20,63 +20,62 @@ import { PlanGeneralService } from 'src/app/servicios/planGeneral/plan-general.s
   styleUrls: ['./horarios-multiples.component.css'],
   providers: [
     { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
+    { provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: { useUtc: true } },
     { provide: MAT_DATE_FORMATS, useValue: MAT_MOMENT_DATE_FORMATS },
     { provide: MAT_DATE_LOCALE, useValue: 'es' },
-    { provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: { useUtc: true } },
   ]
 })
+
 export class HorariosMultiplesComponent implements OnInit {
 
-  dataItem: any;
-
-  lunes = false;
-  martes = false;
+  // OPCIONES DE DÍAS LIBRERIAS EN HORARIOS
   miercoles = false;
-  jueves = false;
-  viernes = false;
-  sabado = false;
   domingo = false;
-  horarios: any = [];
+  viernes = false;
+  martes = false;
+  jueves = false;
+  sabado = false;
+  lunes = false;
 
-  horarioF = new FormControl('', [Validators.required]);
+  horarios: any = []; // VARIABLE DE ALMACENAMIENTO DE HORARIOS
+
   fechaInicioF = new FormControl('', Validators.required);
-  fechaFinalF = new FormControl('', [Validators.required]);
-  estadoF = new FormControl('', [Validators.required]);
-  lunesF = new FormControl('');
-  martesF = new FormControl('');
+  fechaFinalF = new FormControl('', Validators.required);
+  horarioF = new FormControl('', Validators.required);
+  estadoF = new FormControl('', Validators.required);
   miercolesF = new FormControl('');
-  juevesF = new FormControl('');
   viernesF = new FormControl('');
-  sabadoF = new FormControl('');
   domingoF = new FormControl('');
+  martesF = new FormControl('');
+  juevesF = new FormControl('');
+  sabadoF = new FormControl('');
+  lunesF = new FormControl('');
 
-  // Asignación de validaciones a inputs del formulario
+  // ASIGNACIÓN DE VALIDACIONES A INPUTS DEL FORMULARIO
   public EmpleadoHorarioForm = new FormGroup({
-    horarioForm: this.horarioF,
     fechaInicioForm: this.fechaInicioF,
     fechaFinalForm: this.fechaFinalF,
-    estadoForm: this.estadoF,
-    lunesForm: this.lunesF,
-    martesForm: this.martesF,
     miercolesForm: this.miercolesF,
-    juevesForm: this.juevesF,
+    horarioForm: this.horarioF,
     viernesForm: this.viernesF,
+    domingoForm: this.domingoF,
+    estadoForm: this.estadoF,
+    martesForm: this.martesF,
+    juevesForm: this.juevesF,
     sabadoForm: this.sabadoF,
-    domingoForm: this.domingoF
+    lunesForm: this.lunesF,
   });
 
   constructor(
-    public rest: EmpleadoHorariosService,
-    public restH: HorarioService,
-    public restE: EmpleadoService,
-    public restD: DetalleCatHorariosService,
-    public restP: PlanGeneralService,
-    private toastr: ToastrService,
-    public dialogRef: MatDialogRef<HorariosMultiplesComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any
-  ) {
-    this.data.datosItem = 4;
-  }
+    public restH: HorarioService, // SERVCIOS DE HORARIOS
+    public restE: EmpleadoService, // SERVICIOS DE DATOS DE EMPLEADOS
+    private toastr: ToastrService, // VARIABLE USADA PARA MOSTRAR NOTIFICACIONES
+    public restP: PlanGeneralService, // SERVICIO DE DATOS DE PLANIFICACIÓN DE HORARIOS
+    public rest: EmpleadoHorariosService, // SERVICIO DE DATOS DE HORARIOS ASIGNADOS A UN EMPLEADO
+    public restD: DetalleCatHorariosService, // SERVICIO DE DATOS DE DETALLES DE HORARIOS
+    @Inject(MAT_DIALOG_DATA) public data: any, // IMPORTACIÓN DE DATOS DE COMPONENTE HORARIOS-MULTIPLE-EMPLEADO
+    public ventana: MatDialogRef<HorariosMultiplesComponent>, // VARIABLE USADA PARA ABRIR VENTANAS EXTERNAS
+  ) { }
 
   ngOnInit(): void {
     console.log('varios', this.data.datos)
@@ -84,38 +83,39 @@ export class HorariosMultiplesComponent implements OnInit {
     this.ObtenerEmpleado(this.data.datos.idEmpleado);
   }
 
+  // VARIABLES DE ALMACENAMIENTO DE DATOS ESPECIFICOS DE UN HORARIO
   detalles_horarios: any = [];
   vista_horarios: any = [];
   hora_entrada: any;
   hora_salida: any;
+
+  // MÉTODO PARA MOSTRAR NOMBRE DE HORARIO CON DETALLE DE ENTRADA Y SALIDA
   BuscarHorarios() {
     this.horarios = [];
     this.vista_horarios = [];
+    // BÚSQUEDA DE HORARIOS
     this.restH.getHorariosRest().subscribe(datos => {
       this.horarios = datos;
-
       this.horarios.map(hor => {
-
+        // BÚSQUEDA DE DETALLES DE ACUERDO AL ID DE HORARIO
         this.restD.ConsultarUnDetalleHorario(hor.id).subscribe(res => {
           this.detalles_horarios = res;
-
           this.detalles_horarios.map(det => {
             if (det.tipo_accion === 'E') {
-              this.hora_entrada = det.hora
+              this.hora_entrada = det.hora.slice(0, 5)
             }
             if (det.tipo_accion === 'S') {
-              this.hora_salida = det.hora
+              this.hora_salida = det.hora.slice(0, 5)
             }
           })
           let datos_horario = [{
             id: hor.id,
-            nombre: hor.nombre + ' (' + this.hora_entrada + '-' + this.hora_salida + ')'
+            nombre: '(' + this.hora_entrada + '-' + this.hora_salida + ') ' + hor.nombre
           }]
           if (this.vista_horarios.length === 0) {
             this.vista_horarios = datos_horario;
           } else {
             this.vista_horarios = this.vista_horarios.concat(datos_horario);
-            console.log('datos horario', this.vista_horarios)
           }
         }, error => {
           let datos_horario = [{
@@ -126,15 +126,14 @@ export class HorariosMultiplesComponent implements OnInit {
             this.vista_horarios = datos_horario;
           } else {
             this.vista_horarios = this.vista_horarios.concat(datos_horario);
-            console.log('datos horario', this.vista_horarios)
           }
         })
       })
     })
   }
 
+  // MÉTODO PARA VER LA INFORMACIÓN DEL EMPLEADO
   empleado: any = [];
-  // Método para ver la información del empleado 
   ObtenerEmpleado(idemploy: any) {
     this.empleado = [];
     this.restE.getOneEmpleadoRest(idemploy).subscribe(data => {
@@ -142,30 +141,40 @@ export class HorariosMultiplesComponent implements OnInit {
     })
   }
 
-  ValidarFechas(form) {
-    /*  let datosBusqueda = {
-        id_cargo: this.data.datos.idCargo,
-        id_empleado: this.data.datos.idEmpleado
-      }
-      this.restE.BuscarFechaContrato(datosBusqueda).subscribe(response => {
-        console.log('fecha', response[0].fec_ingreso.split('T')[0], ' ', Date.parse(form.fechaInicioForm), Date.parse(response[0].fec_ingreso.split('T')[0]))
-        if (Date.parse(response[0].fec_ingreso.split('T')[0]) < Date.parse(form.fechaInicioForm)) {*/
-    if (Date.parse(form.fechaInicioForm) < Date.parse(form.fechaFinalForm)) {
-      this.InsertarEmpleadoHorario(form);
-    }
-    else {
-      this.toastr.info('La fecha de inicio de actividades debe ser mayor a la fecha de fin de actividades.', '', {
+  // MÉTODO PARA VERIFICAR QUE CAMPOS DE FECHAS NO SE ENCUENTREN VACIOS
+  VerificarIngresoFechas(form) {
+    if (form.fechaInicioForm === '' || form.fechaInicioForm === null || form.fechaInicioForm === undefined ||
+      form.fechaFinalForm === '' || form.fechaFinalForm === null || form.fechaFinalForm === undefined) {
+      this.toastr.warning('Por favor ingrese fechas de inicio y fin de actividades.', '', {
         timeOut: 6000,
       });
+      this.EmpleadoHorarioForm.patchValue({
+        horarioForm: 0
+      })
     }
-    /* }
-     else {
-       this.toastr.info('La fecha de inicio de actividades no puede ser anterior a la fecha de ingreso de contrato.', '', {
-         timeOut: 6000,
-       });
-     }
-   }, error => {
-   });*/
+    else {
+      this.ValidarFechas(form);
+    }
+  }
+
+  // MÉTODO PARA VERIFICAR SI EL EMPLEADO INGRESO CORRECTAMENTE LAS FECHAS
+  ValidarFechas(form) {
+    if (Date.parse(form.fechaInicioForm) < Date.parse(form.fechaFinalForm)) {
+      // this.InsertarEmpleadoHorario(form);
+    }
+    else {
+      this.toastr.warning('Fecha de inicio de actividades debe ser mayor a la fecha fin de actividades.', '', {
+        timeOut: 6000,
+      });
+      this.EmpleadoHorarioForm.patchValue({
+        horarioForm: 0
+      })
+    }
+  }
+
+  // MÉTODO PARA LIMPIAR CAMPO SELECCIÓN DE HORARIO
+  LimpiarHorario() {
+    this.EmpleadoHorarioForm.patchValue({ horarioForm: 0 });
   }
 
   fechasHorario: any = [];
@@ -208,7 +217,7 @@ export class HorariosMultiplesComponent implements OnInit {
         //this.CerrarVentanaEmpleadoHorario();
         this.contador = this.contador + 1;
         if (this.contador === this.data.datos.length) {
-          this.dialogRef.close();
+          this.ventana.close();
           window.location.reload();
           this.toastr.success('Operación Exitosa', 'Se registra un total de  ' + this.data.datos.length + ' Registros de horarios.', {
             timeOut: 6000,
@@ -224,41 +233,17 @@ export class HorariosMultiplesComponent implements OnInit {
     this.detalles = [];
     this.restD.ConsultarUnDetalleHorario(form.horarioForm).subscribe(res => {
       this.detalles = res;
-      //this.toastr.success('Operación Exitosa', 'Horario del Empleado registrado', {
-      //  timeOut: 6000,
-      //});
-      this.fechasHorario = []; // Array que contiene todas las fechas del mes indicado 
+
+      this.fechasHorario = []; // ARRAY QUE CONTIENE TODAS LAS FECHAS DEL MES INDICADO 
       this.inicioDate = moment(form.fechaInicioForm).format('MM-DD-YYYY');
       this.finDate = moment(form.fechaFinalForm).format('MM-DD-YYYY');
 
-      // Inicializar datos de fecha
+      // INICIALIZAR DATOS DE FECHA
       var start = new Date(this.inicioDate);
       var end = new Date(this.finDate);
 
-      // Lógica para obtener el nombre de cada uno de los día del periodo indicado
+      // LÓGICA PARA OBTENER EL NOMBRE DE CADA UNO DE LOS DÍA DEL PERIODO INDICADO
       while (start <= end) {
-        /* console.log(moment(start).format('dddd DD/MM/YYYY'), form.lunesForm)
-         if (moment(start).format('dddd') === 'lunes' && form.lunesForm === false) {
-           this.fechasHorario.push(moment(start).format('YYYY-MM-DD'));
-         }
-         if (moment(start).format('dddd') === 'martes' && form.martesForm === false) {
-           this.fechasHorario.push(moment(start).format('YYYY-MM-DD'));
-         }
-         if (moment(start).format('dddd') === 'miércoles' && form.miercolesForm === false) {
-           this.fechasHorario.push(moment(start).format('YYYY-MM-DD'));
-         }
-         if (moment(start).format('dddd') === 'jueves' && form.juevesForm === false) {
-           this.fechasHorario.push(moment(start).format('YYYY-MM-DD'));
-         }
-         if (moment(start).format('dddd') === 'viernes' && form.viernesForm === false) {
-           this.fechasHorario.push(moment(start).format('YYYY-MM-DD'));
-         }
-         if (moment(start).format('dddd') === 'sábado' && form.sabadoForm === false) {
-           this.fechasHorario.push(moment(start).format('YYYY-MM-DD'));
-         }
-         if (moment(start).format('dddd') === 'domingo' && form.domingoForm === false) {
-           this.fechasHorario.push(moment(start).format('YYYY-MM-DD'));
-         }*/
         this.fechasHorario.push(moment(start).format('YYYY-MM-DD'));
         var newDate = start.setDate(start.getDate() + 1);
         start = new Date(newDate);
@@ -270,15 +255,15 @@ export class HorariosMultiplesComponent implements OnInit {
             accion = element.minu_espera;
           }
           let plan = {
-            fec_hora_horario: obj + ' ' + element.hora,
-            maxi_min_espera: accion,
             estado: null,
-            id_det_horario: element.id,
             fec_horario: obj,
-            id_empl_cargo: this.data.datos.idCargo,
-            tipo_entr_salida: element.tipo_accion,
+            maxi_min_espera: accion,
+            id_det_horario: element.id,
+            id_horario: form.horarioForm,
             codigo: this.empleado[0].codigo,
-            id_horario: form.horarioForm
+            tipo_entr_salida: element.tipo_accion,
+            id_empl_cargo: this.data.datos.idCargo,
+            fec_hora_horario: obj + ' ' + element.hora,
           };
           this.restP.CrearPlanGeneral(plan).subscribe(res => {
           })
@@ -306,20 +291,8 @@ export class HorariosMultiplesComponent implements OnInit {
 
   CerrarVentanaEmpleadoHorario() {
     this.LimpiarCampos();
-    this.dialogRef.close(this.data.datosItem);
+    this.ventana.close(this.data.datosItem);
   }
 
-  VerificarDetalles(form) {
-    this.restD.ConsultarUnDetalleHorario(form.horarioForm).subscribe(res => {
-    },
-      erro => {
-        this.EmpleadoHorarioForm.patchValue({
-          horarioForm: ''
-        });
-        this.toastr.info('El horario seleccionado no tienen registros de detalle de horario.', 'Primero registrar detalle de horario.', {
-          timeOut: 6000,
-        });
-      })
-  }
 
 }

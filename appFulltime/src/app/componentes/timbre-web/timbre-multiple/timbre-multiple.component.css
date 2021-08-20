@@ -4,14 +4,7 @@ td { padding-top: 10px; text-align: center; }
 
 mat-form-field { padding: 10px 15px 0px 15px;}
 
-#TituloResultado { 
-    font-size: 17px; 
-    text-align: center; 
-    background: rgb(52,65,84); 
-    color: white; 
-    padding-top: 10px; 
-    padding-bottom: 6px; 
-}
+
 
 table { width: 100%; font-size: 13px;}
 
