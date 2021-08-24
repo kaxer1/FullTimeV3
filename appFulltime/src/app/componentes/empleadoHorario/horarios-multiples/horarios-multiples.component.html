@@ -82,7 +82,7 @@
     </mat-card-content>
 </form>
 <div style="text-align: center;">
-    <button type="submit" class="btn btn-sm" (click)="ValidarFechas(EmpleadoHorarioForm.value)"
+    <button type="submit" class="btn btn-sm" (click)="VerificarDuplicidad(EmpleadoHorarioForm.value)"
         [disabled]="!EmpleadoHorarioForm.valid">Guardar</button>
     <button type="submit" class="btn btn-sm" (click)="CerrarVentanaEmpleadoHorario()">Salir</button>
 </div>

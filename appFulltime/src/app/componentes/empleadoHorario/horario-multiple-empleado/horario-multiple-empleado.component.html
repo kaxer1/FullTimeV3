@@ -158,3 +158,33 @@
         </mat-paginator>
     </div>
 </div>
+
+<div class="container" style="margin: 25px 0px 25px 0px; text-align: center;" *ngIf="no_asignados">
+    <div class="mat-elevation-z8" style="background: white;">
+        <div class="d-flex bd-highlight" id="titulo">
+            <span class="w-100 bd-highlight">
+                LISTA DE EMPLEADOS SIN ASIGNACIÓN DE HORARIO <mat-icon (click)="CerrarTabla()" matSuffix
+                    matTooltipPosition="right" matTooltip="Cerrar la tabla." id="cerrar">
+                    close</mat-icon></span>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-hover table-sm">
+                <thead class="thead-light">
+                    <tr style="text-align: center;">
+                        <th scope="col">Código</th>
+                        <th scope="col">Empleado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let e of empleados_sin_asignacion | paginate:tamanio_pagina_h:numero_pagina_h">
+                        <td>{{e.codigo}}</td>
+                        <td>{{e.empleado}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <mat-paginator [length]="empleados_sin_asignacion.length" [pageSize]="tamanio_pagina_h"
+            [pageSizeOptions]="pageSizeOptions_h" id="pagina" (page)="ManejarPaginaH($event)" showFirstLastButtons>
+        </mat-paginator>
+    </div>
+</div>

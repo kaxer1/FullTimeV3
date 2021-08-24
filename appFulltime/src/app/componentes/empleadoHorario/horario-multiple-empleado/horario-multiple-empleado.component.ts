@@ -27,6 +27,7 @@ export interface EmpleadoElemento {
   nombre: string;
   apellido: string;
   id_cargo: number;
+  hora_trabaja: number;
 }
 
 @Component({
@@ -39,10 +40,19 @@ export class HorarioMultipleEmpleadoComponent implements OnInit {
 
   Lista_empleados: any = []; // VARIABLE USADA PARA ALMACENAR LISTA DE EMPLEADOS
 
-  // ITEMS DE PAGINACION DE LA TABLA
+  // VARIABLE USADA PARA ALMACENAR LISTA DE EMPLEADOS QUE NO SE ASIGNAN HORARIO
+  empleados_sin_asignacion: any = [];
+  no_asignados: boolean = false;
+
+  // ITEMS DE PAGINACIÓN DE LA TABLA
   numero_pagina: number = 1;
   tamanio_pagina: number = 5;
   pageSizeOptions = [5, 10, 20, 50];
+
+  // ITEMS DE PAGINACIÓN DE LA TABLA EMPLEADOS SIN HORARIO
+  numero_pagina_h: number = 1;
+  tamanio_pagina_h: number = 5;
+  pageSizeOptions_h = [5, 10, 20, 50];
 
   // VARIABLES TABLA DE DATOS
   dataSource: any;
@@ -107,6 +117,12 @@ export class HorarioMultipleEmpleadoComponent implements OnInit {
   ManejarPagina(e: PageEvent) {
     this.tamanio_pagina = e.pageSize;
     this.numero_pagina = e.pageIndex + 1;
+  }
+
+  // MÉTODO PARA MANEJO DE PÁGINAS EN TABLAS DE EMPLEADOS SIN ASIGNACIÓN
+  ManejarPaginaH(e: PageEvent) {
+    this.tamanio_pagina_h = e.pageSize;
+    this.numero_pagina_h = e.pageIndex + 1;
   }
 
   // MÉTODO PARA BÚSQUEDA DE EMPLEADOS
@@ -185,6 +201,7 @@ export class HorarioMultipleEmpleadoComponent implements OnInit {
         id_cargo: obj.id_cargo,
         codigo: obj.codigo,
         id: obj.id,
+        hora_trabaja: obj.hora_trabaja,
       }
     })
     if (EmpleadosSeleccionados.length > 0) {
@@ -195,6 +212,10 @@ export class HorarioMultipleEmpleadoComponent implements OnInit {
           this.ObtenerEmpleados();
           this.selectionUno.clear();
           this.HabilitarSeleccion();
+          if (item.length != 0) {
+            this.no_asignados = true;
+            this.empleados_sin_asignacion = item
+          }
         });
     }
   }
@@ -571,6 +592,11 @@ export class HorarioMultipleEmpleadoComponent implements OnInit {
       form.laboralForm === '' && form.cargosForm != '') {
       this.VerInformacionCargo(form);
     }
+  }
+
+  CerrarTabla() {
+    this.no_asignados = false;
+    this.empleados_sin_asignacion = [];
   }
 
 }

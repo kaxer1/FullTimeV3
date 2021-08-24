@@ -12,3 +12,5 @@ table { width: 100%; font-size: 12px;}
 }
 
 #accion { color: rgb(38, 0, 255); cursor: pointer; }
+
+#cerrar { cursor: pointer; margin-left: 25px;}
