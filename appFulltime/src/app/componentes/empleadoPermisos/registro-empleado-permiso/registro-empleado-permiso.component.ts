@@ -305,11 +305,11 @@ export class RegistroEmpleadoPermisoComponent implements OnInit {
             })
             this.readonly = true;
           }, err => {
-            const { access, message } = err.error.message;
+         /*   const { access, message } = err.error.message;
             if (access === false) {
               this.toastr.error(message)
               this.dialogRef.close();
-            }
+            }*/
           })
         }
       }, error => {

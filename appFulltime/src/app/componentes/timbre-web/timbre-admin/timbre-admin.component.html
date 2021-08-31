@@ -59,7 +59,7 @@
                         <td>{{d.cargo}}</td>
                         <td class="d-flex justify-content-center">
                             <i matSuffix matTooltipPosition="right" matTooltip="Ver lista de timbres del empleado."
-                                class="fas fa-eye" id="t-ver" (click)="ObtenerListaTimbres(d.id)">
+                                class="fas fa-eye" id="t-ver" (click)="ObtenerListaTimbres(d.id, d.nombre, d.apellido)">
                                 <p>Ver</p>
                             </i>
                         </td>
@@ -74,7 +74,7 @@
 </div>
 <div class="container" style="padding-bottom: 50px; text-align: center;" *ngIf="lista">
     <div class="mat-elevation-z8" style="background: white;">
-        <div id="titulo">LISTA DE TIMBRES <mat-icon (click)="CerrarTabla()" matSuffix
+        <div id="titulo">LISTA DE TIMBRES DE {{selec_nombre.toUpperCase()}} <mat-icon (click)="CerrarTabla()" matSuffix
                 matTooltipPosition="right" matTooltip="Cerrar lista de datos seleccionada." id="cerrar">
                 close</mat-icon>
         </div>

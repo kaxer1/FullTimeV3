@@ -160,6 +160,11 @@
 </div>
 
 <div class="container" style="margin: 25px 0px 25px 0px; text-align: center;" *ngIf="no_asignados">
+    <div class="nota">
+        <span>NOTA: No se asigna horario a un colaborador cuando: 1. El horario a asignar ya se encuentra
+            registrado. 2. El número de horas del horario sobrepasa el número de horas establecidas en su
+            contrato. 3. El horario a asignar no se encuentra dentro de las fechas indicadas en su contrato.</span>
+    </div>
     <div class="mat-elevation-z8" style="background: white;">
         <div class="d-flex bd-highlight" id="titulo">
             <span class="w-100 bd-highlight">

@@ -119,7 +119,7 @@ export class VerPedidoHoraExtraComponent implements OnInit {
     }, err => {
       return this.validacionesService.RedireccionarMixto(err.error)
     });
-    
+
     this.ObtenerEmpleados(this.idEmpleado);
     this.ObtenerSolicitud(this.dataParams.id);
     this.ObtenerAutorizacion(this.dataParams.id);
@@ -240,8 +240,10 @@ export class VerPedidoHoraExtraComponent implements OnInit {
   }
 
   AbrirAutorizaciones(datosHoraExtra, nombre) {
-    this.vistaFolante.open(HoraExtraAutorizacionesComponent, { width: '300px', 
-    data: {pedido_hora: datosHoraExtra, carga: nombre} }).afterClosed().subscribe(items => {
+    this.vistaFolante.open(HoraExtraAutorizacionesComponent, {
+      width: '300px',
+      data: { pedido_hora: datosHoraExtra, carga: nombre }
+    }).afterClosed().subscribe(items => {
       this.BuscarInfo();
       this.HabilitarAutorizacion = true;
     });
@@ -336,8 +338,8 @@ export class VerPedidoHoraExtraComponent implements OnInit {
         }
       },
       content: [
-        {image: this.logo, width: 150, margin: [10, -25, 0, 5] },
-        { text: this.datoSolicitud[0].nom_empresa.toUpperCase(), bold: true, fontSize: 25, alignment: 'center', margin: [0, -30, 0, 10]},
+        { image: this.logo, width: 150, margin: [10, -25, 0, 5] },
+        { text: this.datoSolicitud[0].nom_empresa.toUpperCase(), bold: true, fontSize: 25, alignment: 'center', margin: [0, -30, 0, 10] },
         { text: 'SOLICITUD DE HORAS EXTRAS', fontSize: 10, alignment: 'center', margin: [0, 0, 0, 10] },
         this.SeleccionarMetodo(this.ObtenerFecha()),
       ],
@@ -351,6 +353,7 @@ export class VerPedidoHoraExtraComponent implements OnInit {
   }
 
   SeleccionarMetodo(f) {
+    this.cont = 1;
     if (this.cont === 1) {
       return {
         table: {
@@ -403,9 +406,15 @@ export class VerPedidoHoraExtraComponent implements OnInit {
                       table: {
                         widths: ['auto'],
                         body: [
-                          [{ text: this.datosEmpleadoAutoriza[this.cont - 1].estado.toUpperCase() + ' POR', style: 'tableHeaderA' }],
-                          [{ text: ' ', style: 'itemsTable', margin: [0, 20, 0, 20] }],
-                          [{ text: this.datosEmpleadoAutoriza[this.cont - 1].e_nombre + ' ' + this.datosEmpleadoAutoriza[this.cont - 1].e_apellido + '\n' + this.datosEmpleadoAutoriza[this.cont - 1].cargo, style: 'itemsTable' }]
+                          /*   [{ text: this.datosEmpleadoAutoriza[this.cont - 1].estado.toUpperCase() + ' POR', style: 'tableHeaderA' }],
+                             [{ text: ' ', style: 'itemsTable', margin: [0, 20, 0, 20] }],
+                             [{ text: this.datosEmpleadoAutoriza[this.cont - 1].e_nombre + ' ' + this.datosEmpleadoAutoriza[this.cont - 1].e_apellido + '\n' + this.datosEmpleadoAutoriza[this.cont - 1].cargo, style: 'itemsTable' }]
+                           */
+                          [{ text: 'Estado:' + ' POR', style: 'tableHeaderA' },],
+                          [{ text: ' ', style: 'itemsTable', margin: [0, 20, 0, 20] },],
+                          //  [{ text: this.datosEmpleadoAutoriza[this.cont - 1].e_nombre + ' ' + this.datosEmpleadoAutoriza[this.cont - 1].e_apellido + '\n' + this.datosEmpleadoAutoriza[this.cont - 1].cargo, style: 'itemsTable' },]
+                          [{ text: 'Nombre: ' + ' ' + 'Apellido: ' + '\n' + 'Cargo: ', style: 'itemsTable' },]
+
                         ]
                       }
                     },
@@ -515,9 +524,12 @@ export class VerPedidoHoraExtraComponent implements OnInit {
                       table: {
                         widths: ['auto'],
                         body: [
-                          [{ text: this.datosEmpleadoAutoriza[this.cont - 1].estado.toUpperCase() + ' POR', style: 'tableHeaderA' },],
+                          //  [{ text: this.datosEmpleadoAutoriza[this.cont - 1].estado.toUpperCase() + ' POR', style: 'tableHeaderA' },],
+                          [{ text: 'Estado:' + ' POR', style: 'tableHeaderA' },],
                           [{ text: ' ', style: 'itemsTable', margin: [0, 20, 0, 20] },],
-                          [{ text: this.datosEmpleadoAutoriza[this.cont - 1].e_nombre + ' ' + this.datosEmpleadoAutoriza[this.cont - 1].e_apellido + '\n' + this.datosEmpleadoAutoriza[this.cont - 1].cargo, style: 'itemsTable' },]
+                          //  [{ text: this.datosEmpleadoAutoriza[this.cont - 1].e_nombre + ' ' + this.datosEmpleadoAutoriza[this.cont - 1].e_apellido + '\n' + this.datosEmpleadoAutoriza[this.cont - 1].cargo, style: 'itemsTable' },]
+                          [{ text: 'Nombre: ' + ' ' + 'Apellido: ' + '\n' + 'Cargo: ', style: 'itemsTable' },]
+
                         ]
                       }
                     },

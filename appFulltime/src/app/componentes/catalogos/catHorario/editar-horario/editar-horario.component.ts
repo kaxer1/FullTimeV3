@@ -130,6 +130,9 @@ export class EditarHorarioComponent implements OnInit {
           if (dataHorario.min_almuerzo === 0) {
             this.EliminarDetallesComida();
           }
+          if (dataHorario.detalle === false) {
+            this.EliminarTodoDetalles();
+          }
           this.SalirActualizar(dataHorario, response);
         }, error => {
           console.log(error);
@@ -177,6 +180,9 @@ export class EditarHorarioComponent implements OnInit {
         });
         if (datos.min_almuerzo === 0) {
           this.EliminarDetallesComida();
+        }
+        if (datos.detalle === false) {
+          this.EliminarTodoDetalles();
         }
         this.SubirRespaldo(this.data.horario.id);
         this.SalirActualizar(datos, response);
@@ -247,6 +253,9 @@ export class EditarHorarioComponent implements OnInit {
       });
       if (datos.min_almuerzo === 0) {
         this.EliminarDetallesComida();
+      }
+      if (datos.detalle === false) {
+        this.EliminarTodoDetalles();
       }
       this.SalirActualizar(datos, response);
     }, error => {
@@ -410,7 +419,15 @@ export class EditarHorarioComponent implements OnInit {
           this.EliminarDetalle(det.id);
         }
       })
+    }, error => { })
+  }
 
+  EliminarTodoDetalles() {
+    this.restD.ConsultarUnDetalleHorario(this.data.horario.id).subscribe(res => {
+      this.detalles_horarios = res;
+      this.detalles_horarios.map(det => {
+        this.EliminarDetalle(det.id);
+      })
     }, error => { })
   }
 

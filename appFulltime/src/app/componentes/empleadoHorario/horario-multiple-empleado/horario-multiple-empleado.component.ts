@@ -212,9 +212,11 @@ export class HorarioMultipleEmpleadoComponent implements OnInit {
           this.ObtenerEmpleados();
           this.selectionUno.clear();
           this.HabilitarSeleccion();
-          if (item.length != 0) {
-            this.no_asignados = true;
-            this.empleados_sin_asignacion = item
+          if (item) {
+            if (item.length != 0) {
+              this.no_asignados = true;
+              this.empleados_sin_asignacion = item
+            }
           }
         });
     }

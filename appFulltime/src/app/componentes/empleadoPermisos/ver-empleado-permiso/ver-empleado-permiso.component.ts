@@ -102,7 +102,7 @@ export class VerEmpleadoPermisoComponent implements OnInit {
         this.HabilitarAutorizacion = false;
       });
     }, err => {
-      return this.validacionesService.RedireccionarMixto(err.error) 
+      return this.validacionesService.RedireccionarMixto(err.error)
     });
 
     this.ObtenerEmpleados(this.idEmpleado);
@@ -167,7 +167,7 @@ export class VerEmpleadoPermisoComponent implements OnInit {
         }
       });
     }, err => {
-      return this.validacionesService.RedireccionarMixto(err.error) 
+      return this.validacionesService.RedireccionarMixto(err.error)
     })
   }
 
@@ -219,7 +219,7 @@ export class VerEmpleadoPermisoComponent implements OnInit {
       })
       console.log('autorizacion', this.datosAutorizacion);
     }, err => {
-      return this.validacionesService.RedireccionarMixto(err.error) 
+      return this.validacionesService.RedireccionarMixto(err.error)
     })
   }
 
@@ -313,7 +313,7 @@ export class VerEmpleadoPermisoComponent implements OnInit {
   }
 
   SeleccionarMetodo() {
-    console.log('contador', this.cont)
+    this.cont = 1;
     if (this.cont === 1) {
       return {
         table: {
@@ -366,9 +366,13 @@ export class VerEmpleadoPermisoComponent implements OnInit {
                       table: {
                         widths: ['auto'],
                         body: [
-                          [{ text: this.datosEmpleadoAutoriza[this.cont - 1].estado.toUpperCase() + ' POR', style: 'tableHeaderA' },],
+                          // [{ text: this.datosEmpleadoAutoriza[this.cont - 1].estado.toUpperCase() + ' POR', style: 'tableHeaderA' },],
+                          [{ text: 'Estado:' + ' POR', style: 'tableHeaderA' },],
+
                           [{ text: ' ', style: 'itemsTable', margin: [0, 20, 0, 20] },],
-                          [{ text: this.datosEmpleadoAutoriza[this.cont - 1].e_nombre + ' ' + this.datosEmpleadoAutoriza[this.cont - 1].e_apellido + '\n' + this.datosEmpleadoAutoriza[this.cont - 1].cargo, style: 'itemsTable' },]
+                          // [{ text: this.datosEmpleadoAutoriza[this.cont - 1].e_nombre + ' ' + this.datosEmpleadoAutoriza[this.cont - 1].e_apellido + '\n' + this.datosEmpleadoAutoriza[this.cont - 1].cargo, style: 'itemsTable' },]
+                          [{ text: 'Nombre: ' + ' ' + 'Apellido: ' + '\n' + 'Cargo: ', style: 'itemsTable' },]
+
                         ]
                       }
                     },
@@ -458,8 +462,9 @@ export class VerEmpleadoPermisoComponent implements OnInit {
                       layout: 'lightHorizontalLines',
                       table: {
                         widths: ['auto'],
+                        //.toUpperCase()
                         body: [
-                          [{ text: this.datosEmpleadoAutoriza[this.cont - 2].estado.toUpperCase() + ' POR', style: 'tableHeaderA' },],
+                          [{ text: this.datosEmpleadoAutoriza[this.cont - 2].estado + ' POR', style: 'tableHeaderA' },],
                           [{ text: ' ', style: 'itemsTable', margin: [0, 20, 0, 20] },],
                           [{ text: this.datosEmpleadoAutoriza[this.cont - 2].e_nombre + ' ' + this.datosEmpleadoAutoriza[this.cont - 2].e_apellido + '\n' + this.datosEmpleadoAutoriza[this.cont - 2].cargo, style: 'itemsTable' },]
                         ]

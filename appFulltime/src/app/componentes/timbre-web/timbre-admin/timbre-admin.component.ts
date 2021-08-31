@@ -86,11 +86,13 @@ export class TimbreAdminComponent implements OnInit {
   }
 
   // LISTAR DATOS DE TIMBRES SEGÚN CÓDIGO DE EMPLEADO
-  ObtenerListaTimbres(id: number) {
+  selec_nombre: any;
+  ObtenerListaTimbres(id: number, nombre: any, apellido: any) {
     this.restTimbres.ObtenerTimbresEmpleado(id).subscribe(res => {
       this.dataSource = new MatTableDataSource(res.timbres);
       this.timbres = this.dataSource.data;
       this.lista = true;
+      this.selec_nombre = nombre + ' ' + apellido;
     }, err => {
       this.toastr.error(err.error.message)
     })
