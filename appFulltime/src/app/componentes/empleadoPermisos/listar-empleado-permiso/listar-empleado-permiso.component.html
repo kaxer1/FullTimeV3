@@ -1,7 +1,7 @@
 <br>
 <div class="container" style="padding-bottom: 50px; text-align: center;" *ngIf="lista_permisos">
     <div class="mat-elevation-z8" style="background: white;">
-        <div class="d-flex bd-highlight" id="resultadosEmpre">
+        <div class="d-flex bd-highlight" id="titulo">
             <mat-icon class="flex-shrink-1 bd-highlight" (click)="HabilitarSeleccion()" matSuffix
                 matTooltipPosition="right" matTooltip="Autorizar a todos los empleados su Solicitud de Horas Extras"
                 id="SelectCheck">library_add_check</mat-icon>
@@ -48,7 +48,7 @@
                         <td>{{e.fec_final.split('T')[0]}}</td>
                         <td class="d-flex justify-content-center">
                             <i class="fas fa-edit" id="edit" style="margin-right: 20px;" (click)="EditarPermiso(e.id, e.id_emple_solicita)"
-                                matSuffix matTooltipPosition="right" matTooltipClass="departamento-tooltip"
+                                matSuffix matTooltipPosition="right" 
                                 matTooltip="Modificar los datos generales de este registro">
                                 <p>Editar</p>
                             </i>
@@ -64,13 +64,13 @@
             </table>
         </div>
         <mat-paginator [length]="permisos.length" [pageSize]="tamanio_pagina" [pageSizeOptions]="pageSizeOptions"
-            id="estilo" (page)="ManejarPagina($event)" showFirstLastButtons>
+            id="pagina" (page)="ManejarPagina($event)" showFirstLastButtons>
         </mat-paginator>
     </div>
 </div>
 <div class="container" style="padding-bottom: 50px; text-align: center;" *ngIf="lista_autorizados">
     <div class="mat-elevation-z8" style="background: white;">
-        <div class="d-flex bd-highlight" id="resultadosEmpre">
+        <div class="d-flex bd-highlight" id="titulo">
             <span class="w-100 bd-highlight">
                 Lista de Permisos Autorizados o Negados</span>
         </div>
@@ -111,7 +111,7 @@
             </table>
         </div>
         <mat-paginator [length]="permisosAutorizados.length" [pageSize]="tamanio_pagina_autorizado"
-            [pageSizeOptions]="pageSizeOptions_autorizado" id="estilo" (page)="ManejarPaginaAutorizados($event)"
+            [pageSizeOptions]="pageSizeOptions_autorizado" id="pagina" (page)="ManejarPaginaAutorizados($event)"
             showFirstLastButtons>
         </mat-paginator>
     </div>

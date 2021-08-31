@@ -34,11 +34,13 @@ export class ListarTipoComidasComponent implements OnInit {
 
   // CONTROL DE CAMPOS Y VALIDACIONES DEL FORMULARIO
   nombreF = new FormControl('', [Validators.minLength(2)]);
+  tipoF = new FormControl('', [Validators.minLength(1)]);
   archivoForm = new FormControl('', Validators.required);
 
   // ASIGNACIÓN DE VALIDACIONES A INPUTS DEL FORMULARIO
   public BuscarTipoComidaForm = new FormGroup({
     nombreForm: this.nombreF,
+    tipoForm: this.tipoF
   });
 
   // ALMACENAMIENTO DE DATOS CONSULTADOS  
@@ -47,6 +49,7 @@ export class ListarTipoComidasComponent implements OnInit {
 
   idEmpleado: number; // VARIABLE DE ALMACENAMIENTO DE ID DE EMPLEADO QUE INICIA SESIÓN
   filtroNombre = ''; // VARIABLE DE BÚSQUEDA FILTRO DE DATOS
+  filtroTipo = ''; // VARIABLE DE BÚSQUEDA DE FILTRO DE DATOS TIPO SERVICIO
 
   // ITEMS DE PAGINACIÓN DE LA TABLA
   pageSizeOptions = [5, 10, 20, 50];
@@ -124,6 +127,7 @@ export class ListarTipoComidasComponent implements OnInit {
   LimpiarCampos() {
     this.BuscarTipoComidaForm.setValue({
       nombreForm: '',
+      tipoForm: ''
     });
     this.ObtenerTipoComidas();
   }

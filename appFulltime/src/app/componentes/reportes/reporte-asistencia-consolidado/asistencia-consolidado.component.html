@@ -1,6 +1,7 @@
 <br>
 <div class="container" style="margin-bottom: 25px; padding-bottom: 10px;">
     <div class="row">
+<<<<<<< HEAD
         <div class="col-lg-7" style="margin-bottom: 15px;">
             <mat-accordion>
                 <mat-expansion-panel hideToggle>
@@ -59,102 +60,125 @@
                                     help_outline</mat-icon>
                             </mat-form-field>
                         </div>
+=======
+        <div class="col-lg">
+            <div id="titulo">
+                <span>Búsqueda Rango Fechas</span>
+            </div>
+            <mat-card class="example-card mat-elevation-z9">
+                <div class="d-flex flex-wrap justify-content-center">
+                    <form [formGroup]="fechasForm">
+                        <mat-form-field>
+                            <mat-label>Desde</mat-label>
+                            <input matInput [matDatepicker]="pickerInicial" placeholder="dd/mm/aaaa"
+                                [disabled]="habilitar" [formControl]="fec_inicio_mes" required>
+                            <mat-datepicker-toggle matSuffix [for]="pickerInicial" matTooltipPosition="right"
+                                id="ayuda_fec"
+                                matTooltip="Ingresar fecha inicio del mes que desee consultar el reporte. Ejm: 01/08/2020.">
+                            </mat-datepicker-toggle>
+                            <mat-datepicker touchUi #pickerInicial></mat-datepicker>
+                        </mat-form-field>
+                        <mat-form-field>
+                            <mat-label>Hasta</mat-label>
+                            <input matInput [matDatepicker]="pickerFinal" placeholder="dd/mm/aaaa"
+                                [disabled]="habilitar" [formControl]="fec_final_mes" required>
+                            <mat-datepicker-toggle matSuffix [for]="pickerFinal" matTooltipPosition="right"
+                                id="ayuda_fec"
+                                matTooltip="Ingresar fecha fin del mes que desee consultar el reporte. Ejm: 31/08/2020.">
+                            </mat-datepicker-toggle>
+                            <mat-datepicker touchUi #pickerFinal></mat-datepicker>
+                        </mat-form-field>
+>>>>>>> 02d14eadb2de328920347110074d739493c5f935
                     </form>
-                    <div class="d-flex justify-content-around">
-                        <button mat-button type="submit" class="btn btn-sm" id="boton" (click)="limpiarCampos()">Cancelar</button>
+                    <div class="d-flex flex-wrap justify-content-around" style="margin: 0px 10px 0px 10px;">
+                        <button mat-button type="submit" class="btn btn-sm" id="botones" [disabled]="fechasForm.invalid"
+                            (click)="ValidarRangofechas(fechasForm.value)">Aceptar</button>
+                        <button mat-button type="submit" class="btn btn-sm" id="botones"
+                            (click)="limpiarCamposRango()">Cancelar</button>
+                        <button mat-icon-button (click)="ConfiguracionReporteAsistencia()">
+                            <mat-icon style="color: black;" matSuffix matTooltipPosition="right"
+                                matTooltip="Se visualizaran opciones de descarga al validar fechas ingresadas y seleccionar campos que se visualizaran en el reporte.">
+                                settings</mat-icon>
+                        </button>
                     </div>
-                </mat-expansion-panel>
-            </mat-accordion>
-        </div>
-        <div class="col-lg-5">
-            <mat-accordion multi>
-            
-                <mat-expansion-panel>
-                    <mat-expansion-panel-header class="d-flex bd-highlight">
-                        <mat-panel-title class="w-100 bd-highlight">
-                        Rango Fechas Asistencia
-                        </mat-panel-title>
-                        <mat-icon class="flex-shrink-1 bd-highlight" matTooltipPosition="right"
-                        matTooltip="Ingresa el rango de fechas para la consulta de Asistencia Detalle Consolidado. 
-                            Se recomienda la fecha de inicio y final de mes">date_range</mat-icon>
-                    </mat-expansion-panel-header>
-            
-                    <div class="d-flex flex-wrap justify-content-center">
-                        <form [formGroup]="fechasForm">
-                            <mat-form-field>
-                                <mat-label>Desde</mat-label>
-                                <input matInput [matDatepicker]="pickerInicial" placeholder="dd/mm/aaaa" [disabled]="habilitar"
-                                    [formControl]="fec_inicio_mes" required>
-                                <mat-datepicker-toggle matSuffix [for]="pickerInicial" matTooltipPosition="right" id="ayuda_fec"
-                                    matTooltip="Ingresa la fecha inicial del mes que deseas consultar el reporte. Ejm: 01/08/2020"></mat-datepicker-toggle>
-                                <mat-datepicker touchUi #pickerInicial></mat-datepicker>
-                            </mat-form-field>
-                            <mat-form-field>
-                                <mat-label>Hasta</mat-label>
-                                <input matInput [matDatepicker]="pickerFinal" placeholder="dd/mm/aaaa" [disabled]="habilitar" 
-                                    [formControl]="fec_final_mes" required>
-                                <mat-datepicker-toggle matSuffix [for]="pickerFinal" matTooltipPosition="right" id="ayuda_fec"
-                                    matTooltip="Ingresa la fecha final del mes que deseas consultar el reporte. Ejm: 31/08/2020"></mat-datepicker-toggle>
-                                <mat-datepicker touchUi #pickerFinal></mat-datepicker>
-                            </mat-form-field>
-                        </form>
-                        <div class="d-flex flex-wrap justify-content-around" style="margin: 0px 10px 0px 10px;">
-                            <button mat-button type="submit" class="btn btn-sm" id="botones" [disabled]="fechasForm.invalid" (click)="ValidarRangofechas(fechasForm.value)">Aceptar</button>
-                            <button mat-button type="submit" class="btn btn-sm" id="botones" (click)="limpiarCamposRango()">Cancelar</button>
-                            <button mat-icon-button (click)="ConfiguracionReporteAsistencia()">
-                                <mat-icon style="color: black;">settings</mat-icon>
-                            </button>
-                        </div>
-                    </div>
-                </mat-expansion-panel>
-            </mat-accordion>
+                </div>
+            </mat-card>
         </div>
     </div>
 </div>
 <div class="container" style="padding-bottom: 50px; text-align: center;">
     <div class="mat-elevation-z8" style="background: white;">
-        <div id="resulEmpleados">Resultado de búsqueda</div>
+        <div id="titulo">REPORTE ASISTENCIA DETALLE CONSOLIDADO</div>
         <div class="table-responsive">
             <table class="table table-hover table-sm">
                 <thead class="thead-light">
                     <tr style="text-align: center;">
-                        <!-- <th>
-                            <mat-checkbox *ngIf="btnCheckDeshabilitado" (change)="$event ? masterToggle() : null"
-                                [checked]="selection.hasValue() && isAllSelected()"
-                                [indeterminate]="selection.hasValue() && !isAllSelected()"
-                                [aria-label]="checkboxLabel()">
-                            </mat-checkbox>
-                        </th> -->
                         <th scope="col">Código</th>
                         <th scope="col">Nombre</th>
                         <th scope="col">Apellido</th>
                         <th scope="col">Cédula</th>
-                        <th scope="col">ASISTENCIA</th>
+                        <th scope="col">Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let e of empleados | emplCodigo: filtroCodigo | emplCedula: filtroCedula | emplNombre: filtroNombre | emplApellido: filtroApellido | paginate:tamanio_pagina:numero_pagina">
-                        <!-- <td>
-                            <mat-checkbox *ngIf="btnCheckDeshabilitado" (click)="$event.stopPropagation()"
-                                (change)="$event ? selection.toggle(e) : null" [checked]="selection.isSelected(e)"
-                                [aria-label]="checkboxLabel(e)">
-                            </mat-checkbox>
-                        </td> -->
+                    <tr>
+                        <td>
+                            <mat-form-field id="t-inputs">
+                                <input matInput placeholder="Buscar" [(ngModel)]="filtroCodigo" [formControl]="codigo"
+                                    (keypress)="IngresarSoloNumeros($event)">
+                            </mat-form-field>
+                        </td>
+                        <td>
+                            <mat-form-field id="t-inputs">
+                                <input matInput placeholder="Buscar" [(ngModel)]="filtroEmpleado" [formControl]="nombre"
+                                    type="text" (keypress)="IngresarSoloLetras($event)">
+                            </mat-form-field>
+                        </td>
+                        <td>
+                            <mat-form-field id="t-inputs">
+                                <input matInput placeholder="Buscar" [(ngModel)]="filtroEmpleado" [formControl]="nombre"
+                                    type="text" (keypress)="IngresarSoloLetras($event)">
+                            </mat-form-field>
+                        </td>
+                        <td>
+                            <mat-form-field id="t-inputs">
+                                <input matInput placeholder="Buscar" [(ngModel)]="filtroCedula" maxlength="10"
+                                    oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                    [formControl]="cedula" type="text" (keypress)="IngresarSoloNumeros($event)">
+                            </mat-form-field>
+                        </td>
+                        <td>
+                            <mat-icon id="limpiar" (click)="limpiarCampos()" matSuffix matTooltipPosition="right"
+                                matTooltip="Limpiar campos de búsqueda de la tabla y mostrar todos los datos.">
+                                format_clear
+                            </mat-icon>
+                            <mat-icon id="i-ayuda" matSuffix matTooltipPosition="right"
+                                matTooltip="Búsqueda de datos de empleado de acuerdo a las columnas de la tabla. Se visualizaran opciones de descarga al validar fechas ingresadas y seleccionar campos que se visualizaran en el reporte.">
+                                help_outline</mat-icon>
+                        </td>
+                    </tr>
+                    <tr
+                        *ngFor="let e of empleados | emplCodigo: filtroCodigo | emplCedula: filtroCedula | nombreApellido: filtroEmpleado | paginate:tamanio_pagina:numero_pagina">
                         <th scope="row">{{e.codigo}}</th>
                         <td>{{e.nombre}}</td>
                         <td>{{e.apellido}}</td>
                         <td>{{e.cedula}}</td>
                         <td class="d-flex justify-content-center">
-                            <i matSuffix matTooltipClass="emple-tooltip" [ngStyle]="estilo" matTooltipPosition="right"
-                                matTooltip="Descargar la asistencia consolidada del empleado" class="material-icons" id="upload"
-                                (click)="AsistenciaEmpleado(e.id, 'download')"> cloud_download
-                            </i>
-                            <i matSuffix matTooltipClass="emple-tooltip" [ngStyle]="estilo" matTooltipPosition="right"
-                                matTooltip="Ver la asistencia consolidada en formato pdf desde el navegador"  class="material-icons" id="pdf"
+                            <i matSuffix [ngStyle]="estilo" matTooltipPosition="right"
+                                matTooltip="Visualizar reporte asistencia consolidada en formato PDF desde el navegador."
+                                class="material-icons" id="pdf"
                                 (click)="AsistenciaEmpleado(e.id, 'open')">picture_as_pdf
+                                <p>PDF</p>
                             </i>
-                            <i (click)="exportToExcelAsistencia(e.id)" [ngStyle]="estilo" id="excel" class="fas fa-file-excel" matSuffix matTooltipPosition="right"
-                                matTooltipClass="departamento-tooltip" matTooltip="Descargar lista de empleados de la empresa en formato EXCEL">
+                            <i (click)="exportToExcelAsistencia(e.id)" [ngStyle]="estilo" id="excel"
+                                class="fas fa-file-excel" matSuffix matTooltipPosition="right"
+                                matTooltip="Descargar reporte asistencia consolidada en formato EXCEL.">
+                                <p>XLSL</p>
+                            </i>
+                            <i matSuffix [ngStyle]="estilo" matTooltipPosition="right"
+                                matTooltip="Descargar reporte asistencia consolidada en formato PDF."
+                                class="material-icons" id="descarga" (click)="AsistenciaEmpleado(e.id, 'download')">
+                                cloud_download<p>PDF</p>
                             </i>
                         </td>
                     </tr>
@@ -162,7 +186,7 @@
             </table>
         </div>
         <mat-paginator [length]="empleados.length" [pageSize]="tamanio_pagina" [pageSizeOptions]="pageSizeOptions"
-            id="estilo" (page)="ManejarPagina($event)" showFirstLastButtons>
+            id="pagina" (page)="ManejarPagina($event)" showFirstLastButtons>
         </mat-paginator>
     </div>
 </div>

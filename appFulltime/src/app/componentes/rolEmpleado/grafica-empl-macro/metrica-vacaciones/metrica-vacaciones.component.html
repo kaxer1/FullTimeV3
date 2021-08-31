@@ -18,7 +18,7 @@
                     <input matInput [matDatepicker]="pickerYearI" placeholder="dd/mm/aaaa" [disabled]="habilitar" 
                         [formControl]="anio_inicio" required>
                     <mat-datepicker-toggle matSuffix [for]="pickerYearI" matTooltipPosition="right" id="ayuda_fec"
-                        matTooltip="Ingresa el año inicial del periodo que desea consultar la gráfica estadística. Ejm: 01/08/2020"></mat-datepicker-toggle>
+                        matTooltip="Ingresar fecha inicial en la que desea consultar gráfica estadística. Ejm: 01/08/2020."></mat-datepicker-toggle>
                     <mat-datepicker touchUi #pickerYearI></mat-datepicker>
                 </mat-form-field>
                 <mat-form-field>
@@ -26,7 +26,7 @@
                     <input matInput [matDatepicker]="pickerYearF" placeholder="dd/mm/aaaa" [disabled]="habilitar" 
                         [formControl]="anio_final" required>
                     <mat-datepicker-toggle matSuffix [for]="pickerYearF" matTooltipPosition="right" id="ayuda_fec"
-                        matTooltip="Ingresa el año final del periodo  que desea consultar el reporte. Ejm: 31/08/2020"></mat-datepicker-toggle>
+                        matTooltip="Ingresar fecha final en la que desea consultar gráfica estadística. Ejm: 31/08/2020."></mat-datepicker-toggle>
                     <mat-datepicker touchUi #pickerYearF></mat-datepicker>
                 </mat-form-field>
             </form>
@@ -50,13 +50,13 @@
         </div>
         <div class="p-2 bd-highlight">
             <button mat-icon-button (click)="metodosPDF('open')">
-                <mat-icon class="i-pdf" matTooltipPosition="right" matTooltip="Previsualizar la gráfica el pdf.">picture_as_pdf</mat-icon>
+                <mat-icon class="i-pdf" matTooltipPosition="right" matTooltip="Previsualizar gráfica en formato PDF.">picture_as_pdf</mat-icon>
             </button>
             <button mat-icon-button (click)="metodosPDF('print')">
-                <mat-icon class="i-print" matTooltipPosition="right" matTooltip="Imprimir la gráfica en pdf.">local_printshop</mat-icon>
+                <mat-icon class="i-print" matTooltipPosition="right" matTooltip="Imprimir gráfica en formato PDF.">local_printshop</mat-icon>
             </button>
             <button mat-icon-button (click)="metodosPDF('download')">
-                <mat-icon class="i-download" matTooltipPosition="right" matTooltip="Descargar la gráfica en pdf">cloud_download</mat-icon>
+                <mat-icon class="i-download" matTooltipPosition="right" matTooltip="Descargar gráfica en formato PDF.">cloud_download</mat-icon>
             </button>
             <button mat-icon-button >
                 <mat-icon class="i-help" matTooltipPosition="right" matTooltip="{{texto_grafica}}">help_outline</mat-icon>

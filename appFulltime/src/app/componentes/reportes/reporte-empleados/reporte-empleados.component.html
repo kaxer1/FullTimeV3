@@ -1,6 +1,7 @@
 <br>
 <div class="container" style="margin-bottom: 25px; padding-bottom: 10px;">
     <div class="row">
+<<<<<<< HEAD
         <div class="col-lg-7" style="margin-bottom: 15px;">
             <mat-accordion>
                 <mat-expansion-panel hideToggle>
@@ -80,25 +81,36 @@
                     <i matSuffix matTooltipClass="emple-tooltip" matTooltipPosition="right" style="margin: 20px 10px 0px 10px;"
                         matTooltip="Descargar lista de empleados de la empresa en formato pdf" class="material-icons" id="upload"
                         (click)="ListaEmpleadosDetallado('download')"> cloud_download
+=======
+        <div class="col-lg">
+            <div id="titulo">
+                <span>Opciones de Descarga</span>
+            </div>
+            <mat-card class="example-card mat-elevation-z9">
+                <div class="d-flex flex-wrap justify-content-center">
+                    <i matSuffix matTooltipPosition="right" matTooltip="Descargar reporte en formato PDF." 
+                        class="material-icons i-download" (click)="ListaEmpleadosDetallado('download')"> cloud_download
+>>>>>>> 02d14eadb2de328920347110074d739493c5f935
                     </i>
-                    <i matSuffix matTooltipClass="emple-tooltip" matTooltipPosition="right" style="margin: 20px 10px 0px 10px;"
-                        matTooltip="Ver la información de empleados en pdf desde el navegador"  class="material-icons" id="pdf"
+                    <i matSuffix matTooltipPosition="right" id="opciones"
+                        matTooltip="Visuaizar reporte en formato PDF desde el navegador." class="material-icons i-pdf"
                         (click)="ListaEmpleadosDetallado('open')">picture_as_pdf
                     </i>
-                    <i (click)="exportToExcelListaEmpleados()" id="excel" class="fas fa-file-excel" matSuffix matTooltipPosition="right"
-                        matTooltipClass="departamento-tooltip" matTooltip="Descargar Lista de Empleados en formato EXCEL">
+                    <i (click)="exportToExcelListaEmpleados()" class="fas fa-file-excel i-excel" id="opciones" matSuffix
+                        matTooltipPosition="right" matTooltip="Descargar reporte formato EXCEL.">
                     </i>
-                    <button mat-icon-button (click)="ConfiguracionReporteEmpleados()">
-                        <mat-icon style="margin-top: -8px; color: black;">settings</mat-icon>
+                    <button id="opciones" mat-icon-button (click)="ConfiguracionReporteEmpleados()">
+                        <mat-icon style="margin-top: -8px; color: black;" matSuffix matTooltipPosition="right"
+                            matTooltip="Seleccionar datos que se visualizarán en el reporte.">settings</mat-icon>
                     </button>
-                </mat-expansion-panel>            
-            </mat-accordion>
+                </div>
+            </mat-card>
         </div>
     </div>
 </div>
 <div class="container" style="padding-bottom: 50px; text-align: center;">
     <div class="mat-elevation-z8" style="background: white;">
-        <div id="resulEmpleados">Resultado de búsqueda</div>
+        <div id="titulo">REPORTE DATOS EMPLEADOS</div>
         <div class="table-responsive">
             <table class="table table-hover table-sm">
                 <thead class="thead-light">
@@ -107,21 +119,60 @@
                         <th scope="col">Nombre</th>
                         <th scope="col">Apellido</th>
                         <th scope="col">Cédula</th>
+                        <th scope="col">Correo</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let e of empleados | emplCodigo: filtroCodigo | emplCedula: filtroCedula | emplNombre: filtroNombre | emplApellido: filtroApellido | paginate:tamanio_pagina:numero_pagina">
+                    <tr>
+                        <td>
+                            <mat-form-field id="t-inputs">
+                                <mat-label>Código</mat-label>
+                                <input matInput placeholder="Buscar" [(ngModel)]="filtroCodigo" [formControl]="codigo"
+                                    (keypress)="IngresarSoloNumeros($event)">
+                            </mat-form-field>
+                        </td>
+                        <td>
+                            <mat-form-field id="t-inputs">
+                                <input matInput placeholder="Buscar" [(ngModel)]="filtroNombre" [formControl]="nombre"
+                                    type="text" (keypress)="IngresarSoloLetras($event)">
+                            </mat-form-field>
+                        </td>
+                        <td>
+                            <mat-form-field id="t-inputs">
+                                <input matInput placeholder="Buscar" [(ngModel)]="filtroApellido"
+                                    [formControl]="apellido" type="text" (keypress)="IngresarSoloLetras($event)">
+                            </mat-form-field>
+                        </td>
+                        <td>
+                            <mat-form-field id="t-inputs">
+                                <input matInput placeholder="Buscar" [(ngModel)]="filtroCedula" maxlength="10"
+                                    oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                    [formControl]="cedula" type="text" (keypress)="IngresarSoloNumeros($event)">
+                            </mat-form-field>
+                        </td>
+                        <td>
+                            <mat-icon id="limpiar" (click)="limpiarCampos()" matSuffix matTooltipPosition="right"
+                                matTooltip="Limpiar campos de búsqueda de la tabla y mostrar todos los datos.">
+                                format_clear
+                            </mat-icon>
+                            <mat-icon id="i-ayuda" matSuffix matTooltipPosition="right"
+                                matTooltip="Búsqueda de datos de empleado de acuerdo a las columnas de la tabla.">
+                                help_outline</mat-icon>
+                        </td>
+                    </tr>
+                    <tr
+                        *ngFor="let e of empleados | emplCodigo: filtroCodigo | emplCedula: filtroCedula | emplNombre: filtroNombre | emplApellido: filtroApellido | paginate:tamanio_pagina:numero_pagina">
                         <th scope="row">{{e.codigo}}</th>
                         <td>{{e.nombre}}</td>
                         <td>{{e.apellido}}</td>
                         <td>{{e.cedula}}</td>
+                        <td>{{e.correo}}</td>
                     </tr>
                 </tbody>
             </table>
         </div>
         <mat-paginator [length]="empleados.length" [pageSize]="tamanio_pagina" [pageSizeOptions]="pageSizeOptions"
-            id="estilo" (page)="ManejarPagina($event)" showFirstLastButtons>
+            id="pagina" (page)="ManejarPagina($event)" showFirstLastButtons>
         </mat-paginator>
     </div>
 </div>
-

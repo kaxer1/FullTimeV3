@@ -2,8 +2,6 @@
 
 td { padding-top: 10px; text-align: center; }
 
-mat-form-field { padding: 10px 15px 0px 15px;}
-
 #TituloResultado { 
     font-size: 17px; 
     text-align: center; 
@@ -15,7 +13,7 @@ mat-form-field { padding: 10px 15px 0px 15px;}
 
 table { width: 100%; font-size: 14px;}
 
-#estilo { color: rgb(0, 0, 0); font-size: 13px; }
+
 
 mat-icon { cursor: pointer;}
 
@@ -24,20 +22,11 @@ mat-icon { cursor: pointer;}
     margin-left: 10px;
 }
 
-mat-expansion-panel-header { text-align: center; background: rgb(52,65,84); }
-
-mat-panel-title { color: white; }
-
 #icono { color: white; }
 
-.mat-expansion-panel-header.mat-expanded {
-    background: rgb(52,65,84);
-}
 
-.mat-expansion-panel-header.mat-expanded:hover {
-    background: rgb(52,65,84);
-}
-
-#menu { color: green; font-size: 20px; text-align: center; margin-left: 20px; cursor: pointer; }
+#menu { color: green; font-size: 20px; text-align: center; cursor: pointer; }
 
 p { font-size: x-small; }
+
+mat-form-field { padding: 10px 15px 0px 15px;}

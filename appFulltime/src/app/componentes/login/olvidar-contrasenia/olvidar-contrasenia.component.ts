@@ -9,6 +9,7 @@ import { ToastrService } from 'ngx-toastr';
   templateUrl: './olvidar-contrasenia.component.html',
   styleUrls: ['./olvidar-contrasenia.component.css']
 })
+
 export class OlvidarContraseniaComponent implements OnInit {
 
   correo = new FormControl('', [Validators.required, Validators.email]);

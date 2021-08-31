@@ -1,7 +1,7 @@
 <br>
 <div class="container" style="padding-bottom: 50px; text-align: center;">
     <div class="mat-elevation-z8" style="background: white;">
-        <div class="d-flex bd-highlight" id="resultadosEmpre">
+        <div class="d-flex bd-highlight" id="titulo">
             <span class="w-100 bd-highlight">
                 Lista de Planificaciones de Horas Extras</span>
         </div>
@@ -28,7 +28,7 @@
                         <td>{{p.horas_totales}}</td>
                         <td class="d-flex justify-content-center">
                             <i *ngIf = "p.fecha_desde.split('T')[0] > fecha" class="fas fa-edit" matSuffix matTooltipPosition="right"
-                                matTooltipClass="departamento-tooltip"
+                                
                                 matTooltip="Modificar los datos generales de este registro"
                                 (click)="EditarPlanificacion(p)">
                                 <p>Editar</p>
@@ -40,7 +40,7 @@
         </div>
         <br>
         <mat-paginator [length]="listaPlan.length" [pageSize]="tamanio_pagina" [pageSizeOptions]="pageSizeOptions"
-            id="estilo" (page)="ManejarPagina($event)" showFirstLastButtons>
+            id="pagina" (page)="ManejarPagina($event)" showFirstLastButtons>
         </mat-paginator>
     </div>
 </div>

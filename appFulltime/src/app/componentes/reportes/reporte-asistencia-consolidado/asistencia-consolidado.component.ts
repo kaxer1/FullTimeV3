@@ -11,7 +11,7 @@ import * as moment from 'moment';
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 import { KardexService } from 'src/app/servicios/reportes/kardex.service';
 import { MatDialog } from '@angular/material/dialog';
-import { IReporteAsistenciaConsolidada, IRestAsisteConsoli, IRestTotalAsisteConsoli} from '../../../model/reportes.model'
+import { IReporteAsistenciaConsolidada, IRestAsisteConsoli, IRestTotalAsisteConsoli } from '../../../model/reportes.model'
 import { ConfigAsistenciaComponent } from '../../reportes-Configuracion/config-report-asistencia/config-asistencia.component';
 import { SelectionModel } from '@angular/cdk/collections';
 import { EmpleadoElemento } from 'src/app/model/empleado.model';
@@ -31,12 +31,10 @@ export class AsistenciaConsolidadoComponent implements OnInit {
   codigo = new FormControl('');
   cedula = new FormControl('', [Validators.minLength(2)]);
   nombre = new FormControl('', [Validators.minLength(2)]);
-  apellido = new FormControl('', [Validators.minLength(2)]);
 
   filtroCodigo: number;
   filtroCedula: '';
-  filtroNombre: '';
-  filtroApellido: '';
+  filtroEmpleado = '';
 
   // items de paginacion de la tabla
   tamanio_pagina: number = 5;
@@ -65,10 +63,10 @@ export class AsistenciaConsolidadoComponent implements OnInit {
   selection = new SelectionModel<EmpleadoElemento>(true, []);
 
   // Getters de colores, nombre empresa y logo para colocar en reporte 
-  get p_color(): string { return this.plantillaPDF.color_Primary}
-  get s_color(): string { return this.plantillaPDF.color_Secundary}  
-  get urlImagen() : string { return this.plantillaPDF.logoBase64 }
-  get nombreEmpresa(): string { return this.plantillaPDF.nameEmpresa}
+  get p_color(): string { return this.plantillaPDF.color_Primary }
+  get s_color(): string { return this.plantillaPDF.color_Secundary }
+  get urlImagen(): string { return this.plantillaPDF.logoBase64 }
+  get nombreEmpresa(): string { return this.plantillaPDF.nameEmpresa }
 
   constructor(
     private restEmpleado: EmpleadoService,
@@ -169,7 +167,7 @@ export class AsistenciaConsolidadoComponent implements OnInit {
     var f_f = new Date(form.fec_final)
 
     if (f_i < f_f) {
-      this.toastr.success('Fechas validas','', {
+      this.toastr.success('Fechas validas', '', {
         timeOut: 6000,
       });
       this.f_inicio_req = f_i.toJSON().split('T')[0];
@@ -177,12 +175,12 @@ export class AsistenciaConsolidadoComponent implements OnInit {
       this.habilitar = true
       this.estilo = { 'visibility': 'visible' };
     } else if (f_i > f_f) {
-      this.toastr.info('Fecha final es menor a la fecha inicial','', {
+      this.toastr.info('Fecha final es menor a la fecha inicial', '', {
         timeOut: 6000,
       });
       this.fechasForm.reset();
     } else if (f_i.toLocaleDateString() === f_f.toLocaleDateString()) {
-      this.toastr.info('Fecha inicial es igual a la fecha final','', {
+      this.toastr.info('Fecha inicial es igual a la fecha final', '', {
         timeOut: 6000,
       });
       this.fechasForm.reset();
@@ -215,8 +213,8 @@ export class AsistenciaConsolidadoComponent implements OnInit {
 
   ConfiguracionReporteAsistencia() {
     console.log('Esta listo para configurar');
-    this.openVentana.open(ConfigAsistenciaComponent,{ width: '500px' }).afterClosed()
-      .subscribe(res => { 
+    this.openVentana.open(ConfigAsistenciaComponent, { width: '500px' }).afterClosed()
+      .subscribe(res => {
         if (res === true) {
           if (this.habilitar === true) {
             this.estilo = { 'visibility': 'visible' };
@@ -227,7 +225,7 @@ export class AsistenciaConsolidadoComponent implements OnInit {
           }
         }
       })
-    
+
     this.MensajeInicio()
   }
   /* ****************************************************************************************************
@@ -241,7 +239,7 @@ export class AsistenciaConsolidadoComponent implements OnInit {
     if (pdf === 1) {
       documentDefinition = this.getDocumentDefinicionAsistencia();
     }
-    
+
     switch (action) {
       case 'open': pdfMake.createPdf(documentDefinition).open(); break;
       case 'print': pdfMake.createPdf(documentDefinition).print(); break;
@@ -296,7 +294,7 @@ export class AsistenciaConsolidadoComponent implements OnInit {
                 ]
               ]
             }
-          },          
+          },
           {
             margin: [10, -2, 10, 0],
             columns: [
@@ -341,11 +339,11 @@ export class AsistenciaConsolidadoComponent implements OnInit {
       styles: {
         tableTotal: { fontSize: 30, bold: true, alignment: 'center', fillColor: this.p_color },
         tableHeader: { fontSize: 9, bold: true, alignment: 'center', fillColor: this.p_color },
-        itemsTable: { fontSize: 8, margin: [0, 3, 0, 3],  },
+        itemsTable: { fontSize: 8, margin: [0, 3, 0, 3], },
         itemsTableInfo: { fontSize: 10, margin: [0, 5, 0, 5] },
         subtitulos: { fontSize: 16, alignment: 'center', margin: [0, 5, 0, 10] },
         tableMargin: { margin: [0, 20, 0, 0] },
-        CabeceraTabla: { fontSize: 12, alignment: 'center', margin: [0, 8, 0, 8], fillColor: this.p_color},
+        CabeceraTabla: { fontSize: 12, alignment: 'center', margin: [0, 8, 0, 8], fillColor: this.p_color },
         quote: { margin: [5, -2, 0, -2], italics: true },
         small: { fontSize: 8, color: 'blue', opacity: 0.5 }
       }
@@ -414,7 +412,7 @@ export class AsistenciaConsolidadoComponent implements OnInit {
 
       return { text: 'No has seleccionado ningun campo de impresión.' }
     }
-    
+
     if (!!sessionStorage.getItem('columnasValidasAsistencia') === false) {
       this.toastr.error('Configurar campos a imprimir antes de descargar o visualizar', 'Error Pdf', {
         timeOut: 10000,
@@ -427,7 +425,7 @@ export class AsistenciaConsolidadoComponent implements OnInit {
     }
 
     let columnas = parseInt(sessionStorage.getItem('columnasValidasAsistencia'));
-    let s = JSON.parse( sessionStorage.getItem('arrayConfigAsistencia')) as IReporteAsistenciaConsolidada;
+    let s = JSON.parse(sessionStorage.getItem('arrayConfigAsistencia')) as IReporteAsistenciaConsolidada;
     console.log(s);
 
     return this.FuncionRegistros(columnas, s, d);
@@ -442,7 +440,7 @@ export class AsistenciaConsolidadoComponent implements OnInit {
         widths: this.FuncionColumnas(columnas),
         body: [
           this.FuncionTituloColumna(configuracion),
-          ...datos.map((obj:IRestAsisteConsoli) => {
+          ...datos.map((obj: IRestAsisteConsoli) => {
             contador = contador + 1;
             var array = [
               { style: 'itemsTable', text: '1.' + contador },
@@ -470,70 +468,70 @@ export class AsistenciaConsolidadoComponent implements OnInit {
 
             let index = 0;
             let cont = 0;
-            
-              if (configuracion.atraso === false) { 
-                cont = 0; index = 0;
-                array.forEach(ele => {
-                  if (ele.text.split('.')[0] === '15') { index = cont; }
-                  cont = cont + 1
-                })
-                array.splice(index, 1) 
-              }
-              
-              if (configuracion.salida_antes === false) { 
-                cont = 0; index = 0;
-                array.forEach(ele => {
-                  if (ele.text.split('.')[0] === '16') { index = cont; }
-                  cont = cont + 1
-                })
-                array.splice(index, 1)  
-              }
-              
-              if (configuracion.almuerzo === false) { 
-                cont = 0; index = 0;
-                array.forEach(ele => {
-                  if (ele.text.split('.')[0] === '17') { index = cont; }
-                  cont = cont + 1
-                })
-                array.splice(index, 1) 
-              } 
-              
-              if (configuracion.h_trab === false) { 
-                cont = 0; index = 0;
-                array.forEach(ele => {
-                  if (ele.text.split('.')[0] === '18') { index = cont; }
-                  cont = cont + 1
-                })
-                array.splice(index, 1)
-              }
-              
-              if (configuracion.h_supl === false) { 
-                cont = 0; index = 0;
-                array.forEach(ele => {
-                  if (ele.text.split('.')[0] === '19') { index = cont; }
-                  cont = cont + 1
-                })
-                array.splice(index, 1)  
-              }
-              
-              if (configuracion.h_ex_LV === false) { 
-                cont = 0; index = 0;
-                array.forEach(ele => {
-                  if (ele.text.split('.')[0] === '20') { index = cont; }
-                  cont = cont + 1
-                })
-                array.splice(index, 1)  
-              }
-              
-              if (configuracion.h_ex_SD === false) { 
-                cont = 0; index = 0;
-                array.forEach(ele => {
-                  if (ele.text.split('.')[0] === '21') { index = cont; }
-                  cont = cont + 1
-                })
-                array.splice(index, 1)  
-              }
-              
+
+            if (configuracion.atraso === false) {
+              cont = 0; index = 0;
+              array.forEach(ele => {
+                if (ele.text.split('.')[0] === '15') { index = cont; }
+                cont = cont + 1
+              })
+              array.splice(index, 1)
+            }
+
+            if (configuracion.salida_antes === false) {
+              cont = 0; index = 0;
+              array.forEach(ele => {
+                if (ele.text.split('.')[0] === '16') { index = cont; }
+                cont = cont + 1
+              })
+              array.splice(index, 1)
+            }
+
+            if (configuracion.almuerzo === false) {
+              cont = 0; index = 0;
+              array.forEach(ele => {
+                if (ele.text.split('.')[0] === '17') { index = cont; }
+                cont = cont + 1
+              })
+              array.splice(index, 1)
+            }
+
+            if (configuracion.h_trab === false) {
+              cont = 0; index = 0;
+              array.forEach(ele => {
+                if (ele.text.split('.')[0] === '18') { index = cont; }
+                cont = cont + 1
+              })
+              array.splice(index, 1)
+            }
+
+            if (configuracion.h_supl === false) {
+              cont = 0; index = 0;
+              array.forEach(ele => {
+                if (ele.text.split('.')[0] === '19') { index = cont; }
+                cont = cont + 1
+              })
+              array.splice(index, 1)
+            }
+
+            if (configuracion.h_ex_LV === false) {
+              cont = 0; index = 0;
+              array.forEach(ele => {
+                if (ele.text.split('.')[0] === '20') { index = cont; }
+                cont = cont + 1
+              })
+              array.splice(index, 1)
+            }
+
+            if (configuracion.h_ex_SD === false) {
+              cont = 0; index = 0;
+              array.forEach(ele => {
+                if (ele.text.split('.')[0] === '21') { index = cont; }
+                cont = cont + 1
+              })
+              array.splice(index, 1)
+            }
+
             return array.map(maping => {
               return { style: maping.style, text: maping.text.split('.')[1] }
             })
@@ -550,28 +548,28 @@ export class AsistenciaConsolidadoComponent implements OnInit {
 
   FuncionColumnas(columnas: number) {
     // console.log(columnas);
-    let col = ['auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto']; 
+    let col = ['auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'];
     // console.log(col.slice(0,columnas));
     return col.slice(0, columnas);
   }
 
   FuncionTituloColumna(configuracion: IReporteAsistenciaConsolidada) {
-    
+
     var arrayTitulos = [
       { text: 'Nº', style: 'tableHeader' },
       { colSpan: 4, text: 'ENTRADA', style: 'tableHeader' },
-      { text: ''},
-      { text: ''},
-      { text: ''},
+      { text: '' },
+      { text: '' },
+      { text: '' },
       { colSpan: 3, text: 'SALIDA A', style: 'tableHeader' },
-      { text: ''},
-      { text: ''},
+      { text: '' },
+      { text: '' },
       { colSpan: 3, text: 'ENTRADA A', style: 'tableHeader' },
-      { text: ''},
-      { text: ''},
+      { text: '' },
+      { text: '' },
       { colSpan: 3, text: 'SALIDA', style: 'tableHeader' },
-      { text: ''},
-      { text: ''},
+      { text: '' },
+      { text: '' },
       { text: 'ATRASO', style: 'tableHeader' },
       { text: 'SAL ANTES', style: 'tableHeader' },
       { text: 'ALMUE', style: 'tableHeader' },
@@ -582,67 +580,67 @@ export class AsistenciaConsolidadoComponent implements OnInit {
     ]
     let index = 0;
     let contador = 0;
-    if (configuracion.atraso === false) {   
+    if (configuracion.atraso === false) {
       contador = 0;
       arrayTitulos.forEach(obj => {
         if (obj.text === 'ATRASO') { index = contador; }
         contador = contador + 1
       })
-      arrayTitulos.splice(index, 1) 
+      arrayTitulos.splice(index, 1)
     }
-    
-    if (configuracion.salida_antes === false) { 
+
+    if (configuracion.salida_antes === false) {
       contador = 0;
       arrayTitulos.forEach(obj => {
         if (obj.text === 'SAL ANTES') { index = contador; }
         contador = contador + 1
       })
-      arrayTitulos.splice(index, 1) 
+      arrayTitulos.splice(index, 1)
     }
-    
-    if (configuracion.almuerzo === false) { 
+
+    if (configuracion.almuerzo === false) {
       contador = 0;
       arrayTitulos.forEach(obj => {
         if (obj.text === 'ALMUE') { index = contador; }
         contador = contador + 1
       })
-      arrayTitulos.splice(index, 1) 
-    } 
-    
-    if (configuracion.h_trab === false) { 
+      arrayTitulos.splice(index, 1)
+    }
+
+    if (configuracion.h_trab === false) {
       contador = 0;
-      arrayTitulos.forEach(obj => { 
-        if (obj.text === 'HORA TRAB') { index = contador;}
+      arrayTitulos.forEach(obj => {
+        if (obj.text === 'HORA TRAB') { index = contador; }
         contador = contador + 1
       })
-      arrayTitulos.splice(index, 1) 
+      arrayTitulos.splice(index, 1)
     }
-    
-    if (configuracion.h_supl === false) { 
+
+    if (configuracion.h_supl === false) {
       contador = 0;
       arrayTitulos.forEach(obj => {
         if (obj.text === 'HORA SUPL') { index = contador; }
         contador = contador + 1
       })
-      arrayTitulos.splice(index, 1) 
+      arrayTitulos.splice(index, 1)
     }
-    
-    if (configuracion.h_ex_LV === false) { 
+
+    if (configuracion.h_ex_LV === false) {
       contador = 0;
       arrayTitulos.forEach(obj => {
         if (obj.text === 'HORA EX. L-V') { index = contador; }
         contador = contador + 1
       })
-      arrayTitulos.splice(index, 1) 
+      arrayTitulos.splice(index, 1)
     }
-    
-    if (configuracion.h_ex_SD === false) { 
+
+    if (configuracion.h_ex_SD === false) {
       contador = 0;
       arrayTitulos.forEach(obj => {
         if (obj.text === 'HORA EX. S-D') { index = contador; }
         contador = contador + 1
       })
-      arrayTitulos.splice(index, 1) 
+      arrayTitulos.splice(index, 1)
     }
     // console.log(arrayTitulos);
     return arrayTitulos
@@ -658,7 +656,7 @@ export class AsistenciaConsolidadoComponent implements OnInit {
 
   CampoOperaciones(objeto: any) {
     let columnas = parseInt(sessionStorage.getItem('columnasValidasAsistencia'));
-    let s = JSON.parse( sessionStorage.getItem('arrayConfigAsistencia')) as IReporteAsistenciaConsolidada;
+    let s = JSON.parse(sessionStorage.getItem('arrayConfigAsistencia')) as IReporteAsistenciaConsolidada;
     // console.log(objeto);
     return {
       style: 'tableMargin',
@@ -674,12 +672,12 @@ export class AsistenciaConsolidadoComponent implements OnInit {
   }
 
   FuncionTituloColumnaTotal(configuracion: IReporteAsistenciaConsolidada) {
-    
+
     var arrayTitulos = [
       { rowSpan: 3, colSpan: 14, text: 'TOTAL', style: 'tableTotal' },
-      { text: ''}, { text: ''}, { text: ''}, { text: ''}, { text: ''},
-      { text: ''}, { text: ''}, { text: ''}, { text: ''}, { text: ''},
-      { text: ''}, { text: ''}, { text: ''},
+      { text: '' }, { text: '' }, { text: '' }, { text: '' }, { text: '' },
+      { text: '' }, { text: '' }, { text: '' }, { text: '' }, { text: '' },
+      { text: '' }, { text: '' }, { text: '' },
       { text: 'ATRASO', style: 'tableHeader' },
       { text: 'SAL ANTES', style: 'tableHeader' },
       { text: 'ALMUE', style: 'tableHeader' },
@@ -688,70 +686,70 @@ export class AsistenciaConsolidadoComponent implements OnInit {
       { text: 'HORA EX. L-V', style: 'tableHeader' },
       { text: 'HORA EX. S-D', style: 'tableHeader' }
     ]
-    
+
     let index = 0;
     let contador = 0;
-    if (configuracion.atraso === false) {   
+    if (configuracion.atraso === false) {
       contador = 0;
       arrayTitulos.forEach(obj => {
         if (obj.text === 'ATRASO') { index = contador; }
         contador = contador + 1
       })
-      arrayTitulos.splice(index, 1) 
+      arrayTitulos.splice(index, 1)
     }
-    
-    if (configuracion.salida_antes === false) { 
+
+    if (configuracion.salida_antes === false) {
       contador = 0;
       arrayTitulos.forEach(obj => {
         if (obj.text === 'SAL ANTES') { index = contador; }
         contador = contador + 1
       })
-      arrayTitulos.splice(index, 1) 
+      arrayTitulos.splice(index, 1)
     }
-    
-    if (configuracion.almuerzo === false) { 
+
+    if (configuracion.almuerzo === false) {
       contador = 0;
       arrayTitulos.forEach(obj => {
         if (obj.text === 'ALMUE') { index = contador; }
         contador = contador + 1
       })
-      arrayTitulos.splice(index, 1) 
-    } 
-    
-    if (configuracion.h_trab === false) { 
+      arrayTitulos.splice(index, 1)
+    }
+
+    if (configuracion.h_trab === false) {
       contador = 0;
-      arrayTitulos.forEach(obj => { 
-        if (obj.text === 'HORA TRAB') { index = contador;}
+      arrayTitulos.forEach(obj => {
+        if (obj.text === 'HORA TRAB') { index = contador; }
         contador = contador + 1
       })
-      arrayTitulos.splice(index, 1) 
+      arrayTitulos.splice(index, 1)
     }
-    
-    if (configuracion.h_supl === false) { 
+
+    if (configuracion.h_supl === false) {
       contador = 0;
       arrayTitulos.forEach(obj => {
         if (obj.text === 'HORA SUPL') { index = contador; }
         contador = contador + 1
       })
-      arrayTitulos.splice(index, 1) 
+      arrayTitulos.splice(index, 1)
     }
-    
-    if (configuracion.h_ex_LV === false) { 
+
+    if (configuracion.h_ex_LV === false) {
       contador = 0;
       arrayTitulos.forEach(obj => {
         if (obj.text === 'HORA EX. L-V') { index = contador; }
         contador = contador + 1
       })
-      arrayTitulos.splice(index, 1) 
+      arrayTitulos.splice(index, 1)
     }
-    
-    if (configuracion.h_ex_SD === false) { 
+
+    if (configuracion.h_ex_SD === false) {
       contador = 0;
       arrayTitulos.forEach(obj => {
         if (obj.text === 'HORA EX. S-D') { index = contador; }
         contador = contador + 1
       })
-      arrayTitulos.splice(index, 1) 
+      arrayTitulos.splice(index, 1)
     }
     // console.log(arrayTitulos);
     return arrayTitulos
@@ -759,11 +757,11 @@ export class AsistenciaConsolidadoComponent implements OnInit {
 
   FuncionHHMMTotal(obj: IRestTotalAsisteConsoli, configuracion: IReporteAsistenciaConsolidada) {
     var array = [
-      { style: 'itemsTable', text: '1. '}, { style: 'itemsTable', text: '2. '}, { style: 'itemsTable', text: '3. '}, 
-      { style: 'itemsTable', text: '4. '}, { style: 'itemsTable', text: '5. '}, { style: 'itemsTable', text: '6. '}, 
-      { style: 'itemsTable', text: '7. '}, { style: 'itemsTable', text: '8. '}, { style: 'itemsTable', text: '9. '}, 
-      { style: 'itemsTable', text: '10. '}, { style: 'itemsTable', text: '11. '}, { style: 'itemsTable', text: '12. '}, 
-      { style: 'itemsTable', text: '13. '}, { style: 'itemsTable', text: '14. '},
+      { style: 'itemsTable', text: '1. ' }, { style: 'itemsTable', text: '2. ' }, { style: 'itemsTable', text: '3. ' },
+      { style: 'itemsTable', text: '4. ' }, { style: 'itemsTable', text: '5. ' }, { style: 'itemsTable', text: '6. ' },
+      { style: 'itemsTable', text: '7. ' }, { style: 'itemsTable', text: '8. ' }, { style: 'itemsTable', text: '9. ' },
+      { style: 'itemsTable', text: '10. ' }, { style: 'itemsTable', text: '11. ' }, { style: 'itemsTable', text: '12. ' },
+      { style: 'itemsTable', text: '13. ' }, { style: 'itemsTable', text: '14. ' },
       { style: 'itemsTable', text: '15.' + obj.atraso },
       { style: 'itemsTable', text: '16.' + obj.sal_antes },
       { style: 'itemsTable', text: '17.' + obj.almuerzo },
@@ -774,68 +772,68 @@ export class AsistenciaConsolidadoComponent implements OnInit {
     ]
     let index = 0;
     let cont = 0;
-      if (configuracion.atraso === false) { 
-        cont = 0;
-        array.forEach(ele => {
-          if (ele.text.split('.')[0] === '15') { index = cont; }
-          cont = cont + 1
-        })
-        array.splice(index, 1) 
-      }
-      
-      if (configuracion.salida_antes === false) { 
-        cont = 0;
-        array.forEach(ele => {
-          if (ele.text.split('.')[0] === '16') { index = cont; }
-          cont = cont + 1
-        })
-        array.splice(index, 1)  
-      }
-      
-      if (configuracion.almuerzo === false) { 
-        cont = 0;
-        array.forEach(ele => {
-          if (ele.text.split('.')[0] === '17') { index = cont; }
-          cont = cont + 1
-        })
-        array.splice(index, 1) 
-      } 
-      
-      if (configuracion.h_trab === false) { 
-        cont = 0;
-        array.forEach(ele => {
-          if (ele.text.split('.')[0] === '18') { index = cont; }
-          cont = cont + 1
-        })
-        array.splice(index, 1) 
-      }
-      
-      if (configuracion.h_supl === false) { 
-        cont = 0;
-        array.forEach(ele => {
-          if (ele.text.split('.')[0] === '19') { index = cont; }
-          cont = cont + 1
-        })
-        array.splice(index, 1)  
-      }
-      
-      if (configuracion.h_ex_LV === false) { 
-        cont = 0;
-        array.forEach(ele => {
-          if (ele.text.split('.')[0] === '20') { index = cont; }
-          cont = cont + 1
-        })
-        array.splice(index, 1)  
-      }
-      
-      if (configuracion.h_ex_SD === false) { 
-        cont = 0;
-        array.forEach(ele => {
-          if (ele.text.split('.')[0] === '21') { index = cont; }
-          cont = cont + 1
-        })
-        array.splice(index, 1)  
-      }
+    if (configuracion.atraso === false) {
+      cont = 0;
+      array.forEach(ele => {
+        if (ele.text.split('.')[0] === '15') { index = cont; }
+        cont = cont + 1
+      })
+      array.splice(index, 1)
+    }
+
+    if (configuracion.salida_antes === false) {
+      cont = 0;
+      array.forEach(ele => {
+        if (ele.text.split('.')[0] === '16') { index = cont; }
+        cont = cont + 1
+      })
+      array.splice(index, 1)
+    }
+
+    if (configuracion.almuerzo === false) {
+      cont = 0;
+      array.forEach(ele => {
+        if (ele.text.split('.')[0] === '17') { index = cont; }
+        cont = cont + 1
+      })
+      array.splice(index, 1)
+    }
+
+    if (configuracion.h_trab === false) {
+      cont = 0;
+      array.forEach(ele => {
+        if (ele.text.split('.')[0] === '18') { index = cont; }
+        cont = cont + 1
+      })
+      array.splice(index, 1)
+    }
+
+    if (configuracion.h_supl === false) {
+      cont = 0;
+      array.forEach(ele => {
+        if (ele.text.split('.')[0] === '19') { index = cont; }
+        cont = cont + 1
+      })
+      array.splice(index, 1)
+    }
+
+    if (configuracion.h_ex_LV === false) {
+      cont = 0;
+      array.forEach(ele => {
+        if (ele.text.split('.')[0] === '20') { index = cont; }
+        cont = cont + 1
+      })
+      array.splice(index, 1)
+    }
+
+    if (configuracion.h_ex_SD === false) {
+      cont = 0;
+      array.forEach(ele => {
+        if (ele.text.split('.')[0] === '21') { index = cont; }
+        cont = cont + 1
+      })
+      array.splice(index, 1)
+    }
 
     return array.map(maping => {
       return { style: maping.style, text: maping.text.split('.')[1] }
@@ -844,10 +842,10 @@ export class AsistenciaConsolidadoComponent implements OnInit {
 
   FuncionDecimalTotal(obj: IRestTotalAsisteConsoli, configuracion: IReporteAsistenciaConsolidada) {
     var array = [
-      { text: '1- ', style: 'itemsTable' }, { text: '2- ', style: 'itemsTable' }, { text: '3- ', style: 'itemsTable' }, 
-      { text: '4- ', style: 'itemsTable' }, { text: '5- ', style: 'itemsTable' }, { text: '6- ', style: 'itemsTable' }, 
-      { text: '7- ', style: 'itemsTable' }, { text: '8- ', style: 'itemsTable' }, { text: '9- ', style: 'itemsTable' }, 
-      { text: '10- ', style: 'itemsTable' }, { text: '11- ', style: 'itemsTable' }, { text: '12- ', style: 'itemsTable' }, 
+      { text: '1- ', style: 'itemsTable' }, { text: '2- ', style: 'itemsTable' }, { text: '3- ', style: 'itemsTable' },
+      { text: '4- ', style: 'itemsTable' }, { text: '5- ', style: 'itemsTable' }, { text: '6- ', style: 'itemsTable' },
+      { text: '7- ', style: 'itemsTable' }, { text: '8- ', style: 'itemsTable' }, { text: '9- ', style: 'itemsTable' },
+      { text: '10- ', style: 'itemsTable' }, { text: '11- ', style: 'itemsTable' }, { text: '12- ', style: 'itemsTable' },
       { text: '13- ', style: 'itemsTable' }, { text: '14- ', style: 'itemsTable' },
       { text: '15-' + obj.atraso.toString().slice(0, 8), style: 'itemsTable' },
       { text: '16-' + obj.sal_antes.toString().slice(0, 8), style: 'itemsTable' },
@@ -859,68 +857,68 @@ export class AsistenciaConsolidadoComponent implements OnInit {
     ]
     let index = 0;
     let cont = 0;
-      if (configuracion.atraso === false) { 
-        cont = 0;
-        array.forEach(ele => {
-          if (ele.text.split('-')[0] === '15') { index = cont; }
-          cont = cont + 1
-        })
-        array.splice(index, 1) 
-      }
-      
-      if (configuracion.salida_antes === false) { 
-        cont = 0;
-        array.forEach(ele => {
-          if (ele.text.split('-')[0] === '16') { index = cont; }
-          cont = cont + 1
-        })
-        array.splice(index, 1)  
-      }
-      
-      if (configuracion.almuerzo === false) { 
-        cont = 0;
-        array.forEach(ele => {
-          if (ele.text.split('-')[0] === '17') { index = cont; }
-          cont = cont + 1
-        })
-        array.splice(index, 1) 
-      } 
-      
-      if (configuracion.h_trab === false) { 
-        cont = 0;
-        array.forEach(ele => {
-          if (ele.text.split('-')[0] === '18') { index = cont; }
-          cont = cont + 1
-        })
-        array.splice(index, 1) 
-      }
-      
-      if (configuracion.h_supl === false) { 
-        cont = 0;
-        array.forEach(ele => {
-          if (ele.text.split('-')[0] === '19') { index = cont; }
-          cont = cont + 1
-        })
-        array.splice(index, 1)  
-      }
-      
-      if (configuracion.h_ex_LV === false) { 
-        cont = 0;
-        array.forEach(ele => {
-          if (ele.text.split('-')[0] === '20') { index = cont; }
-          cont = cont + 1
-        })
-        array.splice(index, 1)  
-      }
-      
-      if (configuracion.h_ex_SD === false) { 
-        cont = 0;
-        array.forEach(ele => {
-          if (ele.text.split('-')[0] === '21') { index = cont; }
-          cont = cont + 1
-        })
-        array.splice(index, 1)  
-      }
+    if (configuracion.atraso === false) {
+      cont = 0;
+      array.forEach(ele => {
+        if (ele.text.split('-')[0] === '15') { index = cont; }
+        cont = cont + 1
+      })
+      array.splice(index, 1)
+    }
+
+    if (configuracion.salida_antes === false) {
+      cont = 0;
+      array.forEach(ele => {
+        if (ele.text.split('-')[0] === '16') { index = cont; }
+        cont = cont + 1
+      })
+      array.splice(index, 1)
+    }
+
+    if (configuracion.almuerzo === false) {
+      cont = 0;
+      array.forEach(ele => {
+        if (ele.text.split('-')[0] === '17') { index = cont; }
+        cont = cont + 1
+      })
+      array.splice(index, 1)
+    }
+
+    if (configuracion.h_trab === false) {
+      cont = 0;
+      array.forEach(ele => {
+        if (ele.text.split('-')[0] === '18') { index = cont; }
+        cont = cont + 1
+      })
+      array.splice(index, 1)
+    }
+
+    if (configuracion.h_supl === false) {
+      cont = 0;
+      array.forEach(ele => {
+        if (ele.text.split('-')[0] === '19') { index = cont; }
+        cont = cont + 1
+      })
+      array.splice(index, 1)
+    }
+
+    if (configuracion.h_ex_LV === false) {
+      cont = 0;
+      array.forEach(ele => {
+        if (ele.text.split('-')[0] === '20') { index = cont; }
+        cont = cont + 1
+      })
+      array.splice(index, 1)
+    }
+
+    if (configuracion.h_ex_SD === false) {
+      cont = 0;
+      array.forEach(ele => {
+        if (ele.text.split('-')[0] === '21') { index = cont; }
+        cont = cont + 1
+      })
+      array.splice(index, 1)
+    }
 
     return array.map(maping => {
       return { style: maping.style, text: maping.text.split('-')[1] }
@@ -934,64 +932,64 @@ export class AsistenciaConsolidadoComponent implements OnInit {
     this.asistencia = [];
     this.restKardex.ReporteAsistenciaDetalleConsolidado(id_empleado, '2020-08-01', '2020-08-31').subscribe(res => {
       console.log(this.asistencia);
-        if(res.message) {
-          this.toastr.error(res.message,'', {
-            timeOut: 6000,
-          });
-        } else {
-          this.asistencia = res;
-          console.log(this.asistencia);
-          const wsd: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.asistencia.detalle.map(obj => {
-            return {
-              fecha: obj.fecha_mostrar,
-              E_h_default: obj.E.hora_default,
-              E_h_timbre: obj.E.hora_timbre,
-              E_descripcion: obj.E.descripcion,
-              S_A_h_default: obj.S_A.hora_default,
-              S_A_h_timbre: obj.S_A.hora_timbre,
-              S_A_descripcion: obj.S_A.descripcion,
-              E_A_h_default: obj.E_A.hora_default,
-              E_A_h_timbre: obj.E_A.hora_timbre,
-              E_A_descripcion: obj.E_A.descripcion,
-              S_h_default: obj.S.hora_default,
-              S_h_timbre: obj.S.hora_timbre,
-              S_descripcion: obj.S.descripcion,
-              atraso: obj.atraso,
-              sal_antes: obj.sal_antes,
-              almuerzo: obj.almuerzo,
-              hora_trab: obj.hora_trab,
-              hora_supl: obj.hora_supl,
-              hora_ex_L_V: obj.hora_ex_L_V,
-              hora_ex_S_D: obj.hora_ex_S_D,
-            }
-          }));
-          const wse: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.asistencia.empleado);
-          const wso: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.asistencia.operaciones.map(obj => {
-            return {
-              HHMM_atraso: obj.HHMM.atraso,
-              HHMM_sal_antes: obj.HHMM.sal_antes,
-              HHMM_almuerzo: obj.HHMM.almuerzo,
-              HHMM_hora_trab: obj.HHMM.hora_trab,
-              HHMM_hora_supl: obj.HHMM.hora_supl,
-              HHMM_hora_ex_L_V: obj.HHMM.hora_ex_L_V,
-              HHMM_hora_ex_S_D: obj.HHMM.hora_ex_S_D,
-              decimal_atraso: obj.decimal.atraso.toString().slice(0, 8),
-              decimal_sal_antes: obj.decimal.sal_antes.toString().slice(0, 8),
-              decimal_almuerzo: obj.decimal.almuerzo.toString().slice(0, 8),
-              decimal_hora_trab: obj.decimal.hora_trab.toString().slice(0, 8),
-              decimal_hora_supl: obj.decimal.hora_supl.toString().slice(0, 8),
-              decimal_hora_ex_L_V: obj.decimal.hora_ex_L_V.toString().slice(0, 8),
-              decimal_hora_ex_S_D: obj.decimal.hora_ex_S_D.toString().slice(0, 8),
-            }
-          }));
-          const wb: xlsx.WorkBook = xlsx.utils.book_new();
-          xlsx.utils.book_append_sheet(wb, wsd, 'Detalle');
-          xlsx.utils.book_append_sheet(wb, wse, 'Empleado');
-          xlsx.utils.book_append_sheet(wb, wso, 'Operaciones');
-          xlsx.writeFile(wb, "Asistencia - " + this.asistencia.empleado.nombre + '.xlsx');
-          
-        }
-      
+      if (res.message) {
+        this.toastr.error(res.message, '', {
+          timeOut: 6000,
+        });
+      } else {
+        this.asistencia = res;
+        console.log(this.asistencia);
+        const wsd: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.asistencia.detalle.map(obj => {
+          return {
+            fecha: obj.fecha_mostrar,
+            E_h_default: obj.E.hora_default,
+            E_h_timbre: obj.E.hora_timbre,
+            E_descripcion: obj.E.descripcion,
+            S_A_h_default: obj.S_A.hora_default,
+            S_A_h_timbre: obj.S_A.hora_timbre,
+            S_A_descripcion: obj.S_A.descripcion,
+            E_A_h_default: obj.E_A.hora_default,
+            E_A_h_timbre: obj.E_A.hora_timbre,
+            E_A_descripcion: obj.E_A.descripcion,
+            S_h_default: obj.S.hora_default,
+            S_h_timbre: obj.S.hora_timbre,
+            S_descripcion: obj.S.descripcion,
+            atraso: obj.atraso,
+            sal_antes: obj.sal_antes,
+            almuerzo: obj.almuerzo,
+            hora_trab: obj.hora_trab,
+            hora_supl: obj.hora_supl,
+            hora_ex_L_V: obj.hora_ex_L_V,
+            hora_ex_S_D: obj.hora_ex_S_D,
+          }
+        }));
+        const wse: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.asistencia.empleado);
+        const wso: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.asistencia.operaciones.map(obj => {
+          return {
+            HHMM_atraso: obj.HHMM.atraso,
+            HHMM_sal_antes: obj.HHMM.sal_antes,
+            HHMM_almuerzo: obj.HHMM.almuerzo,
+            HHMM_hora_trab: obj.HHMM.hora_trab,
+            HHMM_hora_supl: obj.HHMM.hora_supl,
+            HHMM_hora_ex_L_V: obj.HHMM.hora_ex_L_V,
+            HHMM_hora_ex_S_D: obj.HHMM.hora_ex_S_D,
+            decimal_atraso: obj.decimal.atraso.toString().slice(0, 8),
+            decimal_sal_antes: obj.decimal.sal_antes.toString().slice(0, 8),
+            decimal_almuerzo: obj.decimal.almuerzo.toString().slice(0, 8),
+            decimal_hora_trab: obj.decimal.hora_trab.toString().slice(0, 8),
+            decimal_hora_supl: obj.decimal.hora_supl.toString().slice(0, 8),
+            decimal_hora_ex_L_V: obj.decimal.hora_ex_L_V.toString().slice(0, 8),
+            decimal_hora_ex_S_D: obj.decimal.hora_ex_S_D.toString().slice(0, 8),
+          }
+        }));
+        const wb: xlsx.WorkBook = xlsx.utils.book_new();
+        xlsx.utils.book_append_sheet(wb, wsd, 'Detalle');
+        xlsx.utils.book_append_sheet(wb, wse, 'Empleado');
+        xlsx.utils.book_append_sheet(wb, wso, 'Operaciones');
+        xlsx.writeFile(wb, "Asistencia - " + this.asistencia.empleado.nombre + '.xlsx');
+
+      }
+
     })
   }
 
@@ -1044,7 +1042,7 @@ export class AsistenciaConsolidadoComponent implements OnInit {
     this.codigo.reset();
     this.cedula.reset();
     this.nombre.reset();
-    this.apellido.reset();
+    this.filtroEmpleado = '';
   }
 
   limpiarCamposRango() {
@@ -1053,5 +1051,5 @@ export class AsistenciaConsolidadoComponent implements OnInit {
     this.estilo = { 'visibility': 'hidden' };
   }
 
-  
+
 }

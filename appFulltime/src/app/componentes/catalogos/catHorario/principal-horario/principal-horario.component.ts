@@ -130,9 +130,10 @@ export class PrincipalHorarioComponent implements OnInit {
 
   AbrirRegistraDetalle(datosSeleccionados: any): void {
     console.log(datosSeleccionados);
-    this.vistaRegistrarDatos.open(DetalleCatHorarioComponent, { width: '600px', data: { datosHorario: datosSeleccionados, actualizar: false } }).afterClosed().subscribe(items => {
-      this.ObtenerHorarios();
-    });
+    this.vistaRegistrarDatos.open(DetalleCatHorarioComponent,
+      { width: '600px', data: { datosHorario: datosSeleccionados, actualizar: false } }).afterClosed().subscribe(items => {
+        this.ObtenerHorarios();
+      });
   }
 
   LimpiarCampos() {
@@ -190,11 +191,15 @@ export class PrincipalHorarioComponent implements OnInit {
         this.toastr.error('Solo se acepta', 'Plantilla seleccionada incorrecta', {
           timeOut: 6000,
         });
+        this.archivo1Form.reset();
+        this.nameFile = '';
       }
     } else {
       this.toastr.error('Error en el formato del documento', 'Plantilla no aceptada', {
         timeOut: 6000,
       });
+      this.archivo1Form.reset();
+      this.nameFile = '';
     }
   }
 
@@ -258,11 +263,15 @@ export class PrincipalHorarioComponent implements OnInit {
         this.toastr.error('Solo se acepta', 'Plantilla seleccionada incorrecta', {
           timeOut: 6000,
         });
+        this.archivo2Form.reset();
+        this.nameFileDetalle = '';
       }
     } else {
       this.toastr.error('Error en el formato del documento', 'Plantilla no aceptada', {
         timeOut: 6000,
       });
+      this.archivo2Form.reset();
+      this.nameFileDetalle = '';
     }
   }
 

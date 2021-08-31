@@ -26,7 +26,7 @@
                     </div>
                 </div>
                 <div style="text-align: right;">
-                    <i id="editarF" (click)="AbrirVentanaEditarFeriado(f)" matSuffix matTooltipClass="color-tooltip"
+                    <i id="editarF" (click)="AbrirVentanaEditarFeriado(f)" matSuffix 
                         matTooltipPosition="right" matTooltip="Modificar datos de este registro" class="fas fa-edit">
                         <p>Editar</p>
                     </i>
@@ -49,7 +49,7 @@
                             <td>{{dc.nombreciudad}}</td>
                             <td>
                                 <i id="editarI" (click)="AbrirVentanaEditarCiudad(dc)" matSuffix
-                                    matTooltipClass="color-tooltip" matTooltipPosition="right"
+                                     matTooltipPosition="right"
                                     matTooltip="Modificar datos de este registro" class="fas fa-edit">
                                     <p>Editar</p>
                                 </i>
@@ -64,7 +64,7 @@
                     </tbody>
                 </table>
                 <mat-paginator [length]="datosCiudades.length" [pageSize]="tamanio_pagina"
-                    [pageSizeOptions]="pageSizeOptions" id="estilo" (page)="ManejarPagina($event)" showFirstLastButtons>
+                    [pageSizeOptions]="pageSizeOptions" id="pagina" (page)="ManejarPagina($event)" showFirstLastButtons>
                 </mat-paginator>
             </div>
             <input type="submit" class="btn btn-sm" [routerLink]="['/listarFeriados/']"

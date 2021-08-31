@@ -48,8 +48,10 @@ export class ListaPlanHoraExtraComponent implements OnInit {
 
   // Búsqueda
   cedula = new FormControl('', [Validators.minLength(2)]);
+  nombre = new FormControl('', [Validators.minLength(2)]);
   filtroCedula: '';
   filtroCedulaO: '';
+  filtroEmpleado = '';
 
   // Habilitar o Deshabilitar el icono de autorización individual
   auto_individual: boolean = true;
@@ -128,7 +130,7 @@ export class ListaPlanHoraExtraComponent implements OnInit {
       }
       console.log('planes', this.horas_extras_plan)
     }, err => {
-      return this.validacionesService.RedireccionarHomeAdmin(err.error) 
+      return this.validacionesService.RedireccionarHomeAdmin(err.error)
     });
   }
 
@@ -156,7 +158,7 @@ export class ListaPlanHoraExtraComponent implements OnInit {
         }
       }
     }, err => {
-      return this.validacionesService.RedireccionarHomeAdmin(err.error) 
+      return this.validacionesService.RedireccionarHomeAdmin(err.error)
     });
   }
 
@@ -255,7 +257,7 @@ export class ListaPlanHoraExtraComponent implements OnInit {
         this.totalHorasExtrasO = (moment(tt).format('HH:mm:ss'));
       }
     }, err => {
-      return this.validacionesService.RedireccionarHomeAdmin(err.error) 
+      return this.validacionesService.RedireccionarHomeAdmin(err.error)
     });
   }
 
@@ -284,7 +286,7 @@ export class ListaPlanHoraExtraComponent implements OnInit {
       }
       console.log(res);
     }, err => {
-      return this.validacionesService.RedireccionarHomeAdmin(err.error) 
+      return this.validacionesService.RedireccionarHomeAdmin(err.error)
     });
   }
 
@@ -368,14 +370,14 @@ export class ListaPlanHoraExtraComponent implements OnInit {
   AbrirAutorizaciones(datosHoraExtra, forma: string) {
     this.vistaFlotante.open(PlanHoraExtraAutorizaComponent,
       { width: '300px', data: { datosHora: datosHoraExtra, carga: forma } }).afterClosed().subscribe(items => {
-      /* this.obtenerPlanHorasExtras();
-        this.obtenerPlanHorasExtrasObservacion();
-        this.obtenerPlanHorasExtrasAutorizadas();
-        this.calcularHoraPaginacion1();
-        this.calcularHoraPaginacion2();
-        this.calcularHoraPaginacion_auto();
-        this.auto_individualO = true;
-        this.auto_individual = true;*/
+        /* this.obtenerPlanHorasExtras();
+          this.obtenerPlanHorasExtrasObservacion();
+          this.obtenerPlanHorasExtrasAutorizadas();
+          this.calcularHoraPaginacion1();
+          this.calcularHoraPaginacion2();
+          this.calcularHoraPaginacion_auto();
+          this.auto_individualO = true;
+          this.auto_individual = true;*/
         window.location.reload();
       });
   }
@@ -406,7 +408,7 @@ export class ListaPlanHoraExtraComponent implements OnInit {
       }
       this.restHEP.AutorizarTiempoHoraExtra(EmpleadosSeleccionados[i].id_plan_extra, h).subscribe(res => {
       }, err => {
-        return this.validacionesService.RedireccionarHomeAdmin(err.error) 
+        return this.validacionesService.RedireccionarHomeAdmin(err.error)
       })
     }
     this.AbrirAutorizaciones(EmpleadosSeleccionados, 'multiple');
@@ -415,6 +417,8 @@ export class ListaPlanHoraExtraComponent implements OnInit {
   // Método para limpiar el campo cédula
   limpiarCampos() {
     this.cedula.reset();
+    this.nombre.reset();
+    this.filtroEmpleado = '';
   }
 
   // Método para ingresar solo números
@@ -462,7 +466,7 @@ export class ListaPlanHoraExtraComponent implements OnInit {
         this.totalAutorizadas = (moment(tt).format('HH:mm:ss'));
       }
     }, err => {
-      return this.validacionesService.RedireccionarHomeAdmin(err.error) 
+      return this.validacionesService.RedireccionarHomeAdmin(err.error)
     });
   }
 
@@ -490,7 +494,7 @@ export class ListaPlanHoraExtraComponent implements OnInit {
         }
       }
     }, err => {
-      return this.validacionesService.RedireccionarHomeAdmin(err.error) 
+      return this.validacionesService.RedireccionarHomeAdmin(err.error)
     });
   }
 
@@ -514,6 +518,28 @@ export class ListaPlanHoraExtraComponent implements OnInit {
     this.tamanio_pagina_auto = e.pageSize;
     this.numero_pagina_auto = e.pageIndex + 1;
     this.calcularHoraPaginacion_auto();
+  }
+
+  IngresarSoloLetras(e) {
+    let key = e.keyCode || e.which;
+    let tecla = String.fromCharCode(key).toString();
+    //Se define todo el abecedario que se va a usar.
+    let letras = " áéíóúabcdefghijklmnñopqrstuvwxyzÁÉÍÓÚABCDEFGHIJKLMNÑOPQRSTUVWXYZ";
+    //Es la validación del KeyCodes, que teclas recibe el campo de texto.
+    let especiales = [8, 37, 39, 46, 6, 13];
+    let tecla_especial = false
+    for (var i in especiales) {
+      if (key == especiales[i]) {
+        tecla_especial = true;
+        break;
+      }
+    }
+    if (letras.indexOf(tecla) == -1 && !tecla_especial) {
+      this.toastr.info('No se admite datos numéricos', 'Usar solo letras', {
+        timeOut: 6000,
+      })
+      return false;
+    }
   }
 
 }

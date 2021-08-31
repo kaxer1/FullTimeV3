@@ -4,19 +4,7 @@
 
 p { font-size: x-small; }
 
-#pdf { color:red; font-size: 20px; text-align: center; margin-left: 20px;}
-
-#excel { color:green; font-size: 20px; text-align: center; margin-left: 20px;}
-
-#csv { color:blue; font-size: 20px; text-align: center; margin-left: 20px;}
-
-#xml { color:orangered; font-size: 20px; text-align: center; margin-left: 20px; cursor: pointer; }
-
 td { padding-top: 10px; text-align: center; }
-
-.fa-edit { color:green; margin-left: 20px; cursor: pointer; }
-
-#ver { color: indianred; cursor: pointer; }
 
 #nombre { font-size: x-small; }
 
@@ -44,11 +32,9 @@ h5 { text-align: center; }
     padding-bottom: 6px; 
 }
 
-table { width: 100%; font-size: 13px;}
+table { width: 100%; font-size: 12px;}
 
-#estilo { color: rgb(0, 0, 0); font-size: 13px; }
 
-mat-form-field { padding: 10px 15px 0px 15px;}
 
 .scrollme { 
     overflow-x: scroll; 

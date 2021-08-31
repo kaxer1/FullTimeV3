@@ -12,12 +12,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.HorariosParaInasistencias = exports.EstadoHorarioPeriVacacion = exports.VerificarHorario = void 0;
 const database_1 = __importDefault(require("../database"));
 const moment_1 = __importDefault(require("moment"));
 const MetodosFechas_1 = require("./MetodosFechas");
 const FECHA_FERIADOS = [];
-const VerificarHorario = function (id_cargo) {
+exports.VerificarHorario = function (id_cargo) {
     return __awaiter(this, void 0, void 0, function* () {
         let horario = yield database_1.default.query('SELECT * FROM empl_horarios WHERE id_empl_cargo = $1 AND estado = 1 ORDER BY fec_inicio DESC LIMIT 1', [id_cargo]).then(result => { return result.rows[0]; }); // devuelve el ultimo horario del cargo
         if (!horario)
@@ -53,7 +52,6 @@ const VerificarHorario = function (id_cargo) {
         return objeto;
     });
 };
-exports.VerificarHorario = VerificarHorario;
 /**
  * Metodo devuelve el tipo de horario que tiene el empleado.
  * @param inicio Fecha de inicio del horario del empleado.
@@ -126,7 +124,7 @@ function fechaIterada(fechaIterada, horario) {
         estado: est
     };
 }
-const EstadoHorarioPeriVacacion = function (id_empleado) {
+exports.EstadoHorarioPeriVacacion = function (id_empleado) {
     return __awaiter(this, void 0, void 0, function* () {
         console.log(id_empleado);
         let ids = yield database_1.default.query('SELECT co.id AS id_contrato, ca.id AS id_cargo FROM empl_contratos AS co, empl_cargos AS ca WHERE co.id_empleado = $1 AND co.id = ca.id_empl_contrato', [id_empleado])
@@ -150,8 +148,7 @@ const EstadoHorarioPeriVacacion = function (id_empleado) {
         return 0;
     });
 };
-exports.EstadoHorarioPeriVacacion = EstadoHorarioPeriVacacion;
-const HorariosParaInasistencias = function (horario) {
+exports.HorariosParaInasistencias = function (horario) {
     let fechasRango = {
         inicio: horario.fec_inicio,
         final: horario.fec_final
@@ -161,7 +158,6 @@ const HorariosParaInasistencias = function (horario) {
     // console.log('Objeto JSON: ', objeto);
     return objeto.filter(obj => { return (obj.estado === false); }).map(obj => { return { fecha: obj.fecha }; });
 };
-exports.HorariosParaInasistencias = HorariosParaInasistencias;
 function DiasConEstado(horario, rango) {
     var fec_aux = new Date(rango.inicio);
     // console.log('FECHA_FERIADOS', FECHA_FERIADOS);

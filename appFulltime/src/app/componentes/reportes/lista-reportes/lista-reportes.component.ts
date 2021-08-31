@@ -113,7 +113,11 @@ const TREE_DATA: CategoriasReportes[] = [
       { name: 'Empleados', url: '/reporteEmpleados' },
       { name: 'Entradas Salidas', url: '/reporteEntradaSalida' },
       { name: 'Empleados Inactivos', url: '/reporte-emp-inactivos' },
+<<<<<<< HEAD
       { name: 'Horas Extras Calculados', url: '/horas/extras' },
+=======
+      { name: 'Solicitudes Horas Extras', url: '/horas/extras' },
+>>>>>>> 02d14eadb2de328920347110074d739493c5f935
       { name: 'Horas Extras Autorizaciones', url: '/reporteHorasExtras' },
       { name: 'Asistencia Detalle Consolidado', url: '/reporteAsistenciaConsolidado' },
     ]

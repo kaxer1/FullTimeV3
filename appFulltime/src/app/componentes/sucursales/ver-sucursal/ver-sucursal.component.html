@@ -27,7 +27,7 @@
                     </div>
                 </div>
                 <div style="text-align: right;">
-                    <i id="editarF" (click)="EditarDatosSucursal(s)" matSuffix matTooltipClass="color-tooltip"
+                    <i id="editarF" (click)="EditarDatosSucursal(s)" matSuffix 
                         matTooltipPosition="right" matTooltip="Modificar datos de este registro" class="fas fa-edit">
                         <p>Editar</p>
                     </i>
@@ -59,7 +59,7 @@
                             </td>
                             <td *ngIf="d.nombre != 'Ninguno'">
                                 <i id="editarI" (click)="AbrirVentanaEditarDepartamento(d)" matSuffix
-                                    matTooltipClass="color-tooltip" matTooltipPosition="right"
+                                     matTooltipPosition="right"
                                     matTooltip="Modificar datos de este registro" class="fas fa-edit">
                                     <p>Editar</p>
                                 </i>
@@ -74,7 +74,7 @@
                     </tbody>
                 </table>
                 <mat-paginator [length]="datosDepartamentos.length" [pageSize]="tamanio_pagina"
-                    [pageSizeOptions]="pageSizeOptions" id="estilo" (page)="ManejarPagina($event)" showFirstLastButtons>
+                    [pageSizeOptions]="pageSizeOptions" id="pagina" (page)="ManejarPagina($event)" showFirstLastButtons>
                 </mat-paginator>
                 <input type="submit" class="btn btn-sm" [routerLink]="['/sucursales/']"
                     value="Ir a la Lista de Establecimientos">

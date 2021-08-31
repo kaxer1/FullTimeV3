@@ -4,29 +4,9 @@
 
 p { font-size: x-small; }
 
-#pdf { color:red; font-size: 20px; text-align: center; margin-left: 20px; }
-
-#excel { color:green; font-size: 20px; text-align: center; margin-left: 20px; }
-
-#csv { color:blue; font-size: 20px; text-align: center; margin-left: 20px; }
-
-#xml { color:orangered; font-size: 20px; text-align: center; margin-left: 20px; cursor: pointer; }
-
 #centrar { padding-top: 10px; text-align: center; }
 
 #fila { padding-top: 10px; margin-left: 50px; }
-
-.fa-edit { color:green; margin-left: 20px; cursor: pointer; }
-
-.fa-trash-alt { color:red; cursor: pointer; margin-left: 20px; }
-
-#ver { color: indianred; margin-left: 20px;}
-
-#detalleH { color: rgb(38, 0, 255); margin-left: 20px;}
-
-#iComidasL { cursor: pointer; }
-
-mat-form-field { padding: 10px 15px 0px 15px;}
 
 .tituloTipoCoL { 
     font-size: 20px; 
@@ -48,7 +28,7 @@ mat-form-field { padding: 10px 15px 0px 15px;}
 
 table { width: 100%; font-size: 14px; }
 
-#estilo { color: rgb(0, 0, 0); font-size: 13px; }
+
 
 [type="file"] {
     height: 0;

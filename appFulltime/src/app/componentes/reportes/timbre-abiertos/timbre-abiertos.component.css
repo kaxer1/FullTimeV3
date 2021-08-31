@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 mat-form-field.input-tables {
     margin-bottom: -5px;
     font-size: 10px;
@@ -23,3 +24,8 @@ mat-panel-description { color: white; }
     padding-top: 10px; 
     padding-bottom: 6px; 
 }
+=======
+table { width: 100%; font-size: 13px;}
+
+#limpiar { cursor: pointer; padding-top: 10px; margin-right: 20px;}
+>>>>>>> 02d14eadb2de328920347110074d739493c5f935

@@ -94,39 +94,6 @@ class FeriadosControlador {
             res.status(404).jsonp({ text: 'Registros no encontrados' });
         });
     }
-    // INGRESAR DATOS DE FERIADOS MEDIANTE PLANTILLA
-    CrearFeriadoPlantilla(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
-            let list = req.files;
-            let cadena = list.uploads[0].path;
-            let filename = cadena.split("\\")[1];
-            var filePath = `./plantillas/${filename}`;
-            var contador = 1;
-            const workbook = xlsx_1.default.readFile(filePath);
-            const sheet_name_list = workbook.SheetNames;
-            const plantilla = xlsx_1.default.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]);
-            // LECTURA DE DATOS DE LA PLANTILLA
-            plantilla.forEach((data) => __awaiter(this, void 0, void 0, function* () {
-                const { fecha, descripcion, fec_recuperacion } = data;
-                // VERIFICACIÓN DE EXISTENCIA DE DATOS DE FECHA DE RECUPERACIÓN
-                if (fec_recuperacion === undefined) {
-                    var recuperar = null;
-                }
-                else {
-                    recuperar = fec_recuperacion;
-                }
-                // REGISTRO DE DATOS EN EL SISTEMA
-                yield database_1.default.query('INSERT INTO cg_feriados (fecha, descripcion, fec_recuperacion) ' +
-                    'VALUES ($1, $2, $3)', [fecha, descripcion, recuperar]);
-                // ENVIO DE MENSAJE UNA VEZ QUE SE HA LEIDO TODOS LOS DATOS DE LA PLANTILLA
-                if (contador === plantilla.length) {
-                    return res.jsonp({ message: 'CORRECTO' });
-                }
-                contador = contador + 1;
-            }));
-            fs_1.default.unlinkSync(filePath);
-        });
-    }
     // MÉTODO PARA REVISAR LOS DATOS DE LA PLANTILLA DENTRO DEL SISTEMA - MENSAJES DE CADA ERROR
     RevisarDatos(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -138,26 +105,27 @@ class FeriadosControlador {
             const sheet_name_list = workbook.SheetNames;
             const plantilla = xlsx_1.default.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]);
             // VARIABLES USADAS PARA CONTAR NÚMERO DE FILAS CORRECTAS
-            var fila = 1;
-            var contador = 1;
-            var existeFecha = 0;
-            var existeDescripcion = 0;
-            var contarRecuperacion = 0;
-            var contarFecha = 0;
-            var contarFechaValida = 0;
-            var contarFechaSiguiente = 0;
-            var contarFechaRecuperarValida = 0;
+            let lectura = 1;
+            let contador = 1;
+            let contarFecha = 0;
+            let existeFecha = 0;
+            let contarFechaValida = 0;
+            let existeDescripcion = 0;
+            let contarRecuperacion = 0;
+            let contarFechaSiguiente = 0;
+            let contarFechaRecuperarValida = 0;
             // VARIABLES DE ALMACENAMIENTO DE FILAS CON ERRORES
-            var faltaFecha = '';
-            var faltaDescripcion = '';
-            var fechaInvalida = '';
-            var recuperacionInvalida = '';
-            var fechaDuplicada = '';
-            var recuperacionDuplicada = '';
-            var fechasIncorrectas = '';
+            let faltaFecha = '';
+            let fechaInvalida = '';
+            let fechaDuplicada = '';
+            let faltaDescripcion = '';
+            let fechasIncorrectas = '';
+            let recuperacionInvalida = '';
+            let recuperacionDuplicada = '';
+            // LECTURA DE LOS DATOS DE LA PLANTILLA
             plantilla.forEach((data) => __awaiter(this, void 0, void 0, function* () {
-                const { fecha, descripcion, fec_recuperacion } = data;
-                fila = fila + 1;
+                lectura = lectura + 1;
+                var { fecha, descripcion, fec_recuperacion, fila = lectura } = data;
                 // VERIFICACIÓN DE EXISTENCIA DE REGISTRO DE FECHA
                 if (fecha != undefined) {
                     existeFecha = existeFecha + 1;
@@ -172,8 +140,8 @@ class FeriadosControlador {
                     if (fecha === moment_1.default(fecha).format('YYYY-MM-DD')) {
                         contarFechaValida = contarFechaValida + 1;
                         // VERIFICACIÓN DE REGISTRO DE FECHA DENTRO DEL SISTEMA - NO SON VÁLIDAS FECHAS DUPLICADAS
-                        const VERIFICAR_FECHA = yield database_1.default.query('SELECT * FROM cg_feriados WHERE fecha = $1 OR ' +
-                            'fec_recuperacion = $1', [fecha]);
+                        const VERIFICAR_FECHA = yield database_1.default.query('SELECT * FROM cg_feriados ' +
+                            'WHERE fecha = $1 OR fec_recuperacion = $1', [fecha]);
                         if (VERIFICAR_FECHA.rowCount === 0) {
                             contarFecha = contarFecha + 1;
                         }
@@ -286,49 +254,116 @@ class FeriadosControlador {
             const sheet_name_list = workbook.SheetNames;
             const plantilla = xlsx_1.default.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]);
             // VARIABLES DE CONTADORES DE REGISTROS
+            var lectura = 1;
             var contador = 1;
             var contarFecha = 0;
             var contarRecuperacion = 0;
+            var fecha_recuperacion = 0;
             // ARRAY DE DATOS TOTALES DE PLANTILLA
+            var ver_fecha = [];
             var datos_totales = [];
+            var ver_recuperacion = [];
+            // VARIABLES DE ALMACENAMIENTO DE FILAS DUPLICADAS
+            let fechaDuplicada = '';
+            let fechaIgualRecupera = '';
+            let recuperacionDuplicada = '';
             // LECTURA DE DATOS DE LA PLANTILLA FILA POR FILA
             plantilla.forEach((data) => __awaiter(this, void 0, void 0, function* () {
-                const { fecha, fec_recuperacion } = data;
+                lectura = lectura + 1;
+                var { fecha, fec_recuperacion, fila = lectura } = data;
                 let fila_datos = {
-                    fecha: fecha,
                     fec_recuperacion: fec_recuperacion,
+                    fecha: fecha,
+                    fila: fila
                 };
                 datos_totales.push(fila_datos);
             }));
             fs_1.default.unlinkSync(filePath);
+            ver_fecha = ver_recuperacion = datos_totales;
             // VERIFICACIÓN DE FECHAS DUPLICADAS DENTRO DE LA MISMA PLANTILLA
             for (var i = 0; i <= datos_totales.length - 1; i++) {
                 for (var j = 0; j <= datos_totales.length - 1; j++) {
-                    // VERIFICAR SI LA FECHA SE ENCUENTRA DUPLICADA EN LA FILAS O SI ES IGUAL A UNA FECHA DE RECUPERACIÓN
-                    if (datos_totales[i].fecha === datos_totales[j].fecha &&
-                        datos_totales[i].fecha === datos_totales[j].fec_recuperacion) {
-                        contarFecha = contarFecha + 1;
-                    }
-                    // VERIFICAR SI LA FECHA DE RECUPERACIÓN EXISTE
-                    if (datos_totales[i].fec_recuperacion != undefined) {
-                        // VERIFICAR SI LA FECHA DE RECUPERACIÓN SE ENCUNTRA DUPLICADA EN ALGUNA FILA O ES SIMILAR A LA FECHA DE FERIADO
-                        if (datos_totales[i].fec_recuperacion === datos_totales[j].fec_recuperacion &&
-                            datos_totales[i].fec_recuperacion === datos_totales[j].fecha) {
-                            contarRecuperacion = contarRecuperacion + 1;
+                    // NO SE LEE LA MISMA FILA EN LOS DATOS
+                    if (i != j) {
+                        // VERIFICAR SI LA FECHA SE ENCUENTRA DUPLICADA EN LAS DEMÁS FILAS 
+                        if (ver_fecha[i].fecha === ver_fecha[j].fecha) {
+                            contarFecha = contarFecha + 1;
+                            fechaDuplicada = fechaDuplicada + ' - Fila ' + ver_fecha[i].fila +
+                                ' similar a la fila ' + ver_fecha[j].fila + '.';
+                            ver_fecha.splice(i, 1);
                         }
+                        // SE REALIZA VERIFICACIÓN SI EXISTE FECHA DE RECUPERACIÓN
+                        if (ver_recuperacion[i].fec_recuperacion != undefined) {
+                            // VERIFICAR SI LA FECHA DE RECUPERACIÓN SE ENCUENTRA DUPLICADA EN LAS DEMÁS FILAS 
+                            if (ver_recuperacion[i].fec_recuperacion === ver_recuperacion[j].fec_recuperacion) {
+                                contarRecuperacion = contarRecuperacion + 1;
+                                recuperacionDuplicada = recuperacionDuplicada + ' - Fila ' + ver_fecha[i].fila +
+                                    ' similar a la fila ' + ver_fecha[j].fila + '.';
+                                ver_recuperacion.splice(i, 1);
+                            }
+                        }
+                    }
+                    // VERIFICAR SI LA FECHA DE FERIADO ES IGUAL A UNA FECHA DE RECUPERACIÓN
+                    if (datos_totales[i].fecha === datos_totales[j].fec_recuperacion) {
+                        fecha_recuperacion = fecha_recuperacion + 1;
+                        fechaIgualRecupera = fechaIgualRecupera + ' - Campo fecha Fila ' + datos_totales[i].fila +
+                            ' similar a campo fec_recuperacion fila ' + datos_totales[j].fila + '.';
                     }
                 }
                 contador = contador + 1;
             }
             // ENVIO DE MENSAJES DE EVENTOS DESPUÉS DE LEER TODA LA PLANTILLA
             if ((contador - 1) === plantilla.length) {
-                if (contarFecha === 0 && contarRecuperacion === 0) {
-                    return res.jsonp({ message: 'CORRECTO' });
+                if (contarFecha === 0) {
+                    if (contarRecuperacion === 0) {
+                        if (fecha_recuperacion === 0) {
+                            return res.jsonp({ message: 'CORRECTO' });
+                        }
+                        else {
+                            return res.jsonp({ message: 'SIMILAR FECHA-RECUPERACION', data: fechaIgualRecupera });
+                        }
+                    }
+                    else {
+                        return res.jsonp({ message: 'ERROR RECUPERACION', data: recuperacionDuplicada });
+                    }
                 }
                 else {
-                    return res.jsonp({ message: 'ERROR' });
+                    return res.jsonp({ message: 'ERROR FECHA', data: fechaDuplicada });
                 }
             }
+        });
+    }
+    // INGRESAR DATOS DE FERIADOS MEDIANTE PLANTILLA
+    CrearFeriadoPlantilla(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let list = req.files;
+            let cadena = list.uploads[0].path;
+            let filename = cadena.split("\\")[1];
+            var filePath = `./plantillas/${filename}`;
+            var contador = 1;
+            const workbook = xlsx_1.default.readFile(filePath);
+            const sheet_name_list = workbook.SheetNames;
+            const plantilla = xlsx_1.default.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]);
+            // LECTURA DE DATOS DE LA PLANTILLA
+            plantilla.forEach((data) => __awaiter(this, void 0, void 0, function* () {
+                const { fecha, descripcion, fec_recuperacion } = data;
+                // VERIFICACIÓN DE EXISTENCIA DE DATOS DE FECHA DE RECUPERACIÓN
+                if (fec_recuperacion === undefined) {
+                    var recuperar = null;
+                }
+                else {
+                    recuperar = fec_recuperacion;
+                }
+                // REGISTRO DE DATOS EN EL SISTEMA
+                yield database_1.default.query('INSERT INTO cg_feriados (fecha, descripcion, fec_recuperacion) ' +
+                    'VALUES ($1, $2, $3)', [fecha, descripcion, recuperar]);
+                // ENVIO DE MENSAJE UNA VEZ QUE SE HA LEIDO TODOS LOS DATOS DE LA PLANTILLA
+                if (contador === plantilla.length) {
+                    return res.jsonp({ message: 'CORRECTO' });
+                }
+                contador = contador + 1;
+            }));
+            fs_1.default.unlinkSync(filePath);
         });
     }
     // MÉTODO PARA CREAR ARCHIVO EN FORMATO XML

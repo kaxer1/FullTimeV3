@@ -1,7 +1,7 @@
 <br>
 <div class="container" style="padding-bottom: 50px; text-align: center;" *ngIf="lista_vacaciones">
     <div class="mat-elevation-z8" style="background: white;">
-        <div class="d-flex bd-highlight" id="resultadosEmpre">
+        <div class="d-flex bd-highlight" id="titulo">
             <mat-icon class="flex-shrink-1 bd-highlight" (click)="HabilitarSeleccion()" matSuffix
                 matTooltipPosition="right" matTooltip="Autorizar a todos los empleados su Solicitud de Horas Extras"
                 id="SelectCheck">library_add_check</mat-icon>
@@ -44,7 +44,7 @@
                         <td>{{v.fec_final.split('T')[0]}}</td>
                         <td class="d-flex justify-content-center">
                             <i class="fas fa-edit" id="edit" style="margin-right: 20px;" (click)="EditarVacaciones(v.id)"
-                            matSuffix matTooltipPosition="right" matTooltipClass="departamento-tooltip"
+                            matSuffix matTooltipPosition="right" 
                             matTooltip="Modificar los datos generales de este registro">
                             <p>Editar</p>
                         </i>
@@ -60,13 +60,13 @@
             </table>
         </div>
         <mat-paginator [length]="vacaciones.length" [pageSize]="tamanio_pagina" [pageSizeOptions]="pageSizeOptions"
-            id="estilo" (page)="ManejarPagina($event)" showFirstLastButtons>
+            id="pagina" (page)="ManejarPagina($event)" showFirstLastButtons>
         </mat-paginator>
     </div>
 </div>
 <div class="container" style="padding-bottom: 50px; text-align: center;" *ngIf="lista_autoriza">
     <div class="mat-elevation-z8" style="background: white;">
-        <div id="resultadosEmpre">Lista de todas las vacaciones solicitadas Autorizadas</div>
+        <div id="titulo">Lista de todas las vacaciones solicitadas Autorizadas</div>
         <div class="table-responsive">
             <table class="table table-hover table-sm ">
                 <thead class="thead-light">
@@ -98,7 +98,7 @@
             </table>
         </div>
         <mat-paginator [length]="vacaciones_autorizadas.length" [pageSize]="tamanio_pagina_auto"
-            [pageSizeOptions]="pageSizeOptions_auto" id="estilo" (page)="ManejarPaginaAutorizadas($event)"
+            [pageSizeOptions]="pageSizeOptions_auto" id="pagina" (page)="ManejarPaginaAutorizadas($event)"
             showFirstLastButtons>
         </mat-paginator>
     </div>

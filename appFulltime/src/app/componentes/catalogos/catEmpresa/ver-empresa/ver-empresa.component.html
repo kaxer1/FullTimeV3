@@ -22,7 +22,7 @@
                                 </ng-template>
                                 <br>
                                 <a (click)="EditarLogo()" matSuffix matTooltipPosition="right"
-                                    matTooltip="Editar logo de la empresa">
+                                    matTooltip="Editar logo de la empresa.">
                                     <mat-icon id="logo">add_a_photo</mat-icon>
                                 </a>
                             </figure>
@@ -68,9 +68,8 @@
                             <label id="num">{{e.num_partida}}</label>
                         </div>
                         <div style="text-align: right;">
-                            <i id="editarF" (click)="EditarDatosEmpresa(e)" matSuffix matTooltipClass="color-tooltip"
-                                matTooltipPosition="right" matTooltip="Modificar datos de este registro"
-                                class="fas fa-edit">
+                            <i id="editarF" (click)="EditarDatosEmpresa(e)" matSuffix matTooltipPosition="right"
+                                matTooltip="Modificar datos de este registro." class="fas fa-edit">
                                 <p>Editar</p>
                             </i>
                         </div>
@@ -136,13 +135,13 @@
                         </div>
                         <div class="caja1 d-flex justify-content-start">
                             <label id="datosF">Color Principal:</label>
-                            <input type="color" value="{{e.color_p}}" matSuffix matTooltipClass="enrol-tooltip"
-                                matTooltip="Color Principal que se visualiza en cabeceras de reportes" disabled>
+                            <input type="color" value="{{e.color_p}}" matSuffix
+                                matTooltip="Color Principal que se visualiza en cabeceras de reportes." disabled>
                         </div>
                         <div class="caja1 d-flex justify-content-start">
                             <label id="datosF">Color Secundario:</label>
-                            <input type="color" value="{{e.color_s}}" matSuffix matTooltipClass="enrol-tooltip"
-                                matTooltip="Color Secundario que se visualiza en campos importantes en reportes"
+                            <input type="color" value="{{e.color_s}}" matSuffix
+                                matTooltip="Color Secundario que se visualiza en campos importantes en reportes."
                                 disabled>
                         </div>
                         <div class="d-flex justify-content-around text-center">
@@ -180,20 +179,19 @@
                                     <td>{{ds.nombre}}</td>
                                     <td>{{ds.descripcion}}</td>
                                     <td>
-                                        <i matSuffix matTooltipClass="listaF-tooltip" matTooltipPosition="right"
+                                        <i matSuffix matTooltipPosition="right"
                                             matTooltip="Ver datos generales de este establecimiento"
                                             class="fa fa-building" id="ver" [routerLink]="['/vistaSucursales/', ds.id]">
                                             <p>Departamento</p>
                                         </i>
-                                        <i id="editarI" (click)="AbrirVentanaEditarSucursal(ds)" matSuffix
-                                            matTooltipClass="color-tooltip" matTooltipPosition="right"
-                                            matTooltip="Modificar datos de este registro" class="fas fa-edit">
+                                        <i id="t-editar" (click)="AbrirVentanaEditarSucursal(ds)" matSuffix
+                                            matTooltipPosition="right" matTooltip="Modificar datos de este registro."
+                                            class="fas fa-edit">
                                             <p>Editar</p>
                                         </i>
-                                        <i class="far fa-trash-alt" (click)="ConfirmarDelete(ds)"
-                                            style="color:red; margin-left: 15px;" id="iprocesoL" matSuffix
-                                            matTooltipClass="procesoL-tooltip" matTooltipPosition="right"
-                                            matTooltip="Eliminar registro">
+                                        <i class="far fa-trash-alt" (click)="ConfirmarDelete(ds)" id="t-eliminar"
+                                            matSuffix matTooltipClass="procesoL-tooltip" matTooltipPosition="right"
+                                            matTooltip="Eliminar registro.">
                                             <p>Eliminar</p>
                                         </i>
                                     </td>
@@ -202,7 +200,7 @@
                         </table>
                     </div>
                     <mat-paginator [length]="datosSucursales.length" [pageSize]="tamanio_pagina"
-                        [pageSizeOptions]="pageSizeOptions" id="estilo" (page)="ManejarPagina($event)"
+                        [pageSizeOptions]="pageSizeOptions" id="pagina" (page)="ManejarPagina($event)"
                         showFirstLastButtons>
                     </mat-paginator>
                 </div>

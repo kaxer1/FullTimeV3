@@ -12,7 +12,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.timbresControlador = void 0;
 const database_1 = __importDefault(require("../../database"));
 // import { ContarHoras } from '../../libs/contarHoras'
 class TimbresControlador {
@@ -275,6 +274,65 @@ class TimbresControlador {
             }
             catch (error) {
                 console.log(error);
+                res.status(400).jsonp({ message: error });
+            }
+        });
+    }
+    ObtenerTimbresEmpleado(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const { id } = req.params;
+                let timbres = yield database_1.default.query('SELECT CAST(t.fec_hora_timbre AS VARCHAR), t.accion, t.tecl_funcion, ' +
+                    't.observacion, t.latitud, t.longitud, t.id_empleado, t.id_reloj ' +
+                    'FROM empleados AS e, timbres AS t WHERE e.id = $1 AND CAST(e.codigo AS integer) = t.id_empleado ' +
+                    'ORDER BY t.fec_hora_timbre DESC LIMIT 50', [id]).then(result => {
+                    return result.rows
+                        .map(obj => {
+                        switch (obj.accion) {
+                            case 'EoS':
+                                obj.accion = 'Entrada o Salida';
+                                break;
+                            case 'AES':
+                                obj.accion = 'Entrada o Salida Almuerzo';
+                                break;
+                            case 'PES':
+                                obj.accion = 'Entrada o Salida Permiso';
+                                break;
+                            case 'E':
+                                obj.accion = 'Entrada o Salida';
+                                break;
+                            case 'S':
+                                obj.accion = 'Entrada o Salida';
+                                break;
+                            case 'E/A':
+                                obj.accion = 'Entrada o Salida Almuerzo';
+                                break;
+                            case 'S/A':
+                                obj.accion = 'Entrada o Salida Almuerzo';
+                                break;
+                            case 'E/P':
+                                obj.accion = 'Entrada o Salida Permiso';
+                                break;
+                            case 'S/P':
+                                obj.accion = 'Entrada o Salida Permiso';
+                                break;
+                            case 'HA':
+                                obj.accion = 'Horario Abierto';
+                                break;
+                            default:
+                                obj.accion = 'codigo 99';
+                                break;
+                        }
+                        return obj;
+                    });
+                });
+                if (timbres.length === 0)
+                    return res.status(400).jsonp({ message: 'No se encontraron registros de timbres.' });
+                return res.status(200).jsonp({
+                    timbres: timbres,
+                });
+            }
+            catch (error) {
                 res.status(400).jsonp({ message: error });
             }
         });

@@ -56,7 +56,24 @@
 
     </mat-tree>
 
-
+    <mat-card *ngIf="showMessageLicencia" style="background-color: rgba(0, 89, 255, 0.849); color: white;" >
+      <mat-card-header>
+        <mat-card-title>Licencia caduca</mat-card-title>
+        <mat-card-subtitle style="color: rgb(221, 221, 221);">
+          {{fec_caducidad_licencia | date: 'fullDate' }}
+        </mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <p>
+          Comunicate con casa pazmiño para seguir utilizando tu sistema.
+        </p>
+      </mat-card-content>
+      <mat-card-actions>
+        <a mat-raised-button href="https://casapazmino.com.ec" target="_blank">Ir Casa Pazmiño
+          <mat-icon>public</mat-icon>
+        </a>
+      </mat-card-actions>
+    </mat-card>
 
   </mat-sidenav>
 

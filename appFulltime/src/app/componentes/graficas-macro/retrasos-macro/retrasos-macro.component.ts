@@ -39,7 +39,7 @@ export class RetrasosMacroComponent implements OnInit {
   habilitar: boolean = false;
   f_inicio_req: string = '';
   f_final_req: string = '';
-  
+
   atrasos: any;
   datos_atrasos: any = [];
 
@@ -47,7 +47,7 @@ export class RetrasosMacroComponent implements OnInit {
     private restGraficas: GraficasService,
     private toastr: ToastrService,
     private restEmpre: EmpresaService,
-  ) { 
+  ) {
     this.ObtenerLogo();
     this.ObtenerColores();
   }
@@ -65,7 +65,7 @@ export class RetrasosMacroComponent implements OnInit {
     let local = sessionStorage.getItem('retrasos');
     // console.log('LOCAL HORA EXTRA: ',local);
     this.chartDom = document.getElementById('charts_atrasos_macro') as HTMLCanvasElement;
-    this.thisChart = echarts.init(this.chartDom, 'light', {width: 1050, renderer: 'svg',devicePixelRatio: 5 });
+    this.thisChart = echarts.init(this.chartDom, 'light', { width: 1050, renderer: 'svg', devicePixelRatio: 5 });
 
     if (local === null) {
       this.restGraficas.MetricaRetrasoMicro().subscribe(res => {
@@ -102,7 +102,7 @@ export class RetrasosMacroComponent implements OnInit {
     if (f_i < f_f) {
 
       if (f_i.getFullYear() === f_f.getFullYear()) {
-        this.toastr.success('Fechas validas','', {
+        this.toastr.success('Fechas validas', '', {
           timeOut: 6000,
         });
 
@@ -118,18 +118,18 @@ export class RetrasosMacroComponent implements OnInit {
           this.thisChart.setOption(res.datos_grafica);
         });
       } else {
-        this.toastr.error('Años de consulta diferente','Solo puede consultar datos de un año en concreto', {
+        this.toastr.error('Años de consulta diferente', 'Solo puede consultar datos de un año en concreto', {
           timeOut: 6000,
         });
       }
 
     } else if (f_i > f_f) {
-      this.toastr.info('Fecha final es menor a la fecha inicial','', {
+      this.toastr.info('Fecha final es menor a la fecha inicial', '', {
         timeOut: 6000,
       });
       this.fechasConsultaForm.reset();
     } else if (f_i.toLocaleDateString() === f_f.toLocaleDateString()) {
-      this.toastr.info('Fecha inicial es igual a la fecha final','', {
+      this.toastr.info('Fecha inicial es igual a la fecha final', '', {
         timeOut: 6000,
       });
       this.fechasConsultaForm.reset();
@@ -158,9 +158,9 @@ export class RetrasosMacroComponent implements OnInit {
   }
 
   graficaBase64: any;
-  metodosPDF(accion){  
-    this.graficaBase64 = this.thisChart.getDataURL({type: 'jpg' , pixelRatio: 5 });
-    this.generarPdf(accion) 
+  metodosPDF(accion) {
+    this.graficaBase64 = this.thisChart.getDataURL({ type: 'jpg', pixelRatio: 5 });
+    this.generarPdf(accion)
   }
 
   generarPdf(action) {
@@ -180,7 +180,7 @@ export class RetrasosMacroComponent implements OnInit {
     return {
       pageSize: 'A4',
       pageOrientation: 'portrait',
-      pageMargins: [ 30, 60, 30, 40 ],
+      pageMargins: [30, 60, 30, 40],
       watermark: { text: this.frase, color: 'blue', opacity: 0.1, bold: true, italics: false },
       header: { text: 'Impreso por:  ' + localStorage.getItem('fullname_print'), margin: 10, fontSize: 9, opacity: 0.3, alignment: 'right' },
 
@@ -190,12 +190,13 @@ export class RetrasosMacroComponent implements OnInit {
         fecha = f.format('YYYY-MM-DD');
         h.setUTCHours(h.getHours());
         var time = h.toJSON().split("T")[1].split(".")[0];
-        
+
         return {
           margin: 10,
           columns: [
             { text: 'Fecha: ' + fecha + ' Hora: ' + time, opacity: 0.3 },
-            { text: [
+            {
+              text: [
                 {
                   text: '© Pag ' + currentPage.toString() + ' of ' + pageCount,
                   alignment: 'right', opacity: 0.3
@@ -231,40 +232,40 @@ export class RetrasosMacroComponent implements OnInit {
     for (let i = 0; i < datos.length; i++) { // Ciclo For para crear celdas de la tabla
 
       if (i >= 0 && i <= 2) { // Rango para colocar las celdas de máximo 3 meses
-        colums.push({ text: datos[i].mes, margin: [0,3,0,3], fillColor: this.p_color, border: border });
-        colums.push({ text: datos[i].valor + ' h', margin: [0,3,0,3], alignment: 'center', border: border });
+        colums.push({ text: datos[i].mes, margin: [0, 3, 0, 3], fillColor: this.p_color, border: border });
+        colums.push({ text: datos[i].valor + ' h', margin: [0, 3, 0, 3], alignment: 'center', border: border });
       };
       if (i >= 3 && i <= 5) { // Rango para colocar las celdas de máximo 3 meses
-        colums1.push({ text: datos[i].mes, margin: [0,3,0,3], fillColor: this.p_color, border: border });
-        colums1.push({ text: datos[i].valor + ' h', margin: [0,3,0,3], alignment: 'center', border: border });
+        colums1.push({ text: datos[i].mes, margin: [0, 3, 0, 3], fillColor: this.p_color, border: border });
+        colums1.push({ text: datos[i].valor + ' h', margin: [0, 3, 0, 3], alignment: 'center', border: border });
       };
       if (i >= 6 && i <= 8) { // Rango para colocar las celdas de máximo 3 meses
-        colums2.push({ text: datos[i].mes, margin: [0,3,0,3], fillColor: this.p_color, border: border });
-        colums2.push({ text: datos[i].valor + ' h', margin: [0,3,0,3], alignment: 'center', border: border });
-      }; 
+        colums2.push({ text: datos[i].mes, margin: [0, 3, 0, 3], fillColor: this.p_color, border: border });
+        colums2.push({ text: datos[i].valor + ' h', margin: [0, 3, 0, 3], alignment: 'center', border: border });
+      };
       if (i >= 9 && i <= 11) { // Rango para colocar las celdas de máximo 3 meses
-        colums3.push({ text: datos[i].mes, margin: [0,3,0,3], fillColor: this.p_color, border: border });
-        colums3.push({ text: datos[i].valor + ' h', margin: [0,3,0,3], alignment: 'center', border: border });
+        colums3.push({ text: datos[i].mes, margin: [0, 3, 0, 3], fillColor: this.p_color, border: border });
+        colums3.push({ text: datos[i].valor + ' h', margin: [0, 3, 0, 3], alignment: 'center', border: border });
       }
     }
 
     var other = [];
 
     switch (colums.length) {
-      case 2: other = ['auto',40]; break;
-      case 4: other = ['auto',40,'auto',40]; break;
-      case 6: other = ['auto',40,'auto',40,'auto',40]; break;
+      case 2: other = ['auto', 40]; break;
+      case 4: other = ['auto', 40, 'auto', 40]; break;
+      case 6: other = ['auto', 40, 'auto', 40, 'auto', 40]; break;
       default: other = []; break;
     }
 
     let tabla = {
-			table: {
+      table: {
         widths: other,
-				body: []
-			}
-		}
+        body: []
+      }
+    }
 
-    const texto_push = {text: '', border: [false, false, false, false] };
+    const texto_push = { text: '', border: [false, false, false, false] };
 
     switch (colums1.length) { // Agrega celdas faltantes en blanco. para q no exista conflicto en la generación del PDF
       case 2: for (let i = 0; i < 4; i++) { colums1.push(texto_push); } break;
@@ -283,21 +284,21 @@ export class RetrasosMacroComponent implements OnInit {
       case 4: for (let i = 0; i < 2; i++) { colums3.push(texto_push); } break;
       default: break;
     }
-    
+
     if (colums.length > 0) { tabla.table.body.push(colums); }
     if (colums1.length > 0) { tabla.table.body.push(colums1); }
     if (colums2.length > 0) { tabla.table.body.push(colums2); }
-    if (colums3.length > 0) { tabla.table.body.push(colums3); } 
+    if (colums3.length > 0) { tabla.table.body.push(colums3); }
     // console.log(tabla);
 
     const columnas = {
       alignment: 'justify',
-			columns: [
-				{ width: 95, text: '' },
-				tabla,
-				{ width: 95, text: '' }
-			]
-		}
+      columns: [
+        { width: 95, text: '' },
+        tabla,
+        { width: 95, text: '' }
+      ]
+    }
 
     return columnas
   }
@@ -308,11 +309,11 @@ export class RetrasosMacroComponent implements OnInit {
     this.llamarGraficaOriginal();
   }
 
-  texto_grafica: string = 
-  "Gracias al uso de una plataforma en la nuve para el control de asistencia, se puede identificar de manera " +
-  "más clara los minutos de atraso de tus trabajadores, elemento que es un indicador importante. \n" +
-  "Esta medición no se realiza solo desde la hora de inicio de la jornada laboral, sino tambien a través de " +
-  "la entrada y salida al horario de colación. Asimismo, al determinar la cantidad de tiempo de retraso, " +
-  "puedes ver mensualmente cuantas horas de efectividad se están perdiendo en tu compañia.";
+  texto_grafica: string =
+    "Gracias al uso de una plataforma en la nube para el control de asistencia, se puede identificar de manera " +
+    "clara los minutos de atraso de los trabajadores. \n" +
+    "Esta medición no se realiza solo desde la hora de inicio de jornada laboral, sino tambien a través de " +
+    "los registros de entradas y salidas de horario de colación. Además, al determinar la cantidad de tiempo de retraso, " +
+    "puede ver mensualmente cuantas horas de efectividad se están perdiendo en la compañia.";
 
 }

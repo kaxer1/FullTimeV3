@@ -219,7 +219,6 @@ export class ListarFeriadosComponent implements OnInit {
     let arrayItems = this.nameFile.split(".");
     let itemExtencion = arrayItems[arrayItems.length - 1];
     let itemName = arrayItems[0].slice(0, 8);
-    console.log(itemName.toLowerCase());
     if (itemExtencion == 'xlsx' || itemExtencion == 'xls') {
       if (itemName.toLowerCase() == 'feriados') {
         this.Revisarplantilla();
@@ -227,11 +226,15 @@ export class ListarFeriadosComponent implements OnInit {
         this.toastr.error('Seleccione plantilla con nombre Feriados', 'Plantilla seleccionada incorrecta', {
           timeOut: 6000,
         });
+        this.archivoForm.reset();
+        this.nameFile = '';
       }
     } else {
       this.toastr.error('Error en el formato del documento', 'Plantilla no aceptada', {
         timeOut: 6000,
       });
+      this.archivoForm.reset();
+      this.nameFile = '';
     }
   }
 
@@ -241,16 +244,78 @@ export class ListarFeriadosComponent implements OnInit {
     for (var i = 0; i < this.archivoSubido.length; i++) {
       formData.append("uploads[]", this.archivoSubido[i], this.archivoSubido[i].name);
     }
-    this.rest.RevisarArchivo(formData).subscribe(res => {
+    // VERIFICACIÓN DE DATOS FORMATO - DUPLICIDAD DENTRO DEL SISTEMA
+    this.rest.RevisarFormato(formData).subscribe(res => {
       console.log('probando plantilla1', res);
       if (res.message === 'CAMPO FECHA ES OBLIGATORIO') {
+<<<<<<< HEAD
         this.toastr.error('Para asegurar el buen funcionamiento del sistema es necesario que verifique los datos ' +
           'de la plantilla ingresada. No se encuentra el registro del campo fecha en la ' + res.data + '.', 'Recuerde el campo fecha es obligatorio.', {
+=======
+        this.toastr.error('Para asegurar el buen funcionamiento del sistema es necesario que verifique los datos ' +
+          'de la plantilla ingresada. No se encuentra el registro del campo fecha en la ' + res.data + '.',
+          'Recuerde el campo fecha es obligatorio.', {
           timeOut: 10000,
         });
         this.archivoForm.reset();
         this.nameFile = '';
       }
+      else if (res.message === 'CAMPO DESCRIPCION ES OBLIGATORIO') {
+        this.toastr.error('Para asegurar el buen funcionamiento del sistema es necesario que verifique los datos ' +
+          'de la plantilla ingresada. No se encuentra el registro del campo descripcion en la ' + res.data + '.',
+          'Recuerde el campo descripcion es obligatorio.', {
+          timeOut: 10000,
+        });
+        this.archivoForm.reset();
+        this.nameFile = '';
+      }
+      else if (res.message === 'FECHA INVALIDA') {
+        this.toastr.error('Para asegurar el buen funcionamiento del sistema es necesario que verifique los datos ' +
+          'de la plantilla ingresada. Las fechas con formato incorrecto o fuera de rango se encuentran en la ' +
+          res.data + '.', 'Recuerde las fechas en la plantilla EXCEL deben estar en formato texto.', {
+          timeOut: 10000,
+        });
+        this.archivoForm.reset();
+        this.nameFile = '';
+      }
+      else if (res.message === 'FECHA YA EXISTE') {
+        this.toastr.error('Para asegurar el buen funcionamiento del sistema es necesario que verifique los datos ' +
+          'de la plantilla ingresada. Se encuentran fechas que ya estan registradas en el sistema en la ' + res.data + '.',
+          'Recuerde que el sistema no permite registros duplicados.', {
+          timeOut: 10000,
+        });
+        this.archivoForm.reset();
+        this.nameFile = '';
+      }
+      else if (res.message === 'FECHA DE RECUPERACION INVALIDA') {
+        this.toastr.error('Para asegurar el buen funcionamiento del sistema es necesario que verifique los datos ' +
+          'de la plantilla ingresada. Las fechas de recuperación con formato incorrecto o fuera de rango se encuentran en la '
+          + res.data + '.', 'Recuerde las fechas de recuperación en la plantilla EXCEL deben estar en formato texto.', {
+          timeOut: 10000,
+        });
+        this.archivoForm.reset();
+        this.nameFile = '';
+      }
+      else if (res.message === 'FECHA DE RECUPERACION ANTERIOR') {
+        this.toastr.error('Para asegurar el buen funcionamiento del sistema es necesario que verifique los datos ' +
+          'de la plantilla ingresada. Las fechas de recuperación que no son válidas se encuentran en la ' +
+          res.data + '.', 'Recuerde la fecha de recuperación debe ser posterior a la fecha que registra como un feriado.', {
+          timeOut: 10000,
+        });
+        this.archivoForm.reset();
+        this.nameFile = '';
+      }
+      else if (res.message === 'FECHA DE RECUPERACION YA EXISTE') {
+        this.toastr.error('Para asegurar el buen funcionamiento del sistema es necesario que verifique los datos ' +
+          'de la plantilla ingresada. Se encuentran fechas de recuperación que ya se encuentran registradas en el sistema en la ' +
+          res.data + '.', 'Recuerde que el sistema no permite ingresar fechas de recuperación duplicadas.', {
+>>>>>>> 02d14eadb2de328920347110074d739493c5f935
+          timeOut: 10000,
+        });
+        this.archivoForm.reset();
+        this.nameFile = '';
+      }
+<<<<<<< HEAD
       else if (res.message === 'CAMPO DESCRIPCION ES OBLIGATORIO') {
         this.toastr.error('Para asegurar el buen funcionamiento del sistema es necesario que verifique los datos ' +
           'de la plantilla ingresada. No se encuentra el registro del campo descripcion en la ' + res.data + '.', 'Recuerde el campo descripcion es obligatorio.', {
@@ -301,20 +366,42 @@ export class ListarFeriadosComponent implements OnInit {
       }
       else if (res.message === 'CORRECTO') {
         this.rest.RevisarArchivoDatos(formData).subscribe(respose => {
+=======
+      else if (res.message === 'CORRECTO') {
+        // VERIFICAR DATOS DUPLICADOS DENTRO DE LA MISMA PLANTILLA
+        this.rest.RevisarDuplicidad(formData).subscribe(respose => {
+>>>>>>> 02d14eadb2de328920347110074d739493c5f935
           console.log('probando plantilla2', respose);
-          if (respose.message === 'error') {
+          if (respose.message === 'ERROR FECHA') {
             this.toastr.error('Para asegurar el buen funcionamiento del sistema es necesario que verifique los datos ' +
-              'de la plantilla ingresada, recuerde que fechas fuera de rango no son válidas, los datos no pueden estar duplicados y la fecha de ' +
-              'recuperación debe ser posterior a la fecha del feriado a registrar.',
-              'Verificar los datos ingresados en la plantilla', {
+              'de la plantilla ingresada. Se encuentran fechas duplicadas dentro de su plantilla en la ' + respose.data,
+              'Recuerde que el sistema no admite duplicidad de registros.', {
               timeOut: 10000,
             });
             this.archivoForm.reset();
             this.nameFile = '';
           }
-          else if (respose.message === 'correcto') {
+          else if (respose.message === 'ERROR RECUPERACION') {
+            this.toastr.error('Para asegurar el buen funcionamiento del sistema es necesario que verifique los datos ' +
+              'de la plantilla ingresada. Se encuentran fechas de recuperación duplicadas dentro de su plantilla en la ' + respose.data,
+              'Recuerde que el sistema no admite duplicidad de registros.', {
+              timeOut: 10000,
+            });
+            this.archivoForm.reset();
+            this.nameFile = '';
+          }
+          else if (respose.message === 'SIMILAR FECHA-RECUPERACION') {
+            this.toastr.error('Para asegurar el buen funcionamiento del sistema es necesario que verifique los datos ' +
+              'de la plantilla ingresada.' + respose.data,
+              'Recuerde que el sistema no admite duplicidad de registros.', {
+              timeOut: 10000,
+            });
+            this.archivoForm.reset();
+            this.nameFile = '';
+          }
+          else if (respose.message === 'CORRECTO') {
+            // SUBIR LOS DATOS CUANDO TODOS SON CORRECTOS
             this.rest.subirArchivoExcel(formData).subscribe(subido => {
-              console.log('probando plantilla3', subido);
               window.location.reload();
               this.toastr.success('Operación Exitosa', 'Plantilla de Feriados importada.', {
                 timeOut: 10000,
@@ -477,9 +564,9 @@ export class ListarFeriadosComponent implements OnInit {
     this.ObtenerFeriados();
   }
 
-  /****************************************************************************************************** 
-   * MÉTODO PARA EXPORTAR A CSV 
-   ******************************************************************************************************/
+  /* ***************************************************************************************************** 
+   *                                     MÉTODO PARA EXPORTAR A CSV 
+   * *****************************************************************************************************/
 
   ExportToCVS() {
     this.OrdenarDatos(this.feriados);

@@ -187,6 +187,7 @@ export class LoginComponent implements OnInit {
         localStorage.setItem('autoriza', datos.estado);
         localStorage.setItem('bool_timbres', datos.acciones_timbres);
         localStorage.setItem('ip', datos.ip_adress);
+        localStorage.setItem('fec_caducidad_licencia', datos.caducidad_licencia);
         this.toastr.success('Ingreso Existoso! ' + datos.usuario + ' ' + datos.ip_adress, 'Usuario y contraseña válidos', {
           timeOut: 6000,
         })

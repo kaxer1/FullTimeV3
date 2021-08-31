@@ -1,7 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ModuloReportesValidation = void 0;
-const ModuloReportesValidation = (req, res, next) => {
+exports.ModuloReportesValidation = (req, res, next) => {
     const { reportes } = req.modulos;
     console.log('******************** validacion de modulo de reportes', reportes);
     if (!reportes)
@@ -13,4 +12,3 @@ const ModuloReportesValidation = (req, res, next) => {
     console.log('******************** si tiene acceso modulo de reportes', reportes);
     next();
 };
-exports.ModuloReportesValidation = ModuloReportesValidation;

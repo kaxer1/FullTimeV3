@@ -53,11 +53,11 @@ export class ValidacionesService {
   }
 
   RedireccionarMixto(error) {
-    const { access, message, text, url} = error;
+    const { access, message, text, url } = error;
     console.log(error);
     console.log(access, message);
     if (access === false) {
-      this.toastr.error(message )
+      this.toastr.error(message)
         .onTap.subscribe(items => {
           if (url) {
             window.open(`https://${url}`, "_blank");
@@ -71,16 +71,15 @@ export class ValidacionesService {
     }
   }
 
-  /**
-   * METODOS PARA CONTROLAR INGRESO DE LETRAS
-   */
-
+  /** ******************************************************************** *
+   *                  MÉTODO PARA CONTROLAR INGRESO DE LETRAS              *
+   *  ******************************************************************** */
   IngresarSoloLetras(e) {
     let key = e.keyCode || e.which;
     let tecla = String.fromCharCode(key).toString();
-    //Se define todo el abecedario que se va a usar.
+    // SE DEFINE TODO EL ABECEDARIO QUE SE VA A USAR.
     let letras = " áéíóúabcdefghijklmnñopqrstuvwxyzÁÉÍÓÚABCDEFGHIJKLMNÑOPQRSTUVWXYZ";
-    //Es la validación del KeyCodes, que teclas recibe el campo de texto.
+    // ES LA VALIDACIÓN DEL KEYCODES, QUE TECLAS RECIBE EL CAMPO DE TEXTO.
     let especiales = [8, 37, 39, 46, 6, 13];
     let tecla_especial = false
     for (var i in especiales) {
@@ -97,6 +96,9 @@ export class ValidacionesService {
     }
   }
 
+  /** ******************************************************************** *
+   *                  MÉTODO PARA CONTROLAR INGRESO DE NÚMEROS             *
+   *  ******************************************************************** */
   IngresarSoloNumeros(evt) {
     if (window.event) {
       var keynum = evt.keyCode;
@@ -104,7 +106,7 @@ export class ValidacionesService {
     else {
       keynum = evt.which;
     }
-    // Comprobamos si se encuentra en el rango numérico y que teclas no recibirá.
+    // COMPROBAMOS SI SE ENCUENTRA EN EL RANGO NUMÉRICO Y QUE TECLAS NO RECIBIRÁ.
     if ((keynum > 47 && keynum < 58) || keynum == 8 || keynum == 13 || keynum == 6) {
       return true;
     }

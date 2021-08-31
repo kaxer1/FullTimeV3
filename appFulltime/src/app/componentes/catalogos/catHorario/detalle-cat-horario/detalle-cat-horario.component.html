@@ -12,20 +12,20 @@
         <div class="d-flex flex-wrap justify-content-between">
             <mat-form-field>
                 <mat-label>Tipo de Acción</mat-label>
-                <mat-icon id="icono" matSuffix matTooltipClass="icono-tooltip" matTooltipPosition="right"
-                    matTooltip="Indicar la acción del orden de horario">
+                <mat-icon id="icono" matSuffix matTooltipPosition="right"
+                    matTooltip="Indicar la acción del orden de horario.">
                     help_outline
                 </mat-icon>
                 <mat-select [formControl]="accionF" required>
-                    <mat-option *ngFor="let option of options" [value]="option.accion" (click)="AutoSelectOrden(option.orden)" >
+                    <mat-option *ngFor="let option of options" [value]="option.accion"
+                        (click)="AutoSelectOrden(option.orden)">
                         {{option.view_option}}
                     </mat-option>
                 </mat-select>
             </mat-form-field>
             <mat-form-field>
                 <mat-label>Orden</mat-label>
-                <mat-icon id="icono" matSuffix matTooltipClass="icono-tooltip" matTooltipPosition="right"
-                    matTooltip="Indicar el orden del horario">
+                <mat-icon id="icono" matSuffix matTooltipPosition="right" matTooltip="Indicar el orden del horario">
                     help_outline
                 </mat-icon>
                 <mat-select [formControl]="ordenF" [disabled]="true" required>
@@ -38,15 +38,14 @@
                 <mat-label>Hora</mat-label>
                 <input type="time" matInput placeholder="Ej: 60" [formControl]="horaF"
                     (keypress)="IngresarSoloNumeros($event)" required>
-                <mat-icon id="icono" matSuffix matTooltipClass="icono-tooltip" matTooltipPosition="right"
-                    matTooltip="Indicar la hora de referencia">
+                <mat-icon id="icono" matSuffix matTooltipPosition="right" matTooltip="Indicar la hora de referencia">
                     help_outline</mat-icon>
             </mat-form-field>
-            <mat-form-field>
+            <mat-form-field *ngIf="espera">
                 <mat-label>Minutos de espera</mat-label>
                 <input matInput placeholder="Ej: 60" [formControl]="minEsperaF"
                     (keypress)="IngresarSoloNumeros($event)">
-                <mat-icon id="icono" matSuffix matTooltipClass="icono-tooltip" matTooltipPosition="right"
+                <mat-icon id="icono" matSuffix matTooltipPosition="right"
                     matTooltip="Indicar los minutos de tolerancia de espera para ingreso">
                     help_outline</mat-icon>
             </mat-form-field>
@@ -60,10 +59,6 @@
 </div>
 
 <div class="pantalla-progress" *ngIf="habilitarprogress">
-    <mat-progress-spinner
-        class="progress"
-        [color]="color"
-        [mode]="mode"
-        [value]="value">
+    <mat-progress-spinner class="progress" [color]="color" [mode]="mode" [value]="value">
     </mat-progress-spinner>
 </div>

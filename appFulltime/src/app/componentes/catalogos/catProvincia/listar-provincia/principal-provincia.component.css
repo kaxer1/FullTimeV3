@@ -4,7 +4,7 @@ p { font-size: x-small; }
 
 td { padding-top: 10px; text-align: center; }
 
-.far { color:red; margin-right: 15px; }
+.far { color:red; cursor: pointer;}
 
 #departamento { font-size: 12px; }
 
@@ -26,12 +26,7 @@ td { padding-top: 10px; text-align: center; }
     padding-bottom: 6px; 
 }
 
-mat-form-field { padding: 10px 15px 0px 15px;}
-
 button {margin: 5px 10px 5px 10px;}
-
-#prov { cursor: pointer; }
 
 table { width: 100%; font-size: 14px;}
 
-#estilo { color: rgb(0, 0, 0); font-size: 13px; }

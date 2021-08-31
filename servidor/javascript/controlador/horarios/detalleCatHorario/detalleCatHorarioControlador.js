@@ -49,11 +49,11 @@ class DetalleCatalogoHorarioControlador {
                             o.tipo_accion = 'E';
                             break;
                         case 'S/A':
-                            o.tipo_accion_show = 'S.Almuerzo';
+                            o.tipo_accion_show = 'Inicio Alimentación';
                             o.tipo_accion = 'S/A';
                             break;
                         case 'E/A':
-                            o.tipo_accion_show = 'E.Almuerzo';
+                            o.tipo_accion_show = 'Fin Alimentación';
                             o.tipo_accion = 'E/A';
                             break;
                         case 'S':

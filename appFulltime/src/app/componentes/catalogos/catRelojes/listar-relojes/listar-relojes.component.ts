@@ -221,14 +221,18 @@ export class ListarRelojesComponent implements OnInit {
       if (itemName.toLowerCase() == 'dispositivos') {
         this.plantilla();
       } else {
-        this.toastr.error('Solo se acepta Dispositvos', 'Plantilla seleccionada incorrecta', {
+        this.toastr.error('Solo se acepta plantilla con nombre Dispositivos.', 'Plantilla seleccionada incorrecta.', {
           timeOut: 6000,
         });
+        this.archivoForm.reset();
+        this.nameFile = '';
       }
     } else {
-      this.toastr.error('Error en el formato del documento', 'Plantilla no aceptada', {
+      this.toastr.error('Error en el formato del documento.', 'Plantilla no aceptada.', {
         timeOut: 6000,
       });
+      this.archivoForm.reset();
+      this.nameFile = '';
     }
   }
 

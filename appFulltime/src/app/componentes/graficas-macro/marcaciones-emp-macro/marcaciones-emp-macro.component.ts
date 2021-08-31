@@ -39,14 +39,14 @@ export class MarcacionesEmpMacroComponent implements OnInit {
   habilitar: boolean = false;
   f_inicio_req: string = '';
   f_final_req: string = '';
-  
+
   marcaciones: any;
   datos_marcaciones: any = [];
   constructor(
     private restGraficas: GraficasService,
     private toastr: ToastrService,
     private restEmpre: EmpresaService,
-  ) { 
+  ) {
     this.ObtenerLogo();
     this.ObtenerColores();
   }
@@ -64,7 +64,7 @@ export class MarcacionesEmpMacroComponent implements OnInit {
     let local = sessionStorage.getItem('marcaciones');
     // console.log('LOCAL HORA EXTRA: ',local);
     this.chartDom = document.getElementById('charts_marcaciones_macro') as HTMLCanvasElement;
-    this.thisChart = echarts.init(this.chartDom, 'light', {width: 1050, renderer: 'svg',devicePixelRatio: 5 });
+    this.thisChart = echarts.init(this.chartDom, 'light', { width: 1050, renderer: 'svg', devicePixelRatio: 5 });
 
     if (local === null) {
       this.restGraficas.MetricaMarcacionesMicro().subscribe(res => {
@@ -99,10 +99,10 @@ export class MarcacionesEmpMacroComponent implements OnInit {
     var f_f = new Date(form.fec_final)
 
     if (f_i < f_f) {
-      
+
 
       if (f_i.getFullYear() === f_f.getFullYear()) {
-        this.toastr.success('Fechas validas','', {
+        this.toastr.success('Fechas validas', '', {
           timeOut: 6000,
         });
 
@@ -118,19 +118,19 @@ export class MarcacionesEmpMacroComponent implements OnInit {
           this.thisChart.setOption(res.datos_grafica);;
         });
       } else {
-        this.toastr.error('Años de consulta diferente','Solo puede consultar datos de un año en concreto', {
+        this.toastr.error('Años de consulta diferente', 'Solo puede consultar datos de un año en concreto', {
           timeOut: 6000,
         });
       }
-      
+
 
     } else if (f_i > f_f) {
-      this.toastr.info('Fecha final es menor a la fecha inicial','', {
+      this.toastr.info('Fecha final es menor a la fecha inicial', '', {
         timeOut: 6000,
       });
       this.fechasConsultaForm.reset();
     } else if (f_i.toLocaleDateString() === f_f.toLocaleDateString()) {
-      this.toastr.info('Fecha inicial es igual a la fecha final','', {
+      this.toastr.info('Fecha inicial es igual a la fecha final', '', {
         timeOut: 6000,
       });
       this.fechasConsultaForm.reset();
@@ -159,9 +159,9 @@ export class MarcacionesEmpMacroComponent implements OnInit {
   }
 
   graficaBase64: any;
-  metodosPDF(accion){  
-    this.graficaBase64 = this.thisChart.getDataURL({type: 'jpg' , pixelRatio: 5 });
-    this.generarPdf(accion) 
+  metodosPDF(accion) {
+    this.graficaBase64 = this.thisChart.getDataURL({ type: 'jpg', pixelRatio: 5 });
+    this.generarPdf(accion)
   }
 
   generarPdf(action) {
@@ -181,7 +181,7 @@ export class MarcacionesEmpMacroComponent implements OnInit {
     return {
       pageSize: 'A4',
       pageOrientation: 'portrait',
-      pageMargins: [ 30, 60, 30, 40 ],
+      pageMargins: [30, 60, 30, 40],
       watermark: { text: this.frase, color: 'blue', opacity: 0.1, bold: true, italics: false },
       header: { text: 'Impreso por:  ' + localStorage.getItem('fullname_print'), margin: 10, fontSize: 9, opacity: 0.3, alignment: 'right' },
 
@@ -191,12 +191,13 @@ export class MarcacionesEmpMacroComponent implements OnInit {
         fecha = f.format('YYYY-MM-DD');
         h.setUTCHours(h.getHours());
         var time = h.toJSON().split("T")[1].split(".")[0];
-        
+
         return {
           margin: 10,
           columns: [
             { text: 'Fecha: ' + fecha + ' Hora: ' + time, opacity: 0.3 },
-            { text: [
+            {
+              text: [
                 {
                   text: '© Pag ' + currentPage.toString() + ' of ' + pageCount,
                   alignment: 'right', opacity: 0.3
@@ -230,7 +231,7 @@ export class MarcacionesEmpMacroComponent implements OnInit {
 
       return this.marcaciones.xAxis.data.includes(obj.mes)
     })
-    
+
     let n: any = [];
     let colums = { alignment: 'justify', columns: [] };
     let colums1 = { alignment: 'justify', columns: [] };
@@ -241,30 +242,30 @@ export class MarcacionesEmpMacroComponent implements OnInit {
 
       if (i >= 0 && i <= 2) {
         colums.columns.push({
-          text: datos[i].mes + ': ' + datos[i].valor, margin: [11,0,0,5]
+          text: datos[i].mes + ': ' + datos[i].valor, margin: [11, 0, 0, 5]
         });
       };
       if (i >= 3 && i <= 5) {
         colums1.columns.push({
-          text: datos[i].mes + ': ' + datos[i].valor, margin: [11,0,0,5]
+          text: datos[i].mes + ': ' + datos[i].valor, margin: [11, 0, 0, 5]
         });
       };
       if (i >= 6 && i <= 8) {
         colums2.columns.push({
-          text: datos[i].mes + ': ' + datos[i].valor, margin: [11,0,0,5]
+          text: datos[i].mes + ': ' + datos[i].valor, margin: [11, 0, 0, 5]
         });
-      }; 
+      };
       if (i >= 9 && i <= 11) {
         colums3.columns.push({
-          text: datos[i].mes + ': ' + datos[i].valor, margin: [11,0,0,5] 
+          text: datos[i].mes + ': ' + datos[i].valor, margin: [11, 0, 0, 5]
         });
       }
     }
-    
+
     if (colums.columns.length > 0) { n.push(colums); }
     if (colums1.columns.length > 0) { n.push(colums1); }
     if (colums2.columns.length > 0) { n.push(colums2); }
-    if (colums3.columns.length > 0) { n.push(colums3); }    
+    if (colums3.columns.length > 0) { n.push(colums3); }
 
     return n
   }
@@ -275,11 +276,11 @@ export class MarcacionesEmpMacroComponent implements OnInit {
     this.llamarGraficaOriginal();
   }
 
-  texto_grafica: string = 
-  "Este es uno de los indicadores de rendimiento más reconocidos, y sirve para ver el cumplimiento de todos " +
-  "los trabajadores. A través del uso de este indicador puedes ver la cantidad de trabajadores que realizan " +
-  "su registro al interior de tu compañía de manera mensual y anual. \n" +
-  "Las marcaciones son en tiempo real, y tanto la empresa como el trabajador pueden ver sus registros y " +
-  "realizar también reportes en base a estos.";
+  texto_grafica: string =
+    "Marcaciones, indicador de rendimiento más reconocido, sirve para observar el cumplimiento de todos " +
+    "los trabajadores. A través del uso de este indicador puede ver la cantidad de marcaciones que realizan los colaboradores " +
+    "de su compañía de manera mensual y anual. \n" +
+    "Las marcaciones son en tiempo real, y todos los colaboradores de la empresa pueden ver sus registros y " +
+    "obtener reportes en base a estos.";
 
 }

@@ -1,64 +1,17 @@
 <br>
 <div class="container" style="margin-bottom: 25px; padding-bottom: 10px;">
     <div class="row">
-        <div class="col-md" style="margin-bottom: 25px; padding-bottom: 10px;">
+        <div class="col-md">
             <div class="tituloDepartamentos">
-                <span id="negrita_dep">DEPARTAMENTOS</span>
+                <span>DEPARTAMENTOS</span>
             </div>
             <mat-card class="example-card mat-elevation-z9">
-                <h5 style="text-align: center">Críterios de Búsqueda</h5>
-                <form [formGroup]="BuscarDepartamentosForm">
-                    <div class="d-flex flex-wrap justify-content-center">
-                        <mat-form-field>
-                            <mat-label>Departamento</mat-label>
-                            <input matInput id="depNombre" name="filtroNombre" placeholder="Departamento"
-                                [formControl]="departamentoF" (keypress)="IngresarSoloLetras($event)"
-                                [(ngModel)]="filtroNombre">
-                            <mat-icon id="color" matSuffix matTooltipPosition="right"
-                                matTooltipClass="departamento-tooltip" matTooltip="Búsqueda por Departamento">
-                                help_outline</mat-icon>
-                            <mat-error *ngIf="departamentoF.invalid">{{ObtenerMensajeDepartamentoLetras()}}
-                            </mat-error>
-                        </mat-form-field>
-                        <mat-form-field>
-                            <mat-label>Empresa</mat-label>
-                            <input matInput id="depPadre" name="filtroEmpresaSuc" placeholder="Nombre de Empresa"
-                                [formControl]="buscarEmpresa" [(ngModel)]="filtroEmpresaSuc">
-                            <mat-icon id="color" matSuffix matTooltipPosition="right"
-                                matTooltipClass="departamento-tooltip"
-                                matTooltip="Búsqueda del Departamento por nombre de Empresa">
-                                help_outline</mat-icon>
-                            <mat-error *ngIf="buscarEmpresa.invalid">
-                                Indispensable ingresar dos letras</mat-error>
-                        </mat-form-field>
-                        <mat-form-field>
-                            <mat-label>Establecimiento</mat-label>
-                            <input matInput id="depPadre" name="filtroNombreSuc" placeholder="Nombre de Sucursal"
-                                [formControl]="buscarNombre" [(ngModel)]="filtroNombreSuc">
-                            <mat-icon id="color" matSuffix matTooltipPosition="right"
-                                matTooltipClass="departamento-tooltip"
-                                matTooltip="Búsqueda del Departamento por nombre de Sucursal">
-                                help_outline</mat-icon>
-                            <mat-error *ngIf="buscarNombre.invalid">
-                                Indispensable ingresar dos letras</mat-error>
-                        </mat-form-field>
-                        <mat-form-field>
-                            <mat-label>Departamento Superior</mat-label>
-                            <input matInput id="depPadre" name="filtroDeparPadre" placeholder="Departamento Superior"
-                                [formControl]="departamentoPadreF" (keypress)="IngresarSoloLetras($event)"
-                                [(ngModel)]="filtroDeparPadre">
-                            <mat-icon id="color" matSuffix matTooltipPosition="right"
-                                matTooltipClass="departamento-tooltip" matTooltip="Búsqueda por Departamento Superior">
-                                help_outline</mat-icon>
-                            <mat-error *ngIf="departamentoPadreF.invalid">
-                                {{ObtenerMensajeDepartamentoPadreLetras()}}</mat-error>
-                        </mat-form-field>
-                    </div>
-                </form>
                 <div class="d-flex flex-wrap justify-content-center">
                     <input type="submit" class="btn btn-sm button" (click)="AbrirVentanaRegistrarDepartamento()"
                         value="Crear nuevo Departamento">
-                    <input type="submit" class="btn btn-sm button" (click)="LimpiarCampos()" value="Cancelar">
+                    <input type="submit" class="btn btn-sm button" (click)="LimpiarCampos()" matSuffix
+                        matTooltipPosition="right"
+                        matTooltip="Limpiar campos de búsqueda de la tabla y mostrar todos los datos." value="Cancelar">
                 </div>
             </mat-card>
         </div>
@@ -71,7 +24,6 @@
             <table class="table table-hover table-sm">
                 <thead class="thead-light">
                     <tr>
-                        <th scope="col">Empresa</th>
                         <th scope="col">Establecimiento</th>
                         <th scope="col">Departamento</th>
                         <th scope="col">Nivel</th>
@@ -80,9 +32,34 @@
                     </tr>
                 </thead>
                 <tbody>
+                    <tr>
+                        <td>
+                            <mat-form-field id="t-inputs">
+                                <input matInput placeholder="Buscar" [formControl]="buscarNombre"
+                                    [(ngModel)]="filtroNombreSuc">
+                            </mat-form-field>
+                        </td>
+                        <td>
+                            <mat-form-field id="t-inputs">
+                                <input matInput placeholder="Buscar" [formControl]="departamentoF"
+                                    (keypress)="IngresarSoloLetras($event)" [(ngModel)]="filtroNombre">
+                            </mat-form-field>
+                        </td>
+                        <td></td>
+                        <td>
+                            <mat-form-field id="t-inputs">
+                                <input matInput placeholder="Buscar" [formControl]="departamentoPadreF"
+                                    (keypress)="IngresarSoloLetras($event)" [(ngModel)]="filtroDeparPadre">
+                            </mat-form-field>
+                        </td>
+                        <td>
+                            <mat-icon id="i-ayuda" matSuffix matTooltipPosition="right"
+                                matTooltip="Búsqueda de departamentos de acurdo a cada columna de la tabla.">
+                                help_outline</mat-icon>
+                        </td>
+                    </tr>
                     <tr
-                        *ngFor="let departamento of departamentos | filtroDepartamento: filtroNombre | departamentoPadre: filtroDeparPadre | filtroSucursalR: filtroNombreSuc | filtroEmpresaR: filtroEmpresaSuc | paginate:tamanio_pagina:numero_pagina">
-                        <td *ngIf="departamento.nombre != 'Ninguno'">{{departamento.nomempresa}}</td>
+                        *ngFor="let departamento of departamentos | filtroDepartamento: filtroNombre | departamentoPadre: filtroDeparPadre | filtroSucursalR: filtroNombreSuc | paginate:tamanio_pagina:numero_pagina">
                         <td *ngIf="departamento.nombre != 'Ninguno'">{{departamento.nomsucursal}}</td>
                         <td *ngIf="departamento.nombre != 'Ninguno'">{{departamento.nombre | titlecase}}</td>
                         <td *ngIf="departamento.nombre != 'Ninguno'">{{departamento.nivel}}</td>
@@ -90,14 +67,12 @@
                         </td>
                         <td *ngIf="departamento.nombre != 'Ninguno'" class="d-flex justify-content-center">
                             <i class="fas fa-edit" matSuffix matTooltipPosition="right"
-                                matTooltipClass="departamento-tooltip"
-                                matTooltip="Modificar los datos generales de este registro"
+                                matTooltip="Modificar los datos generales de este registro."
                                 (click)="AbrirVentanaEditarDepartamento(departamento)">
                                 <p>Editar</p>
                             </i>
-                            <i (click)="ConfirmarDelete(departamento)" class="far fa-trash-alt" matSuffix
-                                matTooltipPosition="right" matTooltipClass="departamento-tooltip"
-                                matTooltip="Eliminar este registro">
+                            <i (click)="ConfirmarDelete(departamento)" class="far fa-trash-alt" id="t-eliminar"
+                                matSuffix matTooltipPosition="right" matTooltip="Eliminar este registro.">
                                 <p>Eliminar</p>
                             </i>
                         </td>
@@ -106,23 +81,23 @@
             </table>
         </div>
         <mat-paginator [length]="departamentos.length" [pageSize]="tamanio_pagina" [pageSizeOptions]="pageSizeOptions"
-            id="estilo" (page)="ManejarPagina($event)" showFirstLastButtons>
+            id="pagina" (page)="ManejarPagina($event)" showFirstLastButtons>
         </mat-paginator>
         <div class="d-flex justify-content-end" style="margin-right: 5%;">
             <i (click)="generarPdf('download')" id="pdf" class="fas fa-file-pdf" matSuffix matTooltipPosition="right"
-                matTooltipClass="departamento-tooltip" matTooltip="Descargar Lista de Departamentos en formato PDF">
+                matTooltip="Descargar Lista de Departamentos en formato PDF.">
                 <p>PDF</p>
             </i>
             <i (click)="exportToExcel()" id="excel" class="fas fa-file-excel" matSuffix matTooltipPosition="right"
-                matTooltipClass="departamento-tooltip" matTooltip="Descargar Lista de Departamentos en formato EXCEL">
+                matTooltip="Descargar Lista de Departamentos en formato EXCEL.">
                 <p>XLSL</p>
             </i>
             <i (click)="exportToCVS()" id="csv" class="fas fa-file-csv" matSuffix matTooltipPosition="right"
-                matTooltipClass="departamento-tooltip" matTooltip="Descargar Lista de Departamentos en formato CSV">
+                matTooltip="Descargar Lista de Departamentos en formato CSV.">
                 <p>CSV</p>
             </i>
             <i (click)="exportToXML()" id="xml" class="fas fa-file-code" matSuffix matTooltipPosition="right"
-                matTooltipClass="departamento-tooltip" matTooltip="Descargar Lista de Departamentos en formato XML">
+                matTooltip="Descargar Lista de Departamentos en formato XML.">
                 <p>XML</p>
             </i>
         </div>

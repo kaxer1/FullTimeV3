@@ -17,7 +17,7 @@ class DepartamentoRutas {
 
     configuracion(): void {
         this.router.get('/', TokenValidation, PERIODO_VACACION_CONTROLADOR.ListarPerVacaciones);
-        this.router.get('/infoPeriodo/:id_empl_contrato', TokenValidation, PERIODO_VACACION_CONTROLADOR.EncontrarPerVacacionesPorIdContrato);
+        this.router.get('/infoPeriodo/:codigo', TokenValidation, PERIODO_VACACION_CONTROLADOR.EncontrarPerVacaciones);
         this.router.get('/buscar/:id_empleado', TokenValidation, PERIODO_VACACION_CONTROLADOR.EncontrarIdPerVacaciones);
         this.router.post('/', TokenValidation, PERIODO_VACACION_CONTROLADOR.CrearPerVacaciones);
         this.router.put('/', TokenValidation, PERIODO_VACACION_CONTROLADOR.ActualizarPeriodo);

@@ -28,8 +28,8 @@ import { IReporteAtrasos } from 'src/app/model/reportes.model';
   ]
 })
 export class ReporteEmpleadosInactivosComponent implements OnInit {
-  
-  respuesta: any [];
+
+  respuesta: any[];
   sucursales: any = [];
   departamentos: any = [];
   empleados: any = [];
@@ -41,12 +41,13 @@ export class ReporteEmpleadosInactivosComponent implements OnInit {
   selectionSuc = new SelectionModel<ITableEmpleados>(true, []);
   selectionDep = new SelectionModel<ITableEmpleados>(true, []);
   selectionEmp = new SelectionModel<ITableEmpleados>(true, []);
-  
+
   // Items de paginación de la tabla
   tamanio_pagina: number = 5;
   numero_pagina: number = 1;
   pageSizeOptions = [5, 10, 20, 50];
 
+  seleccion = new FormControl('');
   codigo = new FormControl('');
   cedula = new FormControl('', [Validators.minLength(2)]);
   nombre_emp = new FormControl('', [Validators.minLength(2)]);
@@ -58,12 +59,12 @@ export class ReporteEmpleadosInactivosComponent implements OnInit {
   filtroNombreEmp: '';
   filtroNombreDep: '';
   filtroNombreSuc: '';
-  
+
   constructor(
     private toastr: ToastrService,
     private R_asistencias: ReportesAsistenciasService,
     private restEmpre: EmpresaService
-  ) { 
+  ) {
     this.ObtenerLogo();
     this.ObtenerColores();
   }
@@ -100,10 +101,10 @@ export class ReporteEmpleadosInactivosComponent implements OnInit {
           })
         })
       })
-      console.log('SUCURSALES',this.sucursales);
-      console.log('DEPARTAMENTOS',this.departamentos);
-      console.log('EMPLEADOS',this.empleados);
-      
+      console.log('SUCURSALES', this.sucursales);
+      console.log('DEPARTAMENTOS', this.departamentos);
+      console.log('EMPLEADOS', this.empleados);
+
     }, err => {
       this.toastr.error(err.error.message, '', {
         timeOut: 10000,
@@ -117,13 +118,13 @@ export class ReporteEmpleadosInactivosComponent implements OnInit {
     switch (e.value) {
       case '1':
         this.bool_suc = true; this.bool_dep = false; this.bool_emp = false;
-      break;
+        break;
       case '2':
         this.bool_suc = false; this.bool_dep = true; this.bool_emp = false;
-      break;
+        break;
       case '3':
         this.bool_suc = false; this.bool_dep = false; this.bool_emp = true;
-      break;
+        break;
       default:
         this.bool_suc = false; this.bool_dep = false; this.bool_emp = false;
         break;
@@ -136,21 +137,21 @@ export class ReporteEmpleadosInactivosComponent implements OnInit {
    */
   validacionReporte(action) {
 
-    if (this.bool_suc === false && this.bool_dep === false && this.bool_emp === false) return this.toastr.error('Seleccione un criterio de búsqueda') 
+    if (this.bool_suc === false && this.bool_dep === false && this.bool_emp === false) return this.toastr.error('Seleccione un criterio de búsqueda')
 
     switch (this.opcion) {
       case 1:
         if (this.selectionSuc.selected.length === 0) return this.toastr.error('No a seleccionado ninguno', 'Seleccione sucursal')
         this.ModelarSucursal(action);
-      break;
+        break;
       case 2:
         if (this.selectionDep.selected.length === 0) return this.toastr.error('No a seleccionado ninguno', 'Seleccione departamentos')
         this.ModelarDepartamento(action);
-      break;
+        break;
       case 3:
         if (this.selectionEmp.selected.length === 0) return this.toastr.error('No a seleccionado ninguno', 'Seleccione empleados')
         this.ModelarEmpleados(action);
-      break;
+        break;
       default:
         this.bool_suc = false; this.bool_dep = false; this.bool_emp = false;
         break;
@@ -162,7 +163,7 @@ export class ReporteEmpleadosInactivosComponent implements OnInit {
     let respuesta = JSON.parse(sessionStorage.getItem('reporte_emp_inactivos'))
 
     let suc = respuesta.filter(o => {
-      var bool =  this.selectionSuc.selected.find(obj1 => {
+      var bool = this.selectionSuc.selected.find(obj1 => {
         return obj1.id === o.id_suc
       })
       return bool != undefined
@@ -178,18 +179,18 @@ export class ReporteEmpleadosInactivosComponent implements OnInit {
   }
 
   ModelarDepartamento(accion) {
-    
+
     let respuesta = JSON.parse(sessionStorage.getItem('reporte_emp_inactivos'))
 
     respuesta.forEach((obj: any) => {
-      obj.departamentos =  obj.departamentos.filter(o => {
-        var bool =  this.selectionDep.selected.find(obj1 => {
+      obj.departamentos = obj.departamentos.filter(o => {
+        var bool = this.selectionDep.selected.find(obj1 => {
           return obj1.id === o.id_depa
         })
         return bool != undefined
       })
     })
-    let dep = respuesta.filter(obj => { 
+    let dep = respuesta.filter(obj => {
       return obj.departamentos.length > 0
     });
     console.log('DEPARTAMENTOS', dep);
@@ -208,23 +209,23 @@ export class ReporteEmpleadosInactivosComponent implements OnInit {
     respuesta.forEach((obj: any) => {
       obj.departamentos.forEach(element => {
         element.empleado = element.empleado.filter(o => {
-          var bool =  this.selectionEmp.selected.find(obj1 => {
+          var bool = this.selectionEmp.selected.find(obj1 => {
             return obj1.id === o.id
           })
           return bool != undefined
         })
       });
     })
-    respuesta.forEach(obj => { 
+    respuesta.forEach(obj => {
       obj.departamentos = obj.departamentos.filter(e => {
         return e.empleado.length > 0
       })
     });
 
-    let emp = respuesta.filter(obj => { 
+    let emp = respuesta.filter(obj => {
       return obj.departamentos.length > 0
     });
-    
+
     console.log('EMPLEADOS', emp);
     this.data_pdf = [];
     this.data_pdf = emp;
@@ -232,7 +233,7 @@ export class ReporteEmpleadosInactivosComponent implements OnInit {
       case 'excel': this.exportToExcel(); break;
       default: this.generarPdf(accion); break;
     }
-    
+
   }
 
   /***************************
@@ -283,7 +284,7 @@ export class ReporteEmpleadosInactivosComponent implements OnInit {
     return {
       pageSize: 'A4',
       pageOrientation: 'portrait',
-      pageMargins: [ 40, 60, 40, 40 ],
+      pageMargins: [40, 60, 40, 40],
       watermark: { text: this.frase, color: 'blue', opacity: 0.1, bold: true, italics: false },
       header: { text: 'Impreso por:  ' + localStorage.getItem('fullname_print'), margin: 10, fontSize: 9, opacity: 0.3, alignment: 'right' },
 
@@ -293,12 +294,13 @@ export class ReporteEmpleadosInactivosComponent implements OnInit {
         fecha = f.format('YYYY-MM-DD');
         h.setUTCHours(h.getHours());
         var time = h.toJSON().split("T")[1].split(".")[0];
-        
+
         return {
           margin: 10,
           columns: [
             { text: 'Fecha: ' + fecha + ' Hora: ' + time, opacity: 0.3 },
-            { text: [
+            {
+              text: [
                 {
                   text: '© Pag ' + currentPage.toString() + ' of ' + pageCount,
                   alignment: 'right', opacity: 0.3
@@ -331,15 +333,15 @@ export class ReporteEmpleadosInactivosComponent implements OnInit {
     };
   }
 
-  impresionDatosPDF(data: any []): Array<any> {
+  impresionDatosPDF(data: any[]): Array<any> {
     let n = []
     let c = 0;
     let arr_emp = [];
 
     data.forEach((obj: IReporteAtrasos) => {
-      
+
       if (this.bool_suc === true) {
-        let arr_suc = obj.departamentos.map(o => { return o.empleado.length});
+        let arr_suc = obj.departamentos.map(o => { return o.empleado.length });
         let suma_suc = this.SumarRegistros(arr_suc);
         let arr_emp = [];
         n.push({
@@ -378,7 +380,7 @@ export class ReporteEmpleadosInactivosComponent implements OnInit {
         n.push({
           style: 'tableMarginEmp',
           table: {
-            widths: ['auto', '*', 'auto','auto', 'auto'],
+            widths: ['auto', '*', 'auto', 'auto', 'auto'],
             body: [
               [
                 { text: 'N°', style: 'tableHeader' },
@@ -386,7 +388,7 @@ export class ReporteEmpleadosInactivosComponent implements OnInit {
                 { text: 'CÉDULA', style: 'tableHeader' },
                 { text: 'CÓDIGO', style: 'tableHeader' },
                 { text: 'FECHA SALIDA', style: 'tableHeader' }
-              ], 
+              ],
               ...arr_emp.map(obj3 => {
                 c = c + 1
                 return [
@@ -404,7 +406,7 @@ export class ReporteEmpleadosInactivosComponent implements OnInit {
               return (rowIndex % 2 === 0) ? '#E5E7E9' : null;
             }
           }
-        }); 
+        });
       }
 
       if (this.bool_dep === true) {
@@ -430,14 +432,14 @@ export class ReporteEmpleadosInactivosComponent implements OnInit {
             ]
           }
         })
-        
+
         obj.departamentos.forEach(obj1 => {
 
           let reg = obj1.empleado.length
           n.push({
             style: 'tableMarginDep',
             table: {
-              widths: ['*','*'],
+              widths: ['*', '*'],
               body: [
                 [
                   {
@@ -454,11 +456,11 @@ export class ReporteEmpleadosInactivosComponent implements OnInit {
               ]
             }
           })
-  
+
           n.push({
             style: 'tableMarginEmp',
             table: {
-              widths: ['auto', '*', 'auto','auto', 'auto'],
+              widths: ['auto', '*', 'auto', 'auto', 'auto'],
               body: [
                 [
                   { text: 'N°', style: 'tableHeader' },
@@ -466,7 +468,7 @@ export class ReporteEmpleadosInactivosComponent implements OnInit {
                   { text: 'CÉDULA', style: 'tableHeader' },
                   { text: 'CÓDIGO', style: 'tableHeader' },
                   { text: 'FECHA SALIDA', style: 'tableHeader' }
-                ], 
+                ],
                 ...arr_emp.map(obj3 => {
                   c = c + 1
                   return [
@@ -485,8 +487,8 @@ export class ReporteEmpleadosInactivosComponent implements OnInit {
               }
             }
           });
-  
-        });  
+
+        });
 
       }
 
@@ -496,7 +498,7 @@ export class ReporteEmpleadosInactivosComponent implements OnInit {
           o.empleado.forEach(e => {
             arr_emp.push(e)
           })
-        }) 
+        })
       }
 
     })
@@ -506,7 +508,7 @@ export class ReporteEmpleadosInactivosComponent implements OnInit {
       n.push({
         style: 'tableMarginEmp',
         table: {
-          widths: ['auto', '*', 'auto','auto', 'auto'],
+          widths: ['auto', '*', 'auto', 'auto', 'auto'],
           body: [
             [
               { text: 'N°', style: 'tableHeader' },
@@ -514,7 +516,7 @@ export class ReporteEmpleadosInactivosComponent implements OnInit {
               { text: 'CÉDULA', style: 'tableHeader' },
               { text: 'CÓDIGO', style: 'tableHeader' },
               { text: 'FECHA SALIDA', style: 'tableHeader' }
-            ], 
+            ],
             ...arr_emp.map(obj3 => {
               c = c + 1
               return [
@@ -534,14 +536,14 @@ export class ReporteEmpleadosInactivosComponent implements OnInit {
         }
       });
     }
-    
+
     return n
   }
 
-  SumarRegistros(array: any []) {
+  SumarRegistros(array: any[]) {
     let valor = 0;
     for (let i = 0; i < array.length; i++) {
-        valor = valor + array[i];
+      valor = valor + array[i];
     }
     return valor
   }
@@ -549,13 +551,13 @@ export class ReporteEmpleadosInactivosComponent implements OnInit {
   /****************************************************************************************************** 
    *                                       MÉTODO PARA EXPORTAR A EXCEL
    ******************************************************************************************************/
-   exportToExcel(): void {
+  exportToExcel(): void {
 
     const wsr: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.MapingDataPdfDefault(this.data_pdf));
     const wb: xlsx.WorkBook = xlsx.utils.book_new();
     xlsx.utils.book_append_sheet(wb, wsr, 'Empleados Inactivos');
     xlsx.writeFile(wb, "Empleados Inactivos " + new Date().getTime() + '.xlsx');
-    
+
   }
 
   MapingDataPdfDefault(array: Array<any>) {
@@ -564,9 +566,9 @@ export class ReporteEmpleadosInactivosComponent implements OnInit {
       obj1.departamentos.forEach(obj2 => {
         obj2.empleado.forEach(obj3 => {
           console.log(obj3);
-          
+
           let ele = {
-            'Id Sucursal': obj1.id_suc, 'Ciudad': obj1.ciudad, 'Sucursal': obj1.name_suc, 
+            'Id Sucursal': obj1.id_suc, 'Ciudad': obj1.ciudad, 'Sucursal': obj1.name_suc,
             'Id Departamento': obj2.id_depa, 'Departamento': obj2.name_dep,
             'Id Empleado': obj3.id, 'Nombre Empleado': obj3.name_empleado, 'Cédula': obj3.cedula, 'Código': obj3.codigo,
             'Género': obj3.genero, 'Fecha termino Cargo': obj3.fec_final
@@ -697,14 +699,18 @@ export class ReporteEmpleadosInactivosComponent implements OnInit {
       this.codigo.reset();
       this.cedula.reset();
       this.nombre_emp.reset();
+      this.bool_emp = false;
     }
     if (this.bool_dep) {
       this.nombre_dep.reset();
+      this.bool_dep = false;
     }
     if (this.bool_suc) {
       this.nombre_suc.reset();
+      this.bool_suc = false;
     }
+    this.seleccion.reset();
   }
- 
+
 
 }

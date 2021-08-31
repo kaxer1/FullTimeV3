@@ -1,5 +1,6 @@
 <!--*********** LISTA DE SOLICITUDES DE PLANIFICACIONES HORAS EXTRAS PENDIENTES O PREAUTORIZADAS *************-->
 <br *ngIf="!HabilitarPlan">
+<<<<<<< HEAD
 <div class="container" style="margin-bottom: 25px; padding-bottom: 10px;" *ngIf="!HabilitarPlan">
     <div class="row">
         <div class="col-lg-7" style="margin-bottom: 15px;">
@@ -70,9 +71,11 @@
         </div>
     </div>
 </div>
+=======
+>>>>>>> 02d14eadb2de328920347110074d739493c5f935
 <div class="container" style="padding-bottom: 50px; text-align: center;" *ngIf="!HabilitarPlan">
     <div class="mat-elevation-z8" style="background: white;">
-        <div class="d-flex bd-highlight" id="resultadosEmpre">
+        <div class="d-flex bd-highlight" id="titulo">
             <mat-icon class="flex-shrink-1 bd-highlight" (click)="HabilitarSeleccion()" matSuffix
                 matTooltipPosition="right" matTooltip="Autorizar a todos los empleados la Planificación de Horas Extras"
                 id="SelectCheck">library_add_check</mat-icon>
@@ -107,8 +110,40 @@
                     </tr>
                 </thead>
                 <tbody>
+                    <tr>
+                        <td></td>
+                        <td>
+                            <mat-form-field id="t-inputs">
+                                <input matInput placeholder="Buscar" [(ngModel)]="filtroCedula" maxlength="10"
+                                    oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                    [formControl]="cedula" type="text" (keypress)="IngresarSoloNumeros($event)">
+                            </mat-form-field>
+                        </td>
+                        <td>
+                            <mat-form-field id="t-inputs">
+                                <input matInput placeholder="Buscar" [(ngModel)]="filtroEmpleado" [formControl]="nombre"
+                                    type="text" (keypress)="IngresarSoloLetras($event)">
+                            </mat-form-field>
+                        </td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>
+                            <mat-icon id="i-ayuda" (click)="limpiarCampos()" matSuffix matTooltipPosition="right"
+                                matTooltip="Limpiar campos de búsqueda de la tabla y mostrar todos los datos.">
+                                format_clear
+                            </mat-icon>
+                        </td>
+                        <td>
+                            <mat-icon id="i-ayuda" matSuffix matTooltipPosition="right" 
+                                matTooltip="Búsqueda de datos de acuerdo a la columna de la tabla.">
+                                help_outline</mat-icon>
+                        </td>
+                    </tr>
                     <tr
-                        *ngFor="let h of horas_extras_plan | emplCedula: filtroCedula | paginate:tamanio_pagina:numero_pagina; index as i">
+                        *ngFor="let h of horas_extras_plan | emplCedula: filtroCedula | nombreApellido: filtroEmpleado | paginate:tamanio_pagina:numero_pagina; index as i">
                         <td>
                             <mat-checkbox *ngIf="btnCheckHabilitar" (click)="$event.stopPropagation()"
                                 (change)="$event ? selectionUno.toggle(h) : null" [checked]="selectionUno.isSelected(h)"
@@ -129,8 +164,7 @@
                                 [routerLink]="['/ver-hora-extra', h.id]">
                                 <p>Documento</p>
                             </a>-->
-                            <i id="iconos" *ngIf="auto_individual" class="fas fa-stopwatch"
-                                style="color:rgb(8, 96, 168); margin-left: 15px;"
+                            <i id="iconos" *ngIf="auto_individual" class="fas fa-stopwatch" id="plan"
                                 (click)="AbrirTiempoAutorizacion(h.hora_total_timbre, h.id_plan_extra, h, h.empl_id)"
                                 matTooltipPosition="right" matTooltip="Tiempo que se le autoriza de la hora extra.">
                                 <p>Autorizar Horas</p>
@@ -148,7 +182,7 @@
         </div>
         <br>
         <mat-paginator [length]="horas_extras_plan.length" [pageSize]="tamanio_pagina"
-            [pageSizeOptions]="pageSizeOptions" id="estilo" (page)="ManejarPagina($event)" showFirstLastButtons>
+            [pageSizeOptions]="pageSizeOptions" id="pagina" (page)="ManejarPagina($event)" showFirstLastButtons>
         </mat-paginator>
     </div>
 </div>
@@ -174,8 +208,8 @@
                                 <input matInput placeholder="Ej: " [(ngModel)]="filtroCodigo"
                                     [formControl]="codigo" (keypress)="IngresarSoloNumeros($event)">
                                 <mat-icon id="iemple" matSuffix matTooltipPosition="right"
-                                    matTooltipClass="emple-tooltip"
-                                    matTooltip="Búsqueda de empleado por el código">
+                                    
+                                    matTooltip="Búsqueda de datos de empleado por código.">
                                     help_outline</mat-icon>
                             </mat-form-field>-->
                             <mat-form-field>
@@ -186,7 +220,7 @@
                                 <mat-error *ngIf="cedula.invalid">Indispensable ingresar dos valores
                                 </mat-error>
                                 <mat-icon id="iemple" matSuffix matTooltipPosition="right"
-                                    matTooltipClass="emple-tooltip"
+                                    
                                     matTooltip="Búsqueda de empleado por la cédula de identificación o pasaporte">
                                     help_outline</mat-icon>
                             </mat-form-field>
@@ -197,7 +231,7 @@
                                 <mat-error *ngIf="nombre.invalid">Indispensable ingresar dos letras
                                 </mat-error>
                                 <mat-icon id="iemple" matSuffix matTooltipPosition="right"
-                                    matTooltipClass="emple-tooltip"
+                                    
                                     matTooltip="Búsqueda de empleado por el nombre">
                                     help_outline</mat-icon>
                             </mat-form-field>
@@ -209,7 +243,7 @@
                                 <mat-error *ngIf="apellido.invalid">Indispensable ingresar dos letras
                                 </mat-error>
                                 <mat-icon id="iemple" matSuffix matTooltipPosition="right"
-                                    matTooltipClass="emple-tooltip"
+                                    
                                     matTooltip="Búsqueda de empleado por el apellido">
                                     help_outline</mat-icon>
                             </mat-form-field>-->
@@ -226,7 +260,7 @@
 </div>
 <div class="container" style="padding-bottom: 50px; text-align: center;" *ngIf="!HabilitarObservacion">
     <div class="mat-elevation-z8" style="background: white;">
-        <div class="d-flex bd-highlight" id="resultadosEmpre">
+        <div class="d-flex bd-highlight" id="titulo">
             <mat-icon class="flex-shrink-1 bd-highlight" (click)="HabilitarSeleccionO()" matSuffix
                 matTooltipPosition="right" matTooltip="Autorizar a todos los empleados la Planificación de Horas Extras"
                 id="SelectCheck">library_add_check</mat-icon>
@@ -303,7 +337,7 @@
         </div>
         <br>
         <mat-paginator [length]="horas_extras_plan_observacion.length" [pageSize]="tamanio_pagina_O"
-            [pageSizeOptions]="pageSizeOptions_O" id="estilo" (page)="ManejarPaginaObserva($event)"
+            [pageSizeOptions]="pageSizeOptions_O" id="pagina" (page)="ManejarPaginaObserva($event)"
             showFirstLastButtons>
         </mat-paginator>
     </div>
@@ -312,7 +346,7 @@
 <br *ngIf="!HabilitarAutoriza">
 <div class="container" style="padding-bottom: 50px; text-align: center;" *ngIf="!HabilitarAutoriza">
     <div class="mat-elevation-z8" style="background: white;">
-        <div class="d-flex bd-highlight" id="resultadosEmpre">
+        <div class="d-flex bd-highlight" id="titulo">
             <span class="w-100 bd-highlight">
                 Lista de planificaciones de horas extras realizadas autorizadas</span>
             <button class="btn btn-sm" style="float: right; margin-right: 10px;" ngDefaultControl
@@ -370,7 +404,7 @@
         </div>
         <br>
         <mat-paginator [length]="horas_extras_autorizadas.length" [pageSize]="tamanio_pagina_auto"
-            [pageSizeOptions]="pageSizeOptions_auto" id="estilo" (page)="ManejarPagina_auto($event)"
+            [pageSizeOptions]="pageSizeOptions_auto" id="pagina" (page)="ManejarPagina_auto($event)"
             showFirstLastButtons>
         </mat-paginator>
     </div>

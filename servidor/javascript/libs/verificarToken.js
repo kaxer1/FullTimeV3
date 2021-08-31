@@ -3,10 +3,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.TokenValidation = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const fs_1 = __importDefault(require("fs"));
-const TokenValidation = (req, res, next) => {
+exports.TokenValidation = (req, res, next) => {
     // verifica si en la peticion existe la cabecera autorizacion 
     if (!req.headers.authorization) {
         return res.status(401).send('No puede solicitar, permiso denegado');
@@ -36,7 +35,7 @@ const TokenValidation = (req, res, next) => {
                 return o;
             });
             // console.log(ok_licencias);
-            if (ok_licencias.leght === 0)
+            if (ok_licencias.lenght === 0)
                 return res.status(401).send('La licencia no existe');
             const hoy = new Date();
             const { fec_activacion, fec_desactivacion } = ok_licencias[0];
@@ -53,7 +52,7 @@ const TokenValidation = (req, res, next) => {
                 next();
             }
             else {
-                return res.status(401).send('La licencia a expirado,');
+                return res.status(401).send('La licencia a expirado');
             }
         });
     }
@@ -62,4 +61,3 @@ const TokenValidation = (req, res, next) => {
         return res.status(401).send(error.message);
     }
 };
-exports.TokenValidation = TokenValidation;

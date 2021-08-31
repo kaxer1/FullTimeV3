@@ -14,12 +14,10 @@ class TimbresRutas {
         this.router.get('/noti-timbres/avisos/:id_empleado', TokenValidation, TIMBRES_CONTROLADOR.ObtenerAvisosTimbresEmpleado);
         this.router.put('/noti-timbres/vista/:id_noti_timbre', TokenValidation, TIMBRES_CONTROLADOR.ActualizarVista);
         this.router.put('/eliminar-multiples/avisos', TokenValidation, TIMBRES_CONTROLADOR.EliminarMultiplesAvisos);
-        // this.router.post('/mail-noti/', TokenValidation, TIMBRES_CONTROLADOR.SendMailNotifiPermiso);
-        // this.router.put('/:id/estado', TokenValidation, TIMBRES_CONTROLADOR.ActualizarEstado);
-        // this.router.delete('/eliminar/:id_vacacion', TokenValidation, TIMBRES_CONTROLADOR.EliminarVacaciones);
         this.router.post('/', TokenValidation, TIMBRES_CONTROLADOR.CrearTimbreWeb);
         this.router.post('/admin/', TokenValidation, TIMBRES_CONTROLADOR.CrearTimbreWebAdmin);
         this.router.get('/', TokenValidation, TIMBRES_CONTROLADOR.ObtenerTimbres);
+        this.router.get('/ver/timbres/:id', TokenValidation, TIMBRES_CONTROLADOR.ObtenerTimbresEmpleado);
         this.router.get('/ultimo-timbre', TokenValidation, TIMBRES_CONTROLADOR.ObtenerUltimoTimbreEmpleado);
     }
 }

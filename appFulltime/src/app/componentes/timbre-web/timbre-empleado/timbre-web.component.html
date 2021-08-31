@@ -1,13 +1,9 @@
-<div class="container" style="margin: 25px 0px 25px 0px;">
+<div class="container" style="margin: 25px 0px 10px 0px;">
     <div class="row">
-        <div class="col-sm-4">
-            <button class="btn btn-lg btn-block" (click)="AbrirRegistrarTimbre()">Timbre virtual</button>
-            <br>
-        </div>
-        <div class="col-sm-4" *ngFor="let c of cuenta">
+        <div class="col-sm-6" *ngFor="let c of cuenta">
             <mat-card>
                 <mat-card-header>
-                    <mat-card-title style="font-weight: bold;">Timbres</mat-card-title>
+                    <mat-card-title style="font-weight: bold; text-align: center;">Timbres Totales</mat-card-title>
                 </mat-card-header>
                 <mat-card-content>
                     <b>N° timbres Entrada y Salida: </b> <span>{{c.timbres_EoS}} </span> <br>
@@ -18,10 +14,10 @@
             </mat-card>
             <br>
         </div>
-        <div class="col-sm-4" *ngFor="let i of info">
+        <div class="col-sm-6" *ngFor="let i of info">
             <mat-card>
                 <mat-card-header>
-                    <mat-card-title style="font-weight: bold;">Información personal</mat-card-title>
+                    <mat-card-title style="font-weight: bold; text-align: center;">Información Personal</mat-card-title>
                 </mat-card-header>
                 <mat-card-content>
                     <b>Cargo: </b> <span>{{i.cargo}} </span> <br>
@@ -32,13 +28,21 @@
         </div>
     </div>
 </div>
-<mat-form-field>
-    <mat-label>Filtro general de campos</mat-label>
-    <input matInput (keyup)="applyFilter($event)" placeholder="2020...." #input>
-</mat-form-field>
+<div class="container" style="margin: 0px 0px 10px 0px;">
+    <div class="row">
+        <div class="col-sm-4">
+        </div>
+        <div class="col-sm-4">
+            <button class="btn btn-md btn-block" (click)="AbrirRegistrarTimbre()">Timbre Virtual</button>
+            <br>
+        </div>
+        <div class="col-sm-4">
+        </div>
+    </div>
+</div>
 <div class="container" style="padding-bottom: 50px; text-align: center;">
     <div class="mat-elevation-z8" style="background: white;">
-        <!-- <div id="TituloResultado">Resultado de búsqueda</div> -->
+        <div id="titulo">LISTA DE TIMBRES</div>
         <div class="table-responsive">
             <table class="table table-hover table-sm">
                 <thead class="thead-light">
@@ -47,37 +51,60 @@
                         <th scope="col">Fecha</th>
                         <th scope="col">Hora</th>
                         <th scope="col">Acción</th>
-                        <th scope="col">Tecla funcion</th>
                         <th scope="col">Observacion</th>
                         <th scope="col">Latitud</th>
                         <th scope="col">Longitud</th>
-                        <th scope="col">Codigo Empleado</th>
                         <th scope="col">Reloj</th>
                     </tr>
                 </thead>
                 <tbody>
+<<<<<<< HEAD
                     <tr *ngFor="let t of timbres | fecTimbre: filtroFechaTimbre | paginate:tamanio_pagina:numero_pagina">
                         <td>
                             <mat-icon aria-hidden="false"  
                                 style="color: rgb(53, 95, 209); text-align: center; cursor: pointer;"
                                 (click)="abrirMapa(t.latitud, t.longitud)">
+=======
+                    <tr>
+                        <td></td>
+                        <td>
+                            <mat-form-field id="t-inputs">
+                                <input matInput (keyup)="applyFilter($event)" placeholder="Buscar" #input>
+                            </mat-form-field>
+                        </td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr
+                        *ngFor="let t of timbres | fecTimbre: filtroFechaTimbre | paginate:tamanio_pagina:numero_pagina">
+                        <td>
+                            <mat-icon aria-hidden="false" id="accion" (click)="abrirMapa(t.latitud, t.longitud)"
+                                matSuffix matTooltipPosition="right"
+                                matTooltip="Direccionar al mapa con ubicación del timbre seleccionado.">
+>>>>>>> 02d14eadb2de328920347110074d739493c5f935
                                 location_on</mat-icon>
                         </td>
                         <td>{{t.fec_hora_timbre.split(' ')[0]}}</td>
                         <td>{{t.fec_hora_timbre.split(' ')[1]}}</td>
+<<<<<<< HEAD
                         <td>{{t.accion}}</td>
+=======
+>>>>>>> 02d14eadb2de328920347110074d739493c5f935
                         <td>{{t.tecl_funcion}}</td>
                         <td>{{t.observacion}}</td>
                         <td>{{t.latitud}}</td>
                         <td>{{t.longitud}}</td>
-                        <td>{{t.id_empleado}}</td>
                         <td>{{t.id_reloj}}</td>
                     </tr>
                 </tbody>
             </table>
         </div>
         <mat-paginator [length]="timbres.length" [pageSize]="tamanio_pagina" [pageSizeOptions]="pageSizeOptions"
-            id="estilo" (page)="ManejarPagina($event)" showFirstLastButtons>
+            id="pagina" (page)="ManejarPagina($event)" showFirstLastButtons>
         </mat-paginator>
     </div>
 </div>

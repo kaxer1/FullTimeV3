@@ -14,10 +14,12 @@ import { NestedTreeControl } from '@angular/cdk/tree';
 import { MatTreeNestedDataSource } from '@angular/material/tree';
 import { MenuNode } from '../../model/menu.model'
 import { UsuarioService } from 'src/app/servicios/usuarios/usuario.service';
-import { FraseSeguridadComponent } from 'src/app/componentes/frase-seguridad/frase-seguridad.component';
+import { FraseSeguridadComponent } from 'src/app/componentes/frase-administrar/frase-seguridad/frase-seguridad.component';
 import { FuncionesService } from 'src/app/servicios/funciones/funciones.service';
 import { MainNavService } from './main-nav.service';
 import { PlantillaReportesService } from '../../componentes/reportes/plantilla-reportes.service';
+
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-main-nav',
@@ -25,7 +27,7 @@ import { PlantillaReportesService } from '../../componentes/reportes/plantilla-r
   styleUrls: ['./main-nav.component.css']
 })
 export class MainNavComponent implements OnInit {
- 
+
   isHandset$: Observable<boolean> = this.breakpointObserver.observe('(max-width: 800px)')
     .pipe(
       map(result => result.matches),
@@ -41,6 +43,8 @@ export class MainNavComponent implements OnInit {
   datosEmpresa: any = [];
   mensaje: boolean = false;
 
+  fec_caducidad_licencia: Date;
+
   constructor(
     private breakpointObserver: BreakpointObserver,
     public location: Location,
@@ -54,7 +58,7 @@ export class MainNavComponent implements OnInit {
     private plantillaPDF: PlantillaReportesService,
     private route: ActivatedRoute,
     private mainService: MainNavService
-  ) {  }
+  ) { }
 
   hasChild = (_: number, node: MenuNode) => !!node.children && node.children.length > 0;
 
@@ -74,10 +78,35 @@ export class MainNavComponent implements OnInit {
     }
   }
 
+  showMessageLicencia: Boolean = false;
+
+  FuncionLicencia() {
+    const licencia = localStorage.getItem('fec_caducidad_licencia');
+    if (licencia !== null) {
+      const fec_caducidad = new Date(licencia.split('.')[0])
+      const fecha_hoy = new Date();
+      this.fec_caducidad_licencia = fec_caducidad;
+      const fecha1 = moment(fecha_hoy.toJSON().split('T')[0])
+      const fecha2 = moment(fec_caducidad.toJSON().split('T')[0])
+
+      const diferencia = fecha2.diff(fecha1, 'days');
+
+      if (diferencia <= 30) {
+        this.showMessageLicencia = true;
+        const text = (diferencia === 1) ? 'dia' : 'dias';
+        this.toaster.warning(`Tu licencia expira en ${diferencia + ' ' + text}`)
+      }
+      
+    }
+  }
+
   ngOnInit() {
 
     if (this.loginService.loggedIn()) { // es importante el orden en el q se invocan las funciones.
       this.idEmpresa = parseInt(localStorage.getItem('empresa'))
+      
+      this.FuncionLicencia()
+
       this.mainService.LogicaFunciones()
       this.plantillaPDF.ShowColoresLogo(localStorage.getItem('empresa'))
       this.breakpointObserver.observe('(max-width: 800px)').subscribe((result: BreakpointState) => {
@@ -88,9 +117,9 @@ export class MainNavComponent implements OnInit {
 
   }
 
-  get color_p(): string { return this.plantillaPDF.color_Primary}
-  get color_s(): string { return this.plantillaPDF.color_Secundary}  
-  get logo() : string { return this.plantillaPDF.logoBase64 }
+  get color_p(): string { return this.plantillaPDF.color_Primary }
+  get color_s(): string { return this.plantillaPDF.color_Secundary }
+  get logo(): string { return this.plantillaPDF.logoBase64 }
 
   LlamarDatos() {
     this.id_empleado_logueado = parseInt(localStorage.getItem('empleado'));
@@ -142,12 +171,12 @@ export class MainNavComponent implements OnInit {
     }
   }
 
-  
-  get HabilitarAccion() : boolean { return this.mainService.accionesPersonal; }
-  get HabilitarHoraExtra() : boolean { return this.mainService.horasExtras; }
-  get HabilitarAlimentacion() : boolean { return this.mainService.alimentacion; }
-  get HabilitarPermisos() : boolean { return this.mainService.permisos; }
-  get HabilitarReportes() : boolean { return this.mainService.reportes; }
+
+  get HabilitarAccion(): boolean { return this.mainService.accionesPersonal; }
+  get HabilitarHoraExtra(): boolean { return this.mainService.horasExtras; }
+  get HabilitarAlimentacion(): boolean { return this.mainService.alimentacion; }
+  get HabilitarPermisos(): boolean { return this.mainService.permisos; }
+  get HabilitarReportes(): boolean { return this.mainService.reportes; }
 
   /**
    * MENU PRINCIPAL
@@ -166,21 +195,21 @@ export class MainNavComponent implements OnInit {
     if (name_emp !== null && tipo_empresa !== null) {
 
       this.MetodoSubSelectMenu(name_emp, tipo_empresa)
-      
+
     } else {
       this.restEmpresa.ConsultarEmpresas().subscribe(res => {
-        console.log('Empresa: ',res);
+        console.log('Empresa: ', res);
         localStorage.setItem('name_empresa', res[0].nombre);
         localStorage.setItem('tipo_empresa', res[0].tipo_empresa);
         this.MetodoSubSelectMenu(res[0].nombre, res[0].tipo_empresa)
-  
+
       })
 
     }
 
   }
 
-  MetodoSubSelectMenu(nombre: string, tipo_empresa: string){
+  MetodoSubSelectMenu(nombre: string, tipo_empresa: string) {
     if (tipo_empresa === 'Pública') {
       this.mainService.setAccionesPersonal(true);
     }
@@ -269,7 +298,7 @@ export class MainNavComponent implements OnInit {
           { name: 'Horas Extras Planificadas', url: '/planificacionesHorasExtras' },
           { name: 'Planificar Hora Extra', url: '/planificaHoraExtra' },
           { name: 'Planificaciones', url: '/listadoPlanificaciones' },
-          { name: 'Calcular Hora Extra', url: '/horaExtraReal' },
+          //   { name: 'Calcular Hora Extra', url: '/horaExtraReal' },
         ]
       },
       {
@@ -278,8 +307,9 @@ export class MainNavComponent implements OnInit {
         estado: true,
         icono: 'schedule',
         children: [
-          { name: 'Enrolar Empleado', url: '/enrolados' },
+          //  { name: 'Enrolar Empleado', url: '/enrolados' },
           { name: 'Registrar Dispositivo', url: '/listarRelojes' },
+          { name: 'App Movil', url: '/app-movil' },
         ]
       },
       {
@@ -300,7 +330,8 @@ export class MainNavComponent implements OnInit {
         icono: 'fingerprint',
         children: [
           { name: 'Administrar Timbres', url: '/timbres-admin' },
-          { name: 'Timbres personales', url: '/timbres-personal' },
+          { name: 'Timbres Personales', url: '/timbres-personal' },
+          { name: 'Timbres Múltiples', url: '/timbres-multiples' },
         ]
       },
       {

@@ -20,14 +20,14 @@ export class TimbresService {
   }
 
   PutVistaTimbre(id_noti_timbre: number) {
-    let data = {visto:true};
+    let data = { visto: true };
     return this.http.put(`${environment.url}/timbres/noti-timbres/vista/${id_noti_timbre}`, data);
   }
 
   AvisosTimbresRealtime(id_empleado: number) {
     return this.http.get(`${environment.url}/timbres/noti-timbres/avisos/${id_empleado}`);
   }
-  
+
   EliminarAvisos(Seleccionados: any[]) {
     return this.http.put<any>(`${environment.url}/timbres/eliminar-multiples/avisos`, Seleccionados); //Eliminacion de datos seleccionados.
   }
@@ -35,13 +35,17 @@ export class TimbresService {
   PostTimbreWeb(datos: any) {
     return this.http.post<any>(`${environment.url}/timbres/`, datos);
   }
-  
+
   PostTimbreWebAdmin(datos: any) {
     return this.http.post<any>(`${environment.url}/timbres/admin/`, datos);
   }
 
   ObtenerTimbres() {
     return this.http.get<any>(`${environment.url}/timbres/`);
+  }
+
+  ObtenerTimbresEmpleado(id: number) {
+    return this.http.get<any>(`${environment.url}/timbres/ver/timbres/${id}`);
   }
 
   UltimoTimbreEmpleado() {

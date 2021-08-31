@@ -41,8 +41,8 @@ import { RegimenPipe } from './catRegimen/regimen/regimen.pipe';
 import { EmplCargoPipe } from './empleado/filtroEmpCargo/empl-cargo.pipe';
 import { PaginatePipe } from './pipes/paginate.pipe';
 import { TimbreEmpleadoPipe } from './empleado/timbre-empleado.pipe';
-
-
+import { NombreApellidoPipe } from './comidas/nombreApellido/nombre-apellido.pipe';
+import { TipoPipe } from './comidas/tipoServicio/tipo.pipe';
 // Pipe Paginacion
 import { CustomMatPaginatorIntl } from './pipes/paginator-es';
 import { MatPaginatorIntl } from '@angular/material/paginator';
@@ -93,7 +93,9 @@ import { MatPaginatorIntl } from '@angular/material/paginator';
     AvisoFechPipe,
     AvisoEstadoPipe,
     FecTimbrePipe,
-    TimbreEmpleadoPipe
+    TimbreEmpleadoPipe,
+    TipoPipe,
+    NombreApellidoPipe
   ],
   exports: [
     DepartamentoPipe,
@@ -140,7 +142,9 @@ import { MatPaginatorIntl } from '@angular/material/paginator';
     AvisoFechPipe,
     AvisoEstadoPipe,
     FecTimbrePipe,
-    TimbreEmpleadoPipe
+    TimbreEmpleadoPipe, 
+    TipoPipe,
+    NombreApellidoPipe
   ],
   providers: [
     { provide: MatPaginatorIntl, useClass: CustomMatPaginatorIntl },

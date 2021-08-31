@@ -14,7 +14,7 @@
                 <div class="col-sm">
                     <mat-form-field>
                         <mat-label>Seleccionar Horario</mat-label>
-                        <mat-icon id="icono" matSuffix matTooltipClass="icono-tooltip" matTooltipPosition="right"
+                        <mat-icon id="icono" matSuffix  matTooltipPosition="right"
                             matTooltip="Lista de horarios cargados en el sistema">
                             help_outline</mat-icon>
                         <mat-select [formControl]="horarioF" required>
@@ -29,7 +29,7 @@
                         <mat-label>Fecha de Inicio</mat-label>
                         <input matInput [matDatepicker]="picker" placeholder="dd/mm/aaaa" [formControl]="fechaInicioF"
                             min="1950-01-31" max="2050-01-31" required>
-                        <mat-datepicker-toggle matSuffix [for]="picker" id="icono" matTooltipClass="icono-tooltip"
+                        <mat-datepicker-toggle matSuffix [for]="picker" id="icono" 
                             matTooltipPosition="right"
                             matTooltip="Indicar la fecha de inicio de actividades. Seleccione la fecha dando click en el icono de calendario o puede escribir la fecha con el formato  día/mes/año. Ejemplo: 12/04/1993">
                         </mat-datepicker-toggle>
@@ -40,7 +40,7 @@
                         <mat-label>Fecha de Finalización</mat-label>
                         <input matInput [matDatepicker]="picker2" placeholder="dd/mm/aaaa" [formControl]="fechaFinalF"
                             required>
-                        <mat-datepicker-toggle matSuffix [for]="picker2" id="icono" matTooltipClass="icono-tooltip"
+                        <mat-datepicker-toggle matSuffix [for]="picker2" id="icono" 
                             matTooltipPosition="right"
                             matTooltip="Indicar la fecha de finalización de actividades. Seleccione la fecha dando click en el icono de calendario o puede escribir la fecha con el formato  día/mes/año. Ejemplo: 12/04/1993">
                         </mat-datepicker-toggle>
@@ -49,7 +49,7 @@
                     <br>
                     <mat-form-field>
                         <mat-label>Estado</mat-label>
-                        <mat-icon id="icono" matSuffix matTooltipClass="icono-tooltip" matTooltipPosition="right"
+                        <mat-icon id="icono" matSuffix  matTooltipPosition="right"
                             matTooltip="Indicar cual es el estado del empleado">
                             help_outline
                         </mat-icon>
@@ -62,7 +62,7 @@
                 </div>
                 <div class="col-sm" style="text-align: left;">
                     <label style="margin-right: 35px;">Seleccionar días libres *</label>
-                    <mat-icon id="icono" matSuffix matTooltipClass="icono-tooltip" matTooltipPosition="right"
+                    <mat-icon id="icono" matSuffix  matTooltipPosition="right"
                         matTooltip="Indicar si existen días libres en el horario de trabajo">
                         help_outline</mat-icon>
                     <div class="container" style="text-align: center;">

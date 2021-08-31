@@ -12,7 +12,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.beforeTwoDays = exports.beforeFiveDays = exports.Peri_Vacacion_Automatico = void 0;
 const database_1 = __importDefault(require("../database"));
 const settingsMail_1 = require("./settingsMail");
 const HORA_ENVIO_VACACION_AUTOMATICO = 23;
@@ -77,17 +76,6 @@ function CrearNuevoPeriodo(Obj, descripcion, dia, anio) {
         if (year >= regimen.anio_antiguedad) {
             antiguedad = regimen.dia_incr_antiguedad;
         }
-        // var nuevo = new PVacacion(
-        //     Obj.id_empl_contrato,
-        //     descripcion,
-        //     regimen.dia_anio_vacacion,
-        //     antiguedad,
-        //     1,
-        //     dia,
-        //     anio,
-        //     Obj.dia_perdido,
-        //     Obj.horas_vacaciones,
-        //     Obj.min_vacaciones );
         // console.log(nuevo);
         yield database_1.default.query('INSERT INTO peri_vacaciones(id_empl_contrato, descripcion, dia_vacacion, dia_antiguedad, estado, fec_inicio, fec_final, dia_perdido, horas_vacaciones, min_vacaciones) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10 )', [Obj.id_empl_contrato, descripcion, regimen.dia_anio_vacacion, antiguedad, 1, dia, anio, Obj.dia_perdido, Obj.horas_vacaciones, Obj.min_vacaciones])
             .then(() => {
@@ -106,7 +94,7 @@ function PeriVacacionHoy(fechaHoy) {
     });
 }
 // METODO PARA VERIFICAR SI FINALIZO SU PERIODO DE VACACIONES Y CREAR UN NUEVO PERIODO AUTOMATICAMENTE.
-const Peri_Vacacion_Automatico = function () {
+exports.Peri_Vacacion_Automatico = function () {
     setInterval(() => __awaiter(this, void 0, void 0, function* () {
         var f = new Date();
         console.log(f.getHours());
@@ -128,9 +116,8 @@ const Peri_Vacacion_Automatico = function () {
         }
     }), 3600000);
 };
-exports.Peri_Vacacion_Automatico = Peri_Vacacion_Automatico;
 // Metodo para verificar si debe tomar vacaciones. y enviar un aviso al correo electrónico.  Tiempo de aviso 5 dias antes. 
-const beforeFiveDays = function () {
+exports.beforeFiveDays = function () {
     setInterval(() => __awaiter(this, void 0, void 0, function* () {
         const date = new Date();
         console.log(date.toLocaleDateString());
@@ -145,6 +132,7 @@ const beforeFiveDays = function () {
             if (avisoVacacion.rowCount > 0) {
                 // Enviar mail a todos los que nacieron en la fecha seleccionada
                 avisoVacacion.rows.forEach(obj => {
+                    settingsMail_1.Credenciales(0);
                     let data = {
                         to: obj.correo,
                         from: settingsMail_1.email,
@@ -163,9 +151,8 @@ const beforeFiveDays = function () {
         }
     }), 3600000);
 };
-exports.beforeFiveDays = beforeFiveDays;
 // Metodo para verificar si debe tomar vacaciones. y enviar un aviso al correo electrónico.  Tiempo de aviso 2 dias antes. 
-const beforeTwoDays = function () {
+exports.beforeTwoDays = function () {
     setInterval(() => __awaiter(this, void 0, void 0, function* () {
         const date = new Date();
         const hora = date.getHours();
@@ -176,6 +163,7 @@ const beforeTwoDays = function () {
             if (avisoVacacion.rowCount > 0) {
                 // Enviar mail a todos los que nacieron en la fecha seleccionada
                 avisoVacacion.rows.forEach(obj => {
+                    settingsMail_1.Credenciales(0);
                     let data = {
                         to: obj.correo,
                         from: settingsMail_1.email,
@@ -194,4 +182,3 @@ const beforeTwoDays = function () {
         }
     }), 3600000);
 };
-exports.beforeTwoDays = beforeTwoDays;

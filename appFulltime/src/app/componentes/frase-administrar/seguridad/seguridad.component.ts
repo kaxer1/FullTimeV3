@@ -81,7 +81,7 @@ export class SeguridadComponent implements OnInit {
       this.datosUser = data;
       console.log(pass);
       if (pass === this.datosUser[0].contrasena) {
-        this.dialogRef.close(true);
+        this.dialogRef.close('true');
       }
       else {
         this.intentos = this.intentos + 1;
@@ -90,7 +90,7 @@ export class SeguridadComponent implements OnInit {
           this.toastr.error('Intente más tarde', 'Ha exedido el número de intentos', {
             timeOut: 3000,
           });
-          this.dialogRef.close(false);
+          this.dialogRef.close('false');
         }
         else {
           this.toastr.error('Incorrecto', 'La contraseña actual no es la correcta', {
@@ -104,7 +104,7 @@ export class SeguridadComponent implements OnInit {
   CompararFrase(form) {
     this.restUser.BuscarDatosUser(parseInt(this.usuario)).subscribe(data => {
       if (form.aFrase === data[0].frase) {
-        this.dialogRef.close(true);
+        this.dialogRef.close('true');
       }
       else {
         this.intentos = this.intentos + 1;
@@ -113,7 +113,7 @@ export class SeguridadComponent implements OnInit {
           this.toastr.error('Intente más tarde', 'Ha exedido el número de intentos', {
             timeOut: 3000,
           });
-          this.dialogRef.close(false);
+          this.dialogRef.close('false');
         }
         else {
           this.toastr.error('La Frase ingresada no es la correcta.', 'Incorrecto', {
@@ -125,6 +125,11 @@ export class SeguridadComponent implements OnInit {
   }
 
   CerrarRegistro() {
-    this.dialogRef.close(false);
+    this.dialogRef.close('false');
+  }
+
+  RecuperarFrase() {
+    this.loginService.logout();
+    this.dialogRef.close('olvidar');
   }
 }

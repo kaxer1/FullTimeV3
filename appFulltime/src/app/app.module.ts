@@ -46,7 +46,7 @@ import { ListarRelojesComponent } from './componentes/catalogos/catRelojes/lista
 import { TituloEmpleadoComponent } from './componentes/empleado/titulo-empleado/titulo-empleado.component';
 import { ListarCiudadComponent } from './componentes/ciudades/listar-ciudad/listar-ciudad.component';
 import { RegistrarCiudadComponent } from './componentes/ciudades/registrar-ciudad/registrar-ciudad.component';
-import { VistaElementosComponent } from './componentes/catalogos/catTipoPermisos/listarTipoPermisos/vista-elementos/vista-elementos.component';
+import { VistaElementosComponent } from './componentes/catalogos/catTipoPermisos/listarTipoPermisos/vista-elementos.component';
 import { AsignarCiudadComponent } from './componentes/catalogos/catFeriados/asignar-ciudad/asignar-ciudad.component';
 import { RegistroContratoComponent } from './componentes/empleadoContrato/registro-contrato/registro-contrato.component';
 import { EmplCargosComponent } from './componentes/empleadoCargos/empl-cargos/empl-cargos.component';
@@ -232,9 +232,9 @@ import { JornadaVsHoraExtraMacroComponent } from './componentes/graficas-macro/j
 import { MarcacionesEmpMacroComponent } from './componentes/graficas-macro/marcaciones-emp-macro/marcaciones-emp-macro.component';
 import { RetrasosMacroComponent } from './componentes/graficas-macro/retrasos-macro/retrasos-macro.component';
 import { TiempoJornadaVsHoraExtMacroComponent } from './componentes/graficas-macro/tiempo-jornada-vs-hora-ext-macro/tiempo-jornada-vs-hora-ext-macro.component';
-import { SeguridadComponent } from './componentes/seguridad/seguridad.component';
+import { SeguridadComponent } from './componentes/frase-administrar/seguridad/seguridad.component';
 import { TipoSeguridadComponent } from './componentes/catalogos/catEmpresa/tipo-seguridad/tipo-seguridad.component';
-import { FraseSeguridadComponent } from './componentes/frase-seguridad/frase-seguridad.component';
+import { FraseSeguridadComponent } from './componentes/frase-administrar/frase-seguridad/frase-seguridad.component';
 import { PlanComidasComponent } from './componentes/planificacionComidas/plan-comidas/plan-comidas.component';
 import { SalidasAntesMacroComponent } from './componentes/graficas-macro/salidas-antes-macro/salidas-antes-macro.component';
 import { MetricaVacacionesComponent } from './componentes/rolEmpleado/grafica-empl-macro/metrica-vacaciones/metrica-vacaciones.component';
@@ -287,6 +287,17 @@ import { ButtonAvisosComponent } from './share/main-nav/button-avisos/button-avi
 import { ProgressComponent } from './share/progress/progress.component';
 import { ButtonOpcionesComponent } from './share/main-nav/button-opciones/button-opciones.component';
 import { PlantillaReportesService } from './componentes/reportes/plantilla-reportes.service';
+
+import { CrearVacunaComponent } from './componentes/empleado/vacunacion/crear-vacuna/crear-vacuna.component';
+import { EditarVacunaComponent } from './componentes/empleado/vacunacion/editar-vacuna/editar-vacuna.component';
+import { TimbreMultipleComponent } from './componentes/timbre-web/timbre-multiple/timbre-multiple.component';
+import { CambiarFraseComponent } from './componentes/frase-administrar/cambiar-frase/cambiar-frase.component';
+import { RecuperarFraseComponent } from './componentes/frase-administrar/recuperar-frase/recuperar-frase.component';
+
+import { ListaAppComponent } from './componentes/appMovil/lista-app/lista-app.component';
+import { UpdateEstadoAppComponent } from './componentes/appMovil/update-estado-app/update-estado-app.component';
+import { OlvidarFraseComponent } from './componentes/frase-administrar/olvidar-frase/olvidar-frase.component';
+
 
 const config: SocketIoConfig = { url: environment.url, options: {} };
 
@@ -516,6 +527,17 @@ const config: SocketIoConfig = { url: environment.url, options: {} };
     ButtonAvisosComponent,
     ProgressComponent,
     ButtonOpcionesComponent,
+
+    CrearVacunaComponent,
+    EditarVacunaComponent,
+    TimbreMultipleComponent,
+    CambiarFraseComponent,
+    RecuperarFraseComponent,
+
+    ListaAppComponent,
+    UpdateEstadoAppComponent,
+    OlvidarFraseComponent,
+
   ],
 
   imports: [

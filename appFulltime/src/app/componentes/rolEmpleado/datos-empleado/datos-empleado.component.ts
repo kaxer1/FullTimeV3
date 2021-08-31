@@ -32,13 +32,17 @@ import { RegistroEmpleadoPermisoComponent } from 'src/app/componentes/empleadoPe
 import { CambiarContrasenaComponent } from 'src/app/componentes/rolEmpleado/cambiar-contrasena/cambiar-contrasena.component';
 // import { NavbarComponent } from '../../../share/main-nav/navbar/navbar.component';
 import { environment } from 'src/environments/environment';
+import { VacunacionService } from 'src/app/servicios/empleado/empleadoVacunas/vacunacion.service';
+import { MetodosComponent } from '../../metodoEliminar/metodos.component';
 
 @Component({
   selector: 'app-datos-empleado',
   templateUrl: './datos-empleado.component.html',
   styleUrls: ['./datos-empleado.component.css']
 })
+
 export class DatosEmpleadoComponent implements OnInit {
+
 
   iniciales: string;
   urlImagen: any;
@@ -74,6 +78,8 @@ export class DatosEmpleadoComponent implements OnInit {
   numero_pagina: number = 1;
   pageSizeOptions = [5, 10, 20, 50];
 
+  hipervinculo: string = environment.url; // VARIABLE DE MANEJO DE RUTAS CON URL
+
   constructor(
     public restTitulo: TituloService,
     public restEmpleado: EmpleadoService,
@@ -92,6 +98,7 @@ export class DatosEmpleadoComponent implements OnInit {
     public restEmpre: EmpresaService,
     private toastr: ToastrService,
     private scriptService: ScriptService,
+    public restVacuna: VacunacionService,
     // public Main: NavbarComponent,
   ) {
     this.idEmpleado = localStorage.getItem('empleado');
@@ -109,8 +116,8 @@ export class DatosEmpleadoComponent implements OnInit {
     this.ObtenerHorariosEmpleado(parseInt(this.idEmpleado));
     this.obtenerCargoEmpleado(parseInt(this.idEmpleado));
     this.obtenerEmpleadoProcesos(parseInt(this.idEmpleado));
-    this.obtenerPeriodoVacaciones(parseInt(this.idEmpleado));
     this.obtenerVacaciones(parseInt(this.idEmpleado));
+    this.ObtenerDatosVacunas();
     this.ObtenerLogo();
     this.ObtenerColores();
   }
@@ -325,35 +332,7 @@ export class DatosEmpleadoComponent implements OnInit {
     });
   }
 
-  /* Método para imprimir datos del periodo de vacaciones */
-  buscarPeriodosVacaciones: any;
-  peridoVacaciones: any;
-  obtenerPeriodoVacaciones(id_empleado: number) {
-    this.buscarPeriodosVacaciones = [];
-    this.peridoVacaciones = [];
-    this.restEmpleado.BuscarIDContrato(id_empleado).subscribe(datos => {
-      this.idContrato = datos;
-      console.log("idContrato ", this.idContrato[0].id);
-      for (let i = 0; i <= this.idContrato.length - 1; i++) {
-        this.restPerV.getInfoPeriodoVacacionesPorIdContrato(this.idContrato[i]['id']).subscribe(datos => {
-          this.buscarPeriodosVacaciones = datos;
-          if (this.buscarPeriodosVacaciones.length === 0) {
-            console.log("No se encuentran registros")
-          }
-          else {
-            if (this.cont === 0) {
-              this.peridoVacaciones = datos
-              this.cont++;
-            }
-            else {
-              this.peridoVacaciones = this.peridoVacaciones.concat(datos);
-              console.log("Datos Periodo Vacaciones" + i + '', this.peridoVacaciones)
-            }
-          }
-        })
-      }
-    });
-  }
+
 
   /* Método para mostrar datos de autoridad departamentos */
   autorizacionEmpleado: any;
@@ -511,7 +490,7 @@ export class DatosEmpleadoComponent implements OnInit {
 
       // Pie de página
       footer: function (currentPage: any, pageCount: any, fecha: any, hora: any) {
-   var f = moment();
+        var f = moment();
         fecha = f.format('YYYY-MM-DD');
         hora = f.format('HH:mm:ss');
         return {
@@ -748,6 +727,76 @@ export class DatosEmpleadoComponent implements OnInit {
       this.urlxml = `${environment.url}/empleado/download/` + this.data.name;
       window.open(this.urlxml, "_blank");
     });
+  }
+
+
+  /* ************************************************************************************************** *
+ *                               REGISTRO DE VACUNACIÓN                                               *
+ * ************************************************************************************************** */
+  // MÉTODO PARA CONSULTAR DATOS DE REGISTRO DE VACUNACIÓN
+  mostrarVacuna = true;
+  btnHabilitadoVacuna = true;
+  datosVacuna: any = [];
+  ObtenerDatosVacunas() {
+    this.datosVacuna = [];
+    this.restVacuna.ObtenerVacunaEmpleado(parseInt(this.idEmpleado)).subscribe(data => {
+      this.datosVacuna = data;
+      this.HabilitarBotonesVacuna();
+    });
+  }
+
+  btnVacuna = 'Añadir';
+  mostrarVacunaEditar: boolean = true;
+  HabilitarBotonesVacuna() {
+    if (this.datosVacuna.length == 0) {
+      this.btnVacuna = 'Añadir';
+    } else {
+      this.btnVacuna = 'Editar';
+    }
+  }
+
+  // LÓGICA DE BOTÓN PARA MOSTRAR COMPONENTE DEL REGISTRO DE VACUNACION 
+  MostrarVentanaVacuna() {
+    if (this.btnVacuna != 'Editar' && this.btnVacuna != 'Cancelar') {
+      if (this.mostrarVacuna == true) {
+        this.mostrarVacuna = false;
+        this.btnVacuna = 'No Añadir';
+      } else {
+        this.mostrarVacuna = true;
+        this.btnVacuna = 'Añadir';
+      }
+    } else {
+      if (this.mostrarVacunaEditar == false) {
+        this.mostrarVacunaEditar = true;
+        this.btnVacuna = 'Editar';
+      } else {
+        this.mostrarVacunaEditar = false;
+        this.btnVacuna = 'Cancelar';
+      }
+    }
+  }
+
+  // ELIMINAR REGISTRO DE VACUNA
+  EliminarVacuna(id: number) {
+    this.restVacuna.EliminarRegistroVacuna(id).subscribe(res => {
+      this.ObtenerDatosVacunas();
+      this.btnVacuna = 'Añadir';
+      this.toastr.error('Registro eliminado', '', {
+        timeOut: 6000,
+      });
+    });
+  }
+
+  // FUNCIÓN PARA CONFIRMAR SI SE ELIMINA O NO UN REGISTRO 
+  ConfirmarEliminarVacuna(id: number) {
+    this.vistaRegistrarDatos.open(MetodosComponent, { width: '450px' }).afterClosed()
+      .subscribe((confirmado: Boolean) => {
+        if (confirmado) {
+          this.EliminarVacuna(id);
+        } else {
+          // this.router.navigate(['/verEmpleado/', this.idEmpleado]);
+        }
+      });
   }
 
 }

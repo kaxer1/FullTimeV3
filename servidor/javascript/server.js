@@ -71,6 +71,7 @@ const accionPersonalRutas_1 = __importDefault(require("./rutas/accionPersonal/ac
 const reportesNotificacionRutas_1 = __importDefault(require("./rutas/reportes/reportesNotificacionRutas"));
 const licencias_1 = __importDefault(require("./utils/licencias"));
 const reloj_virtual_1 = __importDefault(require("./utils/reloj_virtual"));
+const vacunasRutas_1 = __importDefault(require("./rutas/empleado/empleadoVacuna/vacunasRutas"));
 const http_1 = require("http");
 const socketIo = require('socket.io');
 class Servidor {
@@ -178,6 +179,8 @@ class Servidor {
         this.app.use('/reloj-virtual', reloj_virtual_1.default);
         // NOTIFICACIONES
         this.app.use('/notificacionSistema', reportesNotificacionRutas_1.default);
+        // VACUNACIÓN
+        this.app.use('/vacunas', vacunasRutas_1.default);
     }
     start() {
         this.server.listen(this.app.get('puerto'), () => {
@@ -223,5 +226,3 @@ ContarHoras_1.RegistrarAsistenciaByTimbres();
 NotiTimbres_1.NotificacionTimbreAutomatica();
 SinTimbres_1.NotificacionSinTimbres();
 DesactivarEmpleado_1.DesactivarFinContratoEmpleado();
-//generarTimbres(1);
-//ModificarTimbresEntrada();

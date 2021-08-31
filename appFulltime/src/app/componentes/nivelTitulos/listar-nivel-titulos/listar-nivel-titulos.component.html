@@ -1,32 +1,18 @@
 <br>
 <div class="container" style="margin-bottom: 25px; padding-bottom: 10px;">
     <div class="row">
-        <div class="col-md" style="margin-bottom: 25px; padding-bottom: 10px;">
+        <div class="col-md">
             <div class="nivelTituloL">
                 <span>NIVELES DE TÍTULOS PROFESIONALES</span>
             </div>
             <mat-card class="example-card mat-elevation-z9">
-                <h5 style="text-align: center">Críterios de Búsqueda</h5>
-                <form [formGroup]="BuscarNivelTitulosForm">
-                    <div class="d-flex flex-wrap justify-content-center">
-                        <mat-form-field>
-                            <mat-label>Búsqueda por nombre</mat-label>
-                            <input matInput placeholder="Nombre Título" name="filtradoNombre" [formControl]="nombreF"
-                                [(ngModel)]="filtradoNombre" (keypress)="IngresarSoloLetras($event)">
-                            <mat-icon id="itituloL" matSuffix matTooltipClass="tituloL-tooltip"
-                                matTooltipPosition="right"
-                                matTooltip="Búsqueda de un nivel de título profesional por su nombre">
-                                help_outline</mat-icon>
-                            <mat-error *ngIf="nombreF.invalid">{{ObtenerMensajeErrorNombre()}}
-                            </mat-error>
-                        </mat-form-field>
-                    </div>
-                </form>
                 <div class="d-flex flex-wrap justify-content-center">
                     <button mat-button type="submit" class="btn btn-sm" (click)="AbrirVentanaNivelTitulo()">Crear Nivel
                         de Título Profesional
                     </button>
-                    <button mat-button type="submit" class="btn btn-sm" (click)="LimpiarCampos()">Cancelar
+                    <button mat-button type="submit" class="btn btn-sm" (click)="LimpiarCampos()" matSuffix
+                        matTooltipPosition="right"
+                        matTooltip="Limpiar campos de búsqueda de la tabla y mostrar todos los datos.">Cancelar
                     </button>
                 </div>
             </mat-card>
@@ -45,18 +31,29 @@
                     </tr>
                 </thead>
                 <tbody>
+                    <tr>
+                        <td>
+                            <mat-form-field id="t-inputs">
+                                <input matInput placeholder="Buscar" [formControl]="nombreF"
+                                    [(ngModel)]="filtradoNombre" (keypress)="IngresarSoloLetras($event)">
+                            </mat-form-field>
+                        </td>
+                        <td>
+                            <mat-icon id="i-ayuda" matSuffix matTooltipPosition="right"
+                                matTooltip="Búsqueda de un nivel de título profesional por su nombre.">
+                                help_outline</mat-icon>
+                        </td>
+                    </tr>
                     <tr
                         *ngFor="let t of nivelTitulos | filtrosNombres: filtradoNombre |  paginate:tamanio_pagina:numero_pagina">
                         <td>{{t.nombre}}</td>
                         <td class="d-flex justify-content-center">
                             <i class="fas fa-edit" (click)=AbrirVentanaEditarTitulo(t) matSuffix
-                                matTooltipClass="tituloL-tooltip" matTooltipPosition="right"
-                                matTooltip="Editar los datos generales de este registro">
+                                matTooltipPosition="right" matTooltip="Editar los datos generales de este registro.">
                                 <p>Editar</p>
                             </i>
                             <i class="far fa-trash-alt" (click)="ConfirmarDelete(t)" matSuffix
-                                matTooltipClass="tituloL-tooltip" matTooltipPosition="right"
-                                matTooltip="Eliminar este registro">
+                                matTooltipPosition="right" matTooltip="Eliminar este registro.">
                                 <p>Eliminar</p>
                             </i>
                         </td>
@@ -65,23 +62,23 @@
             </table>
         </div>
         <mat-paginator [length]="nivelTitulos.length" [pageSize]="tamanio_pagina" [pageSizeOptions]="pageSizeOptions"
-            id="estilo" (page)="ManejarPagina($event)" showFirstLastButtons>
+            id="pagina" (page)="ManejarPagina($event)" showFirstLastButtons>
         </mat-paginator>
         <div class="d-flex justify-content-end" style="margin-right: 5%;">
             <i (click)="GenerarPdf('download')" id="pdf" class="fas fa-file-pdf" matSuffix matTooltipPosition="right"
-                matTooltipClass="departamento-tooltip" matTooltip="Descargar Lista de Niveles de Títulos en formato PDF">
+                matTooltip="Descargar Lista de Niveles de Títulos en formato PDF.">
                 <p>PDF</p>
             </i>
             <i (click)="ExportToExcel()" id="excel" class="fas fa-file-excel" matSuffix matTooltipPosition="right"
-                matTooltipClass="departamento-tooltip" matTooltip="Descargar Lista de Niveles de Títulos en formato EXCEL">
+                matTooltip="Descargar Lista de Niveles de Títulos en formato EXCEL.">
                 <p>XLSL</p>
             </i>
             <i (click)="ExportToCVS()" id="csv" class="fas fa-file-csv" matSuffix matTooltipPosition="right"
-                matTooltipClass="departamento-tooltip" matTooltip="Descargar Lista de Niveles de Títulos en formato CSV">
+                matTooltip="Descargar Lista de Niveles de Títulos en formato CSV.">
                 <p>CSV</p>
             </i>
             <i (click)="ExportToXML()" id="xml" class="fas fa-file-code" matSuffix matTooltipPosition="right"
-                matTooltipClass="departamento-tooltip" matTooltip="Descargar Lista de Niveles de Títulos en formato XML">
+                matTooltip="Descargar Lista de Niveles de Títulos en formato XML.">
                 <p>XML</p>
             </i>
         </div>

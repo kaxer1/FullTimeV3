@@ -18,6 +18,14 @@ export class UsuarioService {
     return this.http.get(`${environment.url}/usuarios`);
   }
 
+  getUsersAppMovil() {
+    return this.http.get<any>(`${environment.url}/usuarios/lista-app-movil/`);
+  }
+
+  updateUsersAppMovil(data: any) {
+    return this.http.put<any>(`${environment.url}/usuarios/lista-app-movil/`, data);
+  }
+
   BuscarUsersNoEnrolados() {
     return this.http.get(`${environment.url}/usuarios/noEnrolados`);
   }
@@ -57,6 +65,14 @@ export class UsuarioService {
   /** ADMINISTRACIÓN MÓDULO DE ALIMENTACIÓN */
   RegistrarAdminComida(data: any) {
     return this.http.put(`${environment.url}/usuarios/admin/comida`, data);
+  }
+
+  RecuperarFraseSeguridad(data: any) {
+    return this.http.post(`${environment.url}/usuarios/frase/olvido-frase`, data)
+  }
+
+  CambiarFrase(data: any) {
+    return this.http.post(`${environment.url}/usuarios/frase/restaurar-frase/nueva`, data)
   }
 
 }

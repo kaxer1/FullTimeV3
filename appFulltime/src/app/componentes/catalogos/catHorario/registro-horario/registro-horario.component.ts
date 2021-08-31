@@ -6,6 +6,7 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { HorarioService } from 'src/app/servicios/catalogos/catHorarios/horario.service';
 import { ThemePalette } from '@angular/material/core';
 import { ProgressSpinnerMode } from '@angular/material/progress-spinner';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-registro-horario',
@@ -16,6 +17,7 @@ import { ProgressSpinnerMode } from '@angular/material/progress-spinner';
 export class RegistroHorarioComponent implements OnInit {
 
   nocturno = false;
+  detalle = false;
   isChecked: boolean = false;
 
   // Validaciones para el formulario
@@ -23,6 +25,7 @@ export class RegistroHorarioComponent implements OnInit {
   minAlmuerzo = new FormControl('', [Validators.pattern('[0-9]*')]);
   horaTrabajo = new FormControl('', [Validators.required, Validators.pattern("^[0-9]*(:[0-9][0-9])?$")]);
   tipoF = new FormControl('');
+  detalleF = new FormControl('');
   nombreCertificadoF = new FormControl('');
   archivoForm = new FormControl('');
 
@@ -32,7 +35,8 @@ export class RegistroHorarioComponent implements OnInit {
     horarioMinAlmuerzoForm: this.minAlmuerzo,
     horarioHoraTrabajoForm: this.horaTrabajo,
     nombreCertificadoForm: this.nombreCertificadoF,
-    tipoForm: this.tipoF
+    tipoForm: this.tipoF,
+    detalleForm: this.detalleF,
   });
 
   /**
@@ -42,10 +46,11 @@ export class RegistroHorarioComponent implements OnInit {
   mode: ProgressSpinnerMode = 'indeterminate';
   value = 10;
   habilitarprogress: boolean = false;
-  
+
   constructor(
     private rest: HorarioService,
     private toastr: ToastrService,
+    public router: Router,
     public dialogRef: MatDialogRef<RegistroHorarioComponent>
   ) { }
 
@@ -60,9 +65,16 @@ export class RegistroHorarioComponent implements OnInit {
       min_almuerzo: form.horarioMinAlmuerzoForm,
       hora_trabajo: form.horarioHoraTrabajoForm,
       doc_nombre: form.nombreCertificadoForm,
-      nocturno: form.tipoForm
+      nocturno: form.tipoForm,
+      detalle: form.detalleForm,
     };
-    if (dataHorario.min_almuerzo === '') {
+    if (dataHorario.detalle === false) {
+      dataHorario.hora_trabajo = this.StringTimeToSegundosTime(form.horarioHoraTrabajoForm)
+    }
+    else {
+      dataHorario.hora_trabajo = this.CambiarFormato(form.horarioHoraTrabajoForm)
+    }
+    if (dataHorario.min_almuerzo === '' || dataHorario.min_almuerzo === null || dataHorario.min_almuerzo === undefined) {
       dataHorario.min_almuerzo = 0;
     }
     if (form.nombreCertificadoForm === '') {
@@ -72,12 +84,18 @@ export class RegistroHorarioComponent implements OnInit {
         });
         this.habilitarprogress = false;
       }, error => {
-        this.rest.postHorarioRest(dataHorario).subscribe(response => {
+        this.rest.postHorarioRest(dataHorario).subscribe(hora => {
           this.toastr.success('Operación Exitosa', 'Horario registrado', {
             timeOut: 6000,
           });
           this.habilitarprogress = false;
-          this.LimpiarCampos();
+          if (dataHorario.detalle === true) {
+            this.router.navigate(['/verHorario', hora.id]);
+            this.dialogRef.close();
+          }
+          else {
+            this.dialogRef.close();
+          }
         }, error => {
           this.toastr.error('Operación Fallida', 'Horario no pudo ser registrado', {
             timeOut: 6000,
@@ -96,7 +114,54 @@ export class RegistroHorarioComponent implements OnInit {
       });
 
     }
+  }
 
+  StringTimeToSegundosTime(stringTime: string) {
+    let hora = '';
+    if (stringTime.split(':').length === 1) {
+      if (parseInt(stringTime) < 10) {
+        hora = '0' + parseInt(stringTime) + ':00:00';
+        return hora;
+      }
+      else {
+        hora = stringTime + ':00:00';
+        return hora;
+      }
+    }
+    else if (stringTime.split(':').length === 2) {
+      if (parseInt(stringTime.split(':')[0]) < 10) {
+        hora = '0' + String(parseInt(stringTime)).split(':')[0] + ':' + stringTime.split(':')[1] + ':00';
+        return hora;
+      }
+      else {
+        hora = stringTime.split(':')[0] + ':' + stringTime.split(':')[1] + ':00';
+        return hora;
+      }
+    }
+  }
+
+  CambiarFormato(stringTime: string) {
+    let horaT = '';
+    if (stringTime.split(':').length === 1) {
+      if (parseInt(stringTime) < 10) {
+        horaT = '0' + parseInt(stringTime) + ':00';
+        return horaT;
+      }
+      else {
+        horaT = stringTime + ':00';
+        return horaT;
+      }
+    }
+    else if (stringTime.split(':').length === 2) {
+      if (parseInt(stringTime.split(':')[0]) < 10) {
+        horaT = '0' + String(parseInt(stringTime)).split(':')[0] + ':' + stringTime.split(':')[1];
+        return horaT;
+      }
+      else {
+        horaT = stringTime.split(':')[0] + ':' + stringTime.split(':')[1];
+        return horaT;
+      }
+    }
   }
 
   GuardarDatos(datos) {
@@ -110,6 +175,13 @@ export class RegistroHorarioComponent implements OnInit {
         this.LimpiarCampos();
         this.idHorario = response;
         this.SubirRespaldo(this.idHorario.id);
+        if (datos.detalle === true) {
+          this.router.navigate(['/verHorario', this.idHorario.id]);
+          this.dialogRef.close();
+        }
+        else {
+          this.dialogRef.close();
+        }
       }, error => {
         this.habilitarprogress = false;
         this.toastr.error('Operación Fallida', 'Horario no pudo ser registrado', {

@@ -2,7 +2,7 @@
 <br>
 <div class="container" style="padding-bottom: 50px; text-align: center;" *ngIf="lista_solicitados">
     <div class="mat-elevation-z8" style="background: white;">
-        <div class="d-flex bd-highlight" id="resultadosEmpre">
+        <div class="d-flex bd-highlight" id="titulo">
             <mat-icon class="flex-shrink-1 bd-highlight" (click)="HabilitarSeleccion()" matSuffix
                 matTooltipPosition="right"
                 matTooltip="Autorizar a todos los empleados su solicitud de servicio de alimentación." id="SelectCheck">
@@ -46,7 +46,7 @@
                         <td>{{e.hora_fin}}</td>
                         <td class="d-flex justify-content-center">
                             <i *ngIf="auto_individual" class="fas fa-edit" (click)="VentanaEditarPlanComida(e)"
-                                matSuffix matTooltipPosition="right" matTooltipClass="departamento-tooltip"
+                                matSuffix matTooltipPosition="right" 
                                 matTooltip="Modificar los datos generales de este registro">
                                 <p>Editar</p>
                             </i>
@@ -62,14 +62,14 @@
             </table>
         </div>
         <mat-paginator [length]="solicitudes.length" [pageSize]="tamanio_pagina" [pageSizeOptions]="pageSizeOptions"
-            id="estilo" (page)="ManejarPagina($event)" showFirstLastButtons>
+            id="pagina" (page)="ManejarPagina($event)" showFirstLastButtons>
         </mat-paginator>
     </div>
 </div>
 <!-- TABLA CON LISTA DE SOLICITUDES DE SERVICIO DE ALIMENTACIÓN AUTORIZADAS O NEGADAS -->
 <div class="container" style="padding-bottom: 50px; text-align: center;" *ngIf="lista_autorizados">
     <div class="mat-elevation-z8" style="background: white;">
-        <div class="d-flex bd-highlight" id="resultadosEmpre">
+        <div class="d-flex bd-highlight" id="titulo">
             <mat-icon class="flex-shrink-1 bd-highlight" (click)="HabilitarSeleccionEstado()" matSuffix
                 matTooltipPosition="right"
                 matTooltip="Autorizar a todos los empleados su solicitud de servicio de alimentación." id="SelectCheck">
@@ -115,7 +115,7 @@
                         <td>{{e.hora_fin}}</td>
                         <td class="d-flex justify-content-center">
                             <i *ngIf="auto_individual_estado && e.aprobada === 'NEGADO'" class="fas fa-edit" (click)="VentanaEditarPlanComida(e)"
-                            matSuffix matTooltipPosition="right" matTooltipClass="departamento-tooltip"
+                            matSuffix matTooltipPosition="right" 
                             matTooltip="Modificar los datos generales de este registro">
                             <p>Editar</p>
                         </i>
@@ -131,7 +131,7 @@
             </table>
         </div>
         <mat-paginator [length]="solicitudesAutorizados.length" [pageSize]="tamanio_pagina_autorizado"
-            [pageSizeOptions]="pageSizeOptions_autorizado" id="estilo" (page)="ManejarPaginaAutorizados($event)"
+            [pageSizeOptions]="pageSizeOptions_autorizado" id="pagina" (page)="ManejarPaginaAutorizados($event)"
             showFirstLastButtons>
         </mat-paginator>
     </div>
@@ -139,7 +139,7 @@
 <!-- TABLA CON LISTA DE SOLICITUDES DE SERVICIO DE ALIMENTACIÓN EXPIRADAS -->
 <div class="container" style="padding-bottom: 50px; text-align: center;" *ngIf="lista_expirados">
     <div class="mat-elevation-z8" style="background: white;">
-        <div class="d-flex bd-highlight" id="resultadosEmpre">
+        <div class="d-flex bd-highlight" id="titulo">
             <span class="w-100 bd-highlight">
                 Lista de Servicios de Alimentación</span>
         </div>
@@ -167,7 +167,7 @@
             </table>
         </div>
         <mat-paginator [length]="solicitudesExpiradas.length" [pageSize]="tamanio_pagina_expirada"
-            [pageSizeOptions]="pageSizeOptions_expirada" id="estilo" (page)="ManejarPaginaExpiradas($event)"
+            [pageSizeOptions]="pageSizeOptions_expirada" id="pagina" (page)="ManejarPaginaExpiradas($event)"
             showFirstLastButtons>
         </mat-paginator>
     </div>

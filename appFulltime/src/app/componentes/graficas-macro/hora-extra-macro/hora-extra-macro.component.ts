@@ -49,7 +49,7 @@ export class HoraExtraMacroComponent implements OnInit {
   ) {
     this.ObtenerLogo();
     this.ObtenerColores();
-   }
+  }
 
   ngOnInit(): void {
     echarts.use(
@@ -64,7 +64,7 @@ export class HoraExtraMacroComponent implements OnInit {
     let local = sessionStorage.getItem('HoraExtra');
     // console.log('LOCAL HORA EXTRA: ',local);
     this.chartDom = document.getElementById('charts_Hora_Extra_macro') as HTMLCanvasElement;
-    this.thisChart = echarts.init(this.chartDom, 'light', {width: 1050, renderer: 'svg',devicePixelRatio: 5 });
+    this.thisChart = echarts.init(this.chartDom, 'light', { width: 1050, renderer: 'svg', devicePixelRatio: 5 });
 
     if (local === null) {
       this.restGraficas.MetricaHoraExtraMicro().subscribe(res => {
@@ -100,7 +100,7 @@ export class HoraExtraMacroComponent implements OnInit {
     if (f_i < f_f) {
 
       if (f_i.getFullYear() === f_f.getFullYear()) {
-        this.toastr.success('Fechas validas','', {
+        this.toastr.success('Fechas validas', '', {
           timeOut: 6000,
         });
 
@@ -116,18 +116,18 @@ export class HoraExtraMacroComponent implements OnInit {
           this.thisChart.setOption(res.datos_grafica);
         });
       } else {
-        this.toastr.error('Años de consulta diferente','Solo puede consultar datos de un año en concreto', {
+        this.toastr.error('Años de consulta diferente', 'Solo puede consultar datos de un año en concreto', {
           timeOut: 6000,
         });
       }
 
     } else if (f_i > f_f) {
-      this.toastr.info('Fecha final es menor a la fecha inicial','', {
+      this.toastr.info('Fecha final es menor a la fecha inicial', '', {
         timeOut: 6000,
       });
       this.fechasConsultaForm.reset();
     } else if (f_i.toLocaleDateString() === f_f.toLocaleDateString()) {
-      this.toastr.info('Fecha inicial es igual a la fecha final','', {
+      this.toastr.info('Fecha inicial es igual a la fecha final', '', {
         timeOut: 6000,
       });
       this.fechasConsultaForm.reset();
@@ -156,9 +156,9 @@ export class HoraExtraMacroComponent implements OnInit {
   }
 
   graficaBase64: any;
-  metodosPDF(accion){
-    this.graficaBase64 = this.thisChart.getDataURL({type: 'jpg' , pixelRatio: 5 });
-    this.generarPdf(accion) 
+  metodosPDF(accion) {
+    this.graficaBase64 = this.thisChart.getDataURL({ type: 'jpg', pixelRatio: 5 });
+    this.generarPdf(accion)
   }
 
   generarPdf(action) {
@@ -178,7 +178,7 @@ export class HoraExtraMacroComponent implements OnInit {
     return {
       pageSize: 'A4',
       pageOrientation: 'portrait',
-      pageMargins: [ 30, 60, 30, 40 ],
+      pageMargins: [30, 60, 30, 40],
       watermark: { text: this.frase, color: 'blue', opacity: 0.1, bold: true, italics: false },
       header: { text: 'Impreso por:  ' + localStorage.getItem('fullname_print'), margin: 10, fontSize: 9, opacity: 0.3, alignment: 'right' },
 
@@ -188,12 +188,13 @@ export class HoraExtraMacroComponent implements OnInit {
         fecha = f.format('YYYY-MM-DD');
         h.setUTCHours(h.getHours());
         var time = h.toJSON().split("T")[1].split(".")[0];
-        
+
         return {
           margin: 10,
           columns: [
             { text: 'Fecha: ' + fecha + ' Hora: ' + time, opacity: 0.3 },
-            { text: [
+            {
+              text: [
                 {
                   text: '© Pag ' + currentPage.toString() + ' of ' + pageCount,
                   alignment: 'right', opacity: 0.3
@@ -224,48 +225,48 @@ export class HoraExtraMacroComponent implements OnInit {
     let datos = this.datos_horas_extra.filter(obj => {
       return this.hora_extra.xAxis.data.includes(obj.mes)
     })
-    
+
     let tabla = {
-			table: {
+      table: {
         // widths: ['auto',70,'auto',70,'auto',70],
-				body: []
-			}
-		}
+        body: []
+      }
+    }
     let colums = [], colums1 = [], colums2 = [], colums3 = [];
 
     for (let i = 0; i < datos.length; i++) {
 
       if (i >= 0 && i <= 2) {
-        colums.push({ text: datos[i].mes, margin: [0,3,0,3], fillColor: this.p_color });
-        colums.push({ text: datos[i].valor, margin: [0,3,0,3], alignment: 'center' });
+        colums.push({ text: datos[i].mes, margin: [0, 3, 0, 3], fillColor: this.p_color });
+        colums.push({ text: datos[i].valor, margin: [0, 3, 0, 3], alignment: 'center' });
       };
       if (i >= 3 && i <= 5) {
-        colums1.push({ text: datos[i].mes, margin: [0,3,0,3], fillColor: this.p_color });
-        colums1.push({ text: datos[i].valor, margin: [0,3,0,3], alignment: 'center' });
+        colums1.push({ text: datos[i].mes, margin: [0, 3, 0, 3], fillColor: this.p_color });
+        colums1.push({ text: datos[i].valor, margin: [0, 3, 0, 3], alignment: 'center' });
       };
       if (i >= 6 && i <= 8) {
-        colums2.push({ text: datos[i].mes, margin: [0,3,0,3], fillColor: this.p_color });
-        colums2.push({ text: datos[i].valor, margin: [0,3,0,3], alignment: 'center' });
-      }; 
+        colums2.push({ text: datos[i].mes, margin: [0, 3, 0, 3], fillColor: this.p_color });
+        colums2.push({ text: datos[i].valor, margin: [0, 3, 0, 3], alignment: 'center' });
+      };
       if (i >= 9 && i <= 11) {
-        colums3.push({ text: datos[i].mes, margin: [0,3,0,3], fillColor: this.p_color });
-        colums3.push({ text: datos[i].valor, margin: [0,3,0,3], alignment: 'center' });
+        colums3.push({ text: datos[i].mes, margin: [0, 3, 0, 3], fillColor: this.p_color });
+        colums3.push({ text: datos[i].valor, margin: [0, 3, 0, 3], alignment: 'center' });
       }
     }
-    
+
     if (colums.length > 0) { tabla.table.body.push(colums); }
     if (colums1.length > 0) { tabla.table.body.push(colums1); }
     if (colums2.length > 0) { tabla.table.body.push(colums2); }
-    if (colums3.length > 0) { tabla.table.body.push(colums3); } 
-    
+    if (colums3.length > 0) { tabla.table.body.push(colums3); }
+
     let columnas = {
       alignment: 'justify',
-			columns: [
-				{ width: 50, text: '' },
-				tabla,
-				{ width: 50, text: '' }
-			]
-		}
+      columns: [
+        { width: 50, text: '' },
+        tabla,
+        { width: 50, text: '' }
+      ]
+    }
 
     return columnas
   }
@@ -276,11 +277,11 @@ export class HoraExtraMacroComponent implements OnInit {
     this.llamarGraficaOriginal();
   }
 
-  texto_grafica: string = 
-  "Esta relacionado con las horas extraordinarias que desarrollan nuestros trabajadores. La medición de " + 
-  "este factor permite determinar cuán eficientemente se está empleando el tiempo en la jornada de trabajo, " + 
-  "además de ientificar quiénes son los trabajadores que realizan horas extras con más frecuencia. \n" +
-  "Este indicador es de especial ayuda para evaluar cada caso, y determinar el uso que se le está otorgando " +
-  "a las horas extraordinarias por sucursal, departamento, y de manera individual."
+  texto_grafica: string =
+    "Esta relacionado con las horas extraordinarias que desarrollan los trabajadores. La medición de " +
+    "este factor permite determinar cuán eficientemente se está empleando el tiempo en la jornada de trabajo, " +
+    "además de ientificar quiénes son los trabajadores que realizan horas extras con más frecuencia. \n" +
+    "Este indicador es de especial ayuda para evaluar cada caso, y determinar el uso que se le está otorgando " +
+    "a las horas extraordinarias por sucursal, departamento, y de manera individual."
 }
 

@@ -1,38 +1,33 @@
-
-<mat-accordion>
-    <mat-expansion-panel>
-        <mat-expansion-panel-header class="d-flex bd-highlight">
-            <mat-panel-title class="w-100 bd-highlight">
-            Rango Fechas Consulta
-            </mat-panel-title>
-            <mat-icon class="flex-shrink-1 bd-highlight i-barra" matTooltipPosition="right"
-            matTooltip="Ingresa el rango de fechas para la consulta. 
-                Se recomienda la fecha de inicio y final de mes">date_range</mat-icon>
-        </mat-expansion-panel-header>
-
-        <div class="d-flex flex-wrap justify-content-center">
-            <form [formGroup]="fechasForm" class="d-flex flex-wrap justify-content-center">
-                <mat-form-field>
-                    <mat-label>Desde</mat-label>
-                    <input matInput [matDatepicker]="pickerInicial" placeholder="dd/mm/aaaa" [disabled]="habilitar"
-                        [formControl]="fec_inicio_mes" required>
-                    <mat-datepicker-toggle matSuffix [for]="pickerInicial" matTooltipPosition="right" id="ayuda_fec"
-                        matTooltip="Ingresa la fecha inicial del mes que deseas consultar el reporte. Ejm: 01/08/2020"></mat-datepicker-toggle>
-                    <mat-datepicker touchUi #pickerInicial></mat-datepicker>
-                </mat-form-field>
-                <mat-form-field>
-                    <mat-label>Hasta</mat-label>
-                    <input matInput [matDatepicker]="pickerFinal" placeholder="dd/mm/aaaa" [disabled]="habilitar" 
-                        [formControl]="fec_final_mes" required>
-                    <mat-datepicker-toggle matSuffix [for]="pickerFinal" matTooltipPosition="right" id="ayuda_fec"
-                        matTooltip="Ingresa la fecha final del mes que deseas consultar el reporte. Ejm: 31/08/2020"></mat-datepicker-toggle>
-                    <mat-datepicker touchUi #pickerFinal></mat-datepicker>
-                </mat-form-field>
-            </form>
-            <div class="d-flex flex-wrap justify-content-around" style="margin: 0px 10px 0px 10px;">
-                <button mat-button type="submit" class="btn btn-sm" id="botones" [disabled]="fechasForm.invalid" (click)="ValidarRangofechas(fechasForm.value)">Aceptar</button>
-                <button mat-button type="submit" class="btn btn-sm" id="botones" (click)="limpiarCamposRango()">Cancelar</button>
-            </div>
+<div id="titulo">
+    <span>Rango Fechas Consulta</span>
+</div>
+<mat-card class="example-card mat-elevation-z9">
+    <div class="d-flex flex-wrap justify-content-center">
+        <form [formGroup]="fechasForm" class="d-flex flex-wrap justify-content-center">
+            <mat-form-field>
+                <mat-label>Desde</mat-label>
+                <input matInput [matDatepicker]="pickerInicial" placeholder="dd/mm/aaaa" [disabled]="habilitar"
+                    [formControl]="fec_inicio_mes" required>
+                <mat-datepicker-toggle matSuffix [for]="pickerInicial" matTooltipPosition="right" id="ayuda_fec"
+                    matTooltip="Ingresa la fecha inicial del mes que deseas consultar el reporte. Ejm: 01/08/2020.">
+                </mat-datepicker-toggle>
+                <mat-datepicker touchUi #pickerInicial></mat-datepicker>
+            </mat-form-field>
+            <mat-form-field>
+                <mat-label>Hasta</mat-label>
+                <input matInput [matDatepicker]="pickerFinal" placeholder="dd/mm/aaaa" [disabled]="habilitar"
+                    [formControl]="fec_final_mes" required>
+                <mat-datepicker-toggle matSuffix [for]="pickerFinal" matTooltipPosition="right" id="ayuda_fec"
+                    matTooltip="Ingresa la fecha final del mes que deseas consultar el reporte. Ejm: 31/08/2020.">
+                </mat-datepicker-toggle>
+                <mat-datepicker touchUi #pickerFinal></mat-datepicker>
+            </mat-form-field>
+        </form>
+        <div class="d-flex flex-wrap justify-content-around" style="margin: 0px 10px 0px 10px;">
+            <button mat-button type="submit" class="btn btn-sm" id="botones" [disabled]="fechasForm.invalid"
+                (click)="ValidarRangofechas(fechasForm.value)">Aceptar</button>
+            <button mat-button type="submit" class="btn btn-sm" id="botones"
+                (click)="limpiarCamposRango()">Cancelar</button>
         </div>
-    </mat-expansion-panel>
-</mat-accordion>
+    </div>
+</mat-card>

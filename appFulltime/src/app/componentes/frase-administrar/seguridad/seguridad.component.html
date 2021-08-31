@@ -4,7 +4,7 @@
     <form [formGroup]="seguridadForm">
         <div class="nota">
             <span>NOTA: Por favor llenar los campos obligatorios (*) del formulario para activar el botón
-                Confirma Contraseña.</span>
+                Confirmar Contraseña.</span>
         </div>
         <mat-form-field>
             <mat-label>Contraseña Actual</mat-label>
@@ -13,19 +13,19 @@
                 formControlName="aPass" required>
             <button mat-icon-button matSuffix (click)="hide1 = !hide1" [attr.aria-label]="'Hide password'"
                 [attr.aria-pressed]="hide1">
-                <mat-icon id="iEnrol" matSuffix matTooltipClass="enrol-tooltip" matTooltipPosition="right"
-                    matTooltip="Ocultar o mostrar la contraseña ingresada">
+                <mat-icon id="i-cursor" matSuffix  matTooltipPosition="right"
+                    matTooltip="Ocultar o mostrar la contraseña ingresada.">
                     {{hide1 ? 'visibility_off' : 'visibility'}}</mat-icon>
             </button>
         </mat-form-field>
         <br>
         <div style="text-align: center;">
-            <button type="submit" class="btn" (click)="CompararContrasenia(seguridadForm.value)"
+            <button type="submit" class="btn btn_b" (click)="CompararContrasenia(seguridadForm.value)"
                 [disabled]="!seguridadForm.valid">Confirmar Contraseña</button>
         </div>
         <br>
         <div style="text-align: center;">
-            <button type="submit" class="btn" (click)="CerrarRegistro()">Salir</button>
+            <button type="submit" class="btn btn_b" (click)="CerrarRegistro()">Salir</button>
         </div>
     </form>
 </div>
@@ -41,20 +41,24 @@
             <mat-label>Ingresar Frase</mat-label>
             <textarea matInput #message maxlength="100" placeholder="Ingrese su frase de seguridad"
                 formControlName="aFrase" required></textarea>
-            <mat-icon id="birthday" matSuffix matTooltipClass="color-tooltip" matTooltipPosition="right"
-                matTooltip="Para asegurar que es usted dueño de esta cuenta ingrese su frase de seguridad">
+            <mat-icon id="i-cursor"  matSuffix matTooltipPosition="right"
+                matTooltip="Para asegurar que es usted dueño de esta cuenta ingrese su frase de seguridad.">
                 help_outline</mat-icon>
             <mat-hint align="start"><strong>Ingresar hasta 100 caracteres</strong></mat-hint>
             <mat-hint align="end">{{message.value.length}} / 100</mat-hint>
         </mat-form-field>
-        <br><br>
+        <br>
+        <div class="caja1">
+            <button type="button" class="btn btn-link verde" (click)="RecuperarFrase()">Olvido su frase de
+                seguridad?</button>
+        </div>
         <div style="text-align: center;">
-            <button type="submit" class="btn" (click)="CompararFrase(fraseForm.value)"
+            <button type="submit" class="btn btn_b" (click)="CompararFrase(fraseForm.value)"
                 [disabled]="!fraseForm.valid">Confirmar Frase</button>
         </div>
         <br>
         <div style="text-align: center;">
-            <button type="submit" class="btn" (click)="CerrarRegistro()">Salir</button>
+            <button type="submit" class="btn btn_b" (click)="CerrarRegistro()">Salir</button>
         </div>
     </form>
 </div>

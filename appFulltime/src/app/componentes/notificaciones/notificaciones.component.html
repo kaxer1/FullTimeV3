@@ -1,6 +1,6 @@
 <br>
 <div class="container" style="padding-bottom: 50px;">
-    <div id="resultadosEmpre">Lista de todas las notificaciones</div>
+    <div id="titulo">Lista de todas las notificaciones</div>
     <mat-card class="mat-elevation-z8 table-responsive">
         <table class="table table-hover table-sm">
             <thead class="thead-light">
@@ -31,7 +31,7 @@
                             (click)="CambiarVistaNotificacion(n.id)">
                             hora extra
                         </a>
-                        <!-- <i id="permisoSuc" class="far fa-trash-alt"  matTooltipClass="departamento-tooltip"
+                        <!-- <i id="permisoSuc" class="far fa-trash-alt"  
                             matTooltip="Eliminar este registro">
                             <p>Eliminar</p>
                         </i> -->
@@ -40,6 +40,6 @@
             </tbody>
         </table>
         <mat-paginator [length]="notificaciones.length" [pageSize]="tamanio_pagina" [pageSizeOptions]="pageSizeOptions"
-            id="estilo" (page)="ManejarPagina($event)" showFirstLastButtons></mat-paginator>
+            id="pagina" (page)="ManejarPagina($event)" showFirstLastButtons></mat-paginator>
     </mat-card>
 </div>

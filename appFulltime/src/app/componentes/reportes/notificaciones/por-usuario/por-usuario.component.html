@@ -2,9 +2,9 @@
 <br>
 <div class="container" style="padding-bottom: 30px; text-align: center;">
     <div class="mat-elevation-z8" style="background: white;">
-        <div class="d-flex bd-highlight" id="resultadosEmpre">
+        <div class="d-flex bd-highlight" id="titulo">
             <span class="w-100 bd-highlight">
-                Lista de Tipos de Notificaciones</span>
+                LISTA DE TIPOS DE NOTIFICACIONES</span>
         </div>
         <div class="table-responsive">
             <table class="table table-hover table-sm">
@@ -20,14 +20,14 @@
                         <td>{{t.id}}</td>
                         <td>{{t.nombre}}</td>
                         <td class="d-flex justify-content-center">
-                            <i matSuffix matTooltipClass="listaF-tooltip" matTooltipPosition="right"
-                                matTooltip="Ver datos generales de este feriado" class="fas fa-eye" id="enviar"
-                                (click)="MostrarTablas(t.id, 'E')">
+                            <i matSuffix  matTooltipPosition="right"
+                                matTooltip="Listar usuarios a quienes se ha enviado notificaciones." class="fas fa-eye"
+                                id="enviar" (click)="MostrarTablas(t.id, 'E')">
                                 <p>Enviados</p>
                             </i>
-                            <i matSuffix matTooltipClass="listaF-tooltip" matTooltipPosition="right"
-                                matTooltip="Ver datos generales de este feriado" class="fas fa-eye" id="recibir"
-                                (click)="MostrarTablas(t.id, 'R')">
+                            <i matSuffix  matTooltipPosition="right"
+                                matTooltip="Listar usuarios de los cuales se ha recibido notificaciones."
+                                class="fas fa-eye" id="recibir" (click)="MostrarTablas(t.id, 'R')">
                                 <p>Recibidos</p>
                             </i>
                         </td>
@@ -36,54 +36,47 @@
             </table>
         </div>
         <mat-paginator [length]="tipos.length" [pageSize]="tamanio_pagina" [pageSizeOptions]="pageSizeOptions"
-            id="estilo" (page)="ManejarPagina($event)" showFirstLastButtons>
+            id="pagina" (page)="ManejarPagina($event)" showFirstLastButtons>
         </mat-paginator>
     </div>
 </div>
-<div class="container" style="padding-bottom: 30px; text-align: center;" *ngIf='fechas'>
-    <mat-accordion>
-        <mat-expansion-panel hideToggle>
-            <mat-expansion-panel-header class="d-flex bd-highlight">
-                <mat-panel-title class="w-100 bd-highlight">
-                    Período de Búsqueda
-                </mat-panel-title>
-                <mat-icon id="icono" class="flex-shrink-1 bd-highlight" matTooltipPosition="right"
-                    matTooltip="Dar clic para desplegar y contraer los campos de búsqueda. La búsqueda por período de fecha.">
-                    search</mat-icon>
-            </mat-expansion-panel-header>
-            <form [formGroup]="fechasForm">
-                <div class="d-flex flex-wrap justify-content-center">
-                    <mat-form-field>
-                        <mat-label>Fecha Inicial</mat-label>
-                        <input matInput [matDatepicker]="picker1" [formControl]="fechaInicialF" required>
-                        <mat-datepicker-toggle matSuffix [for]="picker1" id="permiso" matTooltipClass="permiso-tooltip"
-                            matTooltipPosition="right" matTooltip="Fecha de inicio de periodo">
-                        </mat-datepicker-toggle>
-                        <mat-datepicker touchUi #picker1></mat-datepicker>
-                    </mat-form-field>
-                    <br>
-                    <mat-form-field>
-                        <mat-label>Fecha Final</mat-label>
-                        <input matInput [matDatepicker]="picker2" [formControl]="fechaFinalF" required>
-                        <mat-datepicker-toggle matSuffix [for]="picker2" id="permiso" matTooltipClass="permiso-tooltip"
-                            matTooltipPosition="right" matTooltip="Fecha de fin de periodo">
-                        </mat-datepicker-toggle>
-                        <mat-datepicker touchUi #picker2></mat-datepicker>
-                    </mat-form-field>
-                </div>
-            </form>
-            <div class="d-flex justify-content-around">
-                <button mat-button type="submit" class="btn btn-sm" (click)="LimpiarFechas()">Cancelar
-                </button>
+<div class="container" style="padding-bottom: 25px; text-align: center;" *ngIf='fechas'>
+    <div id="titulo">
+        <span>Búsqueda Rango Fechas</span>
+    </div>
+    <mat-card class="example-card mat-elevation-z9">
+        <form [formGroup]="fechasForm">
+            <div class="d-flex flex-wrap justify-content-center">
+                <mat-form-field>
+                    <mat-label>Fecha Inicial</mat-label>
+                    <input matInput [matDatepicker]="picker1" [formControl]="fechaInicialF" required>
+                    <mat-datepicker-toggle matSuffix [for]="picker1" id="permiso" matTooltipClass="permiso-tooltip"
+                        matTooltipPosition="right" matTooltip="Fecha de inicio de periodo">
+                    </mat-datepicker-toggle>
+                    <mat-datepicker touchUi #picker1></mat-datepicker>
+                </mat-form-field>
+                <br>
+                <mat-form-field>
+                    <mat-label>Fecha Final</mat-label>
+                    <input matInput [matDatepicker]="picker2" [formControl]="fechaFinalF" required>
+                    <mat-datepicker-toggle matSuffix [for]="picker2" id="permiso" matTooltipClass="permiso-tooltip"
+                        matTooltipPosition="right" matTooltip="Fecha de fin de periodo">
+                    </mat-datepicker-toggle>
+                    <mat-datepicker touchUi #picker2></mat-datepicker>
+                </mat-form-field>
             </div>
-        </mat-expansion-panel>
-    </mat-accordion>
+        </form>
+        <div class="d-flex justify-content-around">
+            <button mat-button type="submit" class="btn btn-sm" (click)="LimpiarFechas()">Cancelar
+            </button>
+        </div>
+    </mat-card>
 </div>
 
 <!-- TABLA CON LISTA DE USUARIO PERMISOS-->
 <div class="container" style="padding-bottom: 50px; text-align: center;" *ngIf='tabla_permisos'>
     <div class="mat-elevation-z8" style="background: white;">
-        <div class="d-flex bd-highlight" id="resultadosEmpre">
+        <div class="d-flex bd-highlight" id="titulo">
             <span class="w-100 bd-highlight">
                 Lista de Usuarios - Permisos</span>
             <mat-icon (click)="CerrarTabla()" matSuffix matTooltipPosition="right"
@@ -107,19 +100,18 @@
                         <td>{{u.apellido}}</td>
                         <td class="d-flex justify-content-center">
                             <i (click)="ImprimirDatos(u.id_empleado, fechasForm.value)" id="pdf" class="fas fa-file-pdf"
-                                matSuffix matTooltipPosition="right" matTooltipClass="departamento-tooltip"
-                                matTooltip="Descargar reporte en formato PDF">
+                                matSuffix matTooltipPosition="right" matTooltip="Descargar reporte en formato PDF.">
                                 <p>PDF</p>
                             </i>
                             <!--
                             <i (click)="ImprimirDatos(u.id_send_empl, 'R', fechasForm.value)" class="fas fa-file-import"
-                                id="recibir" matSuffix matTooltipPosition="right" matTooltipClass="departamento-tooltip"
+                                id="recibir" matSuffix matTooltipPosition="right" 
                                 matTooltip="Modificar los datos generales de este registro">
                                 <p>Recibidos</p>
                             </i>
                      
                             <i (click)="GenerarPDF('download', u.id, 'D')" class="fas fa-file-excel" id="eliminar"
-                                matSuffix matTooltipPosition="right" matTooltipClass="departamento-tooltip"
+                                matSuffix matTooltipPosition="right" 
                                 matTooltip="Modificar los datos generales de este registro">
                                 <p>Eliminados</p>
                             </i>
@@ -130,7 +122,7 @@
             </table>
         </div>
         <mat-paginator [length]="tipos.length" [pageSize]="tamanio_pagina" [pageSizeOptions]="pageSizeOptions"
-            id="estilo" (page)="ManejarPagina($event)" showFirstLastButtons>
+            id="pagina" (page)="ManejarPagina($event)" showFirstLastButtons>
         </mat-paginator>
     </div>
 </div>
@@ -138,7 +130,7 @@
 <!-- TABLA CON LISTA DE USUARIO VACACIONES-->
 <div class="container" style="padding-bottom: 50px; text-align: center;" *ngIf='tabla_vacaciones'>
     <div class="mat-elevation-z8" style="background: white;">
-        <div class="d-flex bd-highlight" id="resultadosEmpre">
+        <div class="d-flex bd-highlight" id="titulo">
             <span class="w-100 bd-highlight">
                 Lista de Usuarios - Vacaciones</span>
             <mat-icon (click)="CerrarTabla()" matSuffix matTooltipPosition="right"
@@ -163,19 +155,18 @@
                         <td class="d-flex justify-content-center">
                         <td class="d-flex justify-content-center">
                             <i (click)="ImprimirDatos(u.id_empleado, fechasForm.value)" id="pdf" class="fas fa-file-pdf"
-                                matSuffix matTooltipPosition="right" matTooltipClass="departamento-tooltip"
-                                matTooltip="Descargar reporte en formato PDF">
+                                matSuffix matTooltipPosition="right" matTooltip="Descargar reporte en formato PDF.">
                                 <p>PDF</p>
                             </i>
                             <!--
                             <i (click)="ImprimirDatos(u.id_send_empl, 'R', fechasForm.value)" class="fas fa-file-import"
-                                id="recibir" matSuffix matTooltipPosition="right" matTooltipClass="departamento-tooltip"
+                                id="recibir" matSuffix matTooltipPosition="right" 
                                 matTooltip="Modificar los datos generales de este registro">
                                 <p>Recibidos</p>
                             </i>
                          
                             <i (click)="GenerarPDF('download', u.id, 'D')" class="fas fa-file-excel" id="eliminar"
-                                matSuffix matTooltipPosition="right" matTooltipClass="departamento-tooltip"
+                                matSuffix matTooltipPosition="right" 
                                 matTooltip="Modificar los datos generales de este registro">
                                 <p>Eliminados</p>
                             </i>
@@ -186,7 +177,7 @@
             </table>
         </div>
         <mat-paginator [length]="tipos.length" [pageSize]="tamanio_pagina" [pageSizeOptions]="pageSizeOptions"
-            id="estilo" (page)="ManejarPagina($event)" showFirstLastButtons>
+            id="pagina" (page)="ManejarPagina($event)" showFirstLastButtons>
         </mat-paginator>
     </div>
 </div>
@@ -194,7 +185,7 @@
 <!-- TABLA CON LISTA DE USUARIO HORAS EXTRAS-->
 <div class="container" style="padding-bottom: 50px; text-align: center;" *ngIf='tabla_horas_extras'>
     <div class="mat-elevation-z8" style="background: white;">
-        <div class="d-flex bd-highlight" id="resultadosEmpre">
+        <div class="d-flex bd-highlight" id="titulo">
             <span class="w-100 bd-highlight">
                 Lista de Usuarios - Horas Extras</span>
             <mat-icon (click)="CerrarTabla()" matSuffix matTooltipPosition="right"
@@ -219,19 +210,18 @@
                         <td class="d-flex justify-content-center">
                         <td class="d-flex justify-content-center">
                             <i (click)="ImprimirDatos(u.id_empleado, fechasForm.value)" id="pdf" class="fas fa-file-pdf"
-                                matSuffix matTooltipPosition="right" matTooltipClass="departamento-tooltip"
-                                matTooltip="Descargar reporte en formato PDF">
+                                matSuffix matTooltipPosition="right" matTooltip="Descargar reporte en formato PDF.">
                                 <p>PDF</p>
                             </i>
                             <!--
                             <i (click)="ImprimirDatos(u.id_send_empl, 'R', fechasForm.value)" class="fas fa-file-import"
-                                id="recibir" matSuffix matTooltipPosition="right" matTooltipClass="departamento-tooltip"
+                                id="recibir" matSuffix matTooltipPosition="right" 
                                 matTooltip="Modificar los datos generales de este registro">
                                 <p>Recibidos</p>
                             </i>
                      
                             <i (click)="GenerarPDF('download', u.id, 'D')" class="fas fa-file-excel" id="eliminar"
-                                matSuffix matTooltipPosition="right" matTooltipClass="departamento-tooltip"
+                                matSuffix matTooltipPosition="right" 
                                 matTooltip="Modificar los datos generales de este registro">
                                 <p>Eliminados</p>
                             </i>
@@ -242,7 +232,7 @@
             </table>
         </div>
         <mat-paginator [length]="tipos.length" [pageSize]="tamanio_pagina" [pageSizeOptions]="pageSizeOptions"
-            id="estilo" (page)="ManejarPagina($event)" showFirstLastButtons>
+            id="pagina" (page)="ManejarPagina($event)" showFirstLastButtons>
         </mat-paginator>
     </div>
 </div>
@@ -250,7 +240,7 @@
 <!-- TABLA CON LISTA DE USUARIO PLAN COMIDAS-->
 <div class="container" style="padding-bottom: 50px; text-align: center;" *ngIf='tabla_plan_comidas'>
     <div class="mat-elevation-z8" style="background: white;">
-        <div class="d-flex bd-highlight" id="resultadosEmpre">
+        <div class="d-flex bd-highlight" id="titulo">
             <span class="w-100 bd-highlight">
                 Lista de Usuarios - Servicio Alimentación</span>
             <mat-icon (click)="CerrarTabla()" matSuffix matTooltipPosition="right"
@@ -275,18 +265,17 @@
                         <td class="d-flex justify-content-center">
                         <td class="d-flex justify-content-center">
                             <i (click)="ImprimirDatos(u.id_empleado, fechasForm.value)" id="pdf" class="fas fa-file-pdf"
-                                matSuffix matTooltipPosition="right" matTooltipClass="departamento-tooltip"
-                                matTooltip="Descargar reporte en formato PDF">
+                                matSuffix matTooltipPosition="right" matTooltip="Descargar reporte en formato PDF.">
                                 <p>PDF</p>
                             </i>
                             <!--    <i (click)="ImprimirDatos(u.id, 'R', fechasForm.value)" class="fas fa-file-import"
-                                id="recibir" matSuffix matTooltipPosition="right" matTooltipClass="departamento-tooltip"
+                                id="recibir" matSuffix matTooltipPosition="right" 
                                 matTooltip="Modificar los datos generales de este registro">
                                 <p>Recibidos</p>
                             </i>
                           
                             <i (click)="GenerarPDF('download', u.id, 'D')" class="fas fa-file-excel" id="eliminar"
-                                matSuffix matTooltipPosition="right" matTooltipClass="departamento-tooltip"
+                                matSuffix matTooltipPosition="right" 
                                 matTooltip="Modificar los datos generales de este registro">
                                 <p>Eliminados</p>
                             </i>
@@ -297,7 +286,7 @@
             </table>
         </div>
         <mat-paginator [length]="tipos.length" [pageSize]="tamanio_pagina" [pageSizeOptions]="pageSizeOptions"
-            id="estilo" (page)="ManejarPagina($event)" showFirstLastButtons>
+            id="pagina" (page)="ManejarPagina($event)" showFirstLastButtons>
         </mat-paginator>
     </div>
 </div>
