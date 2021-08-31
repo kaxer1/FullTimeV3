@@ -12,7 +12,7 @@
         <div class="d-flex flex-wrap justify-content-between">
             <mat-form-field>
                 <mat-label>Tipo de Acción</mat-label>
-                <mat-icon id="icono" matSuffix matTooltipPosition="right"
+                <mat-icon id="i-cursor" matSuffix matTooltipPosition="right"
                     matTooltip="Indicar la acción del orden de horario.">
                     help_outline
                 </mat-icon>
@@ -25,7 +25,7 @@
             </mat-form-field>
             <mat-form-field>
                 <mat-label>Orden</mat-label>
-                <mat-icon id="icono" matSuffix matTooltipPosition="right" matTooltip="Indicar el orden del horario">
+                <mat-icon id="i-cursor" matSuffix matTooltipPosition="right" matTooltip="Indicar el orden del horario">
                     help_outline
                 </mat-icon>
                 <mat-select [formControl]="ordenF" [disabled]="true" required>
@@ -38,14 +38,14 @@
                 <mat-label>Hora</mat-label>
                 <input type="time" matInput placeholder="Ej: 60" [formControl]="horaF"
                     (keypress)="IngresarSoloNumeros($event)" required>
-                <mat-icon id="icono" matSuffix matTooltipPosition="right" matTooltip="Indicar la hora de referencia">
+                <mat-icon id="i-cursor" matSuffix matTooltipPosition="right" matTooltip="Indicar la hora de referencia">
                     help_outline</mat-icon>
             </mat-form-field>
             <mat-form-field *ngIf="espera">
                 <mat-label>Minutos de espera</mat-label>
                 <input matInput placeholder="Ej: 60" [formControl]="minEsperaF"
                     (keypress)="IngresarSoloNumeros($event)">
-                <mat-icon id="icono" matSuffix matTooltipPosition="right"
+                <mat-icon id="i-cursor" matSuffix matTooltipPosition="right"
                     matTooltip="Indicar los minutos de tolerancia de espera para ingreso">
                     help_outline</mat-icon>
             </mat-form-field>

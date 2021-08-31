@@ -1,5 +1,6 @@
 // IMPORTAR LIBRERIAS
 import * as moment from 'moment';
+import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Component, OnInit, Inject } from '@angular/core';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
@@ -11,7 +12,6 @@ import { HorarioService } from 'src/app/servicios/catalogos/catHorarios/horario.
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 import { EmpleadoHorariosService } from 'src/app/servicios/horarios/empleadoHorarios/empleado-horarios.service';
 import { DetalleCatHorariosService } from 'src/app/servicios/horarios/detalleCatHorarios/detalle-cat-horarios.service';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-registo-empleado-horario',
@@ -20,8 +20,6 @@ import { Router } from '@angular/router';
 })
 
 export class RegistoEmpleadoHorarioComponent implements OnInit {
-
-  dataItem: any;
 
   // VARIABLES QUE ALMACENAN SELECCIÓN DE DÍAS LIBRES
   lunes = false;
@@ -39,7 +37,6 @@ export class RegistoEmpleadoHorarioComponent implements OnInit {
   fechaFinalF = new FormControl('', [Validators.required]);
   fechaInicioF = new FormControl('', Validators.required);
   horarioF = new FormControl('', [Validators.required]);
-  estadoF = new FormControl('', [Validators.required]);
   miercolesF = new FormControl('');
   viernesF = new FormControl('');
   domingoF = new FormControl('');
@@ -56,7 +53,6 @@ export class RegistoEmpleadoHorarioComponent implements OnInit {
     horarioForm: this.horarioF,
     viernesForm: this.viernesF,
     domingoForm: this.domingoF,
-    estadoForm: this.estadoF,
     martesForm: this.martesF,
     juevesForm: this.juevesF,
     sabadoForm: this.sabadoF,
@@ -64,17 +60,16 @@ export class RegistoEmpleadoHorarioComponent implements OnInit {
   });
 
   constructor(
+    public router: Router,
     public restH: HorarioService,
-    private toastr: ToastrService,
     public restE: EmpleadoService,
+    private toastr: ToastrService,
     public restP: PlanGeneralService,
     public rest: EmpleadoHorariosService,
     public restD: DetalleCatHorariosService,
-    public router: Router,
     @Inject(MAT_DIALOG_DATA) public datoEmpleado: any,
     public dialogRef: MatDialogRef<RegistoEmpleadoHorarioComponent>,
   ) {
-    this.dataItem = 4;
   }
 
   ngOnInit(): void {
@@ -87,6 +82,7 @@ export class RegistoEmpleadoHorarioComponent implements OnInit {
   vista_horarios: any = [];
   hora_entrada: any;
   hora_salida: any;
+
   // MÉTODO PARA MOSTRAR NOMBRE DE HORARIO CON DETALLE DE ENTRADA Y SALIDA
   BuscarHorarios() {
     this.horarios = [];
@@ -169,7 +165,7 @@ export class RegistoEmpleadoHorarioComponent implements OnInit {
           this.VerificarDuplicidad(form);
         }
         else {
-          this.toastr.warning('La fecha de inicio de actividades debe ser mayor a la fecha de fin de actividades.', '', {
+          this.toastr.warning('Fecha de inicio de actividades debe ser mayor a la fecha fin de actividades.', '', {
             timeOut: 6000,
           });
           this.EmpleadoHorarioForm.patchValue({
@@ -178,7 +174,7 @@ export class RegistoEmpleadoHorarioComponent implements OnInit {
         }
       }
       else {
-        this.toastr.warning('La fecha de inicio de actividades no puede ser anterior a la fecha de ingreso de contrato.', '', {
+        this.toastr.warning('Fecha de inicio de actividades no puede ser anterior a fecha de ingreso de contrato.', '', {
           timeOut: 6000,
         });
         this.EmpleadoHorarioForm.patchValue({
@@ -215,8 +211,6 @@ export class RegistoEmpleadoHorarioComponent implements OnInit {
     });
   }
 
-
-
   // MÉTODO PARA VERIFICAR DUPLICIDAD DE REGISTROS
   horarioExistentes: any = [];
   VerificarDuplicidad(form) {
@@ -226,18 +220,14 @@ export class RegistoEmpleadoHorarioComponent implements OnInit {
       id_horario: form.horarioForm
     };
     this.rest.VerificarDuplicidadHorarios(this.datoEmpleado.idEmpleado, fechas).subscribe(existe => {
-      this.toastr.info('Las fechas ingresadas ya se encuentran registradas en otro horario', '', {
+      this.toastr.info('Fechas y horario seleccionado ya se encuentran registrados.', 'Verificar la información ingresada.', {
         timeOut: 6000,
       });
       this.EmpleadoHorarioForm.patchValue({
         horarioForm: 0
       })
     }, error => {
-      this.toastr.info('Bien', '', {
-        timeOut: 6000,
-      });
       this.ValidarHorarioByHorasTrabaja(form);
-      // this.InsertarEmpleadoHorario(form);
     });
   }
 
@@ -294,50 +284,57 @@ export class RegistoEmpleadoHorarioComponent implements OnInit {
   // MÉTODO PARA CERRAR VENTANA DE SELECCIÓN DE HORARIO
   CerrarVentanaEmpleadoHorario() {
     this.LimpiarCampos();
-    this.dialogRef.close(this.dataItem);
+    this.dialogRef.close();
   }
 
+  // MÉTODO PARA VALIDAR HORAS DE TRABAJO SEGÚN CONTRATO
+  sumHoras: any;
+  suma = '00:00:00';
+  horariosEmpleado: any = []
   ValidarHorarioByHorasTrabaja(form) {
     const [obj_res] = this.horarios.filter(o => {
       return o.id === parseInt(form.horarioForm)
     })
-    if (!obj_res) return this.toastr.warning('Selección de horario no valido.');
-    const seg = this.SegundosToStringTime(this.datoEmpleado.horas_trabaja * 3600)
-    const { hora_trabajo, id } = obj_res;
-    console.log('horario', this.StringTimeToSegundosTime(hora_trabajo))
-    console.log(obj_res, hora_trabajo, ' ====== ', seg);
-    if (!this.StringTimeToSegundosTime(hora_trabajo)) {
-      this.EmpleadoHorarioForm.patchValue({ horarioForm: 0 });
-      this.toastr.warning('Horas de horario no validas.', 'Dar click para verificar registro de detalle de horario.', {
-        timeOut: 6000,
-      }).onTap.subscribe(obj => {
-        this.dialogRef.close(this.dataItem);
-        this.router.navigate(['/verHorario', id]);
-      });
+    if (!obj_res) return this.toastr.warning('Horario no válido.');
+    if (obj_res.detalle === false) {
+
     }
     else {
-      let fechas = {
-        fechaInicio: form.fechaInicioForm,
-        fechaFinal: form.fechaFinalForm,
-        id_horario: form.horarioForm
-      };
-      this.rest.VerificarDuplicidadHorarios(this.datoEmpleado.idEmpleado, fechas).subscribe(existe => {
-        this.toastr.info('Las fechas ingresadas ya se encuentran registradas en otro horario.', '', {
+      const seg = this.SegundosToStringTime(this.datoEmpleado.horas_trabaja * 3600)
+      const { hora_trabajo, id } = obj_res;
+      console.log('horario_horas', this.StringTimeToSegundosTime(hora_trabajo))
+      console.log(obj_res, hora_trabajo, ' ====== ', seg);
+
+      // VERIFICACIÓN DE FORMATO CORRECTO DE HORARIOS
+      if (!this.StringTimeToSegundosTime(hora_trabajo)) {
+        this.EmpleadoHorarioForm.patchValue({ horarioForm: 0 });
+        this.toastr.warning('Formato de horas en horario seleccionado no son válidas.', 'Dar click para verificar registro de detalle de horario.', {
           timeOut: 6000,
+        }).onTap.subscribe(obj => {
+          this.dialogRef.close();
+          this.router.navigate(['/verHorario', id]);
         });
-        this.EmpleadoHorarioForm.patchValue({
-          horarioForm: 0
-        })
-      }, error => {
-        this.toastr.info('Bien', '', {
-          timeOut: 6000,
-        });
-        this.ValidarHorarioByHorasTrabaja(form);
-        // this.InsertarEmpleadoHorario(form);
-      });
+      }
+      else {
+        // MÉTODO PARA LECTURA DE HORARIOS DE EMPLEADO
+        this.horariosEmpleado = [];
+        let fechas = {
+          fechaInicio: form.fechaInicioForm,
+          fechaFinal: form.fechaFinalForm,
+        };
+        this.rest.VerificarHorariosExistentes(this.datoEmpleado.idEmpleado, fechas).subscribe(existe => {
+          this.horariosEmpleado = existe;
+          console.log('ver horas horarios', this.horariosEmpleado);
+          this.horariosEmpleado.map(h => {
+            console.log('ver horas', h.hora_trabajo);
+            // SUMA DE HORAS DE CADA UNO DE LOS HORARIOS DEL EMPLEADO
+            this.suma = moment(this.suma, 'HH:mm:ss').add(moment.duration(h.hora_trabajo)).format('HH:mm:ss');
+          })
+          // SUMA DE HORAS TOTALES DE HORARIO CON HORAS DE HORARIO SELECCIONADO
+          this.sumHoras = moment(this.suma, 'HH:mm:ss').add(moment.duration(hora_trabajo)).format('HH:mm:ss');
+          console.log('horas totales de horarios', this.sumHoras);
 
-
-
+<<<<<<< HEAD
 <<<<<<< HEAD
     const { hora_trabajo } = obj_res;
      console.log(obj_res, hora_trabajo, ' ====== ', seg);
@@ -352,10 +349,45 @@ export class RegistoEmpleadoHorarioComponent implements OnInit {
       } else {
         this.EmpleadoHorarioForm.patchValue({ horarioForm: 0 });
         return this.toastr.warning('Mal horario')
+=======
+          // MÉTODO PARA COMPARAR HORAS DE TRABAJO CON HORAS DE CONTRATO
+          if (this.StringTimeToSegundosTime(this.sumHoras) === this.StringTimeToSegundosTime(seg)) {
+            return this.toastr.info('Va a cumplir un total de: ' + this.sumHoras + ' horas.')
+          } else if (this.StringTimeToSegundosTime(this.sumHoras) < this.StringTimeToSegundosTime(seg)) {
+            return this.toastr.info('Cumplirá un total de ' + this.sumHoras + ' horas.',
+              'Recuerde que de acuerdo a su contrato debe cumplir un total de ' + seg + ' horas.', {
+              timeOut: 6000,
+            });
+          }
+          else {
+            this.EmpleadoHorarioForm.patchValue({ horarioForm: 0 });
+            return this.toastr.warning('Esta registrando un total de ' + this.sumHoras + ' horas.',
+              'Recuerde que de acuerdo a su contrato debe cumplir un total de ' + seg + ' horas.', {
+              timeOut: 6000,
+            });
+          }
+        }, error => {
+          // MÉTODO PARA COMPARAR HORAS DE TRABAJO CON HORAS DE CONTRATO CUANDO NO EXISTEN HORARIOS EN LAS FECHAS INDICADAS
+          if (this.StringTimeToSegundosTime(hora_trabajo) === this.StringTimeToSegundosTime(seg)) {
+            return this.toastr.info('Va a cumplir un total de: ' + hora_trabajo + ' horas.')
+          } else if (this.StringTimeToSegundosTime(hora_trabajo) < this.StringTimeToSegundosTime(seg)) {
+            return this.toastr.info('Cumplirá un total de ' + hora_trabajo + ' horas.',
+              'Recuerde que de acuerdo a su contrato debe cumplir un total de ' + seg + ' horas.', {
+              timeOut: 6000,
+            });
+          }
+          else {
+            this.EmpleadoHorarioForm.patchValue({ horarioForm: 0 });
+            return this.toastr.warning('El horario seleccionado indica un total de ' + hora_trabajo + ' horas.',
+              'Recuerde que de acuerdo a su contrato debe cumplir un total de ' + seg + ' horas.', {
+              timeOut: 6000,
+            });
+          }
+        });
+>>>>>>> b4dde459b3ed6a734211e0d713e672119a1f982f
       }
 >>>>>>> 02d14eadb2de328920347110074d739493c5f935
     }
-
   }
 
   SegundosToStringTime(segundos: number) {
@@ -373,6 +405,11 @@ export class RegistoEmpleadoHorarioComponent implements OnInit {
     const m = parseInt(stringTime.split(':')[1]) * 60;
     const s = parseInt(stringTime.split(':')[2]);
     return h + m + s
+  }
+
+  // MÉTODO PARA LIMPIAR CAMPO SELECCIÓN DE HORARIO
+  LimpiarHorario() {
+    this.EmpleadoHorarioForm.patchValue({ horarioForm: 0 });
   }
 
 }

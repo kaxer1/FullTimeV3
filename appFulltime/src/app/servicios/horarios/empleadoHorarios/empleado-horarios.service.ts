@@ -54,6 +54,16 @@ export class EmpleadoHorariosService {
     return this.http.post(`${environment.url}/empleadoHorario/validarFechas/horarioEmpleado/${id}/empleado/${codigo}`, datos);
   }
 
+  // MÉTODO PARA BUSCAR HORARIOS DE EMPLEADO EN UN RANGO DE FECHAS
+  VerificarHorariosExistentes(id_empl: number, datos: any) {
+    return this.http.post(`${environment.url}/empleadoHorario/horarios-existentes/${id_empl}`, datos);
+  }
+
+    // MÉTODO PARA BUSCAR HORARIOS DE EMPLEADO EN UN RANGO DE FECHAS
+    VerificarHorariosExistentesEdicion(id_empl: number, datos: any) {
+      return this.http.post(`${environment.url}/empleadoHorario/horarios-existentes-edicion/${id_empl}`, datos);
+    }
+
   // Verificar datos de la plantilla de horario fijo
   VerificarDatos_EmpleadoHorario(formData: any, id: number) {
     console.log('entra')

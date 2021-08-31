@@ -14,7 +14,7 @@
                     <div class="col">
                         <mat-form-field>
                             <mat-label>Vacuna</mat-label>
-                            <mat-icon id="icono" matSuffix matTooltipPosition="right"
+                            <mat-icon id="i-cursor" matSuffix matTooltipPosition="right"
                                 matTooltip="Seleccionar tipo de vacuna.">
                                 help_outline
                             </mat-icon>
@@ -29,20 +29,48 @@
                             <mat-label>Registrar Vacuna</mat-label>
                             <input matInput placeholder="SINOVAC" (keypress)="IngresarSoloLetras($event)"
                                 formControlName="nombreForm" [ngStyle]="estilo">
-                            <mat-icon id="icono" matSuffix matTooltipPosition="right"
+                            <mat-icon id="i-cursor" matSuffix matTooltipPosition="right"
                                 matTooltip="Ingresar nombre tipo de vacuna.">
                                 help_outline</mat-icon>
                         </mat-form-field>
-                        <mat-form-field>
-                            <mat-label>Dosis</mat-label>
-                            <mat-icon id="icono" matSuffix matTooltipPosition="right"
-                                matTooltip="Seleccionar la dosis recibida.">
-                                help_outline
-                            </mat-icon>
-                            <mat-select [formControl]="dosisF">
-                                <mat-option [value]=1>1 dosis</mat-option>
-                                <mat-option [value]=2>2 dosis</mat-option>
-                            </mat-select>
+                        <div class="separar">
+                            <mat-checkbox [checked]="estado_1" (change)="VerFecha_1($event.checked)">
+                                Primera dosis
+                            </mat-checkbox>
+                        </div>
+                        <mat-form-field *ngIf="fecha_1">
+                            <mat-label>Fecha de vacuna</mat-label>
+                            <input matInput [matDatepicker]="picker1" placeholder="dd/mm/aaaa" [formControl]="fecha1F">
+                            <mat-datepicker-toggle matSuffix [for]="picker1" id="i-cursor" matTooltipPosition="right"
+                                matTooltip="Ingresar la fecha en la que recibio la primera dosis de la vacuna. Seleccionar fecha o escribir fecha con formato día/mes/año. Ejemplo: 12/04/1993">
+                            </mat-datepicker-toggle>
+                            <mat-datepicker touchUi #picker1></mat-datepicker>
+                        </mat-form-field>
+                        <div class="separar">
+                            <mat-checkbox [checked]="estado_2" (change)="VerFecha_2($event.checked)">
+                                Segunda dosis
+                            </mat-checkbox>
+                        </div>
+                        <mat-form-field *ngIf="fecha_2">
+                            <mat-label>Fecha de vacuna</mat-label>
+                            <input matInput [matDatepicker]="picker2" placeholder="dd/mm/aaaa" [formControl]="fecha2F">
+                            <mat-datepicker-toggle matSuffix [for]="picker2" id="i-cursor" matTooltipPosition="right"
+                                matTooltip="Ingresar la fecha en la que recibio la segunda dosis de la vacuna. Seleccionar fecha o escribir fecha con formato día/mes/año. Ejemplo: 12/04/1993">
+                            </mat-datepicker-toggle>
+                            <mat-datepicker touchUi #picker2></mat-datepicker>
+                        </mat-form-field>
+                        <div class="separar">
+                            <mat-checkbox [checked]="estado_3" (change)="VerFecha_3($event.checked)">
+                                Tercera dosis
+                            </mat-checkbox>
+                        </div>
+                        <mat-form-field *ngIf="fecha_3">
+                            <mat-label>Fecha de vacuna</mat-label>
+                            <input matInput [matDatepicker]="picker3" placeholder="dd/mm/aaaa" [formControl]="fecha3F">
+                            <mat-datepicker-toggle matSuffix [for]="picker3" id="i-cursor" matTooltipPosition="right"
+                                matTooltip="Ingresar la fecha en la que recibio la tercera dosis de la vacuna. Seleccionar fecha o escribir fecha con formato día/mes/año. Ejemplo: 12/04/1993">
+                            </mat-datepicker-toggle>
+                            <mat-datepicker touchUi #picker3></mat-datepicker>
                         </mat-form-field>
                     </div>
                     <div class="col">
@@ -71,7 +99,8 @@
         </mat-card-content>
     </form>
     <div style="text-align: center;">
-        <button type="submit" class="btn" (click)="GuardarDatosSistema(vacunaForm.value)" [disabled]="!vacunaForm.valid">
+        <button type="submit" class="btn" (click)="GuardarDatosSistema(vacunaForm.value)"
+            [disabled]="!vacunaForm.valid">
             <span class="material-icons alinear" matSuffix matTooltipPosition="right"
                 matTooltip="Guardar datos registrados.">save</span>
         </button>

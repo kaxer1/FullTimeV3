@@ -15,9 +15,10 @@
                     <mat-form-field>
                         <mat-label>Fecha de Inicio</mat-label>
                         <input matInput [matDatepicker]="picker" placeholder="dd/mm/aaaa" [formControl]="fechaInicioF"
-                            min="1950-01-31" max="2050-01-31" required>
+                            min="1950-01-31" max="2050-01-31" required (click)="LimpiarHorario()"
+                            (dateInput)="LimpiarHorario()">
                         <mat-datepicker-toggle matSuffix [for]="picker" id="i-cursor" matTooltipPosition="right"
-                            matTooltip="Indicar la fecha de inicio de actividades. Seleccione la fecha dando click en el icono de calendario o puede escribir la fecha con el formato  día/mes/año. Ejemplo: 12/04/1993">
+                            matTooltip="Seleccionar la fecha dando click en el ícono de calendario o puede escribir la fecha con el formato  día/mes/año. Ejemplo: 12/04/1993">
                         </mat-datepicker-toggle>
                         <mat-datepicker touchUi #picker></mat-datepicker>
                     </mat-form-field>
@@ -25,9 +26,9 @@
                     <mat-form-field>
                         <mat-label>Fecha de Finalización</mat-label>
                         <input matInput [matDatepicker]="picker2" placeholder="dd/mm/aaaa" [formControl]="fechaFinalF"
-                            required>
+                            required (click)="LimpiarHorario()" (dateInput)="LimpiarHorario()">
                         <mat-datepicker-toggle matSuffix [for]="picker2" id="i-cursor" matTooltipPosition="right"
-                            matTooltip="Indicar la fecha de finalización de actividades. Seleccione la fecha dando click en el icono de calendario o puede escribir la fecha con el formato  día/mes/año. Ejemplo: 12/04/1993">
+                            matTooltip="Seleccionar la fecha dando click en el ícono de calendario o puede escribir la fecha con el formato  día/mes/año. Ejemplo: 12/04/1993">
                         </mat-datepicker-toggle>
                         <mat-datepicker touchUi #picker2></mat-datepicker>
                     </mat-form-field>
@@ -73,14 +74,13 @@
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>
     </mat-card-content>
 </form>
 <div style="text-align: center;">
-    <button type="submit" class="btn btn-sm" (click)="ValidarFechas(EmpleadoHorarioForm.value)"
+    <button type="submit" class="btn btn-sm" (click)="InsertarEmpleadoHorario(EmpleadoHorarioForm.value)"
         [disabled]="!EmpleadoHorarioForm.valid">Guardar</button>
     <button type="submit" class="btn btn-sm" (click)="CerrarVentanaEmpleadoHorario()">Salir</button>
 </div>

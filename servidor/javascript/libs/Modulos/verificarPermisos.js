@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ModuloPermisosValidation = (req, res, next) => {
+exports.ModuloPermisosValidation = void 0;
+const ModuloPermisosValidation = (req, res, next) => {
     const { permisos } = req.modulos;
     console.log('******************** validacion de modulo de permisos', permisos);
     if (!permisos)
@@ -12,3 +13,4 @@ exports.ModuloPermisosValidation = (req, res, next) => {
     console.log('******************** si tiene acceso modulo de permisos', permisos);
     next();
 };
+exports.ModuloPermisosValidation = ModuloPermisosValidation;

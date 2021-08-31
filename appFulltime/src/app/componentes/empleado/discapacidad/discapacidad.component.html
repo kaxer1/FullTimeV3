@@ -20,7 +20,7 @@
                             <input matInput type="number" placeholder="Ej: " [formControl]="carnet" maxlength="7"
                                 oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                 (keypress)="IngresarSoloNumeros($event)" required>
-                            <mat-icon id="icono" matSuffix matTooltipPosition="right"
+                            <mat-icon id="i-cursor" matSuffix matTooltipPosition="right"
                                 
                                 matTooltip="Ingresar número del carnet del Conadis">
                                 help_outline
@@ -33,7 +33,7 @@
                     <div class="col">
                         <mat-form-field>
                             <mat-label id="tipoD">Seleccionar Discapacidad</mat-label>
-                            <mat-icon id="icono" matSuffix matTooltipPosition="right"
+                            <mat-icon id="i-cursor" matSuffix matTooltipPosition="right"
                                 
                                 matTooltip="Seleccione el tipo de discapacidad que posee el empleado">
                                 help_outline
@@ -53,7 +53,7 @@
                             <input matInput placeholder="Ej: Descripcion del tipo de permiso"
                                 (keypress)="IngresarSoloLetras($event)" formControlName="nombreForm" id="nombreTD"
                                 [ngStyle]="estilo">
-                            <mat-icon id="icono" matSuffix  matTooltipPosition="right"
+                            <mat-icon id="i-cursor" matSuffix  matTooltipPosition="right"
                                 matTooltip="Ingresar nombre del nuevo tipo de discapacidad">
                                 help_outline</mat-icon>
                         </mat-form-field>
@@ -62,7 +62,7 @@
                 <div class="row">
                     <div class="col">
                         <mat-label>Porcentaje de discapacidad *</mat-label>
-                        <mat-icon id="icono" matSuffix matTooltipPosition="right" 
+                        <mat-icon id="i-cursor" matSuffix matTooltipPosition="right" 
                             matTooltip="Indique el valor porcentual de discapacidad que posee el empleado">
                             help_outline
                         </mat-icon>

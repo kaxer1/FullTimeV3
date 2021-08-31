@@ -380,7 +380,7 @@ class PlanComidasControlador {
     // BÚSQUEDA DE PLANIFICACIONES POR EMPLEADO Y FECHA 
     BuscarPlanComidaEmpleadoFechas(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { id, fecha_inicio, fecha_fin } = req.body;
+            const { id, fecha_inicio, fecha_fin, hora_inicio, hora_fin } = req.body;
             const PLAN_COMIDAS = yield database_1.default.query('SELECT * FROM plan_comida_empleado WHERE id_empleado = $1 AND ' +
                 'fecha BETWEEN $2 AND $3', [id, fecha_inicio, fecha_fin]);
             if (PLAN_COMIDAS.rowCount > 0) {

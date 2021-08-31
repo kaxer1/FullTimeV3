@@ -4,18 +4,7 @@ td { padding-top: 10px; text-align: center; }
 
 mat-form-field { padding: 10px 15px 0px 15px;}
 
-#TituloResultado { 
-    font-size: 17px; 
-    text-align: center; 
-    background: rgb(52,65,84); 
-    color: white; 
-    padding-top: 10px; 
-    padding-bottom: 6px; 
-}
-
 table { width: 100%; font-size: 12px;}
-
-
 
 #SelectCheck {
     cursor: pointer;
@@ -23,3 +12,5 @@ table { width: 100%; font-size: 12px;}
 }
 
 #accion { color: rgb(38, 0, 255); cursor: pointer; }
+
+#cerrar { cursor: pointer; margin-left: 25px;}

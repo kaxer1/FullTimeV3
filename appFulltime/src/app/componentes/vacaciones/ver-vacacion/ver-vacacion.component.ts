@@ -316,6 +316,7 @@ export class VerVacacionComponent implements OnInit {
   }
 
   SeleccionarMetodo(f) {
+    this.cont = 1;
     if (this.cont === 1) {
       return {
         table: {
@@ -368,9 +369,15 @@ export class VerVacacionComponent implements OnInit {
                     table: {
                       widths: ['auto'],
                       body: [
-                        [{ text: this.datosEmpleadoAutoriza[this.cont - 1].estado.toUpperCase() + ' POR', style: 'tableHeaderA' }],
+                        /*[{ text: this.datosEmpleadoAutoriza[this.cont - 1].estado.toUpperCase() + ' POR', style: 'tableHeaderA' }],
                         [{ text: ' ', style: 'itemsTable', margin: [0, 20, 0, 20] }],
                         [{ text: this.datosEmpleadoAutoriza[this.cont - 1].e_nombre + ' ' + this.datosEmpleadoAutoriza[this.cont - 1].e_apellido + '\n' + this.datosEmpleadoAutoriza[this.cont - 1].cargo, style: 'itemsTable' }]
+                      */
+                        [{ text: 'Estado:' + ' POR', style: 'tableHeaderA' },],
+                          [{ text: ' ', style: 'itemsTable', margin: [0, 20, 0, 20] },],
+                          //  [{ text: this.datosEmpleadoAutoriza[this.cont - 1].e_nombre + ' ' + this.datosEmpleadoAutoriza[this.cont - 1].e_apellido + '\n' + this.datosEmpleadoAutoriza[this.cont - 1].cargo, style: 'itemsTable' },]
+                          [{ text: 'Nombre: ' + ' ' + 'Apellido: ' + '\n' + 'Cargo: ', style: 'itemsTable' },]
+
                       ]
                     }
                   },
@@ -462,9 +469,16 @@ export class VerVacacionComponent implements OnInit {
                     table: {
                       widths: ['auto'],
                       body: [
-                        [{ text: this.datosEmpleadoAutoriza[this.cont - 2].estado.toUpperCase() + ' POR', style: 'tableHeaderA' }],
-                        [{ text: ' ', style: 'itemsTable', margin: [0, 20, 0, 20] }],
-                        [{ text: this.datosEmpleadoAutoriza[this.cont - 2].e_nombre + ' ' + this.datosEmpleadoAutoriza[this.cont - 2].e_apellido + '\n' + this.datosEmpleadoAutoriza[this.cont - 2].cargo, style: 'itemsTable' }]
+                        /*  [{ text: this.datosEmpleadoAutoriza[this.cont - 2].estado.toUpperCase() + ' POR', style: 'tableHeaderA' }],
+                          [{ text: ' ', style: 'itemsTable', margin: [0, 20, 0, 20] }],
+                          [{ text: this.datosEmpleadoAutoriza[this.cont - 2].e_nombre + ' ' + this.datosEmpleadoAutoriza[this.cont - 2].e_apellido + '\n' + this.datosEmpleadoAutoriza[this.cont - 2].cargo, style: 'itemsTable' }]
+                        
+                        */
+                        [{ text: 'Estado:' + ' POR', style: 'tableHeaderA' },],
+                        [{ text: ' ', style: 'itemsTable', margin: [0, 20, 0, 20] },],
+                        //  [{ text: this.datosEmpleadoAutoriza[this.cont - 1].e_nombre + ' ' + this.datosEmpleadoAutoriza[this.cont - 1].e_apellido + '\n' + this.datosEmpleadoAutoriza[this.cont - 1].cargo, style: 'itemsTable' },]
+                        [{ text: 'Nombre: ' + ' ' + 'Apellido: ' + '\n' + 'Cargo: ', style: 'itemsTable' },]
+
                       ]
                     }
                   },

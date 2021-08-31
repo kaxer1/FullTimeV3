@@ -308,7 +308,7 @@
     <!-- REGISTRO DE VACUNACION -->
     <mat-tab>
         <ng-template mat-tab-label>
-            <mat-icon class="example-tab-icon">local_pharmacy</mat-icon>
+            <mat-icon class="example-tab-icon">local_hospital</mat-icon>
             Vacunación
         </ng-template>
         <div class="container" style="padding-top: 15px; padding-bottom: 25px;">
@@ -333,9 +333,26 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-lg">
-                                        <label *ngIf="dv.dosis === 1"><b>Dosis:</b> Primera dosis</label>
-                                        <label *ngIf="dv.dosis === 2"><b>Dosis:</b> Segunda dosis</label>
+                                    <div class="col-lg-4">
+                                        <!--     <mat-radio-button *ngIf="dv.dosis_1 === true" [checked]="dv.dosis_1" disabled>
+                                            Primera dosis
+                                        </mat-radio-button>-->
+                                        <label *ngIf="dv.dosis_1 === true"><b>Primera Dosis</b></label>
+                                        <br>
+                                        <label *ngIf="dv.fecha_1 != null"><b>Fecha:</b>
+                                            {{dv.fecha_1.split('T')[0]}}</label>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <label *ngIf="dv.dosis_2 === true"><b>Segunda Dosis</b></label>
+                                        <br>
+                                        <label *ngIf="dv.fecha_2 != null"><b>Fecha:</b>
+                                            {{dv.fecha_2.split('T')[0]}}</label>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <label *ngIf="dv.dosis_3 === true"><b>Tercera Dosis</b></label>
+                                        <br>
+                                        <label *ngIf="dv.fecha_3 != null"><b>Fecha:</b>
+                                            {{dv.fecha_3.split('T')[0]}}</label>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -981,15 +998,15 @@
                                 <td>{{h.fec_inicio.split("T")[0]}}</td>
                                 <td>{{h.fec_final.split("T")[0]}}</td>
                                 <td class="d-flex justify-content-center">
-                                    <i matSuffix  matTooltipPosition="right"
+                                    <i matSuffix matTooltipPosition="right"
                                         matTooltip="Agregar Detalles de Planificación de Horario"
                                         class="far fa-list-alt" id="detalleH"
                                         (click)="AbrirVentanaDetallePlanHorario(h)">
                                         <p>Detalle</p>
                                     </i>
-                                    <i *ngFor="let e of empleadoUno" matSuffix 
-                                        matTooltipPosition="right" matTooltip="Ver datos generales de la planificación"
-                                        class="fas fa-eye" id="ver" [routerLink]="['/verDetalles/', h.id, e.id]">
+                                    <i *ngFor="let e of empleadoUno" matSuffix matTooltipPosition="right"
+                                        matTooltip="Ver datos generales de la planificación" class="fas fa-eye" id="ver"
+                                        [routerLink]="['/verDetalles/', h.id, e.id]">
                                         <p>Ver</p>
                                     </i>
                                     <i class="fas fa-edit" style="color:green; margin-left: 15px;"

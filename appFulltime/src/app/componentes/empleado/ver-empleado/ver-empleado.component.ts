@@ -60,18 +60,18 @@ import { EditarSolicitudComidaComponent } from '../../planificacionComidas/edita
 import { RegistrarPeriodoVComponent } from 'src/app/componentes/periodoVacaciones/registrar-periodo-v/registrar-periodo-v.component';
 import { EditarPlanificacionComponent } from 'src/app/componentes/planHorarios/editar-planificacion/editar-planificacion.component';
 import { RegistrarVacacionesComponent } from 'src/app/componentes/vacaciones/registrar-vacaciones/registrar-vacaciones.component';
-import { RegistroContratoComponent } from 'src/app/componentes/empleadoContrato/registro-contrato/registro-contrato.component';
+import { RegistroContratoComponent } from 'src/app/componentes/empleado/contrato/registro-contrato/registro-contrato.component';
 import { CambiarContrasenaComponent } from '../../rolEmpleado/cambiar-contrasena/cambiar-contrasena.component';
-import { EmplCargosComponent } from 'src/app/componentes/empleadoCargos/empl-cargos/empl-cargos.component';
+import { EmplCargosComponent } from 'src/app/componentes/empleado/cargo/empl-cargos/empl-cargos.component';
 import { PedidoHoraExtraComponent } from '../../horasExtras/pedido-hora-extra/pedido-hora-extra.component';
-import { EditarEmpleadoComponent } from '../EditarEmpleado/editar-empleado/editar-empleado.component';
-import { EditarTituloComponent } from '../EditarTituloEmpleado/editar-titulo/editar-titulo.component';
+import { EditarEmpleadoComponent } from '../datos-empleado/editar-empleado/editar-empleado.component';
+import { EditarTituloComponent } from '../titulos/editar-titulo/editar-titulo.component';
 import { EmplLeafletComponent } from '../../settings/leaflet/empl-leaflet/empl-leaflet.component';
 import { AdministraComidaComponent } from '../../administra-comida/administra-comida.component';
 import { FraseSeguridadComponent } from '../../frase-administrar/frase-seguridad/frase-seguridad.component';
 import { MetodosComponent } from 'src/app/componentes/metodoEliminar/metodos.component';
-import { TituloEmpleadoComponent } from '../titulo-empleado/titulo-empleado.component';
-import { EditarContratoComponent } from '../editar-contrato/editar-contrato.component';
+import { TituloEmpleadoComponent } from '../titulos/titulo-empleado/titulo-empleado.component';
+import { EditarContratoComponent } from '../contrato/editar-contrato/editar-contrato.component';
 
 import { CambiarFraseComponent } from '../../frase-administrar/cambiar-frase/cambiar-frase.component';
 
@@ -1297,12 +1297,18 @@ export class VerEmpleadoComponent implements OnInit {
   // VENTANA PARA EDITAR HORARIO DEL EMPLEADO 
   AbrirEditarHorario(datoSeleccionado: any): void {
     console.log(datoSeleccionado);
-    this.vistaRegistrarDatos.open(EditarHorarioEmpleadoComponent,
-      { width: '600px', data: { idEmpleado: this.idEmpleado, datosHorario: datoSeleccionado } })
-      .afterClosed().subscribe(item => {
-        console.log(item);
-        this.ObtenerHorariosEmpleado(parseInt(this.idEmpleado));
-      });
+    this.restCargo.BuscarIDCargoActual(parseInt(this.idEmpleado)).subscribe(datos => {
+      this.vistaRegistrarDatos.open(EditarHorarioEmpleadoComponent,
+        { width: '600px', data: { idEmpleado: this.idEmpleado, datosHorario: datoSeleccionado, horas_trabaja: datos[0].hora_trabaja } })
+        .afterClosed().subscribe(item => {
+          console.log(item);
+          this.ObtenerHorariosEmpleado(parseInt(this.idEmpleado));
+        });
+    }, error => {
+      this.toastr.info('El empleado no tiene registrado un Cargo', 'Primero Registrar Cargo', {
+        timeOut: 6000,
+      })
+    });
   }
 
   // VENTANA PARA REGISTRAR HORARIO 
