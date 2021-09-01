@@ -43,8 +43,12 @@ export class CrearVacunaComponent implements OnInit {
   }
 
   // VARIABLES VISUALIZACIÓN INGRESO DE TIPO DE VACUNA
-  ingresarTipo: boolean = true;
-  estilo: any;
+  ingresarTipo_1: boolean = true;
+  ingresarTipo_2: boolean = true;
+  ingresarTipo_3: boolean = true;
+  estilo_1: any;
+  estilo_2: any;
+  estilo_3: any;
 
   // VARIABLES DE SLECCIÓN DE DOSIS
   estado_1: boolean = false;
@@ -60,20 +64,28 @@ export class CrearVacunaComponent implements OnInit {
   tipoVacuna: any = [];
 
   // VALIDACIONES DE CAMPOS DE FORMULARIO
-  idTipoF = new FormControl('');
-  nombreF = new FormControl('');
   fecha1F = new FormControl('');
   fecha2F = new FormControl('');
   fecha3F = new FormControl('');
   archivoF = new FormControl('');
+  vacuna_1F = new FormControl('');
+  vacuna_2F = new FormControl('');
+  vacuna_3F = new FormControl('');
+  nombre_1F = new FormControl('');
+  nombre_2F = new FormControl('');
+  nombre_3F = new FormControl('');
   certificadoF = new FormControl('');
 
   // FORMULARIO DENTRO DE UN GRUPO
   public vacunaForm = new FormGroup({
     certificadoForm: this.certificadoF,
+    vacuna_1Form: this.vacuna_1F,
+    vacuna_2Form: this.vacuna_2F,
+    vacuna_3Form: this.vacuna_3F,
+    nombre_1Form: this.nombre_1F,
+    nombre_2Form: this.nombre_2F,
+    nombre_3Form: this.nombre_3F,
     archivoForm: this.archivoF,
-    nombreForm: this.nombreF,
-    idTipoForm: this.idTipoF,
     fecha1Form: this.fecha1F,
     fecha2Form: this.fecha2F,
     fecha3Form: this.fecha3F,
@@ -117,8 +129,10 @@ export class CrearVacunaComponent implements OnInit {
   // MÉTODO PARA LIMPIAR FORMULARIO
   LimpiarCampos() {
     this.vacunaForm.reset();
+    this.ingresarTipo_1 = true;
+    this.ingresarTipo_2 = true;
+    this.ingresarTipo_3 = true;
     this.HabilitarBtn = false;
-    this.ingresarTipo = true;
     this.estado_1 = false;
     this.estado_2 = false;
     this.estado_3 = false;
@@ -140,21 +154,57 @@ export class CrearVacunaComponent implements OnInit {
   }
 
   // MÉTODO PARA VISUALIZAR CAMPO REGISTRO DE TIPO DE VACUNA
-  ActivarDesactivarNombre(form) {
-    if (form.idTipoForm === undefined) {
-      this.vacunaForm.patchValue({
-        nombreForm: '',
-      });
-      this.estilo = { 'visibility': 'visible' }; this.ingresarTipo = false;
-      this.toastr.info('Ingresar nombre de tipo de vacuna.', 'Etiqueta Registrar Vacuna activa.', {
-        timeOut: 6000,
-      })
+  ActivarDesactivarNombre(form, opcion: number) {
+    if (opcion === 1) {
+      if (form.vacuna_1Form === undefined) {
+        this.vacunaForm.patchValue({
+          nombre_1Form: '',
+        });
+        this.estilo_1 = { 'visibility': 'visible' }; this.ingresarTipo_1 = false;
+        this.toastr.info('Ingresar nombre de tipo de vacuna.', 'Etiqueta Registrar Vacuna activa.', {
+          timeOut: 6000,
+        })
+      }
+      else {
+        this.vacunaForm.patchValue({
+          nombre_1Form: '',
+        });
+        this.estilo_1 = { 'visibility': 'hidden' }; this.ingresarTipo_1 = true;
+      }
     }
-    else {
-      this.vacunaForm.patchValue({
-        nombreForm: '',
-      });
-      this.estilo = { 'visibility': 'hidden' }; this.ingresarTipo = true;
+    else if (opcion === 2) {
+      if (form.vacuna_2Form === undefined) {
+        this.vacunaForm.patchValue({
+          nombre_2Form: '',
+        });
+        this.estilo_2 = { 'visibility': 'visible' }; this.ingresarTipo_2 = false;
+        this.toastr.info('Ingresar nombre de tipo de vacuna.', 'Etiqueta Registrar Vacuna activa.', {
+          timeOut: 6000,
+        })
+      }
+      else {
+        this.vacunaForm.patchValue({
+          nombre_2Form: '',
+        });
+        this.estilo_2 = { 'visibility': 'hidden' }; this.ingresarTipo_2 = true;
+      }
+    }
+    else if (opcion === 3) {
+      if (form.vacuna_3Form === undefined) {
+        this.vacunaForm.patchValue({
+          nombre_3Form: '',
+        });
+        this.estilo_3 = { 'visibility': 'visible' }; this.ingresarTipo_3 = false;
+        this.toastr.info('Ingresar nombre de tipo de vacuna.', 'Etiqueta Registrar Vacuna activa.', {
+          timeOut: 6000,
+        })
+      }
+      else {
+        this.vacunaForm.patchValue({
+          nombre_3Form: '',
+        });
+        this.estilo_3 = { 'visibility': 'hidden' }; this.ingresarTipo_3 = true;
+      }
     }
   }
 

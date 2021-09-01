@@ -5,10 +5,9 @@ class VacunasControlador {
 
     // LISTAR TODOS LOS REGISTROS DE VACUNACIÓN
     public async ListarRegistro(req: Request, res: Response) {
-        const VACUNA = await pool.query('SELECT ev.id, ev.id_empleado, ev.id_tipo_vacuna, ' +
-            'ev.carnet, tv.nombre AS vacuna, ev.nom_carnet, ev.dosis_1, ev.dosis_2, ' +
-            'ev.dosis_3, ev.fecha_1, ev.fecha_2, ev.fecha_3 ' +
-            'FROM empl_vacuna AS ev, tipo_vacuna AS tv WHERE ev.id_tipo_vacuna = tv.id ORDER BY ev.id ASC');
+        const VACUNA = await pool.query('SELECT ev.id, ev.id_empleado, ev.id_tipo_vacuna_1, ' +
+            'ev.id_tipo_vacuna_2, ev.id_tipo_vacuna_3, ev.carnet, ev.nom_carnet, ev.dosis_1, ev.dosis_2, ' +
+            'ev.dosis_3, ev.fecha_1, ev.fecha_2, ev.fecha_3 FROM empl_vacuna AS ev ORDER BY ev.id ASC');
         if (VACUNA.rowCount > 0) {
             return res.jsonp(VACUNA.rows)
         }
@@ -20,10 +19,9 @@ class VacunasControlador {
     // LISTAR REGISTRO DE VACUNACIÓN DEL EMPLEADO POR SU ID
     public async ListarUnRegistro(req: Request, res: Response): Promise<any> {
         const { id_empleado } = req.params;
-        const VACUNA = await pool.query('SELECT ev.id, ev.id_empleado, ev.id_tipo_vacuna, ' +
-            'ev.carnet, tv.nombre AS vacuna, ev.nom_carnet, ev.dosis_1, ev.dosis_2, ' +
-            'ev.dosis_3, ev.fecha_1, ev.fecha_2, ev.fecha_3 ' +
-            'FROM empl_vacuna AS ev, tipo_vacuna AS tv WHERE ev.id_tipo_vacuna = tv.id AND ev.id_empleado = $1',
+        const VACUNA = await pool.query('SELECT ev.id, ev.id_empleado, ev.id_tipo_vacuna_1, ' +
+            'ev.id_tipo_vacuna_2, ev.id_tipo_vacuna_3, ev.carnet, ev.nom_carnet, ev.dosis_1, ev.dosis_2, ' +
+            'ev.dosis_3, ev.fecha_1, ev.fecha_2, ev.fecha_3 FROM empl_vacuna AS ev WHERE ev.id_empleado = $1',
             [id_empleado]);
         if (VACUNA.rowCount > 0) {
             return res.jsonp(VACUNA.rows)
@@ -35,21 +33,26 @@ class VacunasControlador {
 
     // CREAR REGISTRO DE VACUNACIÓN
     public async CrearRegistro(req: Request, res: Response): Promise<void> {
-        const { id_empleado, id_tipo_vacuna, dosis_1, dosis_2, dosis_3, fecha_1, fecha_2, fecha_3, nom_carnet } = req.body;
+        const { id_empleado, dosis_1, dosis_2, dosis_3, fecha_1, fecha_2, fecha_3, nom_carnet,
+            id_tipo_vacuna_1, id_tipo_vacuna_2, id_tipo_vacuna_3 } = req.body;
         await pool.query('INSERT INTO empl_vacuna ( id_empleado, id_tipo_vacuna, dosis_1, dosis_2, ' +
             'dosis_3, fecha_1, fecha_2, fecha_3, nom_carnet) ' +
             'VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)',
-            [id_empleado, id_tipo_vacuna, dosis_1, dosis_2, dosis_3, fecha_1, fecha_2, fecha_3, nom_carnet]);
+            [id_empleado, dosis_1, dosis_2, dosis_3, fecha_1, fecha_2, fecha_3, nom_carnet, id_tipo_vacuna_1,
+                id_tipo_vacuna_2, id_tipo_vacuna_3]);
         res.jsonp({ message: 'Registro guardado.' });
     }
 
     // ACTUALIZAR REGISTRO DE VACUNACIÓN
     public async ActualizarRegistro(req: Request, res: Response): Promise<void> {
         const { id } = req.params;
-        const { id_tipo_vacuna, dosis_1, dosis_2, dosis_3, fecha_1, fecha_2, fecha_3, nom_carnet } = req.body;
-        await pool.query('UPDATE empl_vacuna SET id_tipo_vacuna = $1, dosis_1 = $2, dosis_2 = $3, dosis_3 = $4, ' +
-            'fecha_1 = $5, fecha_2 = $6, fecha_3 = $7, nom_carnet = $8 WHERE id = $9',
-            [id_tipo_vacuna, dosis_1, dosis_2, dosis_3, fecha_1, fecha_2, fecha_3, nom_carnet, id]);
+        const { dosis_1, dosis_2, dosis_3, fecha_1, fecha_2, fecha_3, nom_carnet, id_tipo_vacuna_1,
+            id_tipo_vacuna_2, id_tipo_vacuna_3 } = req.body;
+        await pool.query('UPDATE empl_vacuna SET dosis_1 = $1, dosis_2 = $2, dosis_3 = $3, ' +
+            'fecha_1 = $4, fecha_2 = $5, fecha_3 = $6, nom_carnet = $7, id_tipo_vacuna_1 = $8, ' +
+            'id_tipo_vacuna_2 = $9, id_tipo_vacuna_3 = $10 WHERE id = $11',
+            [dosis_1, dosis_2, dosis_3, fecha_1, fecha_2, fecha_3, nom_carnet, id_tipo_vacuna_1,
+                id_tipo_vacuna_2, id_tipo_vacuna_3, id]);
         res.jsonp({ message: 'Registro actualizado.' });
     }
 
