@@ -21,6 +21,10 @@ export class VacunacionService {
     return this.http.get(`${environment.url}/vacunas/${id_empleado}`);
   }
 
+  ObtenerUnaVacunaEmpleado(id: number) {
+    return this.http.get(`${environment.url}/vacunas/registro/${id}`);
+  }
+
   ActualizarRegistroVacuna(id: number, data: any) {
     return this.http.put(`${environment.url}/vacunas/${id}`, data);
   }
@@ -31,6 +35,10 @@ export class VacunacionService {
 
   SubirDocumento(formData, id: number) {
     return this.http.put(`${environment.url}/vacunas/${id}/documento`, formData)
+  }
+
+  ConsultarUltimaVacuna() {
+    return this.http.get(`${environment.url}/vacunas/buscar/ultimo`);
   }
 
 

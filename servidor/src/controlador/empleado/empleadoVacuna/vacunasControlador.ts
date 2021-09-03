@@ -16,13 +16,28 @@ class VacunasControlador {
         }
     }
 
-    // LISTAR REGISTRO DE VACUNACIÓN DEL EMPLEADO POR SU ID
+    // LISTAR REGISTROS DE VACUNACIÓN DEL EMPLEADO POR SU ID
     public async ListarUnRegistro(req: Request, res: Response): Promise<any> {
         const { id_empleado } = req.params;
         const VACUNA = await pool.query('SELECT ev.id, ev.id_empleado, ev.id_tipo_vacuna_1, ' +
             'ev.id_tipo_vacuna_2, ev.id_tipo_vacuna_3, ev.carnet, ev.nom_carnet, ev.dosis_1, ev.dosis_2, ' +
             'ev.dosis_3, ev.fecha_1, ev.fecha_2, ev.fecha_3 FROM empl_vacuna AS ev WHERE ev.id_empleado = $1',
             [id_empleado]);
+        if (VACUNA.rowCount > 0) {
+            return res.jsonp(VACUNA.rows)
+        }
+        else {
+            res.status(404).jsonp({ text: 'Registro no encontrado.' });
+        }
+    }
+
+    // LISTAR REGISTROS DE VACUNACIÓN POR SU ID
+    public async VerUnRegistro(req: Request, res: Response): Promise<any> {
+        const { id } = req.params;
+        const VACUNA = await pool.query('SELECT ev.id, ev.id_empleado, ev.id_tipo_vacuna_1, ' +
+            'ev.id_tipo_vacuna_2, ev.id_tipo_vacuna_3, ev.carnet, ev.nom_carnet, ev.dosis_1, ev.dosis_2, ' +
+            'ev.dosis_3, ev.fecha_1, ev.fecha_2, ev.fecha_3 FROM empl_vacuna AS ev WHERE ev.id = $1',
+            [id]);
         if (VACUNA.rowCount > 0) {
             return res.jsonp(VACUNA.rows)
         }
@@ -56,6 +71,17 @@ class VacunasControlador {
         res.jsonp({ message: 'Registro actualizado.' });
     }
 
+    // OBTENER EL ULTIMO REGISTRO DE TIPO VACUNA
+    public async ObtenerUltimoIdVacuna(req: Request, res: Response) {
+        const VACUNA = await pool.query('SELECT MAX(id) FROM empl_vacuna');
+        if (VACUNA.rowCount > 0) {
+            return res.jsonp(VACUNA.rows)
+        }
+        else {
+            return res.status(404).jsonp({ text: 'No se encuentran registros.' });
+        }
+    }
+
     // ELIMINAR REGISTRO DE VACUNACIÓN
     public async EliminarRegistro(req: Request, res: Response): Promise<void> {
         const { id } = req.params;
@@ -68,7 +94,7 @@ class VacunasControlador {
         let list: any = req.files;
         let documento = list.uploads[0].path.split("\\")[1];
         let id = req.params.id;
-        await pool.query('UPDATE empl_vacuna SET carnet = $2 WHERE id_empleado = $1', [id, documento]);
+        await pool.query('UPDATE empl_vacuna SET carnet = $2 WHERE id = $1', [id, documento]);
         res.jsonp({ message: 'Registro guardado.' });
     }
 

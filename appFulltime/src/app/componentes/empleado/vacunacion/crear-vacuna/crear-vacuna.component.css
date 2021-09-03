@@ -11,7 +11,9 @@
 
 mat-form-field { padding: 10px 15px 0px 15px; }
 
-.separar { padding: 10px 10px 0px 10px; }
+.separar_opciones { padding: 0px 0px 10px 50px; }
+
+.separar {padding: 10px 10px 0px 10px}
 
 #nomDocumento { font-size: 14px; display: inline-block; }
 

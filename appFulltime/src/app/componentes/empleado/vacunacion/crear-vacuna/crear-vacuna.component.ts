@@ -39,7 +39,6 @@ export class CrearVacunaComponent implements OnInit {
   ngOnInit(): void {
     this.ObtenerTipoVacunas();
     this.tipoVacuna[this.tipoVacuna.length] = { nombre: "OTRO" };
-
   }
 
   // VARIABLES VISUALIZACIÓN INGRESO DE TIPO DE VACUNA
@@ -226,10 +225,12 @@ export class CrearVacunaComponent implements OnInit {
       dosis_1: this.estado_1,
       dosis_2: this.estado_2,
       dosis_3: this.estado_3,
-      id_tipo_vacuna: id_tipo,
       fecha_1: form.fecha1Form,
       fecha_2: form.fecha2Form,
       fecha_3: form.fecha3Form,
+      id_tipo_vacuna_2: id_tipo,
+      id_tipo_vacuna_3: id_tipo,
+      id_tipo_vacuna_1: id_tipo,
       nom_carnet: form.certificadoForm,
       id_empleado: parseInt(this.idEmploy),
     }
@@ -264,12 +265,12 @@ export class CrearVacunaComponent implements OnInit {
   }
 
   // MÉTODO PARA GUARDAR ARCHIVO SELECCIONADO
-  CargarDocumento(idEmpleado: number) {
+  CargarDocumento(id: number) {
     let formData = new FormData();
     for (var i = 0; i < this.archivoSubido.length; i++) {
       formData.append("uploads[]", this.archivoSubido[i], this.archivoSubido[i].name);
     }
-    this.restVacuna.SubirDocumento(formData, idEmpleado).subscribe(res => {
+    this.restVacuna.SubirDocumento(formData, id).subscribe(res => {
       this.archivoF.reset();
       this.nameFile = '';
     });

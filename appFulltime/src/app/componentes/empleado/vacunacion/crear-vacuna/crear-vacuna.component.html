@@ -5,14 +5,14 @@
     <!-- Formulario Completo -->
     <form [formGroup]="vacunaForm">
         <mat-card-content>
-            <div class="container" style="padding-top: 15px; text-align: center;">
+            <div class="container" style="padding-top: 15px;">
                 <div class="nota">
                     <span>NOTA: Por favor llenar todos los campos obligatorios (*) del formulario para activar el botón
                         Guardar.</span>
                 </div>
                 <div class="row">
                     <div class="col">
-                        <div class="separar">
+                        <div class="separar_opciones">
                             <mat-checkbox [checked]="estado_1" (change)="VerFecha_1($event.checked)">
                                 Primera dosis
                             </mat-checkbox>
@@ -46,7 +46,7 @@
                                 matTooltip="Ingresar nombre tipo de vacuna.">
                                 help_outline</mat-icon>
                         </mat-form-field>
-                        <div class="separar">
+                        <div class="separar_opciones">
                             <mat-checkbox [checked]="estado_2" (change)="VerFecha_2($event.checked)">
                                 Segunda dosis
                             </mat-checkbox>
@@ -80,7 +80,7 @@
                                 matTooltip="Ingresar nombre tipo de vacuna.">
                                 help_outline</mat-icon>
                         </mat-form-field>
-                        <div class="separar">
+                        <div class="separar_opciones">
                             <mat-checkbox [checked]="estado_3" (change)="VerFecha_3($event.checked)">
                                 Tercera dosis
                             </mat-checkbox>
