@@ -21,10 +21,6 @@ export class VacunacionService {
     return this.http.get(`${environment.url}/vacunas/${id_empleado}`);
   }
 
-  ObtenerUnaVacunaEmpleado(id: number) {
-    return this.http.get(`${environment.url}/vacunas/registro/${id}`);
-  }
-
   ActualizarRegistroVacuna(id: number, data: any) {
     return this.http.put(`${environment.url}/vacunas/${id}`, data);
   }
@@ -44,14 +40,10 @@ export class VacunacionService {
 
   // SERVICIOS DE REGISTROS DE TIPO DE VACUNACIÓN
   CrearTipoVacuna(data: any) {
-    return this.http.post(`${environment.url}/vacunas/tipo_vacuna`, data);
+    return this.http.post<any>(`${environment.url}/vacunas/tipo_vacuna`, data);
   }
 
   ListarTiposVacuna() {
     return this.http.get(`${environment.url}/vacunas/lista/tipo_vacuna`);
-  }
-
-  ConsultarUltimoId() {
-    return this.http.get(`${environment.url}/vacunas/tipo_vacuna/buscar/ultimoId`);
   }
 }

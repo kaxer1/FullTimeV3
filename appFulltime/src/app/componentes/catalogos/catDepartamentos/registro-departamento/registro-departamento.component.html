@@ -11,7 +11,7 @@
         <div class="d-flex flex-wrap justify-content-between">
             <mat-form-field *ngIf="!Habilitar">
                 <mat-label id="depSup">Seleccionar Establecimiento</mat-label>
-                <mat-icon id="ayuda" matSuffix matTooltipPosition="right" matTooltipClass="regDepa-tooltip"
+                <mat-icon id="ayuda" matSuffix matTooltipPosition="right" 
                     matTooltip="Lista de Sucursales que pertenecen a la Empresa seleccionada">help_outline
                 </mat-icon>
                 <mat-select [formControl]="idSucursalF" required>
@@ -25,13 +25,13 @@
                 <mat-label>Departamento</mat-label>
                 <input matInput placeholder="Ej: Contabilidad" [formControl]="nombre"
                     (keypress)="IngresarSoloLetras($event)" [(ngModel)]="nombreD" required>
-                <mat-icon id="ayuda" matSuffix matTooltipPosition="right" matTooltipClass="regDepa-tooltip"
+                <mat-icon id="ayuda" matSuffix matTooltipPosition="right" 
                     matTooltip="Ingresar nombre del nuevo departamento">help_outline</mat-icon>
                 <mat-error *ngIf="nombre.invalid">{{ObtenerMensajeErrorNombre()}}</mat-error>
             </mat-form-field>
             <mat-form-field>
                 <mat-label>Nivel</mat-label>
-                <mat-icon id="ayuda" matSuffix matTooltipPosition="right" matTooltipClass="regDepa-tooltip"
+                <mat-icon id="ayuda" matSuffix matTooltipPosition="right" 
                     matTooltip="Seleccionar niveles del departamento">help_outline</mat-icon>
                 <mat-select [formControl]="nivel" [(ngModel)]="selectNivel" required>
                     <mat-option *ngFor="let n of niveles" [value]="n.nombre">
@@ -41,7 +41,7 @@
             </mat-form-field>
             <mat-form-field>
                 <mat-label id="depSup">Departamento Superior</mat-label>
-                <mat-icon id="ayuda" matSuffix matTooltipPosition="right" matTooltipClass="regDepa-tooltip"
+                <mat-icon id="ayuda" matSuffix matTooltipPosition="right" 
                     matTooltip="Seleccionar Departamento Superior del nuevo departamento">help_outline
                 </mat-icon>
                 <mat-select [formControl]="departamentoPadre" [(ngModel)]="selectPadre">

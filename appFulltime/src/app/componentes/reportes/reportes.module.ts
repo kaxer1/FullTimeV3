@@ -32,6 +32,7 @@ import { AdministradorTodasComponent } from './notificaciones/administrador-toda
 import { PorUsuarioComponent } from './notificaciones/por-usuario/por-usuario.component';
 import { OptionTimbreServidorComponent } from './option-timbre-servidor/option-timbre-servidor.component';
 import { TimbreAbiertosComponent } from './timbre-abiertos/timbre-abiertos.component';
+import { VacunaMultipleComponent } from './vacunas/vacuna-multiple/vacuna-multiple.component';
 
 @NgModule({
   declarations: [
@@ -59,6 +60,7 @@ import { TimbreAbiertosComponent } from './timbre-abiertos/timbre-abiertos.compo
     PorUsuarioComponent,
     OptionTimbreServidorComponent,
     TimbreAbiertosComponent,
+    VacunaMultipleComponent,
   ],
   exports: [
     ReporteFaltasComponent,

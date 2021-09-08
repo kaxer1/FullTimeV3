@@ -297,6 +297,7 @@ import { RecuperarFraseComponent } from './componentes/frase-administrar/recuper
 import { ListaAppComponent } from './componentes/appMovil/lista-app/lista-app.component';
 import { UpdateEstadoAppComponent } from './componentes/appMovil/update-estado-app/update-estado-app.component';
 import { OlvidarFraseComponent } from './componentes/frase-administrar/olvidar-frase/olvidar-frase.component';
+import { TipoVacunaComponent } from './componentes/empleado/vacunacion/tipo-vacuna/tipo-vacuna.component';
 
 
 const config: SocketIoConfig = { url: environment.url, options: {} };
@@ -537,6 +538,7 @@ const config: SocketIoConfig = { url: environment.url, options: {} };
     ListaAppComponent,
     UpdateEstadoAppComponent,
     OlvidarFraseComponent,
+    TipoVacunaComponent,
 
   ],
 

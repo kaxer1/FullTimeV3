@@ -1,5 +1,6 @@
 // IMPORTAR LIBRERIAS
 import { ToastrService } from 'ngx-toastr';
+import { MatDialog } from '@angular/material/dialog';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Component, OnInit, Input } from '@angular/core';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
@@ -7,10 +8,10 @@ import { MAT_MOMENT_DATE_FORMATS, MAT_MOMENT_DATE_ADAPTER_OPTIONS, MomentDateAda
 
 // IMPORTAR SERVICIOS
 import { VacunacionService } from 'src/app/servicios/empleado/empleadoVacunas/vacunacion.service';
-import { ValidacionesService } from 'src/app/servicios/validaciones/validaciones.service';
 
 // IMPORTAR COMPONENTES
 import { VerEmpleadoComponent } from '../../ver-empleado/ver-empleado.component';
+import { TipoVacunaComponent } from '../tipo-vacuna/tipo-vacuna.component';
 
 @Component({
   selector: 'app-crear-vacuna',
@@ -30,8 +31,8 @@ export class CrearVacunaComponent implements OnInit {
   @Input() idEmploy: string;
 
   constructor(
+    public ventana: MatDialog, // VARIABLE DE MANEJO DE VENTANAS DE NAVEGACIÓN
     public toastr: ToastrService, // VARIABLE USADA PARA MENSAJES DE NOTIFICACIONES
-    public validar: ValidacionesService, // VARIABLE USADA PARA VALIDACIONES
     public metodos: VerEmpleadoComponent, // VARIABLE USADA PARA EXTRAER MÉTODOS DEL COMPONENTEE IMPORTADO
     public restVacuna: VacunacionService, // CONSULTA DE SERVICIOS DATOS DE VACUNACIÓN
   ) { }
@@ -42,9 +43,6 @@ export class CrearVacunaComponent implements OnInit {
   }
 
   // VARIABLES VISUALIZACIÓN INGRESO DE TIPO DE VACUNA
-  ingresarTipo_1: boolean = true;
-  ingresarTipo_2: boolean = true;
-  ingresarTipo_3: boolean = true;
   estilo_1: any;
   estilo_2: any;
   estilo_3: any;
@@ -70,9 +68,6 @@ export class CrearVacunaComponent implements OnInit {
   vacuna_1F = new FormControl('');
   vacuna_2F = new FormControl('');
   vacuna_3F = new FormControl('');
-  nombre_1F = new FormControl('');
-  nombre_2F = new FormControl('');
-  nombre_3F = new FormControl('');
   certificadoF = new FormControl('');
 
   // FORMULARIO DENTRO DE UN GRUPO
@@ -81,9 +76,6 @@ export class CrearVacunaComponent implements OnInit {
     vacuna_1Form: this.vacuna_1F,
     vacuna_2Form: this.vacuna_2F,
     vacuna_3Form: this.vacuna_3F,
-    nombre_1Form: this.nombre_1F,
-    nombre_2Form: this.nombre_2F,
-    nombre_3Form: this.nombre_3F,
     archivoForm: this.archivoF,
     fecha1Form: this.fecha1F,
     fecha2Form: this.fecha2F,
@@ -97,11 +89,6 @@ export class CrearVacunaComponent implements OnInit {
       this.tipoVacuna = data;
       this.tipoVacuna[this.tipoVacuna.length] = { nombre: "OTRO" };
     });
-  }
-
-  // MÉTODO PARA INGRESAR SOLO LETRAS EN EL FORMULARIO
-  IngresarSoloLetras(e) {
-    return this.validar.IngresarSoloLetras(e);
   }
 
   // MÉTODO PARA QUITAR ARCHIVO SELECCIONADO
@@ -128,9 +115,6 @@ export class CrearVacunaComponent implements OnInit {
   // MÉTODO PARA LIMPIAR FORMULARIO
   LimpiarCampos() {
     this.vacunaForm.reset();
-    this.ingresarTipo_1 = true;
-    this.ingresarTipo_2 = true;
-    this.ingresarTipo_3 = true;
     this.HabilitarBtn = false;
     this.estado_1 = false;
     this.estado_2 = false;
@@ -153,74 +137,33 @@ export class CrearVacunaComponent implements OnInit {
   }
 
   // MÉTODO PARA VISUALIZAR CAMPO REGISTRO DE TIPO DE VACUNA
-  ActivarDesactivarNombre(form, opcion: number) {
+  AbrirVentana(form, opcion: number) {
     if (opcion === 1) {
       if (form.vacuna_1Form === undefined) {
-        this.vacunaForm.patchValue({
-          nombre_1Form: '',
-        });
-        this.estilo_1 = { 'visibility': 'visible' }; this.ingresarTipo_1 = false;
-        this.toastr.info('Ingresar nombre de tipo de vacuna.', 'Etiqueta Registrar Vacuna activa.', {
-          timeOut: 6000,
-        })
-      }
-      else {
-        this.vacunaForm.patchValue({
-          nombre_1Form: '',
-        });
-        this.estilo_1 = { 'visibility': 'hidden' }; this.ingresarTipo_1 = true;
+        this.AbrirTipoVacuna();
       }
     }
     else if (opcion === 2) {
       if (form.vacuna_2Form === undefined) {
-        this.vacunaForm.patchValue({
-          nombre_2Form: '',
-        });
-        this.estilo_2 = { 'visibility': 'visible' }; this.ingresarTipo_2 = false;
-        this.toastr.info('Ingresar nombre de tipo de vacuna.', 'Etiqueta Registrar Vacuna activa.', {
-          timeOut: 6000,
-        })
-      }
-      else {
-        this.vacunaForm.patchValue({
-          nombre_2Form: '',
-        });
-        this.estilo_2 = { 'visibility': 'hidden' }; this.ingresarTipo_2 = true;
+        this.AbrirTipoVacuna();
       }
     }
     else if (opcion === 3) {
       if (form.vacuna_3Form === undefined) {
-        this.vacunaForm.patchValue({
-          nombre_3Form: '',
-        });
-        this.estilo_3 = { 'visibility': 'visible' }; this.ingresarTipo_3 = false;
-        this.toastr.info('Ingresar nombre de tipo de vacuna.', 'Etiqueta Registrar Vacuna activa.', {
-          timeOut: 6000,
-        })
-      }
-      else {
-        this.vacunaForm.patchValue({
-          nombre_3Form: '',
-        });
-        this.estilo_3 = { 'visibility': 'hidden' }; this.ingresarTipo_3 = true;
+        this.AbrirTipoVacuna();
       }
     }
   }
 
-  // MÉTODO PARA REGISTRAR TIPO DE VACUNA
-  GuardarTipoVacuna(form) {
-    let tipoVacunas = {
-      nombre: form.nombreForm,
-    }
-    this.restVacuna.CrearTipoVacuna(tipoVacunas).subscribe(response => {
-      this.restVacuna.ConsultarUltimoId().subscribe(data => {
-        this.GuardarDatosCarnet(form, data[0].max);
+  AbrirTipoVacuna() {
+    this.ventana.open(TipoVacunaComponent,
+      { width: '300px' }).afterClosed().subscribe(item => {
+        this.ObtenerTipoVacunas();
       });
-    }, error => { });
   }
 
   // MÉTODO PARA GUARDAR DATOS DE REGISTRO DE VACUNACIÓN 
-  GuardarDatosCarnet(form, id_tipo) {
+  GuardarDatosCarnet(form) {
     let dataCarnet = {
       dosis_1: this.estado_1,
       dosis_2: this.estado_2,
@@ -228,14 +171,13 @@ export class CrearVacunaComponent implements OnInit {
       fecha_1: form.fecha1Form,
       fecha_2: form.fecha2Form,
       fecha_3: form.fecha3Form,
-      id_tipo_vacuna_2: id_tipo,
-      id_tipo_vacuna_3: id_tipo,
-      id_tipo_vacuna_1: id_tipo,
+      id_tipo_vacuna_2: form.vacuna_2Form,
+      id_tipo_vacuna_3: form.vacuna_3Form,
+      id_tipo_vacuna_1: form.vacuna_1Form,
       nom_carnet: form.certificadoForm,
       id_empleado: parseInt(this.idEmploy),
     }
     this.MensajeFechas(form, dataCarnet);
-    console.log('datos de entrada', dataCarnet);
     this.restVacuna.CrearRegistroVacunacion(dataCarnet).subscribe(response => {
       this.toastr.success(this.mensaje, 'Registro Vacunación guardado.', {
         timeOut: 6000,
@@ -247,40 +189,25 @@ export class CrearVacunaComponent implements OnInit {
     }, error => { });
   }
 
-  // MÉTODO PARA CREAR REGISTRO SEGÚN LA SELECCIÓN DE TIPO DE VACUNA
-  CrearRegistroVacuna(form) {
-    if (form.idTipoForm === undefined || form.idTipoForm === '' || form.idTipoForm === null) {
-      if (form.nombreForm != '' && form.nombreForm != null && form.nombreForm != undefined) {
-        this.GuardarTipoVacuna(form);
-      }
-      else {
-        this.toastr.warning('Ingresar nombre de un tipo de vacuna.', '', {
-          timeOut: 6000,
-        })
-      }
-    }
-    else {
-      this.GuardarDatosCarnet(form, form.idTipoForm);
-    }
-  }
-
   // MÉTODO PARA GUARDAR ARCHIVO SELECCIONADO
-  CargarDocumento(id: number) {
+  CargarDocumento() {
     let formData = new FormData();
     for (var i = 0; i < this.archivoSubido.length; i++) {
       formData.append("uploads[]", this.archivoSubido[i], this.archivoSubido[i].name);
     }
-    this.restVacuna.SubirDocumento(formData, id).subscribe(res => {
-      this.archivoF.reset();
-      this.nameFile = '';
+    this.restVacuna.ConsultarUltimaVacuna().subscribe(ultimo => {
+      this.restVacuna.SubirDocumento(formData, ultimo[0].max).subscribe(res => {
+        this.archivoF.reset();
+        this.nameFile = '';
+      });
     });
   }
 
   // MÉTODO PARA GUARDAR DATOS DE REGISTROS SI EL ARCHIVO CUMPLE CON LOS REQUISITOS
   VerificarArchivo(form) {
     if (this.archivoSubido[0].size <= 2e+6) {
-      this.CrearRegistroVacuna(form);
-      this.CargarDocumento(parseInt(this.idEmploy));
+      this.GuardarDatosCarnet(form);
+      this.CargarDocumento();
       this.metodos.ObtenerDatosVacunas();
       this.CerrarRegistro();
     }
@@ -297,7 +224,7 @@ export class CrearVacunaComponent implements OnInit {
       this.VerificarArchivo(form);
     }
     else {
-      this.CrearRegistroVacuna(form);
+      this.GuardarDatosCarnet(form);
     }
   }
 

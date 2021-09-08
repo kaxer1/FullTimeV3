@@ -20,7 +20,7 @@
                     </mat-form-field>
                     <mat-form-field>
                         <mat-label>Tipo de Hora Extra</mat-label>
-                        <mat-icon id="ayuda" matSuffix matTooltipPosition="right" matTooltipClass="regDepa-tooltip"
+                        <mat-icon id="ayuda" matSuffix matTooltipPosition="right" 
                             matTooltip="Seleccionar el tipo de hora extra">help_outline</mat-icon>
                         <mat-select [formControl]="seleccionarHoraF" required>
                             <mat-option *ngFor="let hora of horasExtras" [value]="hora.id"> {{hora.descripcion}}

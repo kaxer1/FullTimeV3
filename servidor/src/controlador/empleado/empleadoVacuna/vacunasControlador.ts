@@ -21,23 +21,9 @@ class VacunasControlador {
         const { id_empleado } = req.params;
         const VACUNA = await pool.query('SELECT ev.id, ev.id_empleado, ev.id_tipo_vacuna_1, ' +
             'ev.id_tipo_vacuna_2, ev.id_tipo_vacuna_3, ev.carnet, ev.nom_carnet, ev.dosis_1, ev.dosis_2, ' +
-            'ev.dosis_3, ev.fecha_1, ev.fecha_2, ev.fecha_3 FROM empl_vacuna AS ev WHERE ev.id_empleado = $1',
+            'ev.dosis_3, ev.fecha_1, ev.fecha_2, ev.fecha_3 FROM empl_vacuna AS ev WHERE ev.id_empleado = $1 ' +
+            'ORDER BY ev.id DESC',
             [id_empleado]);
-        if (VACUNA.rowCount > 0) {
-            return res.jsonp(VACUNA.rows)
-        }
-        else {
-            res.status(404).jsonp({ text: 'Registro no encontrado.' });
-        }
-    }
-
-    // LISTAR REGISTROS DE VACUNACIÓN POR SU ID
-    public async VerUnRegistro(req: Request, res: Response): Promise<any> {
-        const { id } = req.params;
-        const VACUNA = await pool.query('SELECT ev.id, ev.id_empleado, ev.id_tipo_vacuna_1, ' +
-            'ev.id_tipo_vacuna_2, ev.id_tipo_vacuna_3, ev.carnet, ev.nom_carnet, ev.dosis_1, ev.dosis_2, ' +
-            'ev.dosis_3, ev.fecha_1, ev.fecha_2, ev.fecha_3 FROM empl_vacuna AS ev WHERE ev.id = $1',
-            [id]);
         if (VACUNA.rowCount > 0) {
             return res.jsonp(VACUNA.rows)
         }
@@ -50,9 +36,9 @@ class VacunasControlador {
     public async CrearRegistro(req: Request, res: Response): Promise<void> {
         const { id_empleado, dosis_1, dosis_2, dosis_3, fecha_1, fecha_2, fecha_3, nom_carnet,
             id_tipo_vacuna_1, id_tipo_vacuna_2, id_tipo_vacuna_3 } = req.body;
-        await pool.query('INSERT INTO empl_vacuna ( id_empleado, id_tipo_vacuna, dosis_1, dosis_2, ' +
-            'dosis_3, fecha_1, fecha_2, fecha_3, nom_carnet) ' +
-            'VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)',
+        await pool.query('INSERT INTO empl_vacuna ( id_empleado, dosis_1, dosis_2, dosis_3, fecha_1, ' +
+            'fecha_2, fecha_3, nom_carnet, id_tipo_vacuna_1, id_tipo_vacuna_2, id_tipo_vacuna_3) ' +
+            'VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)',
             [id_empleado, dosis_1, dosis_2, dosis_3, fecha_1, fecha_2, fecha_3, nom_carnet, id_tipo_vacuna_1,
                 id_tipo_vacuna_2, id_tipo_vacuna_3]);
         res.jsonp({ message: 'Registro guardado.' });
@@ -122,19 +108,12 @@ class VacunasControlador {
 
     // CREAR REGISTRO DE TIPO DE VACUNA
     public async CrearTipoVacuna(req: Request, res: Response): Promise<void> {
-        const { nombre } = req.body;
-        await pool.query('INSERT INTO tipo_vacuna (nombre) VALUES ($1)', [nombre]);
-        res.jsonp({ message: 'Registro guardado.' });
-    }
-
-    // OBTENER EL ULTIMO REGISTRO DE TIPO DE VACUNA REALIZADO
-    public async ObtenerUltimoId(req: Request, res: Response) {
-        const VACUNA = await pool.query('SELECT MAX(id) FROM tipo_vacuna');
-        if (VACUNA.rowCount > 0) {
-            return res.jsonp(VACUNA.rows)
-        }
-        else {
-            return res.status(404).jsonp({ text: 'No se encuentran registros.' });
+        try {
+            const { nombre } = req.body;
+            await pool.query('INSERT INTO tipo_vacuna (nombre) VALUES ($1)', [nombre]);
+            res.jsonp({ message: 'Registro guardado.' });
+        } catch (error) {
+            res.jsonp({ message: 'error' });
         }
     }
 

@@ -35,22 +35,8 @@ class VacunasControlador {
             const { id_empleado } = req.params;
             const VACUNA = yield database_1.default.query('SELECT ev.id, ev.id_empleado, ev.id_tipo_vacuna_1, ' +
                 'ev.id_tipo_vacuna_2, ev.id_tipo_vacuna_3, ev.carnet, ev.nom_carnet, ev.dosis_1, ev.dosis_2, ' +
-                'ev.dosis_3, ev.fecha_1, ev.fecha_2, ev.fecha_3 FROM empl_vacuna AS ev WHERE ev.id_empleado = $1', [id_empleado]);
-            if (VACUNA.rowCount > 0) {
-                return res.jsonp(VACUNA.rows);
-            }
-            else {
-                res.status(404).jsonp({ text: 'Registro no encontrado.' });
-            }
-        });
-    }
-    // LISTAR REGISTROS DE VACUNACIÓN POR SU ID
-    VerUnRegistro(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const { id } = req.params;
-            const VACUNA = yield database_1.default.query('SELECT ev.id, ev.id_empleado, ev.id_tipo_vacuna_1, ' +
-                'ev.id_tipo_vacuna_2, ev.id_tipo_vacuna_3, ev.carnet, ev.nom_carnet, ev.dosis_1, ev.dosis_2, ' +
-                'ev.dosis_3, ev.fecha_1, ev.fecha_2, ev.fecha_3 FROM empl_vacuna AS ev WHERE ev.id = $1', [id]);
+                'ev.dosis_3, ev.fecha_1, ev.fecha_2, ev.fecha_3 FROM empl_vacuna AS ev WHERE ev.id_empleado = $1 ' +
+                'ORDER BY ev.id DESC', [id_empleado]);
             if (VACUNA.rowCount > 0) {
                 return res.jsonp(VACUNA.rows);
             }
@@ -63,9 +49,9 @@ class VacunasControlador {
     CrearRegistro(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { id_empleado, dosis_1, dosis_2, dosis_3, fecha_1, fecha_2, fecha_3, nom_carnet, id_tipo_vacuna_1, id_tipo_vacuna_2, id_tipo_vacuna_3 } = req.body;
-            yield database_1.default.query('INSERT INTO empl_vacuna ( id_empleado, id_tipo_vacuna, dosis_1, dosis_2, ' +
-                'dosis_3, fecha_1, fecha_2, fecha_3, nom_carnet) ' +
-                'VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)', [id_empleado, dosis_1, dosis_2, dosis_3, fecha_1, fecha_2, fecha_3, nom_carnet, id_tipo_vacuna_1,
+            yield database_1.default.query('INSERT INTO empl_vacuna ( id_empleado, dosis_1, dosis_2, dosis_3, fecha_1, ' +
+                'fecha_2, fecha_3, nom_carnet, id_tipo_vacuna_1, id_tipo_vacuna_2, id_tipo_vacuna_3) ' +
+                'VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)', [id_empleado, dosis_1, dosis_2, dosis_3, fecha_1, fecha_2, fecha_3, nom_carnet, id_tipo_vacuna_1,
                 id_tipo_vacuna_2, id_tipo_vacuna_3]);
             res.jsonp({ message: 'Registro guardado.' });
         });
@@ -138,20 +124,13 @@ class VacunasControlador {
     // CREAR REGISTRO DE TIPO DE VACUNA
     CrearTipoVacuna(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { nombre } = req.body;
-            yield database_1.default.query('INSERT INTO tipo_vacuna (nombre) VALUES ($1)', [nombre]);
-            res.jsonp({ message: 'Registro guardado.' });
-        });
-    }
-    // OBTENER EL ULTIMO REGISTRO DE TIPO DE VACUNA REALIZADO
-    ObtenerUltimoId(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const VACUNA = yield database_1.default.query('SELECT MAX(id) FROM tipo_vacuna');
-            if (VACUNA.rowCount > 0) {
-                return res.jsonp(VACUNA.rows);
+            try {
+                const { nombre } = req.body;
+                yield database_1.default.query('INSERT INTO tipo_vacuna (nombre) VALUES ($1)', [nombre]);
+                res.jsonp({ message: 'Registro guardado.' });
             }
-            else {
-                return res.status(404).jsonp({ text: 'No se encuentran registros.' });
+            catch (error) {
+                res.jsonp({ message: 'error' });
             }
         });
     }
