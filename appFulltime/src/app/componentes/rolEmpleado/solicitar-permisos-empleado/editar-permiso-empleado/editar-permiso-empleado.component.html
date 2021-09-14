@@ -16,7 +16,7 @@
                 <div class="d-flex flex-wrap justify-content-around">
                     <mat-form-field>
                         <mat-label>Seleccionar Permiso</mat-label>
-                        <mat-icon id="permiso" matSuffix matTooltipClass="permiso-tooltip" matTooltipPosition="right"
+                        <mat-icon id="permiso" matSuffix  matTooltipPosition="right"
                             matTooltip="Lista de Tipos de Permisos existentes">
                             help_outline</mat-icon>
                         <mat-select [formControl]="idPermisoF" required>
@@ -70,7 +70,7 @@
                             (dateInput)="validarFechaSalida($event, PermisoForm.value)" readonly
                             placeholder="dd/mm/aaaa" [formControl]="fechaInicioF" min="1950-01-31" max="2050-01-31"
                             required>
-                        <mat-datepicker-toggle matSuffix [for]="picker2" id="permiso" matTooltipClass="permiso-tooltip"
+                        <mat-datepicker-toggle matSuffix [for]="picker2" id="permiso" 
                             matTooltipPosition="right"
                             matTooltip="Indicar la fecha en la desea el permiso. Seleccione la fecha dando click en el icono de calendario o puede escribir la fecha con el formato  día/mes/año. Ejemplo: 12/04/1993">
                         </mat-datepicker-toggle>
@@ -81,7 +81,7 @@
                         <input matInput [matDatepicker]="picker3"
                             (dateInput)="validarFechaIngreso($event, PermisoForm.value)" placeholder="dd/mm/aaaa"
                             [formControl]="fechaFinalF" required readonly>
-                        <mat-datepicker-toggle matSuffix [for]="picker3" id="permiso" matTooltipClass="permiso-tooltip"
+                        <mat-datepicker-toggle matSuffix [for]="picker3" id="permiso" 
                             matTooltipPosition="right"
                             matTooltip="Indicar la fecha de finalización del permiso. Seleccione la fecha dando click en el icono de calendario o puede escribir la fecha con el formato  día/mes/año. Ejemplo: 12/04/1993">
                         </mat-datepicker-toggle>
@@ -102,7 +102,7 @@
                         <mat-label id="letras">Fin de semana: días libres</mat-label>
                         <input matInput placeholder="Días libres" [formControl]="diaLibreF"
                             (keypress)="IngresarSoloNumeros($event)" [ngStyle]="estiloDiasL" id="Dlibres">
-                        <mat-icon id="permiso" matSuffix matTooltipClass="permiso-tooltip" matTooltipPosition="right"
+                        <mat-icon id="permiso" matSuffix  matTooltipPosition="right"
                             matTooltip="Indicar cuantos días de fin de semana se encuentran dentro del permiso">
                             help_outline</mat-icon>
                     </mat-form-field>

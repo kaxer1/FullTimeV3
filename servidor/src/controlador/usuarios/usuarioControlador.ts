@@ -148,6 +148,7 @@ class UsuarioControlador {
 
   public async RestablecerFrase(req: Request, res: Response) {
     const correo = req.body.correo;
+    const url_page = req.body.url_page;
     Credenciales(1);
     const correoValido = await pool.query('SELECT e.id, e.nombre, e.apellido, e.correo, u.usuario, ' +
       'u.contrasena FROM empleados AS e, usuarios AS u WHERE correo = $1 AND u.id_empleado = e.id AND ' +
@@ -157,7 +158,7 @@ class UsuarioControlador {
 
     const token = jwt.sign({ _id: correoValido.rows[0].id }, process.env.TOKEN_SECRET_MAIL || 'llaveEmail', { expiresIn: 60 * 5, algorithm: 'HS512' });
 
-    var url = 'http://localhost:4200/recuperar-frase';
+    var url = url_page + '/recuperar-frase';
     var data = {
       to: correoValido.rows[0].correo,
       from: email,

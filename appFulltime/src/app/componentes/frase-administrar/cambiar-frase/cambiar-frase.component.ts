@@ -81,6 +81,7 @@ export class CambiarFraseComponent implements OnInit {
 
   RecuperarFrase() {
     this.loginService.logout();
+    this.dialogRef.close();
     this.router.navigate(['/frase-olvidar']);
   }
 

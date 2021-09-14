@@ -201,7 +201,7 @@
                 </div>
                 <div class="col-md">
                     <mat-card class="mat-elevation-z8" style="padding-bottom: 5px;">
-                        <div class="barraTitulo1">
+                        <div id="titulo">
                             <div class="container">
                                 <div class="row" style="text-align: center;">
                                     <div class="col">
@@ -267,16 +267,10 @@
                         <mat-card-content>
                             <div class="container" style="padding-top: 15px;" *ngFor="let dv of datosVacuna">
                                 <div class="row">
-                                    <div class="col-lg">
-                                        <label><b>Vacuna:</b> {{dv.vacuna}}</label>
-                                    </div>
-                                </div>
-                                <div class="row">
                                     <div class="col-lg-4">
-                                        <!--     <mat-radio-button *ngIf="dv.dosis_1 === true" [checked]="dv.dosis_1" disabled>
-                                            Primera dosis
-                                        </mat-radio-button>-->
                                         <label *ngIf="dv.dosis_1 === true"><b>Primera Dosis</b></label>
+                                        <br>
+                                        <label><b>Vacuna:</b> {{dv.id_tipo_vacuna_1}}</label>
                                         <br>
                                         <label *ngIf="dv.fecha_1 != null"><b>Fecha:</b>
                                             {{dv.fecha_1.split('T')[0]}}</label>
@@ -284,11 +278,15 @@
                                     <div class="col-lg-4">
                                         <label *ngIf="dv.dosis_2 === true"><b>Segunda Dosis</b></label>
                                         <br>
+                                        <label><b>Vacuna:</b> {{dv.id_tipo_vacuna_2}}</label>
+                                        <br>
                                         <label *ngIf="dv.fecha_2 != null"><b>Fecha:</b>
                                             {{dv.fecha_2.split('T')[0]}}</label>
                                     </div>
                                     <div class="col-lg-4">
                                         <label *ngIf="dv.dosis_3 === true"><b>Tercera Dosis</b></label>
+                                        <br>
+                                        <label><b>Vacuna:</b> {{dv.id_tipo_vacuna_3}}</label>
                                         <br>
                                         <label *ngIf="dv.fecha_3 != null"><b>Fecha:</b>
                                             {{dv.fecha_3.split('T')[0]}}</label>

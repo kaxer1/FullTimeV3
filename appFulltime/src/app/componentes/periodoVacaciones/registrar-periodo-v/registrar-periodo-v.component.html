@@ -24,7 +24,7 @@
                     <mat-form-field>
                         <mat-label>Descripción</mat-label>
                         <input matInput placeholder="Ej:" [formControl]="descripcionF" required>
-                        <mat-icon id="ayuda" matSuffix matTooltipPosition="right" matTooltipClass="regDepa-tooltip"
+                        <mat-icon id="ayuda" matSuffix matTooltipPosition="right" 
                             matTooltip="Ingresar nombre del período de vacaciones">help_outline</mat-icon>
                         <mat-error *ngIf="descripcionF.invalid">{{ObtenerMensajeErrorNombre()}}</mat-error>
                         <mat-error *ngIf="descripcionF.invalid">Ingrese una descripción válida</mat-error>

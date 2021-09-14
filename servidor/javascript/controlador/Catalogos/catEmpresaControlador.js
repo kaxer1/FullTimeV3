@@ -196,6 +196,17 @@ class EmpresaControlador {
             }
         });
     }
+    BuscarCadena(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const EMPRESA = yield database_1.default.query('SELECT cadena FROM cg_empresa');
+            if (EMPRESA.rowCount > 0) {
+                return res.jsonp(EMPRESA.rows);
+            }
+            else {
+                return res.status(404).jsonp({ text: 'No se encuentran registros' });
+            }
+        });
+    }
 }
 exports.EMPRESA_CONTROLADOR = new EmpresaControlador();
 exports.default = exports.EMPRESA_CONTROLADOR;

@@ -229,7 +229,7 @@
                                 <div class="row" style="margin-top: 5px;">
                                     <div class="col" style="text-align: right;">
                                         <a mat-button type="submit" class="btn" matSuffix matTooltipPosition="right"
-                                            matTooltip="Editar los datos generales de este registro"
+                                            matTooltip="Editar los datos generales de este registro."
                                             (click)="AbrirVentanaEditarTitulo(rte)">
                                             <i class="fas fa-edit" id="edit">
                                                 <p>Editar</p>
@@ -314,6 +314,13 @@
         <div class="container" style="padding-top: 15px; padding-bottom: 25px;">
             <div class="row">
                 <div class="col-md">
+                    <div style="padding-bottom: 5px;">
+                        <app-crear-vacuna [idEmploy]="idEmpleado" *ngIf="!mostrarVacuna">
+                        </app-crear-vacuna>
+                        <app-editar-vacuna [idEmploy]="idEmpleado" [dvacuna]="vacuna_editar"
+                            *ngIf="mostrarVacunaEditar">
+                        </app-editar-vacuna>
+                    </div>
                     <mat-card class="mat-elevation-z8" style="padding-bottom: 5px;">
                         <div class="d-flex bd-highlight barraTitulo1">
                             <div class="w-100 bd-highlight">
@@ -328,16 +335,10 @@
                         <mat-card-content>
                             <div class="container" style="padding-top: 15px;" *ngFor="let dv of datosVacuna">
                                 <div class="row">
-                                    <div class="col-lg">
-                                        <label><b>Vacuna:</b> {{dv.vacuna}}</label>
-                                    </div>
-                                </div>
-                                <div class="row">
                                     <div class="col-lg-4">
-                                        <!--     <mat-radio-button *ngIf="dv.dosis_1 === true" [checked]="dv.dosis_1" disabled>
-                                            Primera dosis
-                                        </mat-radio-button>-->
                                         <label *ngIf="dv.dosis_1 === true"><b>Primera Dosis</b></label>
+                                        <br>
+                                        <label><b>Vacuna:</b> {{dv.id_tipo_vacuna_1}}</label>
                                         <br>
                                         <label *ngIf="dv.fecha_1 != null"><b>Fecha:</b>
                                             {{dv.fecha_1.split('T')[0]}}</label>
@@ -345,11 +346,15 @@
                                     <div class="col-lg-4">
                                         <label *ngIf="dv.dosis_2 === true"><b>Segunda Dosis</b></label>
                                         <br>
+                                        <label><b>Vacuna:</b> {{dv.id_tipo_vacuna_2}}</label>
+                                        <br>
                                         <label *ngIf="dv.fecha_2 != null"><b>Fecha:</b>
                                             {{dv.fecha_2.split('T')[0]}}</label>
                                     </div>
                                     <div class="col-lg-4">
                                         <label *ngIf="dv.dosis_3 === true"><b>Tercera Dosis</b></label>
+                                        <br>
+                                        <label><b>Vacuna:</b> {{dv.id_tipo_vacuna_3}}</label>
                                         <br>
                                         <label *ngIf="dv.fecha_3 != null"><b>Fecha:</b>
                                             {{dv.fecha_3.split('T')[0]}}</label>
@@ -370,6 +375,13 @@
                                 </div>
                                 <div class="row" style="margin-top: 5px;">
                                     <div class="col" style="text-align: right;">
+                                        <a mat-button type="submit" class="btn" matSuffix matTooltipPosition="right"
+                                            matTooltip="Editar los datos generales de este registro"
+                                            (click)="AbrirVentanaEditar(dv)">
+                                            <i class="fas fa-edit" id="edit">
+                                                <p>Editar</p>
+                                            </i>
+                                        </a>
                                         <a mat-button type="submit" (click)="ConfirmarEliminarVacuna(dv.id)" matSuffix>
                                             <i class="far fa-trash-alt" matTooltipPosition="right" id="delete"
                                                 matTooltip="Eliminar registro">
@@ -378,15 +390,10 @@
                                         </a>
                                     </div>
                                 </div>
+                                <mat-divider></mat-divider>
                             </div>
                         </mat-card-content>
                     </mat-card>
-                    <div style="padding-bottom: 35px; padding-top: 35px;">
-                        <app-crear-vacuna [idEmploy]="idEmpleado" *ngIf="!mostrarVacuna">
-                        </app-crear-vacuna>
-                        <app-editar-vacuna [idEmploy]="idEmpleado" [dvacuna]="datosVacuna" *ngIf="!mostrarVacunaEditar">
-                        </app-editar-vacuna>
-                    </div>
                 </div>
             </div>
         </div>
@@ -542,7 +549,6 @@
                                             target="_blank">
                                             <p>{{ce.doc_nombre}}</p>
                                         </a>
-                                        <!-- href="{{rutaContrato}}"  -->
                                         <a *ngIf="ce.doc_nombre === null || ce.doc_nombre === ''" mat-button
                                             type="submit"
                                             (click)="verContratoEdicion(false); ObtenerIdContratoSeleccionado(ce.id)"

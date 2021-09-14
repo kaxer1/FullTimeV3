@@ -23,11 +23,11 @@ class VacunaRutas {
         this.router.get('/:id_empleado', TokenValidation, VACUNA_CONTROLADOR.ListarUnRegistro);
         this.router.delete('/eliminar/:id', TokenValidation, VACUNA_CONTROLADOR.EliminarRegistro);
         this.router.put('/:id/documento', [TokenValidation, multipartMiddleware], VACUNA_CONTROLADOR.GuardarDocumento);
+        this.router.get('/buscar/ultimo', TokenValidation, VACUNA_CONTROLADOR.ObtenerUltimoIdVacuna);
 
         // RUTAS REGISTROS TIPOS DE VACUNA
         this.router.get('/lista/tipo_vacuna', TokenValidation, VACUNA_CONTROLADOR.ListarTipoVacuna);
         this.router.post('/tipo_vacuna', TokenValidation, VACUNA_CONTROLADOR.CrearTipoVacuna);
-        this.router.get('/tipo_vacuna/buscar/ultimoId', TokenValidation, VACUNA_CONTROLADOR.ObtenerUltimoId);
     }
 }
 

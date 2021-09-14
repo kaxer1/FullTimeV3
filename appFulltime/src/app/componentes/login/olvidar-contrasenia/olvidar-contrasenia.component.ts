@@ -3,6 +3,7 @@ import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { LoginService } from 'src/app/servicios/login/login.service';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
 
 @Component({
   selector: 'app-olvidar-contrasenia',
@@ -11,6 +12,8 @@ import { ToastrService } from 'ngx-toastr';
 })
 
 export class OlvidarContraseniaComponent implements OnInit {
+
+  cadena: string;
 
   correo = new FormControl('', [Validators.required, Validators.email]);
 
@@ -21,9 +24,12 @@ export class OlvidarContraseniaComponent implements OnInit {
   constructor(
     public rest: LoginService,
     private router: Router,
+    public restE: EmpresaService,
     private toastr: ToastrService) { }
 
-  ngOnInit(): void {}
+  ngOnInit(): void { 
+    this.VerRuta();
+  }
 
   ObtenerMensajeCampoUsuarioError() {
     if (this.correo.hasError('required')) {
@@ -37,7 +43,8 @@ export class OlvidarContraseniaComponent implements OnInit {
 
   EnviarCorreoConfirmacion(form) {
     let dataPass = {
-      correo: form.usuarioF
+      correo: form.usuarioF,
+      url_page: this.cadena
     }
     this.rest.forgetPassword(dataPass).subscribe(res => {
       this.respuesta = res;
@@ -58,6 +65,12 @@ export class OlvidarContraseniaComponent implements OnInit {
 
   Cancelar() {
     this.router.navigate(['/login']);
+  }
+
+  VerRuta() {
+    this.restE.ConsultarEmpresaCadena().subscribe(res => {
+      this.cadena = res[0].cadena
+    })
   }
 
 }

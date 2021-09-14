@@ -12,28 +12,7 @@
                 </div>
                 <div class="row">
                     <div class="col">
-                        <mat-form-field>
-                            <mat-label>Vacuna</mat-label>
-                            <mat-icon id="i-cursor" matSuffix matTooltipPosition="right"
-                                matTooltip="Seleccionar tipo de vacuna.">
-                                help_outline
-                            </mat-icon>
-                            <mat-select [formControl]="idTipoF">
-                                <mat-option *ngFor="let tv of tipoVacuna" [value]="tv.id"
-                                    (click)="ActivarDesactivarNombre(vacunaForm.value)">
-                                    {{tv.nombre}}
-                                </mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                        <mat-form-field *ngIf="!ingresarTipo">
-                            <mat-label>Registrar Vacuna</mat-label>
-                            <input matInput placeholder="SINOVAC" (keypress)="IngresarSoloLetras($event)"
-                                formControlName="nombreForm" [ngStyle]="estilo">
-                            <mat-icon id="i-cursor" matSuffix matTooltipPosition="right"
-                                matTooltip="Ingresar nombre tipo de vacuna.">
-                                help_outline</mat-icon>
-                        </mat-form-field>
-                        <div class="separar">
+                        <div class="separar_opciones">
                             <mat-checkbox [checked]="estado_1" (change)="VerFecha_1($event.checked)">
                                 Primera dosis
                             </mat-checkbox>
@@ -46,7 +25,20 @@
                             </mat-datepicker-toggle>
                             <mat-datepicker touchUi #picker1></mat-datepicker>
                         </mat-form-field>
-                        <div class="separar">
+                        <mat-form-field *ngIf="fecha_1">
+                            <mat-label>Vacuna</mat-label>
+                            <mat-icon id="i-cursor" matSuffix matTooltipPosition="right"
+                                matTooltip="Seleccionar tipo de vacuna.">
+                                help_outline
+                            </mat-icon>
+                            <mat-select [formControl]="vacuna_1F">
+                                <mat-option *ngFor="let tv of tipoVacuna" [value]="tv.nombre"
+                                    (click)="AbrirVentana(vacunaForm.value, 1)">
+                                    {{tv.nombre}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        <div class="separar_opciones">
                             <mat-checkbox [checked]="estado_2" (change)="VerFecha_2($event.checked)">
                                 Segunda dosis
                             </mat-checkbox>
@@ -59,7 +51,20 @@
                             </mat-datepicker-toggle>
                             <mat-datepicker touchUi #picker2></mat-datepicker>
                         </mat-form-field>
-                        <div class="separar">
+                        <mat-form-field *ngIf="fecha_2">
+                            <mat-label>Vacuna</mat-label>
+                            <mat-icon id="i-cursor" matSuffix matTooltipPosition="right"
+                                matTooltip="Seleccionar tipo de vacuna.">
+                                help_outline
+                            </mat-icon>
+                            <mat-select [formControl]="vacuna_2F">
+                                <mat-option *ngFor="let tv of tipoVacuna" [value]="tv.nombre"
+                                    (click)="AbrirVentana(vacunaForm.value, 2)">
+                                    {{tv.nombre}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        <div class="separar_opciones">
                             <mat-checkbox [checked]="estado_3" (change)="VerFecha_3($event.checked)">
                                 Tercera dosis
                             </mat-checkbox>
@@ -71,6 +76,19 @@
                                 matTooltip="Ingresar la fecha en la que recibio la tercera dosis de la vacuna. Seleccionar fecha o escribir fecha con formato día/mes/año. Ejemplo: 12/04/1993">
                             </mat-datepicker-toggle>
                             <mat-datepicker touchUi #picker3></mat-datepicker>
+                        </mat-form-field>
+                        <mat-form-field *ngIf="fecha_3">
+                            <mat-label>Vacuna</mat-label>
+                            <mat-icon id="i-cursor" matSuffix matTooltipPosition="right"
+                                matTooltip="Seleccionar tipo de vacuna.">
+                                help_outline
+                            </mat-icon>
+                            <mat-select [formControl]="vacuna_3F">
+                                <mat-option *ngFor="let tv of tipoVacuna" [value]="tv.nombre"
+                                    (click)="AbrirVentana(vacunaForm.value, 3)">
+                                    {{tv.nombre}}
+                                </mat-option>
+                            </mat-select>
                         </mat-form-field>
                     </div>
                     <div class="col">

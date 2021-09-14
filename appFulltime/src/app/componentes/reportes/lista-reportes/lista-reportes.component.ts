@@ -70,6 +70,23 @@ export class ListaReportesComponent implements OnInit {
 
 const TREE_DATA: CategoriasReportes[] = [
   {
+    name: 'Reportes Generales',
+    icono: 'grid_view',
+    children: [
+      { name: 'Kardex', url: '/reporteKardex' },
+      { name: 'Timbres', url: '/reporteTimbres' },
+      { name: 'Timbre Abierto', url: '/reporte-timbre-abierto' },
+      { name: 'Atrasos', url: '/reporteAtrasos' },
+      { name: 'Permisos', url: '/reportePermisos' },
+      { name: 'Empleados', url: '/reporteEmpleados' },
+      { name: 'Entradas Salidas', url: '/reporteEntradaSalida' },
+      { name: 'Empleados Inactivos', url: '/reporte-emp-inactivos' },
+      { name: 'Solicitudes Horas Extras', url: '/horas/extras' },
+      { name: 'Horas Extras Autorizaciones', url: '/reporteHorasExtras' },
+      { name: 'Asistencia Detalle Consolidado', url: '/reporteAsistenciaConsolidado' },
+    ]
+  },
+  {
     name: 'Reportes Múltiples',
     icono: 'watch_later',
     children: [
@@ -78,6 +95,7 @@ const TREE_DATA: CategoriasReportes[] = [
       { name: 'Timbres', url: '/reporte-timbres-multiples' },
       { name: 'Puntualidad', url: '/reporte-puntualidad' },
       { name: 'Horas Trabajadas', url: '/reporte-horas-trabaja' },
+      { name: 'Empleados Vacunados', url: '/lista-vacunados' },
     ]
   },
   {
@@ -99,27 +117,7 @@ const TREE_DATA: CategoriasReportes[] = [
     children: [
       { name: 'Tickets Consumidos', url: '/alimentosGeneral' },
       { name: 'Detallado Tickets Consumidos', url: '/alimentosDetallado' },
-    ]
-  },
-  {
-    name: 'Reportes Generales',
-    icono: 'grid_view',
-    children: [
-      { name: 'Kardex', url: '/reporteKardex' },
-      { name: 'Timbres', url: '/reporteTimbres' },
-      { name: 'Timbre Abierto', url: '/reporte-timbre-abierto' },
-      { name: 'Atrasos', url: '/reporteAtrasos' },
-      { name: 'Permisos', url: '/reportePermisos' },
-      { name: 'Empleados', url: '/reporteEmpleados' },
-      { name: 'Entradas Salidas', url: '/reporteEntradaSalida' },
-      { name: 'Empleados Inactivos', url: '/reporte-emp-inactivos' },
-<<<<<<< HEAD
-      { name: 'Horas Extras Calculados', url: '/horas/extras' },
-=======
-      { name: 'Solicitudes Horas Extras', url: '/horas/extras' },
->>>>>>> 02d14eadb2de328920347110074d739493c5f935
-      { name: 'Horas Extras Autorizaciones', url: '/reporteHorasExtras' },
-      { name: 'Asistencia Detalle Consolidado', url: '/reporteAsistenciaConsolidado' },
+      { name: 'Servicios Invitados', url: '/alimentosInvitados' },
     ]
   },
   {

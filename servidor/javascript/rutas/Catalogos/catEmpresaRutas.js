@@ -33,6 +33,8 @@ class DepartamentoRutas {
         this.router.put('/doble/seguridad', verificarToken_1.TokenValidation, catEmpresaControlador_1.default.ActualizarSeguridad);
         this.router.put('/acciones-timbre', verificarToken_1.TokenValidation, catEmpresaControlador_1.default.ActualizarAccionesTimbres);
         this.router.put('/reporte/marca', verificarToken_1.TokenValidation, catEmpresaControlador_1.default.ActualizarMarcaAgua);
+        // CADENA DE NAVEGACIÓN
+        this.router.get('/navegar', catEmpresaControlador_1.default.BuscarCadena);
     }
 }
 const EMPRESA_RUTAS = new DepartamentoRutas();

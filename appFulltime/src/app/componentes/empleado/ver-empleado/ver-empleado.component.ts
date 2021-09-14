@@ -1027,45 +1027,33 @@ export class VerEmpleadoComponent implements OnInit {
     this.datosVacuna = [];
     this.restVacuna.ObtenerVacunaEmpleado(parseInt(this.idEmpleado)).subscribe(data => {
       this.datosVacuna = data;
-      this.HabilitarBotonesVacuna();
     });
   }
 
-  mostrarVacunaEditar: boolean = true;
-  HabilitarBotonesVacuna() {
-    if (this.datosVacuna.length == 0) {
-      this.btnVacuna = 'Añadir';
-    } else {
-      this.btnVacuna = 'Editar';
-    }
+  mostrarVacunaEditar: boolean = false;
+  vacuna_editar: any = [];
+  AbrirVentanaEditar(datos: any) {
+    this.vacuna_editar = datos;
+    this.mostrarVacunaEditar = true;
+    this.btnVacuna = 'No Añadir';
   }
 
   // LÓGICA DE BOTÓN PARA MOSTRAR COMPONENTE DEL REGISTRO DE VACUNACION 
   MostrarVentanaVacuna() {
-    if (this.btnVacuna != 'Editar' && this.btnVacuna != 'Cancelar') {
-      if (this.mostrarVacuna == true) {
-        this.mostrarVacuna = false;
-        this.btnVacuna = 'No Añadir';
-      } else {
-        this.mostrarVacuna = true;
-        this.btnVacuna = 'Añadir';
-      }
+    this.mostrarVacunaEditar = false;
+    if (this.mostrarVacuna == true) {
+      this.mostrarVacuna = false;
+      this.btnVacuna = 'No Añadir';
     } else {
-      if (this.mostrarVacunaEditar == false) {
-        this.mostrarVacunaEditar = true;
-        this.btnVacuna = 'Editar';
-      } else {
-        this.mostrarVacunaEditar = false;
-        this.btnVacuna = 'Cancelar';
-      }
-    }
+      this.mostrarVacuna = true;
+      this.btnVacuna = 'Añadir';
+    } 
   }
 
   // ELIMINAR REGISTRO DE VACUNA
   EliminarVacuna(id: number) {
     this.restVacuna.EliminarRegistroVacuna(id).subscribe(res => {
       this.ObtenerDatosVacunas();
-      this.btnVacuna = 'Añadir';
       this.toastr.error('Registro eliminado', '', {
         timeOut: 6000,
       });

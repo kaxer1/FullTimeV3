@@ -1,10 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
-import { LoginService } from 'src/app/servicios/login/login.service';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
-import { Md5 } from 'ts-md5';
 import { UsuarioService } from 'src/app/servicios/usuarios/usuario.service';
 
 @Component({
@@ -48,7 +46,7 @@ export class RecuperarFraseComponent implements OnInit {
       this.mensaje = res;
       if (this.mensaje.expiro === 'si') {
         this.router.navigate(['/frase-olvidar']);
-        this.toastr.error(this.mensaje.message, 'Ups algo a salido mal.', {
+        this.toastr.error(this.mensaje.message, 'UPS! Algo a salido mal.', {
           timeOut: 6000,
         });
       } else {

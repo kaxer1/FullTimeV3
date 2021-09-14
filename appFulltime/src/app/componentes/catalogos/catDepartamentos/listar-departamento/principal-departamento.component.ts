@@ -26,8 +26,7 @@ import { MetodosComponent } from 'src/app/componentes/metodoEliminar/metodos.com
 @Component({
   selector: 'app-principal-departamento',
   templateUrl: './principal-departamento.component.html',
-  styleUrls: ['./principal-departamento.component.css'],
-  //encapsulation: ViewEncapsulation.None
+  styleUrls: ['./principal-departamento.component.css']
 })
 
 export class PrincipalDepartamentoComponent implements OnInit {

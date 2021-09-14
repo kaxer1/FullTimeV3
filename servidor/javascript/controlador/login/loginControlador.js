@@ -129,12 +129,13 @@ class LoginControlador {
     RestablecerContrasenia(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const correo = req.body.correo;
+            const url_page = req.body.url_page;
             settingsMail_1.Credenciales(1);
             const correoValido = yield database_1.default.query('SELECT e.id, e.nombre, e.apellido, e.correo, u.usuario, u.contrasena FROM empleados AS e, usuarios AS u WHERE correo = $1 AND u.id_empleado = e.id', [correo]);
             if (correoValido.rows[0] == undefined)
                 return res.status(401).send('Correo no valido para el usuario');
             const token = jsonwebtoken_1.default.sign({ _id: correoValido.rows[0].id }, process.env.TOKEN_SECRET_MAIL || 'llaveEmail', { expiresIn: 60 * 5, algorithm: 'HS512' });
-            var url = 'http://localhost:4200/confirmar-contrasenia';
+            var url = url_page + '/confirmar-contrasenia';
             var data = {
                 to: correoValido.rows[0].correo,
                 from: settingsMail_1.email,

@@ -4,12 +4,7 @@
 
 export const environment = {
   production: false,
-<<<<<<< HEAD
-  url: 'http://192.168.1.11:3001'
-
-=======
   url: 'http://192.168.0.210:3001'
->>>>>>> b4dde459b3ed6a734211e0d713e672119a1f982f
 };
 
 /*

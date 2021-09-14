@@ -1,12 +1,12 @@
 <div class="container" style="padding-top: 15px; padding-bottom: 25px;">
     <div class="row">
-        <div class="col-md">
+        <div class="col-md" style="padding-bottom: 10px;">
             <mat-card class="mat-elevation-z8" style="padding-bottom: 5px;">
-                <div class="barraTitulo1">
+                <div id="titulo">
                     <div class="container">
                         <div class="row" style="text-align: center;">
                             <div class="col">
-                                <h5>Información de vacación</h5>
+                                <h5>INFORMACIÓN DE VACACIÓN</h5>
                             </div>
                         </div>
                     </div>
@@ -63,11 +63,11 @@
         </div>
         <div class="col-md">
             <mat-card class="mat-elevation-z8" style="padding-bottom: 5px;">
-                <div class="barraTitulo1">
+                <div id="titulo">
                     <div class="container">
                         <div class="row" style="text-align: center;">
                             <div class="col">
-                                <h5>Información de la Autorización</h5>
+                                <h5>INFORMACIÓN DE LA AUTORIZACIÓN</h5>
                             </div>
                         </div>
                     </div>
@@ -80,13 +80,19 @@
                                     <label id="datosF">Código autorización</label>
                                     <label>{{a.id}}</label>
                                 </div>
-                                <div class="caja1 d-flex justify-content-start">
-                                    <label id="datosF">Estado</label>
-                                    <label>{{estado}}</label>
-                                </div>
-                                <div class="caja1 d-flex justify-content-start">
-                                    <label id="datosF">Orden:</label>
-                                    <label>{{a.orden}}</label>
+                                <div *ngFor="let ea of empleado_estado">
+                                    <div class="row">
+                                        <div class="col">
+                                            <div class="caja1 d-flex justify-content-start">
+                                                <label id="datosF">Colaborador:</label>
+                                                <label>{{ea.nombre}}</label>
+                                            </div>
+                                            <div class="caja1 d-flex justify-content-start">
+                                                <label id="datosF">Estado:</label>
+                                                <label>{{ea.estado}}</label>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="caja1 d-flex justify-content-start">
                                     <label id="datosF">Departamento:</label>
@@ -95,10 +101,11 @@
                                 <div class="caja1 d-flex justify-content-start">
                                     <label id="datosF">Solicitud de Vacaciones:</label>
                                     <label>
-                                        <a id="iconos" (click)="generarPdf('download')" matSuffix
-                                            matTooltipPosition="right" 
+                                        <a id="iconos" (click)="GenerarPdf('download')" matSuffix
+                                            matTooltipPosition="right"
                                             matTooltip="Descargar Solicitud de Permiso en formato PDF">
-                                            <label style="font-size: 14px; color: red; font-weight: bold;">Solicitud.pdf</label>
+                                            <label
+                                                style="font-size: 14px; color: red; font-weight: bold;">Solicitud.pdf</label>
                                         </a>
                                     </label>
                                 </div>
@@ -110,8 +117,9 @@
                             <div class="col">
                             </div>
                             <div class="col" style="text-align: right;">
-                                <i *ngIf="!habilitarActualizar" class="fas fa-edit" style="color:green; text-align: center;"
-                                    matSuffix matTooltipPosition="right" (click)="AbrirVentanaEditarAutorizacion(a)"
+                                <i *ngIf="!habilitarActualizar" class="fas fa-edit" id="i-cursor"
+                                    style="color:green; text-align: center;" matSuffix matTooltipPosition="right"
+                                    (click)="AbrirVentanaEditarAutorizacion(a)"
                                     matTooltip="Cambiar el estado del permiso">
                                     <p>Estado</p>
                                 </i>

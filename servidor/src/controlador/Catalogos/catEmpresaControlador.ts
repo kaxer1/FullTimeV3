@@ -179,6 +179,16 @@ class EmpresaControlador {
         }
     }
 
+    public async BuscarCadena(req: Request, res: Response) {
+        const EMPRESA = await pool.query('SELECT cadena FROM cg_empresa');
+        if (EMPRESA.rowCount > 0) {
+            return res.jsonp(EMPRESA.rows)
+        }
+        else {
+            return res.status(404).jsonp({ text: 'No se encuentran registros' });
+        }
+    }
+
 }
 
 export const EMPRESA_CONTROLADOR = new EmpresaControlador();
