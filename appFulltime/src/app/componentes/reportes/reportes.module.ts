@@ -33,6 +33,7 @@ import { PorUsuarioComponent } from './notificaciones/por-usuario/por-usuario.co
 import { OptionTimbreServidorComponent } from './option-timbre-servidor/option-timbre-servidor.component';
 import { TimbreAbiertosComponent } from './timbre-abiertos/timbre-abiertos.component';
 import { VacunaMultipleComponent } from './vacunas/vacuna-multiple/vacuna-multiple.component';
+import { AlimentosInvitadosComponent } from './alimentacion/alimentos-invitados/alimentos-invitados.component';
 
 @NgModule({
   declarations: [
@@ -61,6 +62,7 @@ import { VacunaMultipleComponent } from './vacunas/vacuna-multiple/vacuna-multip
     OptionTimbreServidorComponent,
     TimbreAbiertosComponent,
     VacunaMultipleComponent,
+    AlimentosInvitadosComponent,
   ],
   exports: [
     ReporteFaltasComponent,

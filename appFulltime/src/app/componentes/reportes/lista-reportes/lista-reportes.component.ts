@@ -117,6 +117,7 @@ const TREE_DATA: CategoriasReportes[] = [
     children: [
       { name: 'Tickets Consumidos', url: '/alimentosGeneral' },
       { name: 'Detallado Tickets Consumidos', url: '/alimentosDetallado' },
+      { name: 'Servicios Invitados', url: '/alimentosInvitados' },
     ]
   },
   {

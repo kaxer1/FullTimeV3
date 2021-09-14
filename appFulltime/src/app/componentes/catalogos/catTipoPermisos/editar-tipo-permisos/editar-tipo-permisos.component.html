@@ -213,7 +213,7 @@
                         <input matInput [matDatepicker]="picker2" readonly placeholder="dd/mm/aaaa"
                             formControlName="fechaForm" min="1950-01-31" max="2050-01-31"
                             (dateInput)="VerificarFecha($event)">
-                        <mat-datepicker-toggle matSuffix [for]="picker2" id="permiso" matTooltipClass="permiso-tooltip"
+                        <mat-datepicker-toggle matSuffix [for]="picker2" id="permiso" 
                             matTooltipPosition="right"
                             matTooltip="Indicar la fecha en la que no se concedera permisos. Seleccione la fecha dando click en el icono de calendario o puede escribir la fecha con el formato  día/mes/año. Ejemplo: 12/04/1993">
                         </mat-datepicker-toggle>

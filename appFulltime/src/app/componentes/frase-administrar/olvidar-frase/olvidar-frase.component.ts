@@ -1,17 +1,22 @@
-import { Component, OnInit } from '@angular/core';
+// IMPORTAR LIBRERIAS
 import { FormControl, Validators, FormGroup } from '@angular/forms';
-import { LoginService } from 'src/app/servicios/login/login.service';
-import { Router } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
+import { Router } from '@angular/router';
+
+// IMPORTAR SERVICIOS
 import { UsuarioService } from 'src/app/servicios/usuarios/usuario.service';
+import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
 
 @Component({
   selector: 'app-olvidar-frase',
   templateUrl: './olvidar-frase.component.html',
   styleUrls: ['./olvidar-frase.component.css']
 })
+
 export class OlvidarFraseComponent implements OnInit {
 
+  cadena: string;
   correo = new FormControl('', [Validators.required, Validators.email]);
 
   public olvidarFrase = new FormGroup({
@@ -19,11 +24,15 @@ export class OlvidarFraseComponent implements OnInit {
   });
 
   constructor(
+    private toastr: ToastrService,
+    public restE: EmpresaService,
     public rest: UsuarioService,
     private router: Router,
-    private toastr: ToastrService) { }
+  ) { }
 
-  ngOnInit(): void { }
+  ngOnInit(): void {
+    this.VerRuta();
+  }
 
   ObtenerMensajeCampoUsuarioError() {
     if (this.correo.hasError('required')) {
@@ -37,8 +46,10 @@ export class OlvidarFraseComponent implements OnInit {
 
   EnviarCorreoConfirmacion(form) {
     let dataPass = {
-      correo: form.usuarioF
+      correo: form.usuarioF,
+      url_page: this.cadena
     }
+    
     this.rest.RecuperarFraseSeguridad(dataPass).subscribe(res => {
       this.respuesta = res;
       if (this.respuesta.mail === 'si') {
@@ -58,6 +69,12 @@ export class OlvidarFraseComponent implements OnInit {
 
   Cancelar() {
     this.router.navigate(['/login']);
+  }
+
+  VerRuta() {
+    this.restE.ConsultarEmpresaCadena().subscribe(res => {
+      this.cadena = res[0].cadena
+    })
   }
 
 }

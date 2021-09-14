@@ -44,4 +44,8 @@ export class AlimentacionService {
     return this.http.post(`${environment.url}/alimentacion/extras/detalle/solicita`, data)
   }
 
+  ObtenerDetallesInvitados(data: any) {
+    return this.http.post(`${environment.url}/alimentacion/servicios/invitados`, data)
+  }
+
 }

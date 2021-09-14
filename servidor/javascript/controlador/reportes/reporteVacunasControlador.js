@@ -13,16 +13,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const database_1 = __importDefault(require("../../database"));
-class ReportesAsistenciaControlador {
-    ReporteTimbresMultiple(req, res) {
+class ReportesVacunasControlador {
+    ReporteVacunasMultiple(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            let { desde, hasta } = req.params;
+            console.log('datos recibidos', req.body);
             let datos = req.body;
             let n = yield Promise.all(datos.map((obj) => __awaiter(this, void 0, void 0, function* () {
                 obj.departamentos = yield Promise.all(obj.departamentos.map((ele) => __awaiter(this, void 0, void 0, function* () {
                     ele.empleado = yield Promise.all(ele.empleado.map((o) => __awaiter(this, void 0, void 0, function* () {
-                        o.timbres = yield BuscarTimbres(desde, hasta, o.codigo);
-                        console.log('Timbres: ', o);
+                        o.vacunas = yield BuscarVacunas(o.id);
+                        console.log('Vacunas: ', o);
                         return o;
                     })));
                     return ele;
@@ -31,22 +31,25 @@ class ReportesAsistenciaControlador {
             })));
             let nuevo = n.map((obj) => {
                 obj.departamentos = obj.departamentos.map((e) => {
-                    e.empleado = e.empleado.filter((t) => { return t.timbres.length > 0; });
+                    e.empleado = e.empleado.filter((v) => { return v.vacunas.length > 0; });
                     return e;
                 }).filter((e) => { return e.empleado.length > 0; });
                 return obj;
             }).filter(obj => { return obj.departamentos.length > 0; });
             if (nuevo.length === 0)
-                return res.status(400).jsonp({ message: 'No hay timbres de empleados en ese periodo' });
+                return res.status(400).jsonp({ message: 'No se ha encontrado registro de vacunas.' });
             return res.status(200).jsonp(nuevo);
         });
     }
 }
-const VACUNAS_REPORTE_CONTROLADOR = new ReportesAsistenciaControlador();
+const VACUNAS_REPORTE_CONTROLADOR = new ReportesVacunasControlador();
 exports.default = VACUNAS_REPORTE_CONTROLADOR;
-const BuscarTimbres = function (fec_inicio, fec_final, codigo) {
+const BuscarVacunas = function (id) {
     return __awaiter(this, void 0, void 0, function* () {
-        return yield database_1.default.query('SELECT CAST(fec_hora_timbre AS VARCHAR), id_reloj, accion, observacion, latitud, longitud, CAST(fec_hora_timbre_servidor AS VARCHAR)  FROM timbres WHERE CAST(fec_hora_timbre AS VARCHAR) between $1 || \'%\' AND $2 || \'%\' AND id_empleado = $3 ORDER BY fec_hora_timbre ASC ', [fec_inicio, fec_final, codigo])
+        return yield database_1.default.query('SELECT ev.id, ev.id_empleado, ev.id_tipo_vacuna_1, ' +
+            'ev.id_tipo_vacuna_2, ev.id_tipo_vacuna_3, ev.carnet, ev.nom_carnet, ev.dosis_1, ev.dosis_2, ' +
+            'ev.dosis_3, ev.fecha_1, ev.fecha_2, ev.fecha_3 FROM empl_vacuna AS ev WHERE ev.id_empleado = $1 ' +
+            'ORDER BY ev.id DESC', [id])
             .then(res => {
             return res.rows;
         });

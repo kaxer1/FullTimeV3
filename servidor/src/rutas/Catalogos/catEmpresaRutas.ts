@@ -36,6 +36,9 @@ class DepartamentoRutas {
         this.router.put('/acciones-timbre', TokenValidation, EMPRESA_CONTROLADOR.ActualizarAccionesTimbres);
 
         this.router.put('/reporte/marca', TokenValidation, EMPRESA_CONTROLADOR.ActualizarMarcaAgua);
+
+        // CADENA DE NAVEGACIÓN
+        this.router.get('/navegar', EMPRESA_CONTROLADOR.BuscarCadena);
     }
 }
 

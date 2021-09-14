@@ -1,5 +1,5 @@
 // IMPORTAR LIBRERIAS
-import { ITableEmpleados, IReporteTimbres, timbre } from 'src/app/model/reportes.model';
+import { ITableEmpleados, ReporteVacunas, vacuna } from 'src/app/model/reportes.model';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { SelectionModel } from '@angular/cdk/collections';
 import { PageEvent } from '@angular/material/paginator';
@@ -14,8 +14,8 @@ import * as xlsx from 'xlsx';
 import { ReportesAsistenciasService } from 'src/app/servicios/reportes/reportes-asistencias.service';
 import { ValidacionesService } from '../../../../servicios/validaciones/validaciones.service';
 import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
+import { VacunasService } from 'src/app/servicios/reportes/vacunas/vacunas.service';
 import { ReportesService } from 'src/app/servicios/reportes/reportes.service';
-
 
 @Component({
   selector: 'app-vacuna-multiple',
@@ -25,17 +25,22 @@ import { ReportesService } from 'src/app/servicios/reportes/reportes.service';
 
 export class VacunaMultipleComponent implements OnInit, OnDestroy {
 
-  get opcion() { return this.reporteService.opcion };
-
+  // MÉTODO QUE INDICA OPCIONES DE BÚSQUEDA SELECCIONADOS
   get bool() { return this.reporteService.criteriosBusqueda };
 
+  // VARIABLE QUE INDICA NÚMERO DE OPCIONES DE BÚSQUEDA
+  get opcion() { return this.reporteService.opcion };
+
+  // VARIABLES DE ALMACENAMIENTO DE RESULTADOS
   departamentos: any = [];
   sucursales: any = [];
   empleados: any = [];
   respuesta: any[];
 
+  // VARIABLE DE ALMACENAMIENTO DE DATOS DE PDF
   data_pdf: any = [];
 
+  // VARIABLES DE ALMACENAMIENTO DE DATOS SELECCIONADOS EN LA BÚSQUEDA
   selectionSuc = new SelectionModel<ITableEmpleados>(true, []);
   selectionDep = new SelectionModel<ITableEmpleados>(true, []);
   selectionEmp = new SelectionModel<ITableEmpleados>(true, []);
@@ -67,11 +72,12 @@ export class VacunaMultipleComponent implements OnInit, OnDestroy {
   get filtroNombreEmp() { return this.reporteService.filtroNombreEmp };
 
   constructor(
-    private R_asistencias: ReportesAsistenciasService,
-    private validacionService: ValidacionesService,
-    private reporteService: ReportesService,
-    private restEmpre: EmpresaService,
-    private toastr: ToastrService,
+    private R_asistencias: ReportesAsistenciasService, // SERVICIO BÚSQUEDA DE DATOS DE DEPARTAMENTOS
+    private validacionService: ValidacionesService, // VARIABLE DE VALIDACIONES DE INGRESO DE LETRAS O NÚMEROS
+    private reporteService: ReportesService, // SERVICIO DATOS DE BÚSQUEDA GENERALES DE REPORTE
+    private restEmpre: EmpresaService, // SERVICIO DATOS GENERALES DE EMPRESA
+    private R_vacuna: VacunasService, // SERVICIO DATOS PARA REPORTE DE VACUNAS
+    private toastr: ToastrService, // VARIABLE DE MANEJO DE NOTIFICACIONES
   ) {
     this.ObtenerLogo();
     this.ObtenerColores();
@@ -79,9 +85,12 @@ export class VacunaMultipleComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
 
-    sessionStorage.removeItem('reporte_timbres_multiple');
+    sessionStorage.removeItem('reporte_vacunas_multiples');
+    // BÚSQUEDA DE DEPARTAMENTOS
     this.R_asistencias.Departamentos().subscribe((res: any[]) => {
-      sessionStorage.setItem('reporte_timbres_multiple', JSON.stringify(res))
+      sessionStorage.setItem('reporte_vacunas_multiples', JSON.stringify(res))
+
+      // BÚSQUEDA DE SUCURSALES
       this.sucursales = res.map(obj => {
         return {
           id: obj.id_suc,
@@ -89,6 +98,7 @@ export class VacunaMultipleComponent implements OnInit, OnDestroy {
         }
       });
 
+      // BÚSQUEDA DE DEPARTAMENTOS
       res.forEach(obj => {
         obj.departamentos.forEach(ele => {
           this.departamentos.push({
@@ -98,6 +108,7 @@ export class VacunaMultipleComponent implements OnInit, OnDestroy {
         })
       })
 
+      // BÚSQUEDA DE DEPARTAMENTO - EMPLEADOS
       res.forEach(obj => {
         obj.departamentos.forEach(ele => {
           ele.empleado.forEach(r => {
@@ -123,50 +134,41 @@ export class VacunaMultipleComponent implements OnInit, OnDestroy {
     this.empleados = [];
   }
 
-  /**
-   * VALIDACIONES REPORT
-   */
+  // VALIDACIONES DE REPORTES
   validacionReporte(action) {
-    if (this.bool.bool_suc === false && this.bool.bool_dep === false && this.bool.bool_emp === false
-      && this.bool.bool_tab === false && this.bool.bool_inc === false) return this.toastr.error('Seleccione un criterio de búsqueda')
-    console.log('opcion:', this.opcion);
-
+    if (this.bool.bool_suc === false && this.bool.bool_dep === false && this.bool.bool_emp === false) return this.toastr.error('Seleccione un criterio de búsqueda.')
     switch (this.opcion) {
       case 1:
-        if (this.selectionSuc.selected.length === 0) return this.toastr.error('No a seleccionado ninguno', 'Seleccione sucursal')
+        if (this.selectionSuc.selected.length === 0) return this.toastr.error('No a seleccionado ninguno.', 'Seleccione sucursal.')
         this.ModelarSucursal(action);
         break;
       case 2:
-        if (this.selectionDep.selected.length === 0) return this.toastr.error('No a seleccionado ninguno', 'Seleccione departamentos')
+        if (this.selectionDep.selected.length === 0) return this.toastr.error('No a seleccionado ninguno.', 'Seleccione departamentos.')
         this.ModelarDepartamento(action);
         break;
       case 3:
-        if (this.selectionEmp.selected.length === 0) return this.toastr.error('No a seleccionado ninguno', 'Seleccione empleados')
+        if (this.selectionEmp.selected.length === 0) return this.toastr.error('No a seleccionado ninguno.', 'Seleccione empleados.')
         this.ModelarEmpleados(action);
         break;
       default:
-        this.toastr.error('Algo a pasado', 'Seleccione criterio de busqueda')
+        this.toastr.error('UPS! Al parecer algo falló.', 'Seleccione criterio de búsqueda.')
         this.reporteService.DefaultFormCriterios()
         break;
     }
   }
 
+  // MODELAMIENTO DE DATOS DE ACUERDO A LAS SUCURSALES
   ModelarSucursal(accion) {
-
-    let respuesta = JSON.parse(sessionStorage.getItem('reporte_timbres_multiple'))
-
+    let respuesta = JSON.parse(sessionStorage.getItem('reporte_vacunas_multiples'))
     let suc = respuesta.filter(o => {
       var bool = this.selectionSuc.selected.find(obj1 => {
         return obj1.id === o.id_suc
       })
       return bool != undefined
     })
-
-    // console.log('SUCURSAL', suc);
     this.data_pdf = []
-    this.R_asistencias.ReporteTimbresMultiple(suc, '', '').subscribe(res => {
+    this.R_vacuna.ReporteVacunasMultiples(suc).subscribe(res => {
       this.data_pdf = res
-      // console.log('DATA PDF', this.data_pdf);
       switch (accion) {
         case 'excel': this.exportToExcel('default'); break;
         default: this.generarPdf(accion); break;
@@ -176,10 +178,9 @@ export class VacunaMultipleComponent implements OnInit, OnDestroy {
     })
   }
 
+  // MODELAMIENTO DE DATOS DE ACUERDO A LOS DEPARTAMENTOS
   ModelarDepartamento(accion) {
-
-    let respuesta = JSON.parse(sessionStorage.getItem('reporte_timbres_multiple'))
-
+    let respuesta = JSON.parse(sessionStorage.getItem('reporte_vacunas_multiples'))
     respuesta.forEach((obj: any) => {
       obj.departamentos = obj.departamentos.filter(o => {
         var bool = this.selectionDep.selected.find(obj1 => {
@@ -191,11 +192,9 @@ export class VacunaMultipleComponent implements OnInit, OnDestroy {
     let dep = respuesta.filter(obj => {
       return obj.departamentos.length > 0
     });
-    // console.log('DEPARTAMENTOS', dep);
     this.data_pdf = []
-    this.R_asistencias.ReporteTimbresMultiple(dep, 'this.rangoFechas.fec_inico', 'this.rangoFechas.fec_final').subscribe(res => {
+    this.R_vacuna.ReporteVacunasMultiples(dep).subscribe(res => {
       this.data_pdf = res
-      // console.log('DATA PDF',this.data_pdf);
       switch (accion) {
         case 'excel': this.exportToExcel('default'); break;
         default: this.generarPdf(accion); break;
@@ -205,10 +204,9 @@ export class VacunaMultipleComponent implements OnInit, OnDestroy {
     })
   }
 
+  // MODELAMIENTO DE DATOS DE ACUERDO A LOS EMPLEADOS
   ModelarEmpleados(accion) {
-
-    let respuesta = JSON.parse(sessionStorage.getItem('reporte_timbres_multiple'))
-
+    let respuesta = JSON.parse(sessionStorage.getItem('reporte_vacunas_multiples'))
     respuesta.forEach((obj: any) => {
       obj.departamentos.forEach(element => {
         element.empleado = element.empleado.filter(o => {
@@ -224,16 +222,12 @@ export class VacunaMultipleComponent implements OnInit, OnDestroy {
         return e.empleado.length > 0
       })
     });
-
     let emp = respuesta.filter(obj => {
       return obj.departamentos.length > 0
     });
-
-    // console.log('EMPLEADOS', emp);
     this.data_pdf = []
-    this.R_asistencias.ReporteTimbresMultiple(emp, 'this.rangoFechas.fec_inico', 'this.rangoFechas.fec_final').subscribe(res => {
+    this.R_vacuna.ReporteVacunasMultiples(emp).subscribe(res => {
       this.data_pdf = res
-      // console.log('DATA PDF',this.data_pdf);
       switch (accion) {
         case 'excel': this.exportToExcel('default'); break;
         default: this.generarPdf(accion); break;
@@ -243,81 +237,7 @@ export class VacunaMultipleComponent implements OnInit, OnDestroy {
     })
   }
 
-  ModelarTabulado(accion) {
-
-    let respuesta = JSON.parse(sessionStorage.getItem('reporte_timbres_multiple'))
-
-    respuesta.forEach((obj: any) => {
-      obj.departamentos.forEach(element => {
-        element.empleado = element.empleado.filter(o => {
-        })
-      });
-    })
-    respuesta.forEach(obj => {
-      obj.departamentos = obj.departamentos.filter(e => {
-        return e.empleado.length > 0
-      })
-    });
-
-    let tab = respuesta.filter(obj => {
-      return obj.departamentos.length > 0
-    });
-
-    // console.log('TABULADO', tab);
-    this.data_pdf = []
-    this.R_asistencias.ReporteTimbrestabulados(tab, 'this.rangoFechas.fec_inico', 'this.rangoFechas.fec_final').subscribe(res => {
-      this.data_pdf = res
-      // console.log('TABULADO PDF',this.data_pdf
-      switch (accion) {
-        case 'excel': this.exportToExcel('tabulado'); break;
-        default: this.generarPdf(accion); break;
-      }
-    }, err => {
-      this.toastr.error(err.error.message)
-    })
-  }
-
-  ModelarTimbresIncompleto(accion) {
-
-    let respuesta = JSON.parse(sessionStorage.getItem('reporte_timbres_multiple'))
-
-    respuesta.forEach((obj: any) => {
-      obj.departamentos.forEach(element => {
-        element.empleado = element.empleado.filter(o => {
-        })
-      });
-    })
-    respuesta.forEach(obj => {
-      obj.departamentos = obj.departamentos.filter(e => {
-        return e.empleado.length > 0
-      })
-    });
-
-    let inc = respuesta.filter(obj => {
-      return obj.departamentos.length > 0
-    });
-
-    // console.log('TIMBRES INCOMPLETOS', inc);
-    this.data_pdf = []
-    this.R_asistencias.ReporteTabuladoTimbresIncompletos(inc, 'this.rangoFechas.fec_inico', 'this.rangoFechas.fec_final').subscribe(res => {
-      this.data_pdf = res
-      // console.log('TIMBRES PDF',this.data_pdf);
-      switch (accion) {
-        case 'excel': this.exportToExcel('incompleto'); break;
-        default: this.generarPdf(accion); break;
-      }
-    }, err => {
-      this.toastr.error(err.error.message)
-    })
-  }
-
-
-  /***********************************
-   * 
-   * COLORES Y LOGO PARA EL REPORTE
-   * 
-   ***********************************/
-
+  // OBTENER LOGO PARA EL REPORTE
   logo: any = String;
   ObtenerLogo() {
     this.restEmpre.LogoEmpresaImagenBase64(localStorage.getItem('empresa')).subscribe(res => {
@@ -337,11 +257,9 @@ export class VacunaMultipleComponent implements OnInit, OnDestroy {
     });
   }
 
-  /******************************************************
-   * 
-   *          PDF
-   * 
-   ******************************************************/
+  /* **************************************************************************** *
+   *                                   PDF                                        *
+   * **************************************************************************** */
 
   generarPdf(action) {
     let documentDefinition;
@@ -351,7 +269,7 @@ export class VacunaMultipleComponent implements OnInit, OnDestroy {
     }
 
     var f = new Date()
-    let doc_name = "Reporte Timbres" + f.toLocaleString() + ".pdf";
+    let doc_name = "Reporte Vacunas" + f.toLocaleString() + ".pdf";
     switch (action) {
       case 'open': pdfMake.createPdf(documentDefinition).open(); break;
       case 'print': pdfMake.createPdf(documentDefinition).print(); break;
@@ -394,9 +312,8 @@ export class VacunaMultipleComponent implements OnInit, OnDestroy {
       },
       content: [
         { image: this.logo, width: 100, margin: [10, -25, 0, 5] },
-        { text: localStorage.getItem('name_empresa'), bold: true, fontSize: 21, alignment: 'center', margin: [0, -30, 0, 10] },
-        { text: 'Reporte - Timbres', bold: true, fontSize: 18, alignment: 'center', margin: [0, -10, 0, 5] },
-        { text: 'Periodo del: ' + 'this.rangoFechas.fec_inico' + " al " + 'this.rangoFechas.fec_final', bold: true, fontSize: 15, alignment: 'center', margin: [0, 10, 0, 10] },
+        { text: localStorage.getItem('name_empresa').toLocaleUpperCase(), bold: true, fontSize: 21, alignment: 'center', margin: [0, -30, 0, 10] },
+        { text: 'Reporte - Registro de Vacunación', bold: true, fontSize: 16, alignment: 'center', margin: [0, -10, 0, 5] },
         ...this.impresionDatosPDF(this.data_pdf).map(obj => {
           return obj
         })
@@ -419,7 +336,7 @@ export class VacunaMultipleComponent implements OnInit, OnDestroy {
     let n = []
     let c = 0;
 
-    data.forEach((obj: IReporteTimbres) => {
+    data.forEach((obj: ReporteVacunas) => {
 
       if (this.bool.bool_suc === true || this.bool.bool_dep === true) {
         n.push({
@@ -448,7 +365,7 @@ export class VacunaMultipleComponent implements OnInit, OnDestroy {
 
         // LA CABECERA CUANDO SE GENERA EL PDF POR DEPARTAMENTOS
         if (this.bool.bool_dep === true) {
-          let arr_reg = obj1.empleado.map(o => { return o.timbres.length })
+          let arr_reg = obj1.empleado.map(o => { return o.vacunas.length })
           let reg = this.SumarRegistros(arr_reg);
           n.push({
             style: 'tableMarginCabecera',
@@ -459,12 +376,12 @@ export class VacunaMultipleComponent implements OnInit, OnDestroy {
                   {
                     border: [true, true, false, true],
                     text: 'DEPARTAMENTO: ' + obj1.name_dep,
-                    style: 'itemsTableInfoBlanco'
+                    style: 'itemsTableInfo'
                   },
                   {
                     border: [true, true, true, true],
                     text: 'N° REGISTROS: ' + reg,
-                    style: 'itemsTableInfoBlanco'
+                    style: 'itemsTableInfo'
                   }
                 ]
               ]
@@ -502,27 +419,27 @@ export class VacunaMultipleComponent implements OnInit, OnDestroy {
           n.push({
             style: 'tableMargin',
             table: {
-              widths: ['auto', '*', 'auto', 'auto', 'auto', '*', '*'],
+              widths: ['*', '*', '*', '*', '*', '*', '*'],
               body: [
                 [
                   { text: 'N°', style: 'tableHeader' },
-                  { text: 'Timbre', style: 'tableHeader' },
-                  { text: 'Reloj', style: 'tableHeader' },
-                  { text: 'Accion', style: 'tableHeader' },
-                  { text: 'Observacion', style: 'tableHeader' },
-                  { text: 'Longuitud', style: 'tableHeader' },
-                  { text: 'Latitud', style: 'tableHeader' }
+                  { text: 'Vacuna', style: 'tableHeader' },
+                  { text: 'Fecha', style: 'tableHeader' },
+                  { text: 'Vacuna', style: 'tableHeader' },
+                  { text: 'Fecha', style: 'tableHeader' },
+                  { text: 'Vacuna', style: 'tableHeader' },
+                  { text: 'Fecha', style: 'tableHeader' }
                 ],
-                ...obj2.timbres.map(obj3 => {
+                ...obj2.vacunas.map(obj3 => {
                   c = c + 1
                   return [
                     { style: 'itemsTableCentrado', text: c },
-                    { style: 'itemsTable', text: obj3.fec_hora_timbre },
-                    { style: 'itemsTable', text: obj3.id_reloj },
-                    { style: 'itemsTable', text: obj3.accion },
-                    { style: 'itemsTable', text: obj3.observacion },
-                    { style: 'itemsTable', text: obj3.longitud },
-                    { style: 'itemsTable', text: obj3.latitud },
+                    { style: 'itemsTable', text: obj3.id_tipo_vacuna_1 },
+                    { style: 'itemsTable', text: obj3.fecha_1.split('T')[0] },
+                    { style: 'itemsTable', text: obj3.id_tipo_vacuna_2 },
+                    { style: 'itemsTable', text: obj3.fecha_2.split('T')[0] },
+                    { style: 'itemsTable', text: obj3.id_tipo_vacuna_3 },
+                    { style: 'itemsTable', text: obj3.fecha_3.split('T')[0] },
                   ]
                 })
 
@@ -556,8 +473,8 @@ export class VacunaMultipleComponent implements OnInit, OnDestroy {
       default:
         const wsr: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.MapingDataPdfDefault(this.data_pdf));
         const wb: xlsx.WorkBook = xlsx.utils.book_new();
-        xlsx.utils.book_append_sheet(wb, wsr, 'Timbres');
-        xlsx.writeFile(wb, "Timbres_default" + new Date().getTime() + '.xlsx');
+        xlsx.utils.book_append_sheet(wb, wsr, 'Vacunas');
+        xlsx.writeFile(wb, "Vacunas" + new Date().getTime() + '.xlsx');
         break;
     }
 
@@ -565,17 +482,17 @@ export class VacunaMultipleComponent implements OnInit, OnDestroy {
 
   MapingDataPdfDefault(array: Array<any>) {
     let nuevo: Array<any> = [];
-    array.forEach((obj1: IReporteTimbres) => {
+    array.forEach((obj1: ReporteVacunas) => {
       obj1.departamentos.forEach(obj2 => {
         obj2.empleado.forEach(obj3 => {
-          obj3.timbres.forEach((obj4: timbre) => {
+          obj3.vacunas.forEach((obj4: vacuna) => {
             let ele = {
               'Id Sucursal': obj1.id_suc, 'Ciudad': obj1.ciudad, 'Sucursal': obj1.name_suc,
               'Id Departamento': obj2.id_depa, 'Departamento': obj2.name_dep,
               'Id Empleado': obj3.id, 'Nombre Empleado': obj3.name_empleado, 'Cédula': obj3.cedula, 'Código': obj3.codigo,
-              'Fecha Timbre': obj4.fec_hora_timbre.split(' ')[0], 'Hora Timbre': obj4.fec_hora_timbre.split(' ')[1],
-              'Acción': obj4.accion, 'Id Reloj': obj4.id_reloj,
-              'Latitud': obj4.latitud, 'Longitud': obj4.longitud, 'Observación': obj4.observacion
+              'Vacuna_1': obj4.id_tipo_vacuna_1, 'Fecha_1': obj4.fecha_1.split('T')[0],
+              'Vacuna_2': obj4.id_tipo_vacuna_2, 'Fecha_2': obj4.fecha_2.split('T')[0],
+              'Vacuna_3': obj4.id_tipo_vacuna_3, 'Fecha_3': obj4.fecha_3.split('T')[0]
             }
             nuevo.push(ele)
           })
@@ -674,7 +591,6 @@ export class VacunaMultipleComponent implements OnInit, OnDestroy {
   IngresarSoloNumeros(evt) {
     return this.validacionService.IngresarSoloNumeros(evt)
   }
-
 
 }
 

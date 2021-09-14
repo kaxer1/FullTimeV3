@@ -1,19 +1,18 @@
 import { Request, Response } from 'express'
-import { dep, emp, IHorarioTrabajo, IReporteAtrasos, IReportePuntualidad, IReporteTimbres, tim_tabulado } from '../../class/Asistencia';
+import { ReporteVacuna } from '../../class/Vacuna';
 import pool from '../../database'
 
-class ReportesAsistenciaControlador {
+class ReportesVacunasControlador {
 
-    public async ReporteTimbresMultiple(req: Request, res: Response) {
-
-        let { desde, hasta } = req.params;
+    public async ReporteVacunasMultiple(req: Request, res: Response) {
+        console.log('datos recibidos', req.body)
         let datos: any[] = req.body;
-    
-        let n: Array<any> = await Promise.all(datos.map(async (obj: IReporteTimbres) => {
+
+        let n: Array<any> = await Promise.all(datos.map(async (obj: ReporteVacuna) => {
             obj.departamentos = await Promise.all(obj.departamentos.map(async (ele) => {
                 ele.empleado = await Promise.all(ele.empleado.map(async (o) => {
-                    o.timbres = await BuscarTimbres(desde, hasta, o.codigo);
-                    console.log('Timbres: ', o);
+                    o.vacunas = await BuscarVacunas(o.id);
+                    console.log('Vacunas: ', o);
                     return o
                 })
                 )
@@ -25,11 +24,11 @@ class ReportesAsistenciaControlador {
         )
 
 
-        let nuevo = n.map((obj: IReporteTimbres) => {
+        let nuevo = n.map((obj: ReporteVacuna) => {
 
             obj.departamentos = obj.departamentos.map((e) => {
 
-                e.empleado = e.empleado.filter((t: any) => { return t.timbres.length > 0 })
+                e.empleado = e.empleado.filter((v: any) => { return v.vacunas.length > 0 })
                 return e
 
             }).filter((e: any) => { return e.empleado.length > 0 })
@@ -37,18 +36,23 @@ class ReportesAsistenciaControlador {
 
         }).filter(obj => { return obj.departamentos.length > 0 })
 
-        if (nuevo.length === 0) return res.status(400).jsonp({ message: 'No hay timbres de empleados en ese periodo' })
+        if (nuevo.length === 0) return res.status(400).jsonp({ message: 'No se ha encontrado registro de vacunas.' })
 
         return res.status(200).jsonp(nuevo)
 
     }
 
 }
-const VACUNAS_REPORTE_CONTROLADOR = new ReportesAsistenciaControlador();
+
+const VACUNAS_REPORTE_CONTROLADOR = new ReportesVacunasControlador();
 export default VACUNAS_REPORTE_CONTROLADOR;
 
-const BuscarTimbres = async function (fec_inicio: string, fec_final: string, codigo: string | number) {
-    return await pool.query('SELECT CAST(fec_hora_timbre AS VARCHAR), id_reloj, accion, observacion, latitud, longitud, CAST(fec_hora_timbre_servidor AS VARCHAR)  FROM timbres WHERE CAST(fec_hora_timbre AS VARCHAR) between $1 || \'%\' AND $2 || \'%\' AND id_empleado = $3 ORDER BY fec_hora_timbre ASC ', [fec_inicio, fec_final, codigo])
+const BuscarVacunas = async function (id: number) {
+    return await pool.query('SELECT ev.id, ev.id_empleado, ev.id_tipo_vacuna_1, ' +
+        'ev.id_tipo_vacuna_2, ev.id_tipo_vacuna_3, ev.carnet, ev.nom_carnet, ev.dosis_1, ev.dosis_2, ' +
+        'ev.dosis_3, ev.fecha_1, ev.fecha_2, ev.fecha_3 FROM empl_vacuna AS ev WHERE ev.id_empleado = $1 ' +
+        'ORDER BY ev.id DESC',
+        [id])
         .then(res => {
             return res.rows;
         })

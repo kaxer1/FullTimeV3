@@ -53,7 +53,7 @@ export class EmpresaService {
   ActualizarMarcaAgua(formData) {
     return this.http.put<any>(`${environment.url}/empresas/reporte/marca`, formData);
   }
-  
+
   ActualizarAccionesTimbres(formData) {
     return this.http.put<any>(`${environment.url}/empresas/acciones-timbre`, formData);
   }
@@ -73,6 +73,10 @@ export class EmpresaService {
 
   EditarCredenciales(id_empresa: number, data: any) {
     return this.http.put<any>(`${environment.url}/empresas/credenciales/${id_empresa}`, data);
+  }
+
+  ConsultarEmpresaCadena() {
+    return this.http.get(`${environment.url}/empresas/navegar`);
   }
 
 }

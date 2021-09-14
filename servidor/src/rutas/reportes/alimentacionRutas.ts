@@ -17,11 +17,15 @@ class CiudadRutas {
         this.router.post('/extras/plan', [TokenValidation, ModuloAlimentacionValidation], ALIMENTACION_CONTROLADOR.ListarExtrasPlanConsumidos);
         this.router.post('/extras/solicita', [TokenValidation, ModuloAlimentacionValidation], ALIMENTACION_CONTROLADOR.ListarExtrasSolConsumidos);
 
-        // Detalle de servicio de alimentación
+        // DETALLE DE SERVICIO DE ALIMENTACIÓN
         this.router.post('/planificados/detalle', [TokenValidation, ModuloAlimentacionValidation], ALIMENTACION_CONTROLADOR.DetallarPlanificadosConsumidos);
         this.router.post('/solicitados/detalle', [TokenValidation, ModuloAlimentacionValidation], ALIMENTACION_CONTROLADOR.DetallarSolicitudConsumidos);
         this.router.post('/extras/detalle/plan', [TokenValidation, ModuloAlimentacionValidation], ALIMENTACION_CONTROLADOR.DetallarExtrasPlanConsumidos);
         this.router.post('/extras/detalle/solicita', [TokenValidation, ModuloAlimentacionValidation], ALIMENTACION_CONTROLADOR.DetallarExtrasSolConsumidos);
+
+        // DETALLES SERVICIOS DE ALIMENTACIÓN DE INVITADOS
+        this.router.post('/servicios/invitados', [TokenValidation, ModuloAlimentacionValidation], ALIMENTACION_CONTROLADOR.DetallarServiciosInvitados);
+
     }
 }
 

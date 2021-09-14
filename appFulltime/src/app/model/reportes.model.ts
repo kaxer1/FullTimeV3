@@ -35,9 +35,9 @@ export interface IReporteAsistenciaConsolidada {
 }
 
 export interface IRestAsisteConsoli {
-    fecha_mostrar: string, 
+    fecha_mostrar: string,
     E: {
-        hora_default: string,   
+        hora_default: string,
         hora_timbre: string,
         descripcion: string
     },
@@ -87,14 +87,14 @@ export interface IReporteAtrasos {
     id_suc: number,
     name_suc: string,
     ciudad: string,
-    departamentos: Array <dep>
+    departamentos: Array<dep>
 }
 
 export interface IReporteFaltas {
     id_suc: number,
     name_suc: string,
     ciudad: string,
-    departamentos: Array <dep>
+    departamentos: Array<dep>
 }
 
 export interface dep {
@@ -108,7 +108,7 @@ export interface emp {
     name_empleado: string,
     cedula: string,
     codigo: string | number
-    timbres?: Array<tim>,  
+    timbres?: Array<tim>,
     genero?: string | number,
     fec_final?: string,
     cargo?: string,
@@ -136,7 +136,7 @@ export interface IReporteHorasTrabaja {
     id_suc: number,
     name_suc: string,
     ciudad: string,
-    departamentos: Array <departamento>
+    departamentos: Array<departamento>
 }
 
 interface departamento {
@@ -150,7 +150,7 @@ interface empleado {
     name_empleado: string,
     cedula: string,
     codigo: string | number
-    timbres?: Array<hora_trab>,  
+    timbres?: Array<hora_trab>,
     genero?: string | number,
     cargo?: string,
     contrato?: string,
@@ -180,7 +180,7 @@ export interface IReportePuntualidad {
     id_suc: number,
     name_suc: string,
     ciudad: string,
-    departamentos: Array <dep_puntualidad>
+    departamentos: Array<dep_puntualidad>
 }
 
 export interface dep_puntualidad {
@@ -221,7 +221,7 @@ export interface IReporteTimbres {
     id_suc: number,
     name_suc: string,
     ciudad: string,
-    departamentos: Array <dep_tim>
+    departamentos: Array<dep_tim>
 }
 
 interface dep_tim {
@@ -238,15 +238,15 @@ interface emp_tim {
     genero?: string | number,
     cargo?: string,
     contrato?: string,
-    timbres?: Array<timbre | tim_tabulado> 
+    timbres?: Array<timbre | tim_tabulado>
 }
 
 export interface timbre {
-    fec_hora_timbre: string, 
-    id_reloj: number, 
-    accion: string, 
-    observacion: string, 
-    latitud: string | number, 
+    fec_hora_timbre: string,
+    id_reloj: number,
+    accion: string,
+    observacion: string,
+    latitud: string | number,
     longitud: string | number
 }
 
@@ -267,7 +267,7 @@ export interface IReporteTimbresIncompletos {
     id_suc: number,
     name_suc: string,
     ciudad: string,
-    departamentos: Array <dep_tim_inc>
+    departamentos: Array<dep_tim_inc>
 }
 
 interface dep_tim_inc {
@@ -296,7 +296,7 @@ interface tipo_hora {
     tipo: string,
     hora: string
 }
- 
+
 
 /**
  * INTERFACES DE AYUDA
@@ -306,9 +306,9 @@ export interface rango {
     fec_inico: string,
     fec_final: string
 }
-  
+
 export interface checkOptions {
-    opcion: number, 
+    opcion: number,
     valor: string
 }
 
@@ -319,3 +319,45 @@ export interface FormCriteriosBusqueda {
     bool_tab?: boolean;
     bool_inc?: boolean;
 }
+
+// REPORTE DE VACUNAS
+
+export interface ReporteVacunas {
+    id_suc: number,
+    name_suc: string,
+    ciudad: string,
+    departamentos: Array<dep_vac>
+}
+
+interface dep_vac {
+    id_depa: number,
+    name_dep: string,
+    empleado: Array<emp_vac>
+}
+
+interface emp_vac {
+    id: number,
+    name_empleado: string,
+    cedula: string,
+    codigo: number,
+    genero?: string | number,
+    cargo?: string,
+    contrato?: string,
+    vacunas?: Array<vacuna>
+}
+
+export interface vacuna {
+    id_tipo_vacuna_1: string,
+    id_tipo_vacuna_2: string,
+    id_tipo_vacuna_3: string,
+    carnet: string,
+    nom_carnet: string,
+    dosis_1: boolean | string | null,
+    dosis_2: boolean | string | null,
+    dosis_3: boolean | string | null,
+    fecha_1: string,
+    fecha_2: string,
+    fecha_3: string,
+}
+
+
