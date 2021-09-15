@@ -26,7 +26,7 @@ import { SucursalService } from 'src/app/servicios/sucursales/sucursal.service';
 import { DepartamentosService } from 'src/app/servicios/catalogos/catDepartamentos/departamentos.service';
 import { EmplCargosService } from 'src/app/servicios/empleado/empleadoCargo/empl-cargos.service';
 import { RegimenService } from 'src/app/servicios/catalogos/catRegimen/regimen.service';
-import { ValidacionesService } from '../../../servicios/validaciones/validaciones.service';
+import { ValidacionesService } from '../../../../servicios/validaciones/validaciones.service';
 
 @Component({
   selector: 'app-reporte-timbres',

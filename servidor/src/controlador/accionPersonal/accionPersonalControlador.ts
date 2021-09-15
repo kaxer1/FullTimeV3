@@ -221,7 +221,7 @@ class AccionPersonalControlador {
     /** CONSULTAS GENERACIÓN DE PDF */
     public async EncontrarDatosEmpleados(req: Request, res: Response) {
         const { id } = req.params;
-        const EMPLEADO = await pool.query(' SELECT d.id, d.nombre, d.apellido, d.cedula, d.codigo, d.id_cargo, ' +
+        const EMPLEADO = await pool.query('SELECT d.id, d.nombre, d.apellido, d.cedula, d.codigo, d.id_cargo, ' +
             'ec.sueldo, tc.cargo, cd.nombre AS departamento ' +
             'FROM datos_actuales_empleado AS d, empl_cargos AS ec, tipo_cargo AS tc, cg_departamentos AS cd ' +
             'WHERE d.id_cargo = ec.id AND ec.cargo = tc.id AND ec.id_departamento = cd.id AND d.id = $1',

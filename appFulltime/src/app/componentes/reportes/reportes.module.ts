@@ -9,7 +9,7 @@ import { FiltrosModule } from '../../filtros/filtros.module';
 import { RangoFechasComponent } from './rango-fechas/rango-fechas.component';
 import { ReporteFaltasComponent } from './reporte-faltas/reporte-faltas.component';
 import { CriteriosBusquedaComponent } from './criterios-busqueda/criterios-busqueda.component';
-import { ReporteTimbresMultiplesComponent } from './reporte-timbres-multiples/reporte-timbres-multiples.component';
+import { ReporteTimbresMultiplesComponent } from './timbres/reporte-timbres-multiples/reporte-timbres-multiples.component';
 
 import { ListaReportesComponent } from './lista-reportes/lista-reportes.component';
 import { ReporteEmpleadosComponent } from './reporte-empleados/reporte-empleados.component';
@@ -23,7 +23,7 @@ import { ReporteEmpleadosInactivosComponent } from './reporte-empleados-inactivo
 import { ReporteHorasTrabajadasComponent } from './reporte-horas-trabajadas/reporte-horas-trabajadas.component';
 import { ReportePuntualidadComponent } from './reporte-puntualidad/reporte-puntualidad.component';
 import { AsistenciaConsolidadoComponent } from './reporte-asistencia-consolidado/asistencia-consolidado.component';
-import { ReporteTimbresComponent } from './reporte-timbres/reporte-timbres.component';
+import { ReporteTimbresComponent } from './timbres/reporte-timbres/reporte-timbres.component';
 import { ReportePermisosComponent } from './reporte-permisos/reporte-permisos.component';
 import { ReporteAtrasosComponent } from './reporte-atrasos/reporte-atrasos.component';
 import { ReporteEntradaSalidaComponent } from './reporte-entrada-salida/reporte-entrada-salida.component';
@@ -31,9 +31,10 @@ import { AppRoutingModule } from '../../app-routing.module';
 import { AdministradorTodasComponent } from './notificaciones/administrador-todas/administrador-todas.component';
 import { PorUsuarioComponent } from './notificaciones/por-usuario/por-usuario.component';
 import { OptionTimbreServidorComponent } from './option-timbre-servidor/option-timbre-servidor.component';
-import { TimbreAbiertosComponent } from './timbre-abiertos/timbre-abiertos.component';
+import { TimbreAbiertosComponent } from './timbres/timbre-abiertos/timbre-abiertos.component';
 import { VacunaMultipleComponent } from './vacunas/vacuna-multiple/vacuna-multiple.component';
 import { AlimentosInvitadosComponent } from './alimentacion/alimentos-invitados/alimentos-invitados.component';
+import { TimbreIncompletoComponent } from './timbres/timbre-incompleto/timbre-incompleto.component';
 
 @NgModule({
   declarations: [
@@ -63,6 +64,7 @@ import { AlimentosInvitadosComponent } from './alimentacion/alimentos-invitados/
     TimbreAbiertosComponent,
     VacunaMultipleComponent,
     AlimentosInvitadosComponent,
+    TimbreIncompletoComponent,
   ],
   exports: [
     ReporteFaltasComponent,
