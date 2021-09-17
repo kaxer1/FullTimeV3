@@ -1,7 +1,10 @@
 <br>
 <div class="container" style="margin-bottom: 25px; padding-bottom: 10px;">
     <div class="row">
-        <div class="col-lg-5">
+        <div class="col-lg-5" style="padding-bottom: 10px;">
+            <app-rango-fechas></app-rango-fechas>
+        </div>
+        <div class="col-lg-7">
             <div id="titulo">
                 <span>Opciones de Descarga</span>
             </div>
@@ -26,9 +29,7 @@
                     </button>
                 </div>
             </mat-card>
-
-        </div>
-        <div class="col-lg-7">
+            <br>
             <app-criterios-busqueda [num_option]="3"></app-criterios-busqueda>
         </div>
     </div>

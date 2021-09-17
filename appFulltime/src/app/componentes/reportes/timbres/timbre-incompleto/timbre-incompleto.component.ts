@@ -25,70 +25,65 @@ import { ReportesService } from 'src/app/servicios/reportes/reportes.service';
 
 export class TimbreIncompletoComponent implements OnInit, OnDestroy {
 
+  // MÉTODO PARA VERIFICACIÓN DE INGRESO DE FECHAS
   get rangoFechas() { return this.reporteService.rangoFechas };
-
+  // VARIABLE QUE INDICA NÚMERO DE OPCIONES DE BÚSQUEDA
   get opcion() { return this.reporteService.opcion };
-
+  // MÉTODO QUE INDICA OPCIONES DE BÚSQUEDA SELECCIONADOS
   get bool() { return this.reporteService.criteriosBusqueda };
 
+  // VARIABLES DE ALMACENAMIENTO DE DATOS
   respuesta: any[];
-  sucursales: any = [];
-  departamentos: any = [];
   empleados: any = [];
-  tabulado: any = [];
+  sucursales: any = [];
   incompletos: any = [];
+  departamentos: any = [];
 
+  // VARIABLE DE ALMACENAMIENTO DE DATOS PARA PDF
   data_pdf: any = [];
 
+  // VARIABLES DE SELECCIÓN DE DATOS DE BÚSQUEDA
   selectionSuc = new SelectionModel<ITableEmpleados>(true, []);
   selectionDep = new SelectionModel<ITableEmpleados>(true, []);
   selectionEmp = new SelectionModel<ITableEmpleados>(true, []);
-  selectionTab = new SelectionModel<ITableEmpleados>(true, []);
-  selectionInc = new SelectionModel<ITableEmpleados>(true, []);
 
-  // Items de paginación de la tabla SUCURSAL
+  // ITEMS DE PAGINACIÓN DE LA TABLA SUCURSAL
   tamanio_pagina_suc: number = 5;
   numero_pagina_suc: number = 1;
   pageSizeOptions_suc = [5, 10, 20, 50];
-  // Items de paginación de la tabla DEPARTAMENTO
+  // ITEMS DE PAGINACIÓN DE LA TABLA DEPARTAMENTO
   tamanio_pagina_dep: number = 5;
   numero_pagina_dep: number = 1;
   pageSizeOptions_dep = [5, 10, 20, 50];
-  // Items de paginación de la tabla EMPLEADOS
+  // ITEMS DE PAGINACIÓN DE LA TABLA EMPLEADOS
   tamanio_pagina_emp: number = 5;
   numero_pagina_emp: number = 1;
   pageSizeOptions_emp = [5, 10, 20, 50];
-  // Items de paginación de la tabla TABULACION
-  tamanio_pagina_tab: number = 5;
-  numero_pagina_tab: number = 1;
-  pageSizeOptions_tab = [5, 10, 20, 50];
-  // Items de paginación de la tabla INCOMPLETOS
+  // ITEMS DE PAGINACIÓN DE LA TABLA INCOMPLETOS
   tamanio_pagina_inc: number = 5;
   numero_pagina_inc: number = 1;
   pageSizeOptions_inc = [5, 10, 20, 50];
 
+  // VARIABLES DE FILTROS DE SUCURSALES
   get filtroNombreSuc() { return this.reporteService.filtroNombreSuc }
-
   get filtroNombreDep() { return this.reporteService.filtroNombreDep }
 
+  // VARIABLES DE FILTROS DE EMPLEADOS
   get filtroCodigo() { return this.reporteService.filtroCodigo };
   get filtroCedula() { return this.reporteService.filtroCedula };
   get filtroNombreEmp() { return this.reporteService.filtroNombreEmp };
 
-  get filtroCodigo_tab() { return this.reporteService.filtroCodigo_tab };
-  get filtroCedula_tab() { return this.reporteService.filtroCedula_tab };
-  get filtroNombreTab() { return this.reporteService.filtroNombreTab };
-
+  // VARIABLE DE FILTROS DE TIMBRE INCOMPLETO
   get filtroCodigo_inc() { return this.reporteService.filtroCodigo_inc };
   get filtroCedula_inc() { return this.reporteService.filtroCedula_inc };
   get filtroNombreInc() { return this.reporteService.filtroNombreInc };
 
   constructor(
-    private toastr: ToastrService,
-    private reporteService: ReportesService,
-    private validacionService: ValidacionesService,
     private R_asistencias: ReportesAsistenciasService,
-    private restEmpre: EmpresaService
+    private validacionService: ValidacionesService,
+    private reporteService: ReportesService,
+    private restEmpre: EmpresaService,
+    private toastr: ToastrService,
   ) {
     this.ObtenerLogo();
     this.ObtenerColores();
@@ -125,7 +120,6 @@ export class TimbreIncompletoComponent implements OnInit, OnDestroy {
               cedula: r.cedula
             }
             this.empleados.push(elemento)
-            this.tabulado.push(elemento)
             this.incompletos.push(elemento)
           })
         })
@@ -146,19 +140,17 @@ export class TimbreIncompletoComponent implements OnInit, OnDestroy {
     this.sucursales = [];
     this.departamentos = [];
     this.empleados = [];
-    this.tabulado = [];
     this.incompletos = [];
   }
 
-  /**
-   * VALIDACIONES REPORT
-   */
+  // VALIDACIONES REPORT
+
   validacionReporte(action) {
     console.log('Rango de fechas', this.rangoFechas);
 
     if (this.rangoFechas.fec_inico === '' || this.rangoFechas.fec_final === '') return this.toastr.error('Primero valide fechas de busqueda')
     if (this.bool.bool_suc === false && this.bool.bool_dep === false && this.bool.bool_emp === false
-      && this.bool.bool_tab === false && this.bool.bool_inc === false) return this.toastr.error('Seleccione un criterio de búsqueda')
+      && this.bool.bool_inc === false) return this.toastr.error('Seleccione un criterio de búsqueda')
     console.log('opcion:', this.opcion);
 
     switch (this.opcion) {
@@ -172,14 +164,6 @@ export class TimbreIncompletoComponent implements OnInit, OnDestroy {
         break;
       case 3:
         if (this.selectionEmp.selected.length === 0) return this.toastr.error('No a seleccionado ninguno', 'Seleccione empleados')
-        this.ModelarEmpleados(action);
-        break;
-      case 4:
-        if (this.selectionTab.selected.length === 0) return this.toastr.error('No a seleccionado ninguno', 'Seleccione empleados')
-        this.ModelarTabulado(action);
-        break;
-      case 5:
-        if (this.selectionInc.selected.length === 0) return this.toastr.error('No a seleccionado ninguno', 'Seleccione empleados')
         this.ModelarTimbresIncompleto(action);
         break;
       default:
@@ -202,7 +186,7 @@ export class TimbreIncompletoComponent implements OnInit, OnDestroy {
 
     // console.log('SUCURSAL', suc);
     this.data_pdf = []
-    this.R_asistencias.ReporteTimbresMultiple(suc, this.rangoFechas.fec_inico, this.rangoFechas.fec_final).subscribe(res => {
+    this.R_asistencias.ReporteTabuladoTimbresIncompletos(suc, this.rangoFechas.fec_inico, this.rangoFechas.fec_final).subscribe(res => {
       this.data_pdf = res
       // console.log('DATA PDF', this.data_pdf);
       switch (accion) {
@@ -231,7 +215,7 @@ export class TimbreIncompletoComponent implements OnInit, OnDestroy {
     });
     // console.log('DEPARTAMENTOS', dep);
     this.data_pdf = []
-    this.R_asistencias.ReporteTimbresMultiple(dep, this.rangoFechas.fec_inico, this.rangoFechas.fec_final).subscribe(res => {
+    this.R_asistencias.ReporteTabuladoTimbresIncompletos(dep, this.rangoFechas.fec_inico, this.rangoFechas.fec_final).subscribe(res => {
       this.data_pdf = res
       // console.log('DATA PDF',this.data_pdf);
       switch (accion) {
@@ -243,7 +227,7 @@ export class TimbreIncompletoComponent implements OnInit, OnDestroy {
     })
   }
 
-  ModelarEmpleados(accion) {
+  ModelarTimbresIncompleto(accion) {
 
     let respuesta = JSON.parse(sessionStorage.getItem('reporte_timbres_multiple'))
 
@@ -269,7 +253,7 @@ export class TimbreIncompletoComponent implements OnInit, OnDestroy {
 
     // console.log('EMPLEADOS', emp);
     this.data_pdf = []
-    this.R_asistencias.ReporteTimbresMultiple(emp, this.rangoFechas.fec_inico, this.rangoFechas.fec_final).subscribe(res => {
+    this.R_asistencias.ReporteTabuladoTimbresIncompletos(emp, this.rangoFechas.fec_inico, this.rangoFechas.fec_final).subscribe(res => {
       this.data_pdf = res
       // console.log('DATA PDF',this.data_pdf);
       switch (accion) {
@@ -279,82 +263,7 @@ export class TimbreIncompletoComponent implements OnInit, OnDestroy {
     }, err => {
       this.toastr.error(err.error.message)
     })
-  }
 
-  ModelarTabulado(accion) {
-
-    let respuesta = JSON.parse(sessionStorage.getItem('reporte_timbres_multiple'))
-
-    respuesta.forEach((obj: any) => {
-      obj.departamentos.forEach(element => {
-        element.empleado = element.empleado.filter(o => {
-          var bool = this.selectionTab.selected.find(obj1 => {
-            return obj1.id === o.id
-          })
-          return bool != undefined
-        })
-      });
-    })
-    respuesta.forEach(obj => {
-      obj.departamentos = obj.departamentos.filter(e => {
-        return e.empleado.length > 0
-      })
-    });
-
-    let tab = respuesta.filter(obj => {
-      return obj.departamentos.length > 0
-    });
-
-    // console.log('TABULADO', tab);
-    this.data_pdf = []
-    this.R_asistencias.ReporteTimbrestabulados(tab, this.rangoFechas.fec_inico, this.rangoFechas.fec_final).subscribe(res => {
-      this.data_pdf = res
-      // console.log('TABULADO PDF',this.data_pdf
-      switch (accion) {
-        case 'excel': this.exportToExcel('tabulado'); break;
-        default: this.generarPdf(accion); break;
-      }
-    }, err => {
-      this.toastr.error(err.error.message)
-    })
-  }
-
-  ModelarTimbresIncompleto(accion) {
-
-    let respuesta = JSON.parse(sessionStorage.getItem('reporte_timbres_multiple'))
-
-    respuesta.forEach((obj: any) => {
-      obj.departamentos.forEach(element => {
-        element.empleado = element.empleado.filter(o => {
-          var bool = this.selectionInc.selected.find(obj1 => {
-            return obj1.id === o.id
-          })
-          return bool != undefined
-        })
-      });
-    })
-    respuesta.forEach(obj => {
-      obj.departamentos = obj.departamentos.filter(e => {
-        return e.empleado.length > 0
-      })
-    });
-
-    let inc = respuesta.filter(obj => {
-      return obj.departamentos.length > 0
-    });
-
-    // console.log('TIMBRES INCOMPLETOS', inc);
-    this.data_pdf = []
-    this.R_asistencias.ReporteTabuladoTimbresIncompletos(inc, this.rangoFechas.fec_inico, this.rangoFechas.fec_final).subscribe(res => {
-      this.data_pdf = res
-      // console.log('TIMBRES PDF',this.data_pdf);
-      switch (accion) {
-        case 'excel': this.exportToExcel('incompleto'); break;
-        default: this.generarPdf(accion); break;
-      }
-    }, err => {
-      this.toastr.error(err.error.message)
-    })
   }
 
 
@@ -394,8 +303,6 @@ export class TimbreIncompletoComponent implements OnInit, OnDestroy {
 
     if (this.bool.bool_emp === true || this.bool.bool_suc === true || this.bool.bool_dep === true) {
       documentDefinition = this.getDocumentDefinicion();
-    } else if (this.bool.bool_tab === true) {
-      documentDefinition = this.getDocumentDefinicionTabulado();
     } else if (this.bool.bool_inc === true) {
       documentDefinition = this.getDocumentDefinicionTimbresIncompletos();
     }
@@ -448,6 +355,7 @@ export class TimbreIncompletoComponent implements OnInit, OnDestroy {
         { text: 'Reporte - Timbres', bold: true, fontSize: 18, alignment: 'center', margin: [0, -10, 0, 5] },
         { text: 'Periodo del: ' + this.rangoFechas.fec_inico + " al " + this.rangoFechas.fec_final, bold: true, fontSize: 15, alignment: 'center', margin: [0, 10, 0, 10] },
         ...this.impresionDatosPDF(this.data_pdf).map(obj => {
+          console.log('ver data', obj);
           return obj
         })
       ],
@@ -468,9 +376,9 @@ export class TimbreIncompletoComponent implements OnInit, OnDestroy {
   impresionDatosPDF(data: any[]): Array<any> {
     let n = []
     let c = 0;
-
-    data.forEach((obj: IReporteTimbres) => {
-
+    console.log('datos del timbre', data)
+    data.forEach((obj: IReporteTimbresIncompletos) => {
+      console.log('datos incompleto', obj)
       if (this.bool.bool_suc === true || this.bool.bool_dep === true) {
         n.push({
           table: {
@@ -523,7 +431,8 @@ export class TimbreIncompletoComponent implements OnInit, OnDestroy {
         }
 
         obj1.empleado.forEach((obj2: any) => {
-
+          let genero = '';
+          (obj2.genero === 1) ? genero = 'M' : genero = 'F';
           n.push({
             style: 'tableMarginCabecera',
             table: {
@@ -552,18 +461,16 @@ export class TimbreIncompletoComponent implements OnInit, OnDestroy {
           n.push({
             style: 'tableMargin',
             table: {
-              widths: ['auto', '*', 'auto', 'auto', 'auto', '*', '*'],
+              widths: ['auto', '*', 'auto', '*', '*'],
               body: [
                 [
                   { text: 'N°', style: 'tableHeader' },
-                  { text: 'Timbre', style: 'tableHeader' },
-                  { text: 'Reloj', style: 'tableHeader' },
-                  { text: 'Accion', style: 'tableHeader' },
-                  { text: 'Observacion', style: 'tableHeader' },
-                  { text: 'Longuitud', style: 'tableHeader' },
-                  { text: 'Latitud', style: 'tableHeader' }
+                  { text: 'Género', style: 'tableHeader' },
+                  { text: 'Fecha', style: 'tableHeader' },
+                  { text: 'Tipo', style: 'tableHeader' },
+                  { text: 'Hora de Timbre', style: 'tableHeader' },
                 ],
-                ...obj2.timbres.map(obj3 => {
+                /*...obj2.timbres.map(obj3 => {
                   c = c + 1
                   return [
                     { style: 'itemsTableCentrado', text: c },
@@ -574,8 +481,25 @@ export class TimbreIncompletoComponent implements OnInit, OnDestroy {
                     { style: 'itemsTable', text: obj3.longitud },
                     { style: 'itemsTable', text: obj3.latitud },
                   ]
-                })
+                })*/
 
+
+                obj2.timbres.forEach(obj3 => {
+                  console.log('var data, empleados', obj3);
+                  obj3.timbres_hora.forEach((obj4: any) => {
+                    c = c + 1;
+                    
+
+                    return [
+                      { style: 'itemsTableCentrado', text: c },
+                      { style: 'itemsTable', text: genero },
+                      { style: 'itemsTable', text: obj4.fecha_timbre },
+                      { style: 'itemsTable', text: obj4.tipo },
+                      { style: 'itemsTable', text: obj4.hora }
+                    ]
+
+                  })
+                })
               ]
             },
             layout: {
@@ -593,152 +517,6 @@ export class TimbreIncompletoComponent implements OnInit, OnDestroy {
     })
 
     return n
-  }
-
-  getDocumentDefinicionTabulado() {
-    return {
-      pageSize: 'A4',
-      pageOrientation: 'landscape',
-      pageMargins: [40, 50, 40, 50],
-      watermark: { text: this.frase, color: 'blue', opacity: 0.1, bold: true, italics: false },
-      header: { text: 'Impreso por:  ' + localStorage.getItem('fullname_print'), margin: 10, fontSize: 9, opacity: 0.3, alignment: 'right' },
-
-      footer: function (currentPage: any, pageCount: any, fecha: any, hora: any) {
-        var h = new Date();
-        var f = moment();
-        fecha = f.format('YYYY-MM-DD');
-        h.setUTCHours(h.getHours());
-        var time = h.toJSON().split("T")[1].split(".")[0];
-
-        return {
-          margin: 10,
-          columns: [
-            { text: 'Fecha: ' + fecha + ' Hora: ' + time, opacity: 0.3 },
-            {
-              text: [
-                {
-                  text: '© Pag ' + currentPage.toString() + ' of ' + pageCount,
-                  alignment: 'right', opacity: 0.3
-                }
-              ],
-            }
-          ],
-          fontSize: 10
-        }
-      },
-      content: [
-        { image: this.logo, width: 100, margin: [10, -25, 0, 5] },
-        { text: localStorage.getItem('name_empresa'), bold: true, fontSize: 21, alignment: 'center', margin: [0, -30, 0, 10] },
-        { text: 'Reporte Tabulado de Timbres', bold: true, fontSize: 15, alignment: 'center', margin: [0, 10, 0, 10] },
-        { text: 'Periodo del: ' + this.rangoFechas.fec_inico + " al " + this.rangoFechas.fec_final, bold: true, fontSize: 15, alignment: 'center', margin: [0, 10, 0, 10] },
-        this.impresionDatosPDFtabulado(this.data_pdf)
-      ],
-      styles: {
-        tableHeader: { fontSize: 10, bold: true, alignment: 'center', fillColor: this.p_color },
-        itemsTable: { fontSize: 8 },
-        itemsTableCentrado: { fontSize: 10, alignment: 'center' },
-        tableMargin: { margin: [0, 0, 0, 20] },
-        tableMarginCabecera: { margin: [0, 10, 0, 0] },
-        quote: { margin: [5, -2, 0, -2], italics: true },
-        small: { fontSize: 8, color: 'blue', opacity: 0.5 }
-      }
-    };
-  }
-
-  impresionDatosPDFtabulado(data: any[]) {
-    let n = []
-    let c = 0;
-    let arrayTab: any = [];
-
-    data.forEach((obj: IReporteTimbres) => {
-      obj.departamentos.forEach(obj1 => {
-        obj1.empleado.forEach((obj2: any) => {
-          let cont_emp = 0;
-
-          obj2.timbres.map((obj3: tim_tabulado) => {
-            c = c + 1;
-            cont_emp = cont_emp + 1;
-            if (cont_emp === 1) {
-              let ret = [
-                { style: 'itemsTableCentrado', text: c },
-                { rowSpan: obj2.timbres.length, style: 'itemsTable', text: obj2.name_empleado },
-                { rowSpan: obj2.timbres.length, style: 'itemsTable', text: obj2.cedula },
-                { rowSpan: obj2.timbres.length, style: 'itemsTable', text: obj2.codigo },
-                { rowSpan: obj2.timbres.length, style: 'itemsTable', text: obj.ciudad },
-                { rowSpan: obj2.timbres.length, style: 'itemsTable', text: obj1.name_dep },
-                { rowSpan: obj2.timbres.length, style: 'itemsTable', text: obj2.cargo },
-                { rowSpan: obj2.timbres.length, style: 'itemsTable', text: obj2.contrato },
-                { style: 'itemsTable', text: obj3.fecha },
-                { style: 'itemsTable', text: obj3.entrada },
-                { style: 'itemsTable', text: obj3.sal_Alm },
-                { style: 'itemsTable', text: obj3.ent_Alm },
-                { style: 'itemsTable', text: obj3.salida },
-                { style: 'itemsTable', text: obj3.desconocido },
-              ]
-              arrayTab.push(ret)
-              return ret
-            } else {
-              let ret = [
-                { style: 'itemsTableCentrado', text: c },
-                { style: 'itemsTable', text: '' },
-                { style: 'itemsTable', text: '' },
-                { style: 'itemsTable', text: '' },
-                { style: 'itemsTable', text: '' },
-                { style: 'itemsTable', text: '' },
-                { style: 'itemsTable', text: '' },
-                { style: 'itemsTable', text: '' },
-                { style: 'itemsTable', text: obj3.fecha },
-                { style: 'itemsTable', text: obj3.entrada },
-                { style: 'itemsTable', text: obj3.sal_Alm },
-                { style: 'itemsTable', text: obj3.ent_Alm },
-                { style: 'itemsTable', text: obj3.salida },
-                { style: 'itemsTable', text: obj3.desconocido },
-              ]
-              arrayTab.push(ret)
-              return ret
-            }
-
-          })
-
-        });
-
-      });
-
-    })
-
-    return {
-      style: 'tableMargin',
-      table: {
-        widths: ['auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
-        body: [
-          [
-            { text: 'N°', style: 'tableHeader' },
-            { text: 'Empleado', style: 'tableHeader' },
-            { text: 'Cédula', style: 'tableHeader' },
-            { text: 'Cod.', style: 'tableHeader' },
-            { text: 'Ciudad', style: 'tableHeader' },
-            { text: 'Departamento', style: 'tableHeader' },
-            { text: 'Cargo', style: 'tableHeader' },
-            { text: 'Contrato', style: 'tableHeader' },
-            { text: 'Fecha', style: 'tableHeader' },
-            { text: 'Entrada', style: 'tableHeader' },
-            { text: 'Sal.Alm', style: 'tableHeader' },
-            { text: 'Ent.Alm', style: 'tableHeader' },
-            { text: 'Salida', style: 'tableHeader' },
-            { text: 'Desco.', style: 'tableHeader' }
-          ],
-          ...arrayTab.map(obj3 => {
-            return obj3
-          })
-
-        ]
-      },
-      layout: {
-        fillColor: function (rowIndex) {
-          return (rowIndex % 2 === 0) ? '#E5E7E9' : null;
-        }
-      }
-    }
   }
 
   getDocumentDefinicionTimbresIncompletos() {
@@ -1057,48 +835,6 @@ export class TimbreIncompletoComponent implements OnInit, OnDestroy {
     return `${this.selectionEmp.isSelected(row) ? 'deselect' : 'select'} row ${row.id + 1}`;
   }
 
-  /** Si el número de elementos seleccionados coincide con el número total de filas. */
-  isAllSelectedTab() {
-    const numSelected = this.selectionTab.selected.length;
-    return numSelected === this.tabulado.length
-  }
-
-  /** Selecciona todas las filas si no están todas seleccionadas; de lo contrario, selección clara. */
-  masterToggleTab() {
-    this.isAllSelectedTab() ?
-      this.selectionTab.clear() :
-      this.tabulado.forEach(row => this.selectionTab.select(row));
-  }
-
-  /** La etiqueta de la casilla de verificación en la fila pasada*/
-  checkboxLabelTab(row?: ITableEmpleados): string {
-    if (!row) {
-      return `${this.isAllSelectedTab() ? 'select' : 'deselect'} all`;
-    }
-    return `${this.selectionTab.isSelected(row) ? 'deselect' : 'select'} row ${row.id + 1}`;
-  }
-
-  /** Si el número de elementos seleccionados coincide con el número total de filas. */
-  isAllSelectedInc() {
-    const numSelected = this.selectionInc.selected.length;
-    return numSelected === this.incompletos.length
-  }
-
-  /** Selecciona todas las filas si no están todas seleccionadas; de lo contrario, selección clara. */
-  masterToggleInc() {
-    this.isAllSelectedInc() ?
-      this.selectionInc.clear() :
-      this.incompletos.forEach(row => this.selectionInc.select(row));
-  }
-
-  /** La etiqueta de la casilla de verificación en la fila pasada*/
-  checkboxLabelInc(row?: ITableEmpleados): string {
-    if (!row) {
-      return `${this.isAllSelectedInc() ? 'select' : 'deselect'} all`;
-    }
-    return `${this.selectionInc.isSelected(row) ? 'deselect' : 'select'} row ${row.id + 1}`;
-  }
-
   ManejarPagina(e: PageEvent) {
     if (this.bool.bool_suc === true) {
       this.tamanio_pagina_suc = e.pageSize;
@@ -1109,12 +845,6 @@ export class TimbreIncompletoComponent implements OnInit, OnDestroy {
     } else if (this.bool.bool_emp === true) {
       this.tamanio_pagina_emp = e.pageSize;
       this.numero_pagina_emp = e.pageIndex + 1;
-    } else if (this.bool.bool_tab === true) {
-      this.tamanio_pagina_tab = e.pageSize;
-      this.numero_pagina_tab = e.pageIndex + 1;
-    } else if (this.bool.bool_inc === true) {
-      this.tamanio_pagina_inc = e.pageSize;
-      this.numero_pagina_inc = e.pageIndex + 1;
     }
   }
 
