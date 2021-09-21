@@ -303,8 +303,6 @@ export class TimbreIncompletoComponent implements OnInit, OnDestroy {
 
     if (this.bool.bool_emp === true || this.bool.bool_suc === true || this.bool.bool_dep === true) {
       documentDefinition = this.getDocumentDefinicion();
-    } else if (this.bool.bool_inc === true) {
-      documentDefinition = this.getDocumentDefinicionTimbresIncompletos();
     }
 
     var f = new Date()
@@ -355,7 +353,6 @@ export class TimbreIncompletoComponent implements OnInit, OnDestroy {
         { text: 'Reporte - Timbres', bold: true, fontSize: 18, alignment: 'center', margin: [0, -10, 0, 5] },
         { text: 'Periodo del: ' + this.rangoFechas.fec_inico + " al " + this.rangoFechas.fec_final, bold: true, fontSize: 15, alignment: 'center', margin: [0, 10, 0, 10] },
         ...this.impresionDatosPDF(this.data_pdf).map(obj => {
-          console.log('ver data', obj);
           return obj
         })
       ],
@@ -374,9 +371,10 @@ export class TimbreIncompletoComponent implements OnInit, OnDestroy {
   }
 
   impresionDatosPDF(data: any[]): Array<any> {
-    let n = []
+    let n = [];
+    let t = []
     let c = 0;
-    console.log('datos del timbre', data)
+    let arrayInc: any = [];
     data.forEach((obj: IReporteTimbresIncompletos) => {
       console.log('datos incompleto', obj)
       if (this.bool.bool_suc === true || this.bool.bool_dep === true) {
@@ -431,8 +429,6 @@ export class TimbreIncompletoComponent implements OnInit, OnDestroy {
         }
 
         obj1.empleado.forEach((obj2: any) => {
-          let genero = '';
-          (obj2.genero === 1) ? genero = 'M' : genero = 'F';
           n.push({
             style: 'tableMarginCabecera',
             table: {
@@ -458,6 +454,31 @@ export class TimbreIncompletoComponent implements OnInit, OnDestroy {
               ]
             }
           });
+
+
+
+
+
+
+
+
+
+
+          obj2.timbres.forEach(obj3 => {
+            obj3.timbres_hora.map((obj4: any) => {
+              let genero = '';
+              (obj2.genero === 1) ? genero = 'M' : genero = 'F';
+              console.log('var data, empleados', obj4);
+
+              t.push({
+                obj4
+              })
+            })
+
+
+          })
+
+
           n.push({
             style: 'tableMargin',
             table: {
@@ -470,44 +491,40 @@ export class TimbreIncompletoComponent implements OnInit, OnDestroy {
                   { text: 'Tipo', style: 'tableHeader' },
                   { text: 'Hora de Timbre', style: 'tableHeader' },
                 ],
-                /*...obj2.timbres.map(obj3 => {
-                  c = c + 1
+                ...t.map((obj4: any) => {
+                  let genero = '';
+                  (obj2.genero === 1) ? genero = 'M' : genero = 'F';
+                  console.log('var data, empleados', obj4);
+                  c = c + 1;
                   return [
                     { style: 'itemsTableCentrado', text: c },
-                    { style: 'itemsTable', text: obj3.fec_hora_timbre },
-                    { style: 'itemsTable', text: obj3.id_reloj },
-                    { style: 'itemsTable', text: obj3.accion },
-                    { style: 'itemsTable', text: obj3.observacion },
-                    { style: 'itemsTable', text: obj3.longitud },
-                    { style: 'itemsTable', text: obj3.latitud },
+                    { style: 'itemsTable', text: genero },
+                    { style: 'itemsTable', text: obj4.fecha_timbre },
+                    { style: 'itemsTable', text: obj4.tipo },
+                    { style: 'itemsTable', text: obj4.hora }
                   ]
-                })*/
 
-
-                obj2.timbres.forEach(obj3 => {
-                  console.log('var data, empleados', obj3);
-                  obj3.timbres_hora.forEach((obj4: any) => {
-                    c = c + 1;
-                    
-
-                    return [
-                      { style: 'itemsTableCentrado', text: c },
-                      { style: 'itemsTable', text: genero },
-                      { style: 'itemsTable', text: obj4.fecha_timbre },
-                      { style: 'itemsTable', text: obj4.tipo },
-                      { style: 'itemsTable', text: obj4.hora }
-                    ]
-
-                  })
                 })
+                // })
               ]
             },
+
             layout: {
               fillColor: function (rowIndex) {
                 return (rowIndex % 2 === 0) ? '#E5E7E9' : null;
               }
             }
           })
+
+
+
+
+
+
+
+
+
+
 
 
         });
@@ -517,121 +534,6 @@ export class TimbreIncompletoComponent implements OnInit, OnDestroy {
     })
 
     return n
-  }
-
-  getDocumentDefinicionTimbresIncompletos() {
-    return {
-      pageSize: 'A4',
-      pageOrientation: 'landscape',
-      pageMargins: [40, 50, 40, 50],
-      watermark: { text: this.frase, color: 'blue', opacity: 0.1, bold: true, italics: false },
-      header: { text: 'Impreso por:  ' + localStorage.getItem('fullname_print'), margin: 10, fontSize: 9, opacity: 0.3, alignment: 'right' },
-
-      footer: function (currentPage: any, pageCount: any, fecha: any, hora: any) {
-        var h = new Date();
-        var f = moment();
-        fecha = f.format('YYYY-MM-DD');
-        h.setUTCHours(h.getHours());
-        var time = h.toJSON().split("T")[1].split(".")[0];
-
-        return {
-          margin: 10,
-          columns: [
-            { text: 'Fecha: ' + fecha + ' Hora: ' + time, opacity: 0.3 },
-            {
-              text: [
-                {
-                  text: '© Pag ' + currentPage.toString() + ' of ' + pageCount,
-                  alignment: 'right', opacity: 0.3
-                }
-              ],
-            }
-          ],
-          fontSize: 10
-        }
-      },
-      content: [
-        { image: this.logo, width: 100, margin: [10, -25, 0, 5] },
-        { text: localStorage.getItem('name_empresa'), bold: true, fontSize: 21, alignment: 'center', margin: [0, -30, 0, 10] },
-        { text: 'Reporte Tabulado de Timbres Incompletos', bold: true, fontSize: 15, alignment: 'center', margin: [0, 10, 0, 10] },
-        { text: 'Periodo del: ' + this.rangoFechas.fec_inico + " al " + this.rangoFechas.fec_final, bold: true, fontSize: 15, alignment: 'center', margin: [0, 10, 0, 10] },
-        this.impresionDatosPDFtimbresIncompleto(this.data_pdf)
-      ],
-      styles: {
-        tableHeader: { fontSize: 10, bold: true, alignment: 'center', fillColor: this.p_color },
-        itemsTable: { fontSize: 8 },
-        itemsTableCentrado: { fontSize: 10, alignment: 'center' },
-        tableMargin: { margin: [0, 0, 0, 20] },
-        quote: { margin: [5, -2, 0, -2], italics: true },
-        small: { fontSize: 8, color: 'blue', opacity: 0.5 }
-      }
-    };
-  }
-
-  impresionDatosPDFtimbresIncompleto(data: any[]) {
-    let n = []
-    let c = 0;
-    let arrayInc: any = [];
-
-    data.forEach((obj: IReporteTimbresIncompletos) => {
-      obj.departamentos.forEach(obj1 => {
-        obj1.empleado.forEach(obj2 => {
-          obj2.timbres.forEach(obj3 => {
-            // console.log(obj3);
-            obj3.timbres_hora.forEach((obj4: any) => {
-              c = c + 1;
-              let genero = '';
-              (obj2.genero === 1) ? genero = 'M' : genero = 'F';
-
-              let ret = [
-                { style: 'itemsTableCentrado', text: c },
-                { style: 'itemsTable', text: obj2.name_empleado },
-                { style: 'itemsTable', text: obj2.cedula },
-                { style: 'itemsTable', text: obj2.codigo },
-                { style: 'itemsTable', text: genero },
-                { style: 'itemsTable', text: obj.ciudad },
-                { style: 'itemsTable', text: obj1.name_dep },
-                { style: 'itemsTable', text: obj2.cargo },
-                { style: 'itemsTable', text: obj2.contrato },
-                { style: 'itemsTable', text: obj3.fecha },
-                { style: 'itemsTable', text: obj4.tipo },
-                { style: 'itemsTable', text: obj4.hora }
-              ]
-              arrayInc.push(ret)
-            })
-          });
-        });
-      });
-    });
-
-    return {
-      style: 'tableMargin',
-      table: {
-        widths: ['auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
-        body: [
-          [
-            { text: 'N°', style: 'tableHeader' },
-            { text: 'Empleado', style: 'tableHeader' },
-            { text: 'Cédula', style: 'tableHeader' },
-            { text: 'Código', style: 'tableHeader' },
-            { text: 'Género', style: 'tableHeader' },
-            { text: 'Ciudad', style: 'tableHeader' },
-            { text: 'Departamento', style: 'tableHeader' },
-            { text: 'Cargo', style: 'tableHeader' },
-            { text: 'Contrato', style: 'tableHeader' },
-            { text: 'Fecha', style: 'tableHeader' },
-            { text: 'Tipo', style: 'tableHeader' },
-            { text: 'Hora de Timbre', style: 'tableHeader' },
-          ],
-          ...arrayInc.map(obj => { return obj })
-        ]
-      },
-      layout: {
-        fillColor: function (rowIndex) {
-          return (rowIndex % 2 === 0) ? '#E5E7E9' : null;
-        }
-      }
-    }
   }
 
   SumarRegistros(array: any[]) {
