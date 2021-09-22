@@ -372,11 +372,9 @@ export class TimbreIncompletoComponent implements OnInit, OnDestroy {
 
   impresionDatosPDF(data: any[]): Array<any> {
     let n = [];
-    let t = []
-    let c = 0;
-    let arrayInc: any = [];
+
     data.forEach((obj: IReporteTimbresIncompletos) => {
-      console.log('datos incompleto', obj)
+
       if (this.bool.bool_suc === true || this.bool.bool_dep === true) {
         n.push({
           table: {
@@ -401,10 +399,15 @@ export class TimbreIncompletoComponent implements OnInit, OnDestroy {
       }
 
       obj.departamentos.forEach(obj1 => {
-
+        let total = []
         // LA CABECERA CUANDO SE GENERA EL PDF POR DEPARTAMENTOS
         if (this.bool.bool_dep === true) {
-          let arr_reg = obj1.empleado.map(o => { return o.timbres.length })
+          let arr_reg = obj1.empleado.map(o => {
+            o.timbres.forEach(t => {
+              total = total.concat(t.timbres_hora)
+            })
+            return total.length
+          })
           let reg = this.SumarRegistros(arr_reg);
           n.push({
             style: 'tableMarginCabecera',
@@ -429,15 +432,22 @@ export class TimbreIncompletoComponent implements OnInit, OnDestroy {
         }
 
         obj1.empleado.forEach((obj2: any) => {
+          let genero = '';
+          (obj2.genero === 1) ? genero = 'M' : genero = 'F';
           n.push({
             style: 'tableMarginCabecera',
             table: {
-              widths: ['*', 'auto', 'auto'],
+              widths: ['*', 'auto', 'auto', 'auto'],
               body: [
                 [
                   {
                     border: [true, true, false, false],
                     text: 'EMPLEADO: ' + obj2.name_empleado,
+                    style: 'itemsTableInfoBlanco'
+                  },
+                  {
+                    border: [false, true, false, false],
+                    text: 'Género: ' + genero,
                     style: 'itemsTableInfoBlanco'
                   },
                   {
@@ -455,67 +465,70 @@ export class TimbreIncompletoComponent implements OnInit, OnDestroy {
             }
           });
 
+          let datos: number = 0;
+          let timbre_i = [];
+
+          let arr_reg = obj2.timbres.map(t => {
+
+            console.log('ver datos de timbre imcompleto******************************', t)
+            datos = datos + 1;
+            timbre_i = timbre_i.concat(t.timbres_hora);
+            if (datos === obj2.timbres.length) {
+              console.log('ver datos******************************', timbre_i)
+              return timbre_i
+            }
 
 
+          })
 
-
-
-
-
-
-
-          obj2.timbres.forEach(obj3 => {
-            obj3.timbres_hora.map((obj4: any) => {
-              let genero = '';
-              (obj2.genero === 1) ? genero = 'M' : genero = 'F';
+          let c = 0;
+          arr_reg.map((obj4: any) => {
+            if (obj4) {
               console.log('var data, empleados', obj4);
 
-              t.push({
-                obj4
-              })
-            })
+              n.push({
+                style: 'tableMargin',
+                table: {
+                  widths: ['auto', '*', 'auto', '*'],
+                  body: [
+                    [
+                      { text: 'N°', style: 'tableHeader' },
+                      { text: 'Fecha', style: 'tableHeader' },
+                      { text: 'Tipo', style: 'tableHeader' },
+                      { text: 'Hora de Timbre', style: 'tableHeader' },
+                    ],
 
 
-          })
+                    ...obj4.map((obj5: any) => {
+                      console.log('empleados', obj5.fecha_timbre);
+                      c = c + 1;
+                      return [
+                        { style: 'itemsTableCentrado', text: c },
+                        { style: 'itemsTable', text: obj5.fecha_timbre },
+                        { style: 'itemsTable', text: obj5.tipo },
+                        { style: 'itemsTable', text: obj5.hora }
+                      ]
+                    })
 
 
-          n.push({
-            style: 'tableMargin',
-            table: {
-              widths: ['auto', '*', 'auto', '*', '*'],
-              body: [
-                [
-                  { text: 'N°', style: 'tableHeader' },
-                  { text: 'Género', style: 'tableHeader' },
-                  { text: 'Fecha', style: 'tableHeader' },
-                  { text: 'Tipo', style: 'tableHeader' },
-                  { text: 'Hora de Timbre', style: 'tableHeader' },
-                ],
-                ...t.map((obj4: any) => {
-                  let genero = '';
-                  (obj2.genero === 1) ? genero = 'M' : genero = 'F';
-                  console.log('var data, empleados', obj4);
-                  c = c + 1;
-                  return [
-                    { style: 'itemsTableCentrado', text: c },
-                    { style: 'itemsTable', text: genero },
-                    { style: 'itemsTable', text: obj4.fecha_timbre },
-                    { style: 'itemsTable', text: obj4.tipo },
-                    { style: 'itemsTable', text: obj4.hora }
+
+
+
+
                   ]
-
-                })
-                // })
-              ]
-            },
-
-            layout: {
-              fillColor: function (rowIndex) {
-                return (rowIndex % 2 === 0) ? '#E5E7E9' : null;
-              }
+                },
+                layout: {
+                  fillColor: function (rowIndex) {
+                    return (rowIndex % 2 === 0) ? '#E5E7E9' : null;
+                  }
+                }
+              })
             }
-          })
 
+
+
+
+          })
 
 
 
@@ -581,12 +594,6 @@ export class TimbreIncompletoComponent implements OnInit, OnDestroy {
         xlsx.utils.book_append_sheet(wb_inc, wsr_inc, 'Timbres');
         xlsx.writeFile(wb_inc, "Timbres_Incompletos" + new Date().getTime() + '.xlsx');
         break;
-      case 'tabulado':
-        const wsr_tab: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.MapingDataPdfTabulado(this.data_pdf));
-        const wb_tab: xlsx.WorkBook = xlsx.utils.book_new();
-        xlsx.utils.book_append_sheet(wb_tab, wsr_tab, 'Timbres');
-        xlsx.writeFile(wb_tab, "Timbres_Tabulado" + new Date().getTime() + '.xlsx');
-        break;
       default:
         const wsr: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.MapingDataPdfDefault(this.data_pdf));
         const wb: xlsx.WorkBook = xlsx.utils.book_new();
@@ -610,29 +617,6 @@ export class TimbreIncompletoComponent implements OnInit, OnDestroy {
               'Fecha Timbre': obj4.fec_hora_timbre.split(' ')[0], 'Hora Timbre': obj4.fec_hora_timbre.split(' ')[1],
               'Acción': obj4.accion, 'Id Reloj': obj4.id_reloj,
               'Latitud': obj4.latitud, 'Longitud': obj4.longitud, 'Observación': obj4.observacion
-            }
-            nuevo.push(ele)
-          })
-        })
-      })
-    })
-    return nuevo
-  }
-
-  MapingDataPdfTabulado(array: Array<any>) {
-    let nuevo: Array<any> = [];
-    array.forEach((obj1: IReporteTimbres) => {
-      obj1.departamentos.forEach(obj2 => {
-        obj2.empleado.forEach(obj3 => {
-          obj3.timbres.forEach((obj4: tim_tabulado) => {
-            let ele = {
-              'Id Sucursal': obj1.id_suc, 'Ciudad': obj1.ciudad, 'Sucursal': obj1.name_suc,
-              'Id Departamento': obj2.id_depa, 'Departamento': obj2.name_dep,
-              'Id Empleado': obj3.id, 'Nombre Empleado': obj3.name_empleado, 'Cédula': obj3.cedula, 'Código': obj3.codigo,
-              'Contrado': obj3.contrato, 'Cargo': obj3.cargo,
-              'Fecha Timbre': obj4.fecha.split(' ')[0], 'Hora Timbre': obj4.fecha.split(' ')[1], 'Género': obj3.genero,
-              'Entrada': obj4.entrada, 'Salida Almuerzo': obj4.sal_Alm, 'Entrada Almuerzo': obj4.ent_Alm, 'Salida': obj4.salida,
-              'Observación': obj4.desconocido
             }
             nuevo.push(ele)
           })

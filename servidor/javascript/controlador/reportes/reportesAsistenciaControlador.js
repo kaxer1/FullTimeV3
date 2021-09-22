@@ -1135,7 +1135,7 @@ const TimbresTabulados = function (fec_inicio, fec_final, codigo) {
 };
 const TimbresIncompletos = function (fec_inicio, fec_final, codigo) {
     return __awaiter(this, void 0, void 0, function* () {
-        let horarios = yield database_1.default.query('SELECT eh.fec_inicio, eh.fec_final, eh.lunes, eh.martes, eh.miercoles, ' +
+        let horarios = yield database_1.default.query('SELECT eh.fec_inicio, eh.fec_final, eh.lunes, eh.martes, eh.miercoles, eh.id_horarios, ' +
             'eh.jueves, eh.viernes, eh.sabado, eh.domingo, eh.codigo FROM empl_horarios AS eh ' +
             'WHERE (($1 BETWEEN eh.fec_inicio AND eh.fec_final) OR ($2 BETWEEN eh.fec_inicio AND eh.fec_final)) ' +
             'AND eh.codigo = $3 ORDER BY eh.fec_inicio ASC', [fec_inicio, fec_final, codigo]).then(result => {
@@ -1145,10 +1145,12 @@ const TimbresIncompletos = function (fec_inicio, fec_final, codigo) {
         if (horarios.length === 0)
             return [];
         let hora_deta = yield Promise.all(horarios.map((obj) => __awaiter(this, void 0, void 0, function* () {
+            console.log('RESPUESTA TIMBRE ENCONTRADO:------------------------------------ ', obj);
             obj.dias_laborados = MetodosHorario_1.HorariosParaInasistencias(obj);
             // obj.dias_laborados = ModelarFechas(obj.fec_inicio, obj.fec_final, obj)
             obj.deta_horarios = yield database_1.default.query('SELECT DISTINCT dh.hora, dh.orden, dh.tipo_accion FROM empl_horarios AS eh, cg_horarios AS h, deta_horarios AS dh ' +
-                'WHERE eh.id_horarios = h.id AND h.id = dh.id_horario AND eh.codigo = $1 ORDER BY dh.orden ASC', [obj.codigo]).then(result => {
+                'WHERE eh.id_horarios = h.id AND h.id = dh.id_horario AND eh.codigo = $1 AND h.id = $2 ' +
+                'ORDER BY dh.orden ASC', [obj.codigo, obj.id_horarios]).then(result => {
                 return result.rows;
             });
             console.log('RESPUESTA TIMBRE ENCONTRADO:2 ', obj);

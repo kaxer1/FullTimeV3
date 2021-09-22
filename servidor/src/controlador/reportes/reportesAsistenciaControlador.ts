@@ -407,22 +407,22 @@ class ReportesAsistenciaControlador {
         if (req.acciones_timbres === true) {
             // Resultados de timbres con 6 y 3 acciones
 
-          /*  n = await Promise.all(datos.map(async (obj: IReporteTimbres) => {
-                obj.departamentos = await Promise.all(obj.departamentos.map(async (ele) => {
-                    ele.empleado = await Promise.all(ele.empleado.map(async (o) => {
-                        o.contrato = await pool.query('SELECT r.descripcion AS contrato FROM cg_regimenes AS r, empl_contratos AS c WHERE c.id_regimen = r.id AND c.id_empleado = $1 ORDER BY c.fec_ingreso DESC LIMIT 1 ', [o.id]).then(result => { return result.rows[0].contrato })
-                        o.cargo = await pool.query('SELECT tc.cargo FROM empl_contratos AS co, empl_cargos AS ca, tipo_cargo AS tc WHERE co.id_empleado = $1 AND co.id = ca.id_empl_contrato AND tc.id = ca.cargo ORDER BY ca.fec_inicio DESC LIMIT 1 ', [o.id]).then(result => { return result.rows[0].cargo })
-                        o.timbres = await TimbresIncompletos(new Date(desde), new Date(hasta), o.codigo)
-                         console.log(o);
-                        return o
-                    })
-                    )
-                    return ele
-                })
-                )
-                return obj
-            })
-            )*/
+            /*  n = await Promise.all(datos.map(async (obj: IReporteTimbres) => {
+                  obj.departamentos = await Promise.all(obj.departamentos.map(async (ele) => {
+                      ele.empleado = await Promise.all(ele.empleado.map(async (o) => {
+                          o.contrato = await pool.query('SELECT r.descripcion AS contrato FROM cg_regimenes AS r, empl_contratos AS c WHERE c.id_regimen = r.id AND c.id_empleado = $1 ORDER BY c.fec_ingreso DESC LIMIT 1 ', [o.id]).then(result => { return result.rows[0].contrato })
+                          o.cargo = await pool.query('SELECT tc.cargo FROM empl_contratos AS co, empl_cargos AS ca, tipo_cargo AS tc WHERE co.id_empleado = $1 AND co.id = ca.id_empl_contrato AND tc.id = ca.cargo ORDER BY ca.fec_inicio DESC LIMIT 1 ', [o.id]).then(result => { return result.rows[0].cargo })
+                          o.timbres = await TimbresIncompletos(new Date(desde), new Date(hasta), o.codigo)
+                           console.log(o);
+                          return o
+                      })
+                      )
+                      return ele
+                  })
+                  )
+                  return obj
+              })
+              )*/
 
             n = await Promise.all(datos.map(async (obj: IReporteTimbresIncompletos) => {
                 obj.departamentos = await Promise.all(obj.departamentos.map(async (ele) => {
@@ -438,7 +438,7 @@ class ReportesAsistenciaControlador {
                 return obj
             })
             )
-           
+
 
 
 
@@ -452,22 +452,22 @@ class ReportesAsistenciaControlador {
         } else {
             // Resultados de timbres sin acciones
 
-       /*     n = await Promise.all(datos.map(async (obj: IReporteTimbres) => {
-                obj.departamentos = await Promise.all(obj.departamentos.map(async (ele) => {
-                    ele.empleado = await Promise.all(ele.empleado.map(async (o) => {
-                        o.contrato = await pool.query('SELECT r.descripcion AS contrato FROM cg_regimenes AS r, empl_contratos AS c WHERE c.id_regimen = r.id AND c.id_empleado = $1 ORDER BY c.fec_ingreso DESC LIMIT 1 ', [o.id]).then(result => { return result.rows[0].contrato })
-                        o.cargo = await pool.query('SELECT tc.cargo FROM empl_contratos AS co, empl_cargos AS ca, tipo_cargo AS tc WHERE co.id_empleado = $1 AND co.id = ca.id_empl_contrato AND tc.id = ca.cargo ORDER BY ca.fec_inicio DESC LIMIT 1 ', [o.id]).then(result => { return result.rows[0].cargo })
-                        o.timbres = await TimbresSinAccionesIncompletos(new Date(desde), new Date(hasta), o.codigo)
-                         console.log(o);
-                        return o
-                    })
-                    )
-                    return ele
-                })
-                )
-                return obj
-            })
-            )*/
+            /*     n = await Promise.all(datos.map(async (obj: IReporteTimbres) => {
+                     obj.departamentos = await Promise.all(obj.departamentos.map(async (ele) => {
+                         ele.empleado = await Promise.all(ele.empleado.map(async (o) => {
+                             o.contrato = await pool.query('SELECT r.descripcion AS contrato FROM cg_regimenes AS r, empl_contratos AS c WHERE c.id_regimen = r.id AND c.id_empleado = $1 ORDER BY c.fec_ingreso DESC LIMIT 1 ', [o.id]).then(result => { return result.rows[0].contrato })
+                             o.cargo = await pool.query('SELECT tc.cargo FROM empl_contratos AS co, empl_cargos AS ca, tipo_cargo AS tc WHERE co.id_empleado = $1 AND co.id = ca.id_empl_contrato AND tc.id = ca.cargo ORDER BY ca.fec_inicio DESC LIMIT 1 ', [o.id]).then(result => { return result.rows[0].cargo })
+                             o.timbres = await TimbresSinAccionesIncompletos(new Date(desde), new Date(hasta), o.codigo)
+                              console.log(o);
+                             return o
+                         })
+                         )
+                         return ele
+                     })
+                     )
+                     return obj
+                 })
+                 )*/
 
 
 
@@ -1311,7 +1311,7 @@ const TimbresTabulados = async function (fec_inicio: string, fec_final: string, 
 const TimbresIncompletos = async function (fec_inicio: Date, fec_final: Date, codigo: number): Promise<any[]> {
 
     let horarios =
-        await pool.query('SELECT eh.fec_inicio, eh.fec_final, eh.lunes, eh.martes, eh.miercoles, ' +
+        await pool.query('SELECT eh.fec_inicio, eh.fec_final, eh.lunes, eh.martes, eh.miercoles, eh.id_horarios, ' +
             'eh.jueves, eh.viernes, eh.sabado, eh.domingo, eh.codigo FROM empl_horarios AS eh ' +
             'WHERE (($1 BETWEEN eh.fec_inicio AND eh.fec_final) OR ($2 BETWEEN eh.fec_inicio AND eh.fec_final)) ' +
             'AND eh.codigo = $3 ORDER BY eh.fec_inicio ASC',
@@ -1323,14 +1323,16 @@ const TimbresIncompletos = async function (fec_inicio: Date, fec_final: Date, co
     if (horarios.length === 0) return [];
 
     let hora_deta = await Promise.all(horarios.map(async (obj: any) => {
+        console.log('RESPUESTA TIMBRE ENCONTRADO:------------------------------------ ', obj);
         obj.dias_laborados = HorariosParaInasistencias(obj)
         // obj.dias_laborados = ModelarFechas(obj.fec_inicio, obj.fec_final, obj)
         obj.deta_horarios = await pool.query('SELECT DISTINCT dh.hora, dh.orden, dh.tipo_accion FROM empl_horarios AS eh, cg_horarios AS h, deta_horarios AS dh ' +
-            'WHERE eh.id_horarios = h.id AND h.id = dh.id_horario AND eh.codigo = $1 ORDER BY dh.orden ASC',
-            [obj.codigo]).then(result => {
+            'WHERE eh.id_horarios = h.id AND h.id = dh.id_horario AND eh.codigo = $1 AND h.id = $2 ' + 
+            'ORDER BY dh.orden ASC',
+            [obj.codigo, obj.id_horarios]).then(result => {
                 return result.rows
             })
-            console.log('RESPUESTA TIMBRE ENCONTRADO:2 ', obj);
+        console.log('RESPUESTA TIMBRE ENCONTRADO:2 ', obj);
         return obj
     }));
 
@@ -1364,7 +1366,7 @@ const TimbresIncompletos = async function (fec_inicio: Date, fec_final: Date, co
                         return h_inicio <= hora_timbre && h_final >= hora_timbre
                     })
 
-                     console.log('RESPUESTA TIMBRE ENCONTRADO: ', respuesta);
+                    console.log('RESPUESTA TIMBRE ENCONTRADO: ', respuesta);
                     if (respuesta.length === 0) {
                         return {
                             tipo: h.tipo_accion,
