@@ -48,7 +48,8 @@ function LlamarDetalleHorario(fecha, hora, num_dia, fechaDate) {
     return __awaiter(this, void 0, void 0, function* () {
         let datoConsulta = fecha + ' ' + hora;
         console.log('FECHA ====>', datoConsulta);
-        let deta_horarios = yield database_1.default.query('SELECT orden, id_horario FROM deta_horarios WHERE CAST(hora AS VARCHAR) like $1 || \'%\' AND orden in (1,4)', [hora])
+        let deta_horarios = yield database_1.default.query('SELECT orden, id_horario FROM deta_horarios ' +
+            'WHERE CAST(hora AS VARCHAR) like $1 || \'%\' AND orden in (1,4)', [hora])
             .then(result => {
             return result.rows;
         });

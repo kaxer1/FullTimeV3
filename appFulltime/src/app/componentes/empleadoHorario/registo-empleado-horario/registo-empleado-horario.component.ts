@@ -154,7 +154,6 @@ export class RegistoEmpleadoHorarioComponent implements OnInit {
   // MÉTODO PARA VERIFICAR SI EL EMPLEADO INGRESO CORRECTAMENTE LAS FECHAS
   ValidarFechas(form) {
     let datosBusqueda = {
-      id_cargo: this.datoEmpleado.idCargo,
       id_empleado: this.datoEmpleado.idEmpleado
     }
     // MÉTODO PARA BUSCAR FECHA DE CONTRATO REGISTRADO EN FICHA DE EMPLEADO

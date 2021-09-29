@@ -142,10 +142,10 @@ class ContratoEmpleadoControlador {
     }
     EncontrarFechaContrato(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { id_cargo, id_empleado } = req.body;
-            const FECHA = yield database_1.default.query('SELECT contrato.fec_ingreso FROM empl_contratos AS contrato, ' +
-                'empl_cargos AS cargo, empleados WHERE contrato.id_empleado = empleados.id AND ' +
-                'cargo.id_empl_contrato = contrato.id AND cargo.id = $1 AND empleados.id = $2', [id_cargo, id_empleado]);
+            const { id_empleado } = req.body;
+            const FECHA = yield database_1.default.query('SELECT ca.id_contrato, ec.fec_ingreso ' +
+                'FROM datos_contrato_actual AS ca, empl_contratos AS ec ' +
+                'WHERE ca.id = $1 AND ec.id = ca.id_contrato', [id_empleado]);
             if (FECHA.rowCount > 0) {
                 return res.jsonp(FECHA.rows);
             }

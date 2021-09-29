@@ -346,25 +346,11 @@ class ReportesAsistenciaControlador {
             //false sin acciones || true con acciones
             if (req.acciones_timbres === true) {
                 // Resultados de timbres con 6 y 3 acciones
-                /*  n = await Promise.all(datos.map(async (obj: IReporteTimbres) => {
-                      obj.departamentos = await Promise.all(obj.departamentos.map(async (ele) => {
-                          ele.empleado = await Promise.all(ele.empleado.map(async (o) => {
-                              o.contrato = await pool.query('SELECT r.descripcion AS contrato FROM cg_regimenes AS r, empl_contratos AS c WHERE c.id_regimen = r.id AND c.id_empleado = $1 ORDER BY c.fec_ingreso DESC LIMIT 1 ', [o.id]).then(result => { return result.rows[0].contrato })
-                              o.cargo = await pool.query('SELECT tc.cargo FROM empl_contratos AS co, empl_cargos AS ca, tipo_cargo AS tc WHERE co.id_empleado = $1 AND co.id = ca.id_empl_contrato AND tc.id = ca.cargo ORDER BY ca.fec_inicio DESC LIMIT 1 ', [o.id]).then(result => { return result.rows[0].cargo })
-                              o.timbres = await TimbresIncompletos(new Date(desde), new Date(hasta), o.codigo)
-                               console.log(o);
-                              return o
-                          })
-                          )
-                          return ele
-                      })
-                      )
-                      return obj
-                  })
-                  )*/
                 n = yield Promise.all(datos.map((obj) => __awaiter(this, void 0, void 0, function* () {
                     obj.departamentos = yield Promise.all(obj.departamentos.map((ele) => __awaiter(this, void 0, void 0, function* () {
                         ele.empleado = yield Promise.all(ele.empleado.map((o) => __awaiter(this, void 0, void 0, function* () {
+                            o.contrato = yield database_1.default.query('SELECT r.descripcion AS contrato FROM cg_regimenes AS r, empl_contratos AS c WHERE c.id_regimen = r.id AND c.id_empleado = $1 ORDER BY c.fec_ingreso DESC LIMIT 1 ', [o.id]).then(result => { return result.rows[0].contrato; });
+                            o.cargo = yield database_1.default.query('SELECT tc.cargo FROM empl_contratos AS co, empl_cargos AS ca, tipo_cargo AS tc WHERE co.id_empleado = $1 AND co.id = ca.id_empl_contrato AND tc.id = ca.cargo ORDER BY ca.fec_inicio DESC LIMIT 1 ', [o.id]).then(result => { return result.rows[0].cargo; });
                             o.timbres = yield TimbresIncompletos(new Date(desde), new Date(hasta), o.codigo);
                             console.log('Timbres: ', o);
                             return o;
@@ -376,25 +362,11 @@ class ReportesAsistenciaControlador {
             }
             else {
                 // Resultados de timbres sin acciones
-                /*     n = await Promise.all(datos.map(async (obj: IReporteTimbres) => {
-                         obj.departamentos = await Promise.all(obj.departamentos.map(async (ele) => {
-                             ele.empleado = await Promise.all(ele.empleado.map(async (o) => {
-                                 o.contrato = await pool.query('SELECT r.descripcion AS contrato FROM cg_regimenes AS r, empl_contratos AS c WHERE c.id_regimen = r.id AND c.id_empleado = $1 ORDER BY c.fec_ingreso DESC LIMIT 1 ', [o.id]).then(result => { return result.rows[0].contrato })
-                                 o.cargo = await pool.query('SELECT tc.cargo FROM empl_contratos AS co, empl_cargos AS ca, tipo_cargo AS tc WHERE co.id_empleado = $1 AND co.id = ca.id_empl_contrato AND tc.id = ca.cargo ORDER BY ca.fec_inicio DESC LIMIT 1 ', [o.id]).then(result => { return result.rows[0].cargo })
-                                 o.timbres = await TimbresSinAccionesIncompletos(new Date(desde), new Date(hasta), o.codigo)
-                                  console.log(o);
-                                 return o
-                             })
-                             )
-                             return ele
-                         })
-                         )
-                         return obj
-                     })
-                     )*/
                 n = yield Promise.all(datos.map((obj) => __awaiter(this, void 0, void 0, function* () {
                     obj.departamentos = yield Promise.all(obj.departamentos.map((ele) => __awaiter(this, void 0, void 0, function* () {
                         ele.empleado = yield Promise.all(ele.empleado.map((o) => __awaiter(this, void 0, void 0, function* () {
+                            o.contrato = yield database_1.default.query('SELECT r.descripcion AS contrato FROM cg_regimenes AS r, empl_contratos AS c WHERE c.id_regimen = r.id AND c.id_empleado = $1 ORDER BY c.fec_ingreso DESC LIMIT 1 ', [o.id]).then(result => { return result.rows[0].contrato; });
+                            o.cargo = yield database_1.default.query('SELECT tc.cargo FROM empl_contratos AS co, empl_cargos AS ca, tipo_cargo AS tc WHERE co.id_empleado = $1 AND co.id = ca.id_empl_contrato AND tc.id = ca.cargo ORDER BY ca.fec_inicio DESC LIMIT 1 ', [o.id]).then(result => { return result.rows[0].cargo; });
                             o.timbres = yield TimbresSinAccionesIncompletos(new Date(desde), new Date(hasta), o.codigo);
                             console.log('Timbres: ', o);
                             return o;
@@ -1171,6 +1143,7 @@ const TimbresIncompletos = function (fec_inicio, fec_final, codigo) {
                 if (o.timbres_hora.length === 0) {
                     o.timbres_hora = obj.deta_horarios.map((h) => {
                         return {
+                            fecha_timbre: o.fecha,
                             tipo: h.tipo_accion,
                             hora: h.hora
                         };
@@ -1188,6 +1161,7 @@ const TimbresIncompletos = function (fec_inicio, fec_final, codigo) {
                         console.log('RESPUESTA TIMBRE ENCONTRADO: ', respuesta);
                         if (respuesta.length === 0) {
                             return {
+                                fecha_timbre: o.fecha,
                                 tipo: h.tipo_accion,
                                 hora: h.hora
                             };
