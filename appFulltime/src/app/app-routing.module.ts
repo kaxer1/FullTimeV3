@@ -74,11 +74,11 @@ import { AuthGuard } from "./guards/auth.guard";
 //Reportes
 import { ReporteTimbresComponent } from './componentes/reportes/timbres/reporte-timbres/reporte-timbres.component';
 import { ReportePermisosComponent } from './componentes/reportes/reporte-permisos/reporte-permisos.component';
-import { ReporteAtrasosComponent } from './componentes/reportes/reporte-atrasos/reporte-atrasos.component';
-import { ReporteEntradaSalidaComponent } from './componentes/reportes/reporte-entrada-salida/reporte-entrada-salida.component';
+import { ReporteAtrasosComponent } from './componentes/reportes/atrasos/reporte-atrasos/reporte-atrasos.component';
+import { ReporteEntradaSalidaComponent } from './componentes/reportes/entradas-salidas/reporte-entrada-salida/reporte-entrada-salida.component';
 import { AsistenciaConsolidadoComponent } from './componentes/reportes/reporte-asistencia-consolidado/asistencia-consolidado.component';
 import { ListaReportesComponent } from './componentes/reportes/lista-reportes/lista-reportes.component';
-import { ReporteHorasPedidasComponent } from './componentes/reportes/reporte-horas-pedidas/reporte-horas-pedidas.component';
+import { ReporteHorasPedidasComponent } from './componentes/reportes/horas-extras/reporte-horas-pedidas/reporte-horas-pedidas.component';
 import { TimbreAbiertosComponent } from './componentes/reportes/timbres/timbre-abiertos/timbre-abiertos.component';
 
 
@@ -100,11 +100,11 @@ import { PlanificacionComidasEmpleadoComponent } from './componentes/rolEmpleado
 import { ProcesosEmpleadoComponent } from './componentes/rolEmpleado/procesos-empleado/procesos-empleado.component';
 import { AutorizaEmpleadoComponent } from './componentes/rolEmpleado/autoriza-empleado/autoriza-empleado.component';
 import { ReporteKardexComponent } from './componentes/reportes/reporte-kardex/reporte-kardex.component';
-import { ReporteEmpleadosComponent } from './componentes/reportes/reporte-empleados/reporte-empleados.component';
+import { ReporteEmpleadosComponent } from './componentes/reportes/empleados/reporte-empleados/reporte-empleados.component';
 import { ListaArchivosComponent } from './componentes/documentos/lista-archivos/lista-archivos.component';
 import { TimbreWebComponent } from './componentes/timbre-web/timbre-empleado/timbre-web.component';
 import { TimbreAdminComponent } from './componentes/timbre-web/timbre-admin/timbre-admin.component';
-import { ReporteHorasExtrasComponent } from './componentes/reportes/reporte-horas-extras/reporte-horas-extras.component';
+import { ReporteHorasExtrasComponent } from './componentes/reportes/horas-extras/reporte-horas-extras/reporte-horas-extras.component';
 import { InasistenciaMacroComponent } from './componentes/graficas-macro/inasistencia-macro/inasistencia-macro.component';
 import { AsistenciaMacroComponent } from './componentes/graficas-macro/asistencia-macro/asistencia-macro.component';
 import { HoraExtraMacroComponent } from './componentes/graficas-macro/hora-extra-macro/hora-extra-macro.component';
@@ -114,8 +114,8 @@ import { RetrasosMacroComponent } from './componentes/graficas-macro/retrasos-ma
 import { TiempoJornadaVsHoraExtMacroComponent } from './componentes/graficas-macro/tiempo-jornada-vs-hora-ext-macro/tiempo-jornada-vs-hora-ext-macro.component';
 import { AlimentosGeneralComponent } from './componentes/reportes/alimentacion/alimentos-general/alimentos-general.component';
 import { SalidasAntesMacroComponent } from './componentes/graficas-macro/salidas-antes-macro/salidas-antes-macro.component';
-import { ReporteAtrasosMultiplesComponent } from './componentes/reportes/reporte-atrasos-multiples/reporte-atrasos-multiples.component';
-import { ReporteEmpleadosInactivosComponent } from './componentes/reportes/reporte-empleados-inactivos/reporte-empleados-inactivos.component';
+import { ReporteAtrasosMultiplesComponent } from './componentes/reportes/atrasos/reporte-atrasos-multiples/reporte-atrasos-multiples.component';
+import { ReporteEmpleadosInactivosComponent } from './componentes/reportes/empleados/reporte-empleados-inactivos/reporte-empleados-inactivos.component';
 import { ReporteFaltasComponent } from './componentes/reportes/reporte-faltas/reporte-faltas.component';
 import { ReporteHorasTrabajadasComponent } from './componentes/reportes/reporte-horas-trabajadas/reporte-horas-trabajadas.component';
 import { ReporteTimbresMultiplesComponent } from './componentes/reportes/timbres/reporte-timbres-multiples/reporte-timbres-multiples.component';
@@ -144,6 +144,7 @@ import { OlvidarFraseComponent } from './componentes/frase-administrar/olvidar-f
 import { VacunaMultipleComponent } from './componentes/reportes/vacunas/vacuna-multiple/vacuna-multiple.component';
 import { AlimentosInvitadosComponent } from './componentes/reportes/alimentacion/alimentos-invitados/alimentos-invitados.component';
 import { TimbreIncompletoComponent } from './componentes/reportes/timbres/timbre-incompleto/timbre-incompleto.component';
+import { SalidasAntesComponent } from './componentes/reportes/entradas-salidas/salidas-antes/salidas-antes.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -251,6 +252,7 @@ const routes: Routes = [
   { path: 'reporte-timbres-multiples', component: ReporteTimbresMultiplesComponent, canActivate: [AuthGuard], data: { roles: 1 } },
   { path: 'reporte-timbre-abierto', component: TimbreAbiertosComponent, canActivate: [AuthGuard], data: { roles: 1 } },
   { path: 'reporte-timbre-incompleto', component: TimbreIncompletoComponent, canActivate: [AuthGuard], data: { roles: 1 } },
+  { path: 'salidas-anticipadas', component: SalidasAntesComponent, canActivate: [AuthGuard], data: { roles: 1 } },
 
   // Reportes Alimentacion
   { path: 'alimentosGeneral', component: AlimentosGeneralComponent, canActivate: [AuthGuard], data: { roles: 1 } },

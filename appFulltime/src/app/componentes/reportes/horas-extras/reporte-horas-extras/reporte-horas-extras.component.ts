@@ -7,8 +7,8 @@ import { KardexService } from 'src/app/servicios/reportes/kardex.service';
 import pdfMake from 'pdfmake/build/pdfmake';
 import * as moment from 'moment';
 import { MatDialog } from '@angular/material/dialog';
-import { ConfigReportFirmasHorasExtrasComponent } from '../../reportes-Configuracion/config-report-firmas-horas-extras/config-report-firmas-horas-extras.component';
-import { PlantillaReportesService } from '../plantilla-reportes.service';
+import { ConfigReportFirmasHorasExtrasComponent } from '../../../reportes-Configuracion/config-report-firmas-horas-extras/config-report-firmas-horas-extras.component';
+import { PlantillaReportesService } from '../../plantilla-reportes.service';
 
 @Component({
   selector: 'app-reporte-horas-extras',

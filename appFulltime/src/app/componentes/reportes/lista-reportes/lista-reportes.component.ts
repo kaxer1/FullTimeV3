@@ -97,6 +97,7 @@ const TREE_DATA: CategoriasReportes[] = [
       { name: 'Horas Trabajadas', url: '/reporte-horas-trabaja' },
       { name: 'Empleados Vacunados', url: '/lista-vacunados' },
       { name: 'Timbre Incompleto', url: '/reporte-timbre-incompleto' },
+      { name: 'Salidas Anticipadas', url: '/salidas-anticipadas' },
     ]
   },
   {
