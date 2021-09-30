@@ -11,8 +11,8 @@ import * as moment from 'moment';
 import * as xlsx from 'xlsx';
 import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
 import { IReporteAtrasos } from 'src/app/model/reportes.model';
-import { ReportesService } from '../../../servicios/reportes/reportes.service';
-import { ValidacionesService } from '../../../servicios/validaciones/validaciones.service';
+import { ReportesService } from '../../../../servicios/reportes/reportes.service';
+import { ValidacionesService } from '../../../../servicios/validaciones/validaciones.service';
 
 @Component({
   selector: 'app-reporte-atrasos-multiples',

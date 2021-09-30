@@ -23,7 +23,7 @@ import { PlanHorarioService } from 'src/app/servicios/horarios/planHorario/plan-
 import { CiudadFeriadosService } from 'src/app/servicios/ciudadFeriados/ciudad-feriados.service';
 import { DatosGeneralesService } from 'src/app/servicios/datosGenerales/datos-generales.service';
 import { EntradasSalidas } from 'src/app/model/timbres.model';
-import { ValidacionesService } from '../../../servicios/validaciones/validaciones.service';
+import { ValidacionesService } from '../../../../servicios/validaciones/validaciones.service';
 
 @Component({
   selector: 'app-reporte-entrada-salida',

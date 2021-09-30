@@ -17,7 +17,7 @@ import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.s
 import { Router } from '@angular/router';
 import { PedHoraExtraService } from 'src/app/servicios/horaExtra/ped-hora-extra.service';
 import { DatosGeneralesService } from 'src/app/servicios/datosGenerales/datos-generales.service';
-import { ValidacionesService } from '../../../servicios/validaciones/validaciones.service';
+import { ValidacionesService } from '../../../../servicios/validaciones/validaciones.service';
 
 @Component({
   selector: 'app-reporte-horas-pedidas',
