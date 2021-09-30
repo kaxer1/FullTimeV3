@@ -37,7 +37,7 @@
     "add": "^2.0.6",
     "angular2-image-upload": "^1.0.0-rc.2",
     "bootstrap": "^4.4.1",
-    "chart.js": "^2.9.3",
+    "chart.js": "^2.9.4",
     "chartjs-plugin-annotation": "^0.5.7",
     "chartjs-plugin-datalabels": "^0.7.0",
     "echarts": "^5.0.2",
@@ -65,7 +65,7 @@
     "ts-md5": "^1.2.7",
     "tslib": "^1.10.0",
     "typescript": "~3.7.5",
-    "xlsx": "^0.15.6",
+    "xlsx": "^0.17.2",
     "xml-js": "^1.6.11",
     "yarn": "^1.22.1",
     "zone.js": "~0.10.2"

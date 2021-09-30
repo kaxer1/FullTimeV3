@@ -44,7 +44,7 @@
     "socket.io": "^2.4.1",
     "ts-md5": "^1.2.7",
     "web-push": "^3.4.4",
-    "xlsx": "^0.15.6",
+    "xlsx": "^0.17.2",
     "xmlbuilder": "^15.1.1"
   },
   "devDependencies": {
