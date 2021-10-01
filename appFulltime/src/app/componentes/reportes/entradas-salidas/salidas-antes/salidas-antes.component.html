@@ -183,43 +183,4 @@
             [pageSizeOptions]="pageSizeOptions_tab" (page)="ManejarPagina($event)" showFirstLastButtons>
         </mat-paginator>
     </div>
-    <!-- TABLA PARA INCOMPETOS -->
-    <div *ngIf="bool.bool_inc" class="mat-elevation-z8" style="background: white;">
-        <div id="titulo">Resultado Incompleto</div>
-        <div class="table-responsive">
-            <table class="table table-hover table-sm">
-                <thead class="thead-light">
-                    <tr style="text-align: center;">
-                        <th>
-                            <mat-checkbox (change)="$event ? masterToggleInc() : null"
-                                [checked]="selectionInc.hasValue() && isAllSelectedInc()"
-                                [indeterminate]="selectionInc.hasValue() && !isAllSelectedInc()"
-                                [aria-label]="checkboxLabelInc()">
-                            </mat-checkbox>
-                        </th>
-                        <th scope="col">Nombre</th>
-                        <th scope="col">Cédula</th>
-                        <th scope="col">Codigo</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr
-                        *ngFor="let i of incompletos | emplCodigo: filtroCodigo_inc | emplCedula: filtroCedula_inc | emplNombre: filtroNombreInc | paginate:tamanio_pagina_inc:numero_pagina_inc">
-                        <td>
-                            <mat-checkbox (click)="$event.stopPropagation()"
-                                (change)="$event ? selectionInc.toggle(i) : null" [checked]="selectionInc.isSelected(i)"
-                                [aria-label]="checkboxLabelInc(i)">
-                            </mat-checkbox>
-                        </td>
-                        <td>{{i.nombre}}</td>
-                        <td>{{i.cedula}}</td>
-                        <td>{{i.codigo}}</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-        <mat-paginator [length]="incompletos.length" [pageSize]="tamanio_pagina_inc"
-            [pageSizeOptions]="pageSizeOptions_inc" (page)="ManejarPagina($event)" showFirstLastButtons>
-        </mat-paginator>
-    </div>
 </div>
