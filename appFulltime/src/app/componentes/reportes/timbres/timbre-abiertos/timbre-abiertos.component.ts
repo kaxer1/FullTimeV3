@@ -85,6 +85,7 @@ export class TimbreAbiertosComponent implements OnInit {
     this.metodosAsistencia.ReporteTimbresAbiertos(arrayIds, this.rangoFechas.fec_inico, this.rangoFechas.fec_final).subscribe(res => {
       console.log(res);
       this.data_pdf = res;
+      console.log('ver data timbres', this.data_pdf)
       switch (action) {
         case 'excel':
           // aqui poner metodo de generar excel

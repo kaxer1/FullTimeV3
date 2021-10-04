@@ -36,6 +36,7 @@ import { VacunaMultipleComponent } from './vacunas/vacuna-multiple/vacuna-multip
 import { AlimentosInvitadosComponent } from './alimentacion/alimentos-invitados/alimentos-invitados.component';
 import { TimbreIncompletoComponent } from './timbres/timbre-incompleto/timbre-incompleto.component';
 import { SalidasAntesComponent } from './entradas-salidas/salidas-antes/salidas-antes.component';
+import { AuditoriaComponent } from './auditoria/auditoria.component';
 
 @NgModule({
   declarations: [
@@ -67,6 +68,7 @@ import { SalidasAntesComponent } from './entradas-salidas/salidas-antes/salidas-
     AlimentosInvitadosComponent,
     TimbreIncompletoComponent,
     SalidasAntesComponent,
+    AuditoriaComponent,
   ],
   exports: [
     ReporteFaltasComponent,

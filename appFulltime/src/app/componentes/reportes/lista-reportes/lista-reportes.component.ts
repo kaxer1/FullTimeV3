@@ -129,5 +129,12 @@ const TREE_DATA: CategoriasReportes[] = [
       { name: 'Todos', url: '/listaAllNotificaciones' },
       { name: 'Usuarios', url: '/listaNotifacionUsuario' },
     ]
-  }
+  },
+  {
+    name: 'Reportes Auditoría',
+    icono: 'gavel',
+    children: [
+      { name: 'Lista reportes', url: '/auditoria' },
+    ]
+  },
 ];
