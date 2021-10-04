@@ -1,7 +1,7 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef } from '@angular/material/dialog';
 
 import { CiudadService } from 'src/app/servicios/ciudad/ciudad.service';
 import { ProvinciaService } from 'src/app/servicios/catalogos/catProvincias/provincia.service';
@@ -11,8 +11,7 @@ import { startWith, map } from 'rxjs/operators';
 @Component({
   selector: 'app-registrar-ciudad',
   templateUrl: './registrar-ciudad.component.html',
-  styleUrls: ['./registrar-ciudad.component.css'],
-  //encapsulation: ViewEncapsulation.None
+  styleUrls: ['./registrar-ciudad.component.css']
 })
 export class RegistrarCiudadComponent implements OnInit {
 
@@ -95,7 +94,7 @@ export class RegistrarCiudadComponent implements OnInit {
   FiltrarPaises(form) {
     var nombreContinente = form.nombreContinenteForm;
     if (nombreContinente === 'Seleccionar' || nombreContinente === '') {
-      this.toastr.info('No ha seleccionado ninguna opción','', {
+      this.toastr.info('No ha seleccionado ninguna opción', '', {
         timeOut: 6000,
       })
       this.paises = [];
@@ -113,7 +112,7 @@ export class RegistrarCiudadComponent implements OnInit {
       this.provincias = datos;
       this.seleccionarProvincia = '';
     }, error => {
-      this.toastr.info('El País seleccionado no tiene Provincias, Departamentos o Estados registrados','', {
+      this.toastr.info('El País seleccionado no tiene Provincias, Departamentos o Estados registrados', '', {
         timeOut: 6000,
       })
     })
@@ -127,7 +126,7 @@ export class RegistrarCiudadComponent implements OnInit {
       }
     });
     if (idPais === undefined) {
-      this.toastr.info('No ha seleccionado ninguna opción','', {
+      this.toastr.info('No ha seleccionado ninguna opción', '', {
         timeOut: 6000,
       })
       this.provincias = [];
@@ -146,7 +145,7 @@ export class RegistrarCiudadComponent implements OnInit {
       }
     });
     if (provinciaId === 'Seleccionar') {
-      this.toastr.info('Seleccione una provincia','', {
+      this.toastr.info('Seleccione una provincia', '', {
         timeOut: 6000,
       })
     }

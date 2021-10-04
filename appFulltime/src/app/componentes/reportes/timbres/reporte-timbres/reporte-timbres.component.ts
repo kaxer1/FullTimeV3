@@ -481,22 +481,15 @@ export class ReporteTimbresComponent implements OnInit {
 
       // Pie de la página
       footer: function (currentPage: any, pageCount: any, fecha: any, hora: any) {
-        var h = new Date();
         var f = moment();
         fecha = f.format('YYYY-MM-DD');
-        // Formato de hora actual
-        if (h.getMinutes() < 10) {
-          var time = h.getHours() + ':0' + h.getMinutes();
-        }
-        else {
-          var time = h.getHours() + ':' + h.getMinutes();
-        }
+        hora = f.format('HH:mm:ss');
         return {
           margin: 10,
           columns: [
             {
               text: [{
-                text: 'Fecha: ' + fecha + ' Hora: ' + time,
+                text: 'Fecha: ' + fecha + ' Hora: ' + hora,
                 alignment: 'left', opacity: 0.3
               }]
             },
