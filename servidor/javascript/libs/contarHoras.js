@@ -67,8 +67,8 @@ function GenerarHorarioEmpleado(id_cargo, inicio, final) {
         if (horarioAnual.length === 0)
             return { message: 'No tienen asignado horario' };
         if (horarioAnual.length === 1) { // referencia a horario anual
-            var fecha1 = (0, moment_1.default)(horarioAnual[0].fec_inicio.toJSON().split("T")[0]);
-            var fecha2 = (0, moment_1.default)(horarioAnual[0].fec_final.toJSON().split("T")[0]);
+            var fecha1 = moment_1.default(horarioAnual[0].fec_inicio.toJSON().split("T")[0]);
+            var fecha2 = moment_1.default(horarioAnual[0].fec_final.toJSON().split("T")[0]);
             var diasHorario = fecha2.diff(fecha1, 'days');
             if (diasHorario > 300) { // compruevo si es realmente horario anual
                 console.log('*************************');
@@ -84,8 +84,8 @@ function GenerarHorarioEmpleado(id_cargo, inicio, final) {
         if (horarioMensual.length === 0)
             return { message: 'No tiene asignado horario' };
         if (horarioMensual.length === 1) { //referencia a un horario mensual
-            var fecha1 = (0, moment_1.default)(horarioMensual[0].fec_inicio.toJSON().split("T")[0]);
-            var fecha2 = (0, moment_1.default)(horarioMensual[0].fec_final.toJSON().split("T")[0]);
+            var fecha1 = moment_1.default(horarioMensual[0].fec_inicio.toJSON().split("T")[0]);
+            var fecha2 = moment_1.default(horarioMensual[0].fec_final.toJSON().split("T")[0]);
             var diasHorario = fecha2.diff(fecha1, 'days');
             if (diasHorario > 25) { // compruevo si es realmente horario mensual
                 console.log('*************************');
@@ -112,8 +112,8 @@ function GenerarHorarioEmpleado(id_cargo, inicio, final) {
     });
 }
 function HorarioConEstado(estados, inicio, final) {
-    var fecha1 = (0, moment_1.default)(inicio.toJSON().split("T")[0]);
-    var fecha2 = (0, moment_1.default)(final.toJSON().split("T")[0]);
+    var fecha1 = moment_1.default(inicio.toJSON().split("T")[0]);
+    var fecha2 = moment_1.default(final.toJSON().split("T")[0]);
     // console.log('ESTADOSSSSSSSS',estados);
     var diasHorario = fecha2.diff(fecha1, 'days');
     let horarioSemanalEstados = [];
