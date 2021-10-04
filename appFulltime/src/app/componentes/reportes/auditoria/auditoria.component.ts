@@ -275,8 +275,8 @@ export class AuditoriaComponent implements OnInit {
       }
 
       return {
-        FECHA: obj.action_tstamp,
-        HORA: obj.action_tstamp,
+        FECHA: obj.obj.action_tstamp.split('T')[0],
+        HORA: obj.action_tstamp.split('T')[0].split('.')[0],
         USUARIO: obj.user_name,
         OPERACION: accion,
         REGISTRO: obj.table_name,
