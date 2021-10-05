@@ -152,6 +152,18 @@ class LoginControlador {
             res.jsonp({ mail: 'si', message: 'Mail enviado' });
         });
     }
+    // PRUEBA AUDITAR
+    AuditarActualizar(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { esquema, tabla, user, ip } = req.body;
+            yield database_1.default.query(' INSERT INTO audit.prueba_auditoria (schema_name,table_name,user_name,action, ' +
+                'original_data,new_data,query, ip) ' +
+                'VALUES ($1,$2,$3,substring(\'UPDATE\',1,1),ROW(OLD.*), ' +
+                'ROW(NEW.*), current_query(), $4)', [esquema, tabla, user, ip]);
+            console.log('req auditar', req.body);
+            res.jsonp({ message: 'Auditar' });
+        });
+    }
 }
 const LOGIN_CONTROLADOR = new LoginControlador();
 exports.default = LOGIN_CONTROLADOR;

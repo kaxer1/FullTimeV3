@@ -1,7 +1,8 @@
 import { Request, Response } from 'express';
 import pool from '../../database';
 import { VerificarHorario } from '../../libs/MetodosHorario';
-import { enviarMail, email, Credenciales } from '../../libs/settingsMail'
+import { enviarMail, email, Credenciales } from '../../libs/settingsMail';
+import { ReporteHoraExtra } from '../../class/HorasExtras';
 const nodemailer = require("nodemailer");
 
 class HorasExtrasPedidasControlador {
@@ -391,8 +392,63 @@ class HorasExtrasPedidasControlador {
     }
   }
 
+
+  /** ******************************************************************************* *
+   **       REPORTE PARA VER INFORMACIÓN DE PLANIFICACIÓN DE HORAS EXTRAS             *
+   ** ******************************************************************************* */
+  public async ReporteVacacionesMultiple(req: Request, res: Response) {
+    console.log('datos recibidos', req.body)
+    let datos: any[] = req.body;
+    let { desde, hasta } = req.params;
+    let n: Array<any> = await Promise.all(datos.map(async (obj: ReporteHoraExtra) => {
+      obj.departamentos = await Promise.all(obj.departamentos.map(async (ele) => {
+        ele.empleado = await Promise.all(ele.empleado.map(async (o) => {
+          o.horaE = await BuscarHorasExtras(o.codigo, desde, hasta);
+          console.log('Vacaciones: ', o);
+          return o
+        })
+        )
+        return ele
+      })
+      )
+      return obj
+    })
+    )
+
+
+    let nuevo = n.map((obj: ReporteHoraExtra) => {
+
+      obj.departamentos = obj.departamentos.map((e) => {
+
+        e.empleado = e.empleado.filter((v: any) => { return v.vacaciones.length > 0 })
+        return e
+
+      }).filter((e: any) => { return e.empleado.length > 0 })
+      return obj
+
+    }).filter(obj => { return obj.departamentos.length > 0 })
+
+    if (nuevo.length === 0) return res.status(400).jsonp({ message: 'No se ha encontrado registro de planificaciones.' })
+
+    return res.status(200).jsonp(nuevo)
+
+  }
+
+
 }
 
 export const horaExtraPedidasControlador = new HorasExtrasPedidasControlador();
 
 export default horaExtraPedidasControlador;
+
+const BuscarHorasExtras = async function (id: number, desde: string, hasta: string) {
+  return await pool.query('SELECT p.fecha_desde, p.fecha_hasta, p.hora_inicio, p.hora_fin, p.descripcion, ' +
+    'p.horas_totales, e.nombre AS planifica_nombre, e.apellido AS planifica_apellido ' +
+    'FROM plan_hora_extra AS p, plan_hora_extra_empleado AS pe, empleados AS e ' +
+    'WHERE p.id = pe.id_plan_hora AND e.id = p.id_empl_planifica AND pe.codigo = $1 AND ' +
+    'p.fecha_desde BETWEEN $2 AND $3',
+    [id, desde, hasta])
+    .then(res => {
+      return res.rows;
+    })
+}

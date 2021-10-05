@@ -38,6 +38,7 @@ import { TimbreIncompletoComponent } from './timbres/timbre-incompleto/timbre-in
 import { SalidasAntesComponent } from './entradas-salidas/salidas-antes/salidas-antes.component';
 import { AuditoriaComponent } from './auditoria/auditoria.component';
 import { SolicitudVacacionComponent } from './vacaciones/solicitud-vacacion/solicitud-vacacion.component';
+import { HorasPlanificadasComponent } from './horas-extras/horas-planificadas/horas-planificadas.component';
 @NgModule({
   declarations: [
     RangoFechasComponent,
@@ -70,6 +71,7 @@ import { SolicitudVacacionComponent } from './vacaciones/solicitud-vacacion/soli
     SalidasAntesComponent,
     AuditoriaComponent,
     SolicitudVacacionComponent,
+    HorasPlanificadasComponent,
   ],
   exports: [
     ReporteFaltasComponent,

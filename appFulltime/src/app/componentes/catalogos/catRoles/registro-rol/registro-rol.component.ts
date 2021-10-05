@@ -4,6 +4,7 @@ import { RolesService } from 'src/app/servicios/catalogos/catRoles/roles.service
 import { ToastrService } from 'ngx-toastr';
 import { MatDialogRef } from '@angular/material/dialog';
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
+import { ValidacionesService } from 'src/app/servicios/validaciones/validaciones.service';
 
 @Component({
   selector: 'app-registro-rol',
@@ -30,6 +31,7 @@ export class RegistroRolComponent implements OnInit {
     public restEmpleado: EmpleadoService,
     private toastr: ToastrService,
     public dialogRef: MatDialogRef<RegistroRolComponent>,
+    public validar: ValidacionesService,
   ) {
     this.idEmpleadoLogueado = parseInt(localStorage.getItem('empleado'));
     this.nuevoRolForm.setValue({
@@ -82,6 +84,7 @@ export class RegistroRolComponent implements OnInit {
           this.toastr.success('Operacion Exitosa', 'Rol guardado', {
             timeOut: 6000,
           });
+          //this.validar.Auditar();
           this.limpiarCampos();
           this.salir = true;
         });

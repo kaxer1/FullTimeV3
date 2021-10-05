@@ -208,7 +208,7 @@ export class AuditoriaComponent implements OnInit {
           width: 'auto',
           table: {
             headerRows: 1,
-            widths: ['auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
+            widths: ['auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 230],
             body: [
               this.FuncionTituloColumna(),
               ...datosRest.map((obj) => {
@@ -275,7 +275,7 @@ export class AuditoriaComponent implements OnInit {
       }
 
       return {
-        FECHA: obj.obj.action_tstamp.split('T')[0],
+        FECHA: obj.action_tstamp.split('T')[0],
         HORA: obj.action_tstamp.split('T')[0].split('.')[0],
         USUARIO: obj.user_name,
         OPERACION: accion,
