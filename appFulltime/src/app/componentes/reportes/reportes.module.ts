@@ -13,7 +13,7 @@ import { ReporteTimbresMultiplesComponent } from './timbres/reporte-timbres-mult
 
 import { ListaReportesComponent } from './lista-reportes/lista-reportes.component';
 import { ReporteEmpleadosComponent } from './empleados/reporte-empleados/reporte-empleados.component';
-import { ReporteKardexComponent } from './reporte-kardex/reporte-kardex.component';
+import { ReporteKardexComponent } from './vacaciones/reporte-kardex/reporte-kardex.component';
 import { ReporteHorasPedidasComponent } from './horas-extras/reporte-horas-pedidas/reporte-horas-pedidas.component';
 import { ReporteHorasExtrasComponent } from './horas-extras/reporte-horas-extras/reporte-horas-extras.component';
 import { AlimentosGeneralComponent } from './alimentacion/alimentos-general/alimentos-general.component';
@@ -37,7 +37,7 @@ import { AlimentosInvitadosComponent } from './alimentacion/alimentos-invitados/
 import { TimbreIncompletoComponent } from './timbres/timbre-incompleto/timbre-incompleto.component';
 import { SalidasAntesComponent } from './entradas-salidas/salidas-antes/salidas-antes.component';
 import { AuditoriaComponent } from './auditoria/auditoria.component';
-
+import { SolicitudVacacionComponent } from './vacaciones/solicitud-vacacion/solicitud-vacacion.component';
 @NgModule({
   declarations: [
     RangoFechasComponent,
@@ -69,6 +69,7 @@ import { AuditoriaComponent } from './auditoria/auditoria.component';
     TimbreIncompletoComponent,
     SalidasAntesComponent,
     AuditoriaComponent,
+    SolicitudVacacionComponent,
   ],
   exports: [
     ReporteFaltasComponent,
@@ -89,6 +90,7 @@ import { AuditoriaComponent } from './auditoria/auditoria.component';
     ReporteAtrasosComponent,
     ReporteEntradaSalidaComponent,
     ListaReportesComponent,
+    SolicitudVacacionComponent,
   ],
   imports: [
     BrowserAnimationsModule,
