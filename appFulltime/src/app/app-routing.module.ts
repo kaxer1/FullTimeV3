@@ -99,7 +99,7 @@ import { HoraExtraEmpleadoComponent } from './componentes/rolEmpleado/hora-extra
 import { PlanificacionComidasEmpleadoComponent } from './componentes/rolEmpleado/planificacion-comidas-empleado/planificacion-comidas-empleado.component';
 import { ProcesosEmpleadoComponent } from './componentes/rolEmpleado/procesos-empleado/procesos-empleado.component';
 import { AutorizaEmpleadoComponent } from './componentes/rolEmpleado/autoriza-empleado/autoriza-empleado.component';
-import { ReporteKardexComponent } from './componentes/reportes/reporte-kardex/reporte-kardex.component';
+import { ReporteKardexComponent } from './componentes/reportes/vacaciones/reporte-kardex/reporte-kardex.component';
 import { ReporteEmpleadosComponent } from './componentes/reportes/empleados/reporte-empleados/reporte-empleados.component';
 import { ListaArchivosComponent } from './componentes/documentos/lista-archivos/lista-archivos.component';
 import { TimbreWebComponent } from './componentes/timbre-web/timbre-empleado/timbre-web.component';
@@ -146,6 +146,7 @@ import { AlimentosInvitadosComponent } from './componentes/reportes/alimentacion
 import { TimbreIncompletoComponent } from './componentes/reportes/timbres/timbre-incompleto/timbre-incompleto.component';
 import { SalidasAntesComponent } from './componentes/reportes/entradas-salidas/salidas-antes/salidas-antes.component';
 import { AuditoriaComponent } from './componentes/reportes/auditoria/auditoria.component';
+import { SolicitudVacacionComponent } from './componentes/reportes/vacaciones/solicitud-vacacion/solicitud-vacacion.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -255,6 +256,7 @@ const routes: Routes = [
   { path: 'reporte-timbre-incompleto', component: TimbreIncompletoComponent, canActivate: [AuthGuard], data: { roles: 1 } },
   { path: 'salidas-anticipadas', component: SalidasAntesComponent, canActivate: [AuthGuard], data: { roles: 1 } },
   { path: 'auditoria', component: AuditoriaComponent, canActivate: [AuthGuard], data: { roles: 1 } },
+  { path: 'solicitud-vacacion', component: SolicitudVacacionComponent, canActivate: [AuthGuard], data: { roles: 1 } },
 
   // Reportes Alimentacion
   { path: 'alimentosGeneral', component: AlimentosGeneralComponent, canActivate: [AuthGuard], data: { roles: 1 } },

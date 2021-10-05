@@ -70,7 +70,8 @@ import RELOJ_VIRTUAL_RUTAS from './utils/reloj_virtual';
 import VACUNA_RUTAS from './rutas/empleado/empleadoVacuna/vacunasRutas';
 import VACUNAS_REPORTE_RUTAS from './rutas/reportes/reporteVacunasRutas';
 import SALIDAS_ANTICIPADAS_RUTAS from './rutas/reportes/salidasAntesRutas';
-import AUDITORIA_RUTAS from './rutas/auditoria/auditoriaRutas'
+import AUDITORIA_RUTAS from './rutas/auditoria/auditoriaRutas';
+import VACACIONES_REPORTES_RUTAS from './rutas/reportes/solicitudVacacionesRutas'
 
 import { createServer, Server } from 'http';
 const socketIo = require('socket.io');
@@ -188,6 +189,9 @@ class Servidor {
 
         // REPORTE MÚLTIPLE DE VACUNAS
         this.app.use('/empleado-vacunas-multiples', VACUNAS_REPORTE_RUTAS);
+
+        // REPORTE SOLICITUD DE VACACIONES
+        this.app.use('/empleado-vacaciones-solicitudes', VACACIONES_REPORTES_RUTAS);
 
         // Modulo Alimentación
         this.app.use('/alimentacion', ALIMENTACION_RUTAS); // acceso controlado por ModuloAlimentacionValidation

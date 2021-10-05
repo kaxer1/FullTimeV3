@@ -69,4 +69,9 @@ export class VacacionesService {
   EditarVacacion(id: number, datos: any) {
     return this.http.put(`${environment.url}/vacaciones/${id}/vacacion-solicitada`, datos);
   }
+
+  // REPORTE DE VACACIONES DE FORMA MÚLTIPLE
+  BuscarSolicitudVacacion(datos: any, desde: string, hasta: string) {
+    return this.http.put(`${environment.url}/empleado-vacaciones-solicitudes/vacaciones-solicitudes/${desde}/${hasta}`, datos);
+  }
 }
