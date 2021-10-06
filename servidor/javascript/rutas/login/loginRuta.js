@@ -14,6 +14,7 @@ class LoginRuta {
         this.router.post('/', loginControlador_1.default.ValidarCredenciales);
         this.router.post('/recuperar-contrasenia/', loginControlador_1.default.RestablecerContrasenia);
         this.router.post('/cambiar-contrasenia/', loginControlador_1.default.CambiarContrasenia);
+        this.router.post('/auditar', loginControlador_1.default.AuditarActualizar);
     }
 }
 const LOGIN_RUTA = new LoginRuta();

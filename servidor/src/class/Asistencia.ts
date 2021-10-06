@@ -155,3 +155,39 @@ export interface tim_tabulado {
     sal_Alm: string,
     desconocido: string
 }
+
+
+// TIMBRE INCOMPLETO
+export interface IReporteTimbresIncompletos {
+    id_suc: number,
+    name_suc: string,
+    ciudad: string,
+    departamentos: Array<dep_tim_inc>
+}
+
+interface dep_tim_inc {
+    id_depa: number,
+    name_dep: string,
+    empleado: Array<emp_tim_inc>
+}
+
+interface emp_tim_inc {
+    id: number,
+    name_empleado: string,
+    cedula: string,
+    codigo: number,
+    genero?: string | number,
+    cargo?: string,
+    contrato?: string,
+    timbres?: Array<tim_Imcompleto>,
+}
+
+interface tim_Imcompleto {
+    fecha: string,
+    timbres_hora: Array<tipo_hora>
+}
+
+interface tipo_hora {
+    tipo: string,
+    hora: string
+}

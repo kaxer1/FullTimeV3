@@ -12,7 +12,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ACCION_PERSONAL_CONTROLADOR = void 0;
 const database_1 = __importDefault(require("../../database"));
 const ImagenCodificacion_1 = require("../../libs/ImagenCodificacion");
 class AccionPersonalControlador {
@@ -239,7 +238,7 @@ class AccionPersonalControlador {
     EncontrarDatosEmpleados(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { id } = req.params;
-            const EMPLEADO = yield database_1.default.query(' SELECT d.id, d.nombre, d.apellido, d.cedula, d.codigo, d.id_cargo, ' +
+            const EMPLEADO = yield database_1.default.query('SELECT d.id, d.nombre, d.apellido, d.cedula, d.codigo, d.id_cargo, ' +
                 'ec.sueldo, tc.cargo, cd.nombre AS departamento ' +
                 'FROM datos_actuales_empleado AS d, empl_cargos AS ec, tipo_cargo AS tc, cg_departamentos AS cd ' +
                 'WHERE d.id_cargo = ec.id AND ec.cargo = tc.id AND ec.id_departamento = cd.id AND d.id = $1', [id]);

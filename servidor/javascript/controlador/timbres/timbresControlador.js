@@ -12,7 +12,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.timbresControlador = void 0;
 const database_1 = __importDefault(require("../../database"));
 // import { ContarHoras } from '../../libs/contarHoras'
 class TimbresControlador {
@@ -294,28 +293,28 @@ class TimbresControlador {
                                 obj.accion = 'Entrada o Salida';
                                 break;
                             case 'AES':
-                                obj.accion = 'Entrada o Salida Almuerzo';
+                                obj.accion = '  Inicio o Fin Comida';
                                 break;
                             case 'PES':
-                                obj.accion = 'Entrada o Salida Permiso';
+                                obj.accion = 'Inicio o Fin Permiso';
                                 break;
                             case 'E':
-                                obj.accion = 'Entrada o Salida';
+                                obj.accion = 'Entrada';
                                 break;
                             case 'S':
-                                obj.accion = 'Entrada o Salida';
+                                obj.accion = 'Salida';
                                 break;
                             case 'E/A':
-                                obj.accion = 'Entrada o Salida Almuerzo';
+                                obj.accion = 'Fin Comida';
                                 break;
                             case 'S/A':
-                                obj.accion = 'Entrada o Salida Almuerzo';
+                                obj.accion = 'Inicio Comida';
                                 break;
                             case 'E/P':
-                                obj.accion = 'Entrada o Salida Permiso';
+                                obj.accion = 'Fin Permiso';
                                 break;
                             case 'S/P':
-                                obj.accion = 'Entrada o Salida Permiso';
+                                obj.accion = 'Inicio Permiso';
                                 break;
                             case 'HA':
                                 obj.accion = 'Horario Abierto';

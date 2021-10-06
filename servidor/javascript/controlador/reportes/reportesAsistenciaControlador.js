@@ -352,7 +352,7 @@ class ReportesAsistenciaControlador {
                             o.contrato = yield database_1.default.query('SELECT r.descripcion AS contrato FROM cg_regimenes AS r, empl_contratos AS c WHERE c.id_regimen = r.id AND c.id_empleado = $1 ORDER BY c.fec_ingreso DESC LIMIT 1 ', [o.id]).then(result => { return result.rows[0].contrato; });
                             o.cargo = yield database_1.default.query('SELECT tc.cargo FROM empl_contratos AS co, empl_cargos AS ca, tipo_cargo AS tc WHERE co.id_empleado = $1 AND co.id = ca.id_empl_contrato AND tc.id = ca.cargo ORDER BY ca.fec_inicio DESC LIMIT 1 ', [o.id]).then(result => { return result.rows[0].cargo; });
                             o.timbres = yield TimbresIncompletos(new Date(desde), new Date(hasta), o.codigo);
-                            // console.log(o);
+                            console.log('Timbres: ', o);
                             return o;
                         })));
                         return ele;
@@ -368,7 +368,7 @@ class ReportesAsistenciaControlador {
                             o.contrato = yield database_1.default.query('SELECT r.descripcion AS contrato FROM cg_regimenes AS r, empl_contratos AS c WHERE c.id_regimen = r.id AND c.id_empleado = $1 ORDER BY c.fec_ingreso DESC LIMIT 1 ', [o.id]).then(result => { return result.rows[0].contrato; });
                             o.cargo = yield database_1.default.query('SELECT tc.cargo FROM empl_contratos AS co, empl_cargos AS ca, tipo_cargo AS tc WHERE co.id_empleado = $1 AND co.id = ca.id_empl_contrato AND tc.id = ca.cargo ORDER BY ca.fec_inicio DESC LIMIT 1 ', [o.id]).then(result => { return result.rows[0].cargo; });
                             o.timbres = yield TimbresSinAccionesIncompletos(new Date(desde), new Date(hasta), o.codigo);
-                            // console.log(o);
+                            console.log('Timbres: ', o);
                             return o;
                         })));
                         return ele;
@@ -1107,19 +1107,25 @@ const TimbresTabulados = function (fec_inicio, fec_final, codigo) {
 };
 const TimbresIncompletos = function (fec_inicio, fec_final, codigo) {
     return __awaiter(this, void 0, void 0, function* () {
-        let horarios = yield database_1.default.query('SELECT eh.fec_inicio, eh.fec_final, eh.lunes, eh.martes, eh.miercoles, eh.jueves, eh.viernes, eh.sabado, eh.domingo, eh.codigo ' +
-            'FROM empl_horarios AS eh WHERE eh.fec_inicio >= $1 AND eh.fec_final <= $2 AND eh.codigo = $3 ORDER BY eh.fec_inicio ASC', [fec_inicio, fec_final, codigo]).then(result => {
+        let horarios = yield database_1.default.query('SELECT eh.fec_inicio, eh.fec_final, eh.lunes, eh.martes, eh.miercoles, eh.id_horarios, ' +
+            'eh.jueves, eh.viernes, eh.sabado, eh.domingo, eh.codigo FROM empl_horarios AS eh ' +
+            'WHERE (($1 BETWEEN eh.fec_inicio AND eh.fec_final) OR ($2 BETWEEN eh.fec_inicio AND eh.fec_final)) ' +
+            'AND eh.codigo = $3 ORDER BY eh.fec_inicio ASC', [fec_inicio, fec_final, codigo]).then(result => {
+            console.log('RESPUESTA TIMBRE ENCONTRADO:1 ', result.rows);
             return result.rows;
         });
         if (horarios.length === 0)
             return [];
         let hora_deta = yield Promise.all(horarios.map((obj) => __awaiter(this, void 0, void 0, function* () {
+            console.log('RESPUESTA TIMBRE ENCONTRADO:------------------------------------ ', obj);
             obj.dias_laborados = MetodosHorario_1.HorariosParaInasistencias(obj);
             // obj.dias_laborados = ModelarFechas(obj.fec_inicio, obj.fec_final, obj)
             obj.deta_horarios = yield database_1.default.query('SELECT DISTINCT dh.hora, dh.orden, dh.tipo_accion FROM empl_horarios AS eh, cg_horarios AS h, deta_horarios AS dh ' +
-                'WHERE eh.id_horarios = h.id AND h.id = dh.id_horario AND eh.codigo = $1 ORDER BY dh.orden ASC', [obj.codigo]).then(result => {
+                'WHERE eh.id_horarios = h.id AND h.id = dh.id_horario AND eh.codigo = $1 AND h.id = $2 ' +
+                'ORDER BY dh.orden ASC', [obj.codigo, obj.id_horarios]).then(result => {
                 return result.rows;
             });
+            console.log('RESPUESTA TIMBRE ENCONTRADO:2 ', obj);
             return obj;
         })));
         if (hora_deta.length === 0)
@@ -1128,13 +1134,16 @@ const TimbresIncompletos = function (fec_inicio, fec_final, codigo) {
             obj.dias_laborados = yield Promise.all(obj.dias_laborados.map((obj1) => __awaiter(this, void 0, void 0, function* () {
                 return {
                     fecha: obj1.fecha,
-                    timbres_hora: yield database_1.default.query('SELECT CAST(fec_hora_timbre AS VARCHAR) AS timbre, accion FROM timbres WHERE id_empleado = $1 AND CAST(fec_hora_timbre AS VARCHAR) like $2 || \'%\' AND accion in (\'EoS\',\'AES\', \'S\',\'E\',\'E/A\',\'S/A\')', [obj.codigo, obj1.fecha]).then(result => { return result.rows; })
+                    timbres_hora: yield database_1.default.query('SELECT CAST(fec_hora_timbre AS VARCHAR) AS timbre, ' +
+                        'accion FROM timbres WHERE id_empleado = $1 AND CAST(fec_hora_timbre AS VARCHAR) ' +
+                        'like $2 || \'%\' AND accion in (\'EoS\',\'AES\', \'S\',\'E\',\'E/A\',\'S/A\')', [obj.codigo, obj1.fecha]).then(result => { return result.rows; })
                 };
             })));
             obj.dias_laborados = obj.dias_laborados.map((o) => {
                 if (o.timbres_hora.length === 0) {
                     o.timbres_hora = obj.deta_horarios.map((h) => {
                         return {
+                            fecha_timbre: o.fecha,
                             tipo: h.tipo_accion,
                             hora: h.hora
                         };
@@ -1149,9 +1158,10 @@ const TimbresIncompletos = function (fec_inicio, fec_final, codigo) {
                             let hora_timbre = SubMetodosGraficas_1.HHMMtoSegundos(t.timbre.split(' ')[1]);
                             return h_inicio <= hora_timbre && h_final >= hora_timbre;
                         });
-                        // console.log('RESPUESTA TIMBRE ENCONTRADO: ', respuesta);
+                        console.log('RESPUESTA TIMBRE ENCONTRADO: ', respuesta);
                         if (respuesta.length === 0) {
                             return {
+                                fecha_timbre: o.fecha,
                                 tipo: h.tipo_accion,
                                 hora: h.hora
                             };
@@ -1161,6 +1171,7 @@ const TimbresIncompletos = function (fec_inicio, fec_final, codigo) {
                     return o;
                 }
             });
+            console.log('RESPUESTA TIMBRE ENCONTRADO: ', obj);
             return obj;
         })));
         // modelado.forEach(obj => { console.log(obj.dias_laborados);})

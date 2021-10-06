@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import { dep, emp, IHorarioTrabajo, IReporteAtrasos, IReportePuntualidad, IReporteTimbres, tim_tabulado } from '../../class/Asistencia';
+import { dep, emp, IHorarioTrabajo, IReporteAtrasos, IReportePuntualidad, IReporteTimbres, tim_tabulado, IReporteTimbresIncompletos } from '../../class/Asistencia';
 import pool from '../../database'
 import { HHMMtoSegundos, SumarValoresArray, SegundosToHHMM, ModelarFechas } from '../../libs/SubMetodosGraficas';
 import { HorariosParaInasistencias } from '../../libs/MetodosHorario'
@@ -14,39 +14,39 @@ class ReportesAsistenciaControlador {
     public async Departamentos(req: Request, res: Response) {
         let estado = req.params.estado;
         console.log('Estado: ', estado);
-        
+
         let suc = await pool.query('SELECT s.id AS id_suc, s.nombre AS name_suc, c.descripcion AS ciudad FROM sucursales AS s, ciudades AS c WHERE s.id_ciudad = c.id ORDER BY s.id')
             .then(result => { return result.rows });
-        
-        if (suc.length === 0) return res.status(404).jsonp({message: 'No tiene sucursales registrados'})
-        
-        let departamentos = await Promise.all(suc.map(async(ele: any) => {
-            ele.departamentos = await pool.query('SELECT d.id as id_depa, d.nombre as name_dep FROM cg_departamentos AS d ' + 
-            'WHERE d.id_sucursal = $1',[ele.id_suc])
-            .then(result => {
-                return result.rows.filter(obj => {
-                    return obj.name_dep != 'Ninguno'
-                })
-            });
+
+        if (suc.length === 0) return res.status(404).jsonp({ message: 'No tiene sucursales registrados' })
+
+        let departamentos = await Promise.all(suc.map(async (ele: any) => {
+            ele.departamentos = await pool.query('SELECT d.id as id_depa, d.nombre as name_dep FROM cg_departamentos AS d ' +
+                'WHERE d.id_sucursal = $1', [ele.id_suc])
+                .then(result => {
+                    return result.rows.filter(obj => {
+                        return obj.name_dep != 'Ninguno'
+                    })
+                });
             return ele
         }));
 
         let depa = departamentos.filter(obj => {
             return obj.departamentos.length > 0
         });
-        
-        if (depa.length === 0) return res.status(404).jsonp({message: 'No tiene departamentos registrados'})
 
-        let lista = await Promise.all( depa.map(async(obj: any) => {
-            obj.departamentos = await Promise.all(obj.departamentos.map(async(ele: any) => {
+        if (depa.length === 0) return res.status(404).jsonp({ message: 'No tiene departamentos registrados' })
+
+        let lista = await Promise.all(depa.map(async (obj: any) => {
+            obj.departamentos = await Promise.all(obj.departamentos.map(async (ele: any) => {
                 if (estado === '1') {
-                    ele.empleado = await pool.query('SELECT DISTINCT e.id, CONCAT(nombre, \' \', apellido) name_empleado, e.codigo, e.cedula, e.genero FROM empl_cargos AS ca, empl_contratos AS co, cg_regimenes AS r, empleados AS e ' + 
-                    'WHERE ca.id_departamento = $1 AND ca.id_empl_contrato = co.id AND co.id_regimen = r.id AND co.id_empleado = e.id AND e.estado = $2',[ele.id_depa, estado])
-                    .then(result => { return result.rows })
+                    ele.empleado = await pool.query('SELECT DISTINCT e.id, CONCAT(nombre, \' \', apellido) name_empleado, e.codigo, e.cedula, e.genero FROM empl_cargos AS ca, empl_contratos AS co, cg_regimenes AS r, empleados AS e ' +
+                        'WHERE ca.id_departamento = $1 AND ca.id_empl_contrato = co.id AND co.id_regimen = r.id AND co.id_empleado = e.id AND e.estado = $2', [ele.id_depa, estado])
+                        .then(result => { return result.rows })
                 } else {
-                    ele.empleado = await pool.query('SELECT DISTINCT e.id, CONCAT(nombre, \' \', apellido) name_empleado, e.codigo, e.cedula, e.genero, ca.fec_final FROM empl_cargos AS ca, empl_contratos AS co, cg_regimenes AS r, empleados AS e ' + 
-                    'WHERE ca.id_departamento = $1 AND ca.id_empl_contrato = co.id AND co.id_regimen = r.id AND co.id_empleado = e.id AND e.estado = $2',[ele.id_depa, estado])
-                    .then(result => { return result.rows })
+                    ele.empleado = await pool.query('SELECT DISTINCT e.id, CONCAT(nombre, \' \', apellido) name_empleado, e.codigo, e.cedula, e.genero, ca.fec_final FROM empl_cargos AS ca, empl_contratos AS co, cg_regimenes AS r, empleados AS e ' +
+                        'WHERE ca.id_departamento = $1 AND ca.id_empl_contrato = co.id AND co.id_regimen = r.id AND co.id_empleado = e.id AND e.estado = $2', [ele.id_depa, estado])
+                        .then(result => { return result.rows })
                 }
 
                 return ele
@@ -54,7 +54,7 @@ class ReportesAsistenciaControlador {
             return obj
         }))
 
-        if (lista.length === 0) return res.status(404).jsonp({message: 'No tiene empleados asignados a los departamentos'})
+        if (lista.length === 0) return res.status(404).jsonp({ message: 'No tiene empleados asignados a los departamentos' })
 
         let respuesta = lista.map(obj => {
             obj.departamentos = obj.departamentos.filter((ele: any) => {
@@ -65,8 +65,8 @@ class ReportesAsistenciaControlador {
             return obj.departamentos.length > 0
         });
 
-        if (respuesta.length === 0) return res.status(404).jsonp({message: 'No tiene departamentos con empleados'})
-        
+        if (respuesta.length === 0) return res.status(404).jsonp({ message: 'No tiene departamentos con empleados' })
+
         return res.status(200).jsonp(respuesta)
     }
 
@@ -76,7 +76,7 @@ class ReportesAsistenciaControlador {
      */
     public async ReporteAtrasosMultiple(req: Request, res: Response) {
 
-        let {desde, hasta} = req.params;
+        let { desde, hasta } = req.params;
         // console.log(desde, hasta);
         let datos: any[] = req.body;
         let n: Array<any> = [];
@@ -84,59 +84,65 @@ class ReportesAsistenciaControlador {
         if (req.acciones_timbres === true) {
             // Resultados de timbres con 6 y 3 acciones
 
-            n = await Promise.all(datos.map(async(obj:IReporteAtrasos) => {
-                obj.departamentos = await Promise.all(obj.departamentos.map(async(ele:dep) => {
-                    ele.empleado = await Promise.all( ele.empleado.map(async(o:emp) => {
-                        
-                            let timbres = await BuscarTimbresEoSReporte(desde, hasta, o.codigo);
-                            o.timbres = await Promise.all(timbres.map(async(e) => {
-                                return await ModelarAtrasosReporte(e);
-                            }))
-                            return o})
-                        )
-                    return ele})
+            n = await Promise.all(datos.map(async (obj: IReporteAtrasos) => {
+                obj.departamentos = await Promise.all(obj.departamentos.map(async (ele: dep) => {
+                    ele.empleado = await Promise.all(ele.empleado.map(async (o: emp) => {
+
+                        let timbres = await BuscarTimbresEoSReporte(desde, hasta, o.codigo);
+                        o.timbres = await Promise.all(timbres.map(async (e) => {
+                            return await ModelarAtrasosReporte(e);
+                        }))
+                        return o
+                    })
                     )
-                return obj})
-            ) 
+                    return ele
+                })
+                )
+                return obj
+            })
+            )
 
         } else {
             // Resultados de timbres sin acciones
-            n = await Promise.all(datos.map(async(obj:IReporteAtrasos) => {
-                obj.departamentos = await Promise.all(obj.departamentos.map(async(ele:dep) => {
-                    ele.empleado = await Promise.all( ele.empleado.map(async(o:emp) => {
-                        
-                            o.timbres = await AtrasosTimbresSinAccion(desde, hasta, o.codigo);
-                            // console.log('Timbres sin acciones: ',o);
-                            return o})
-                        )
-                    return ele})
+            n = await Promise.all(datos.map(async (obj: IReporteAtrasos) => {
+                obj.departamentos = await Promise.all(obj.departamentos.map(async (ele: dep) => {
+                    ele.empleado = await Promise.all(ele.empleado.map(async (o: emp) => {
+
+                        o.timbres = await AtrasosTimbresSinAccion(desde, hasta, o.codigo);
+                        // console.log('Timbres sin acciones: ',o);
+                        return o
+                    })
                     )
-                return obj})
+                    return ele
+                })
+                )
+                return obj
+            })
             )
         }
 
         let nuevo = n.map((obj: any) => {
-    
-            obj.departamentos = obj.departamentos.map((e:any) => {                
 
-                e.empleado = e.empleado.map((t:any) => {
-                    
+            obj.departamentos = obj.departamentos.map((e: any) => {
+
+                e.empleado = e.empleado.map((t: any) => {
+
                     t.timbres = t.timbres.filter((a: any) => { return a != 0 })
                     return t
 
                 }).filter((t: any) => { return t.timbres.length > 0 })
-                    // console.log('Empleados: ',e);
+                // console.log('Empleados: ',e);
                 return e
 
-            }).filter((e: any) => { return e.empleado.length > 0 }) 
+            }).filter((e: any) => { return e.empleado.length > 0 })
             return obj
 
         }).filter(obj => { return obj.departamentos.length > 0 })
 
-        if (nuevo.length === 0) return res.status(400).jsonp({message: 'No hay atrasos de empleados en ese periodo'})
+        if (nuevo.length === 0) return res.status(400).jsonp({ message: 'No hay atrasos de empleados en ese periodo' })
 
         return res.status(200).jsonp(nuevo);
-        
+
     }
 
     /**
@@ -145,90 +151,96 @@ class ReportesAsistenciaControlador {
      */
     public async ReporteFaltasMultiple(req: Request, res: Response) {
 
-        let {desde, hasta} = req.params
+        let { desde, hasta } = req.params
         // console.log(desde, hasta);
         let datos: any[] = req.body
         let n: Array<any> = [];
         //El reporte funciona para relojs de 6, 3 y sin acciones.        
 
-        n = await Promise.all(datos.map(async(obj:IReporteAtrasos) => {
-            obj.departamentos = await Promise.all(obj.departamentos.map(async(ele:dep) => {
-                ele.empleado = await Promise.all( ele.empleado.map(async(o:emp) => {
-                    
-                        let faltas = await BuscarHorarioEmpleado(desde, hasta, o.codigo);
-                        o.faltas = faltas.filter(o => {
-                            return o.registros === 0
-                        }).map(o => { 
-                            return { fecha: o.fecha }
-                        })
-                        
-                        return o})
-                    )
-                return ele})
+        n = await Promise.all(datos.map(async (obj: IReporteAtrasos) => {
+            obj.departamentos = await Promise.all(obj.departamentos.map(async (ele: dep) => {
+                ele.empleado = await Promise.all(ele.empleado.map(async (o: emp) => {
+
+                    let faltas = await BuscarHorarioEmpleado(desde, hasta, o.codigo);
+                    o.faltas = faltas.filter(o => {
+                        return o.registros === 0
+                    }).map(o => {
+                        return { fecha: o.fecha }
+                    })
+
+                    return o
+                })
                 )
-            return obj})
+                return ele
+            })
+            )
+            return obj
+        })
         )
-        
+
         let nuevo = n.map((obj: any) => {
-    
-            obj.departamentos = obj.departamentos.map((e:any) => {                
-                
+
+            obj.departamentos = obj.departamentos.map((e: any) => {
+
                 e.empleado = e.empleado.filter((t: any) => { return t.faltas.length > 0 })
                 return e
 
-            }).filter((e: any) => { return e.empleado.length > 0 }) 
+            }).filter((e: any) => { return e.empleado.length > 0 })
             return obj
 
         }).filter(obj => { return obj.departamentos.length > 0 })
-        
-        if (nuevo.length === 0) return res.status(400).jsonp({message: 'No hay faltas de empleados en ese periodo'})
+
+        if (nuevo.length === 0) return res.status(400).jsonp({ message: 'No hay faltas de empleados en ese periodo' })
 
         return res.status(200).jsonp(nuevo)
     }
-    
+
     public async ReporteFaltasMultipleTabulado(req: Request, res: Response) {
 
-        let {desde, hasta} = req.params
+        let { desde, hasta } = req.params
         // console.log(desde, hasta);
         let datos: any[] = req.body
         // console.log(datos);
         //El reporte funciona para relojs de 6, 3 y sin acciones.
 
-        let n = await Promise.all(datos.map(async(obj:IReporteAtrasos) => {
-            obj.departamentos = await Promise.all(obj.departamentos.map(async(ele:dep) => {
-                ele.empleado = await Promise.all( ele.empleado.map(async(o:emp) => {
-                        o.contrato = await pool.query('SELECT r.descripcion AS contrato FROM cg_regimenes AS r, empl_contratos AS c WHERE c.id_regimen = r.id AND c.id_empleado = $1 ORDER BY c.fec_ingreso DESC LIMIT 1 ', [o.id]).then(result => { return result.rows[0].contrato})
-                        o.cargo = await pool.query('SELECT tc.cargo FROM empl_contratos AS co, empl_cargos AS ca, tipo_cargo AS tc WHERE co.id_empleado = $1 AND co.id = ca.id_empl_contrato AND tc.id = ca.cargo ORDER BY ca.fec_inicio DESC LIMIT 1 ', [o.id]).then(result => { return result.rows[0].cargo})
-                        let faltas = await BuscarHorarioEmpleado(desde, hasta, o.codigo);
-                        o.faltas = faltas.filter(o => {
-                            return o.registros === 0
-                        }).map(o => { 
-                            return { fecha: o.fecha }
-                        })
-                        
-                        return o})
-                    )
-                return ele})
+        let n = await Promise.all(datos.map(async (obj: IReporteAtrasos) => {
+            obj.departamentos = await Promise.all(obj.departamentos.map(async (ele: dep) => {
+                ele.empleado = await Promise.all(ele.empleado.map(async (o: emp) => {
+                    o.contrato = await pool.query('SELECT r.descripcion AS contrato FROM cg_regimenes AS r, empl_contratos AS c WHERE c.id_regimen = r.id AND c.id_empleado = $1 ORDER BY c.fec_ingreso DESC LIMIT 1 ', [o.id]).then(result => { return result.rows[0].contrato })
+                    o.cargo = await pool.query('SELECT tc.cargo FROM empl_contratos AS co, empl_cargos AS ca, tipo_cargo AS tc WHERE co.id_empleado = $1 AND co.id = ca.id_empl_contrato AND tc.id = ca.cargo ORDER BY ca.fec_inicio DESC LIMIT 1 ', [o.id]).then(result => { return result.rows[0].cargo })
+                    let faltas = await BuscarHorarioEmpleado(desde, hasta, o.codigo);
+                    o.faltas = faltas.filter(o => {
+                        return o.registros === 0
+                    }).map(o => {
+                        return { fecha: o.fecha }
+                    })
+
+                    return o
+                })
                 )
-            return obj})
+                return ele
+            })
+            )
+            return obj
+        })
         )
 
         let nuevo = n.map((obj: any) => {
 
-            obj.departamentos = obj.departamentos.map((e:any) => {                
-                
+            obj.departamentos = obj.departamentos.map((e: any) => {
+
                 e.empleado = e.empleado.filter((t: any) => { return t.faltas.length > 0 })
                 return e
 
-            }).filter((e: any) => { return e.empleado.length > 0 }) 
+            }).filter((e: any) => { return e.empleado.length > 0 })
             return obj
 
         }).filter(obj => { return obj.departamentos.length > 0 })
 
-        if (nuevo.length === 0) return res.status(400).jsonp({message: 'No hay faltas de empleados en ese periodo'})
+        if (nuevo.length === 0) return res.status(400).jsonp({ message: 'No hay faltas de empleados en ese periodo' })
 
         return res.status(200).jsonp(nuevo)
-        
+
     }
 
     /**
@@ -237,7 +249,7 @@ class ReportesAsistenciaControlador {
      */
     public async ReporteHorasTrabajaMultiple(req: Request, res: Response) {
 
-        let {desde, hasta} = req.params
+        let { desde, hasta } = req.params
         // console.log(desde, hasta);
         let datos: any[] = req.body
         // console.log(datos);
@@ -247,46 +259,52 @@ class ReportesAsistenciaControlador {
         if (req.acciones_timbres === true) {
             // Resultados de timbres con 6 y 3 acciones
 
-            n = await Promise.all(datos.map(async(obj:IReporteAtrasos) => {
-                obj.departamentos = await Promise.all(obj.departamentos.map(async(ele:dep) => {
-                    ele.empleado = await Promise.all( ele.empleado.map(async(o:emp) => {                        
-                            o.timbres = await ModelarHorasTrabajaReporte(o.codigo, desde, hasta);
-                            return o})
-                        )
-                    return ele})
+            n = await Promise.all(datos.map(async (obj: IReporteAtrasos) => {
+                obj.departamentos = await Promise.all(obj.departamentos.map(async (ele: dep) => {
+                    ele.empleado = await Promise.all(ele.empleado.map(async (o: emp) => {
+                        o.timbres = await ModelarHorasTrabajaReporte(o.codigo, desde, hasta);
+                        return o
+                    })
                     )
-                return obj})
+                    return ele
+                })
+                )
+                return obj
+            })
             )
 
         } else {
             // Resultados de timbres sin acciones
             // console.log('LLEGO A TIMBRES SIN ACCIONES');
-            n = await Promise.all(datos.map(async(obj:IReporteAtrasos) => {
-                obj.departamentos = await Promise.all(obj.departamentos.map(async(ele:dep) => {
-                    ele.empleado = await Promise.all( ele.empleado.map(async(o:emp) => {                        
-                            o.timbres = await ModelarHorasTrabajaTimbresSinAcciones(o.codigo, desde, hasta);
-                            return o})
-                        )
-                    return ele})
+            n = await Promise.all(datos.map(async (obj: IReporteAtrasos) => {
+                obj.departamentos = await Promise.all(obj.departamentos.map(async (ele: dep) => {
+                    ele.empleado = await Promise.all(ele.empleado.map(async (o: emp) => {
+                        o.timbres = await ModelarHorasTrabajaTimbresSinAcciones(o.codigo, desde, hasta);
+                        return o
+                    })
                     )
-                return obj})
+                    return ele
+                })
+                )
+                return obj
+            })
             )
 
         }
-       
+
         let nuevo = n.map((obj: any) => {
-    
-            obj.departamentos = obj.departamentos.map((e:any) => {                
-                
+
+            obj.departamentos = obj.departamentos.map((e: any) => {
+
                 e.empleado = e.empleado.filter((t: any) => { return t.timbres.length > 0 })
                 return e
 
-            }).filter((e: any) => { return e.empleado.length > 0 }) 
+            }).filter((e: any) => { return e.empleado.length > 0 })
             return obj
 
         }).filter(obj => { return obj.departamentos.length > 0 })
 
-        if (nuevo.length === 0) return res.status(400).jsonp({message: 'No hay timbres de empleados en ese periodo'})
+        if (nuevo.length === 0) return res.status(400).jsonp({ message: 'No hay timbres de empleados en ese periodo' })
 
         return res.status(200).jsonp(datos)
     }
@@ -297,313 +315,333 @@ class ReportesAsistenciaControlador {
      */
     public async ReportePuntualidad(req: Request, res: Response) {
 
-        let {desde, hasta} = req.params
+        let { desde, hasta } = req.params
         let datos: any[] = req.body;
         let params_query = req.query
         // console.log(params_query);  
-        
+
         //false sin acciones || true con acciones
         if (req.acciones_timbres === true) {
             // Resultados de timbres con 6 y 3 acciones
 
-            let n = await Promise.all(datos.map(async(obj:IReportePuntualidad) => {
-                obj.departamentos = await Promise.all(obj.departamentos.map(async(ele) => {
-                    ele.empleado = await Promise.all( ele.empleado.map(async(o) => {
-                            o.contrato = await pool.query('SELECT r.descripcion AS contrato FROM cg_regimenes AS r, empl_contratos AS c WHERE c.id_regimen = r.id AND c.id_empleado = $1 ORDER BY c.fec_ingreso DESC LIMIT 1 ', [o.id]).then(result => { return result.rows[0].contrato})
-                            o.cargo = await pool.query('SELECT tc.cargo FROM empl_contratos AS co, empl_cargos AS ca, tipo_cargo AS tc WHERE co.id_empleado = $1 AND co.id = ca.id_empl_contrato AND tc.id = ca.cargo ORDER BY ca.fec_inicio DESC LIMIT 1 ', [o.id]).then(result => { return result.rows[0].cargo})                            
-                            let timbres = await BuscarTimbresEoSReporte(desde, hasta, o.codigo);
-                            // console.log('Return del timbre: ',timbres);
-                            if (timbres.length === 0) {
-                                o.puntualidad = 0;
-                            } else {
-                                let aux = await Promise.all(timbres.map(async(e) => {
-                                    return await ModelarPuntualidad(e);
-                                }))
-                                var array: any = [];
-                                aux.forEach(u => {
-                                    if (u[0] > 0) {
-                                        array.push(u[0])
-                                    }
-                                })
-                                o.puntualidad = parseInt(SumarValoresArray(array));
-                                // console.log(o);
-                            }
-    
-                            if (o.puntualidad >= parseInt(params_query.mayor)) {
-                                o.color = '#06F313' // verde
-                            } else if (o.puntualidad <= parseInt(params_query.menor)) {
-                                o.color = '#EC2E05' // rojo
-                            } else {
-                                o.color = '#F38306' // naranja
-                            }
-                            return o})
-                        )
-                    return ele})
+            let n = await Promise.all(datos.map(async (obj: IReportePuntualidad) => {
+                obj.departamentos = await Promise.all(obj.departamentos.map(async (ele) => {
+                    ele.empleado = await Promise.all(ele.empleado.map(async (o) => {
+                        o.contrato = await pool.query('SELECT r.descripcion AS contrato FROM cg_regimenes AS r, empl_contratos AS c WHERE c.id_regimen = r.id AND c.id_empleado = $1 ORDER BY c.fec_ingreso DESC LIMIT 1 ', [o.id]).then(result => { return result.rows[0].contrato })
+                        o.cargo = await pool.query('SELECT tc.cargo FROM empl_contratos AS co, empl_cargos AS ca, tipo_cargo AS tc WHERE co.id_empleado = $1 AND co.id = ca.id_empl_contrato AND tc.id = ca.cargo ORDER BY ca.fec_inicio DESC LIMIT 1 ', [o.id]).then(result => { return result.rows[0].cargo })
+                        let timbres = await BuscarTimbresEoSReporte(desde, hasta, o.codigo);
+                        // console.log('Return del timbre: ',timbres);
+                        if (timbres.length === 0) {
+                            o.puntualidad = 0;
+                        } else {
+                            let aux = await Promise.all(timbres.map(async (e) => {
+                                return await ModelarPuntualidad(e);
+                            }))
+                            var array: any = [];
+                            aux.forEach(u => {
+                                if (u[0] > 0) {
+                                    array.push(u[0])
+                                }
+                            })
+                            o.puntualidad = parseInt(SumarValoresArray(array));
+                            // console.log(o);
+                        }
+
+                        if (o.puntualidad >= parseInt(params_query.mayor)) {
+                            o.color = '#06F313' // verde
+                        } else if (o.puntualidad <= parseInt(params_query.menor)) {
+                            o.color = '#EC2E05' // rojo
+                        } else {
+                            o.color = '#F38306' // naranja
+                        }
+                        return o
+                    })
                     )
-                return obj})
+                    return ele
+                })
+                )
+                return obj
+            })
             )
             return res.status(200).jsonp(n)
 
         } else {
             // Resultados de timbres sin acciones
 
-            let n = await Promise.all(datos.map(async(obj:IReportePuntualidad) => {
-                obj.departamentos = await Promise.all(obj.departamentos.map(async(ele) => {
-                    ele.empleado = await Promise.all( ele.empleado.map(async(o) => {
-                            o.contrato = await pool.query('SELECT r.descripcion AS contrato FROM cg_regimenes AS r, empl_contratos AS c WHERE c.id_regimen = r.id AND c.id_empleado = $1 ORDER BY c.fec_ingreso DESC LIMIT 1 ', [o.id]).then(result => { return result.rows[0].contrato})
-                            o.cargo = await pool.query('SELECT tc.cargo FROM empl_contratos AS co, empl_cargos AS ca, tipo_cargo AS tc WHERE co.id_empleado = $1 AND co.id = ca.id_empl_contrato AND tc.id = ca.cargo ORDER BY ca.fec_inicio DESC LIMIT 1 ', [o.id]).then(result => { return result.rows[0].cargo})
-                            let timbres = await BuscarTimbresSinAccionesDeEntrada(desde, hasta, o.codigo);
-                            
-                            o.puntualidad = (timbres.length === 0) ? 0 : parseInt(SumarValoresArray(timbres));
-    
-                            if (o.puntualidad >= parseInt(params_query.mayor)) {
-                                o.color = '#06F313' // verde
-                            } else if (o.puntualidad <= parseInt(params_query.menor)) {
-                                o.color = '#EC2E05' // rojo
-                            } else {
-                                o.color = '#F38306' // naranja
-                            }
-                            return o})
-                        )
-                    return ele})
+            let n = await Promise.all(datos.map(async (obj: IReportePuntualidad) => {
+                obj.departamentos = await Promise.all(obj.departamentos.map(async (ele) => {
+                    ele.empleado = await Promise.all(ele.empleado.map(async (o) => {
+                        o.contrato = await pool.query('SELECT r.descripcion AS contrato FROM cg_regimenes AS r, empl_contratos AS c WHERE c.id_regimen = r.id AND c.id_empleado = $1 ORDER BY c.fec_ingreso DESC LIMIT 1 ', [o.id]).then(result => { return result.rows[0].contrato })
+                        o.cargo = await pool.query('SELECT tc.cargo FROM empl_contratos AS co, empl_cargos AS ca, tipo_cargo AS tc WHERE co.id_empleado = $1 AND co.id = ca.id_empl_contrato AND tc.id = ca.cargo ORDER BY ca.fec_inicio DESC LIMIT 1 ', [o.id]).then(result => { return result.rows[0].cargo })
+                        let timbres = await BuscarTimbresSinAccionesDeEntrada(desde, hasta, o.codigo);
+
+                        o.puntualidad = (timbres.length === 0) ? 0 : parseInt(SumarValoresArray(timbres));
+
+                        if (o.puntualidad >= parseInt(params_query.mayor)) {
+                            o.color = '#06F313' // verde
+                        } else if (o.puntualidad <= parseInt(params_query.menor)) {
+                            o.color = '#EC2E05' // rojo
+                        } else {
+                            o.color = '#F38306' // naranja
+                        }
+                        return o
+                    })
                     )
-                return obj})
+                    return ele
+                })
+                )
+                return obj
+            })
             )
             return res.status(200).jsonp(n)
         }
-        
+
     }
 
     public async ReporteTimbresIncompletos(req: Request, res: Response) {
 
-        let {desde, hasta} = req.params
+        let { desde, hasta } = req.params
         let datos: any[] = req.body
         let n: Array<any> = [];
         //false sin acciones || true con acciones
         if (req.acciones_timbres === true) {
             // Resultados de timbres con 6 y 3 acciones
-
-            n = await Promise.all(datos.map(async(obj:IReporteTimbres) => {
-                obj.departamentos = await Promise.all(obj.departamentos.map(async(ele) => {
-                    ele.empleado = await Promise.all( ele.empleado.map(async(o) => {
-                            o.contrato = await pool.query('SELECT r.descripcion AS contrato FROM cg_regimenes AS r, empl_contratos AS c WHERE c.id_regimen = r.id AND c.id_empleado = $1 ORDER BY c.fec_ingreso DESC LIMIT 1 ', [o.id]).then(result => { return result.rows[0].contrato})
-                            o.cargo = await pool.query('SELECT tc.cargo FROM empl_contratos AS co, empl_cargos AS ca, tipo_cargo AS tc WHERE co.id_empleado = $1 AND co.id = ca.id_empl_contrato AND tc.id = ca.cargo ORDER BY ca.fec_inicio DESC LIMIT 1 ', [o.id]).then(result => { return result.rows[0].cargo})
-                            o.timbres = await TimbresIncompletos( new Date(desde), new Date(hasta), o.codigo)
-                            // console.log(o);
-                            return o})
-                        )
-                    return ele})
+            n = await Promise.all(datos.map(async (obj: IReporteTimbresIncompletos) => {
+                obj.departamentos = await Promise.all(obj.departamentos.map(async (ele) => {
+                    ele.empleado = await Promise.all(ele.empleado.map(async (o) => {
+                        o.contrato = await pool.query('SELECT r.descripcion AS contrato FROM cg_regimenes AS r, empl_contratos AS c WHERE c.id_regimen = r.id AND c.id_empleado = $1 ORDER BY c.fec_ingreso DESC LIMIT 1 ', [o.id]).then(result => { return result.rows[0].contrato })
+                        o.cargo = await pool.query('SELECT tc.cargo FROM empl_contratos AS co, empl_cargos AS ca, tipo_cargo AS tc WHERE co.id_empleado = $1 AND co.id = ca.id_empl_contrato AND tc.id = ca.cargo ORDER BY ca.fec_inicio DESC LIMIT 1 ', [o.id]).then(result => { return result.rows[0].cargo })
+                        o.timbres = await TimbresIncompletos(new Date(desde), new Date(hasta), o.codigo)
+                        console.log('Timbres: ', o);
+                        return o
+                    })
                     )
-                return obj})
+                    return ele
+                })
+                )
+                return obj
+            })
             )
+
 
         } else {
             // Resultados de timbres sin acciones
-            
-            n = await Promise.all(datos.map(async(obj:IReporteTimbres) => {
-                obj.departamentos = await Promise.all(obj.departamentos.map(async(ele) => {
-                    ele.empleado = await Promise.all( ele.empleado.map(async(o) => {
-                            o.contrato = await pool.query('SELECT r.descripcion AS contrato FROM cg_regimenes AS r, empl_contratos AS c WHERE c.id_regimen = r.id AND c.id_empleado = $1 ORDER BY c.fec_ingreso DESC LIMIT 1 ', [o.id]).then(result => { return result.rows[0].contrato})
-                            o.cargo = await pool.query('SELECT tc.cargo FROM empl_contratos AS co, empl_cargos AS ca, tipo_cargo AS tc WHERE co.id_empleado = $1 AND co.id = ca.id_empl_contrato AND tc.id = ca.cargo ORDER BY ca.fec_inicio DESC LIMIT 1 ', [o.id]).then(result => { return result.rows[0].cargo})                            
-                            o.timbres = await TimbresSinAccionesIncompletos( new Date(desde), new Date(hasta), o.codigo)
-                            // console.log(o);
-                            return o})
-                        )
-                    return ele})
+            n = await Promise.all(datos.map(async (obj: IReporteTimbresIncompletos) => {
+                obj.departamentos = await Promise.all(obj.departamentos.map(async (ele) => {
+                    ele.empleado = await Promise.all(ele.empleado.map(async (o) => {
+                        o.contrato = await pool.query('SELECT r.descripcion AS contrato FROM cg_regimenes AS r, empl_contratos AS c WHERE c.id_regimen = r.id AND c.id_empleado = $1 ORDER BY c.fec_ingreso DESC LIMIT 1 ', [o.id]).then(result => { return result.rows[0].contrato })
+                        o.cargo = await pool.query('SELECT tc.cargo FROM empl_contratos AS co, empl_cargos AS ca, tipo_cargo AS tc WHERE co.id_empleado = $1 AND co.id = ca.id_empl_contrato AND tc.id = ca.cargo ORDER BY ca.fec_inicio DESC LIMIT 1 ', [o.id]).then(result => { return result.rows[0].cargo })
+                        o.timbres = await TimbresSinAccionesIncompletos(new Date(desde), new Date(hasta), o.codigo);
+                        console.log('Timbres: ', o);
+                        return o
+                    })
                     )
-                return obj})
+                    return ele
+                })
+                )
+                return obj
+            })
             )
 
         }
 
         let nuevo = n.map((obj: any) => {
-            obj.departamentos = obj.departamentos.map((e:any) => {                
+            obj.departamentos = obj.departamentos.map((e: any) => {
                 e.empleado = e.empleado.filter((t: any) => { return t.timbres.length > 0 })
                 return e
-            }).filter((e: any) => { return e.empleado.length > 0 }) 
+            }).filter((e: any) => { return e.empleado.length > 0 })
             return obj
         }).filter(obj => { return obj.departamentos.length > 0 })
-        
-        if (nuevo.length === 0) return res.status(400).jsonp({message: 'No hay atrasos de empleados en ese periodo'})
-        
+
+        if (nuevo.length === 0) return res.status(400).jsonp({ message: 'No hay atrasos de empleados en ese periodo' })
+
         return res.status(200).jsonp(nuevo)
-        
+
     }
 
     public async ReporteTimbresTabulado(req: Request, res: Response) {
 
-        let {desde, hasta} = req.params
+        let { desde, hasta } = req.params
         let datos: any[] = req.body
         let n: Array<any> = [];
         //false sin acciones || true con acciones
         if (req.acciones_timbres === true) {
             // Resultados de timbres con 6 y 3 acciones
 
-            n = await Promise.all(datos.map(async(obj:IReporteTimbres) => {
-                obj.departamentos = await Promise.all(obj.departamentos.map(async(ele) => {
-                    ele.empleado = await Promise.all( ele.empleado.map(async(o) => {
-                            o.contrato = await pool.query('SELECT r.descripcion AS contrato FROM cg_regimenes AS r, empl_contratos AS c WHERE c.id_regimen = r.id AND c.id_empleado = $1 ORDER BY c.fec_ingreso DESC LIMIT 1 ', [o.id]).then(result => { return result.rows[0].contrato})
-                            o.cargo = await pool.query('SELECT tc.cargo FROM empl_contratos AS co, empl_cargos AS ca, tipo_cargo AS tc WHERE co.id_empleado = $1 AND co.id = ca.id_empl_contrato AND tc.id = ca.cargo ORDER BY ca.fec_inicio DESC LIMIT 1 ', [o.id]).then(result => { return result.rows[0].cargo})                            
-                            o.timbres = await TimbresTabulados(desde, hasta, o.codigo)
-                            return o})
-                        )
-                    return ele})
+            n = await Promise.all(datos.map(async (obj: IReporteTimbres) => {
+                obj.departamentos = await Promise.all(obj.departamentos.map(async (ele) => {
+                    ele.empleado = await Promise.all(ele.empleado.map(async (o) => {
+                        o.contrato = await pool.query('SELECT r.descripcion AS contrato FROM cg_regimenes AS r, empl_contratos AS c WHERE c.id_regimen = r.id AND c.id_empleado = $1 ORDER BY c.fec_ingreso DESC LIMIT 1 ', [o.id]).then(result => { return result.rows[0].contrato })
+                        o.cargo = await pool.query('SELECT tc.cargo FROM empl_contratos AS co, empl_cargos AS ca, tipo_cargo AS tc WHERE co.id_empleado = $1 AND co.id = ca.id_empl_contrato AND tc.id = ca.cargo ORDER BY ca.fec_inicio DESC LIMIT 1 ', [o.id]).then(result => { return result.rows[0].cargo })
+                        o.timbres = await TimbresTabulados(desde, hasta, o.codigo)
+                        return o
+                    })
                     )
-                return obj})
+                    return ele
+                })
+                )
+                return obj
+            })
             )
-           
+
         } else {
             // Resultados de timbres sin acciones
 
-            n = await Promise.all(datos.map(async(obj:IReporteTimbres) => {
-                obj.departamentos = await Promise.all(obj.departamentos.map(async(ele) => {
-                    ele.empleado = await Promise.all( ele.empleado.map(async(o) => {
-                            o.contrato = await pool.query('SELECT r.descripcion AS contrato FROM cg_regimenes AS r, empl_contratos AS c WHERE c.id_regimen = r.id AND c.id_empleado = $1 ORDER BY c.fec_ingreso DESC LIMIT 1 ', [o.id]).then(result => { return result.rows[0].contrato})
-                            o.cargo = await pool.query('SELECT tc.cargo FROM empl_contratos AS co, empl_cargos AS ca, tipo_cargo AS tc WHERE co.id_empleado = $1 AND co.id = ca.id_empl_contrato AND tc.id = ca.cargo ORDER BY ca.fec_inicio DESC LIMIT 1 ', [o.id]).then(result => { return result.rows[0].cargo})
-                            o.timbres = await TimbresSinAccionesTabulados(desde, hasta, o.codigo)
-                            return o})
-                        )
-                    return ele})
+            n = await Promise.all(datos.map(async (obj: IReporteTimbres) => {
+                obj.departamentos = await Promise.all(obj.departamentos.map(async (ele) => {
+                    ele.empleado = await Promise.all(ele.empleado.map(async (o) => {
+                        o.contrato = await pool.query('SELECT r.descripcion AS contrato FROM cg_regimenes AS r, empl_contratos AS c WHERE c.id_regimen = r.id AND c.id_empleado = $1 ORDER BY c.fec_ingreso DESC LIMIT 1 ', [o.id]).then(result => { return result.rows[0].contrato })
+                        o.cargo = await pool.query('SELECT tc.cargo FROM empl_contratos AS co, empl_cargos AS ca, tipo_cargo AS tc WHERE co.id_empleado = $1 AND co.id = ca.id_empl_contrato AND tc.id = ca.cargo ORDER BY ca.fec_inicio DESC LIMIT 1 ', [o.id]).then(result => { return result.rows[0].cargo })
+                        o.timbres = await TimbresSinAccionesTabulados(desde, hasta, o.codigo)
+                        return o
+                    })
                     )
-                return obj})
+                    return ele
+                })
+                )
+                return obj
+            })
             )
 
         }
 
         let nuevo = n.map((obj: any) => {
-            obj.departamentos = obj.departamentos.map((e:any) => {                
+            obj.departamentos = obj.departamentos.map((e: any) => {
                 e.empleado = e.empleado.filter((t: any) => { return t.timbres.length > 0 })
                 return e
-            }).filter((e: any) => { return e.empleado.length > 0 }) 
+            }).filter((e: any) => { return e.empleado.length > 0 })
             return obj
         }).filter(obj => { return obj.departamentos.length > 0 });
 
-        if (nuevo.length === 0) return res.status(400).jsonp({message: 'No hay atrasos de empleados en ese periodo'})
-        
+        if (nuevo.length === 0) return res.status(400).jsonp({ message: 'No hay atrasos de empleados en ese periodo' })
+
         return res.status(200).jsonp(nuevo)
 
     }
 
     public async ReporteTimbresMultiple(req: Request, res: Response) {
 
-        let {desde, hasta} = req.params;
+        let { desde, hasta } = req.params;
         let datos: any[] = req.body;
         //El reporte funciona para relojs de 6, 3 y sin acciones.        
 
-        let n: Array<any> = await Promise.all(datos.map(async(obj:IReporteTimbres) => {
-                obj.departamentos = await Promise.all(obj.departamentos.map(async(ele) => {
-                    ele.empleado = await Promise.all( ele.empleado.map(async(o) => {
-                            o.timbres = await BuscarTimbres(desde, hasta, o.codigo);
-                            console.log('Timbres: ',o);
-                            return o})
-                        )
-                    return ele})
-                    )
-                return obj})
+        let n: Array<any> = await Promise.all(datos.map(async (obj: IReporteTimbres) => {
+            obj.departamentos = await Promise.all(obj.departamentos.map(async (ele) => {
+                ele.empleado = await Promise.all(ele.empleado.map(async (o) => {
+                    o.timbres = await BuscarTimbres(desde, hasta, o.codigo);
+                    console.log('Timbres: ', o);
+                    return o
+                })
+                )
+                return ele
+            })
             )
+            return obj
+        })
+        )
 
 
         let nuevo = n.map((obj: IReporteTimbres) => {
-    
-            obj.departamentos = obj.departamentos.map((e) => {                
+
+            obj.departamentos = obj.departamentos.map((e) => {
 
                 e.empleado = e.empleado.filter((t: any) => { return t.timbres.length > 0 })
-                    // console.log('Empleados: ',e);
+                // console.log('Empleados: ',e);
                 return e
 
-            }).filter((e: any) => { return e.empleado.length > 0 }) 
+            }).filter((e: any) => { return e.empleado.length > 0 })
             return obj
 
         }).filter(obj => { return obj.departamentos.length > 0 })
 
-        if (nuevo.length === 0) return res.status(400).jsonp({message: 'No hay timbres de empleados en ese periodo'})
+        if (nuevo.length === 0) return res.status(400).jsonp({ message: 'No hay timbres de empleados en ese periodo' })
 
         return res.status(200).jsonp(nuevo)
-        
+
     }
 
     public async ReporteTimbresAbiertos(req: Request, res: Response) {
 
-        const {data, desde, hasta} = req.query;
+        const { data, desde, hasta } = req.query;
 
         try {
             const array = JSON.parse(data);
-            if (array.length === 0) return res.status(400).jsonp({message: 'no existe datos de consulta'})
-            
-            const resultado = await Promise.all( array.map(async(o: any) => {
+            if (array.length === 0) return res.status(400).jsonp({ message: 'no existe datos de consulta' })
+
+            const resultado = await Promise.all(array.map(async (o: any) => {
                 return {
                     id: o.id,
                     codigo: o.codigo,
                     fullname: o.fullname,
                     cedula: o.cedula,
-                    timbres: await pool.query('SELECT CAST(fec_hora_timbre AS VARCHAR), accion, observacion, latitud, longitud, CAST(fec_hora_timbre_servidor AS VARCHAR), dispositivo_timbre FROM timbres WHERE id_empleado = $1 AND accion = \'HA\' AND fec_hora_timbre BETWEEN $2 AND $3 ORDER BY fec_hora_timbre DESC ', [ parseInt(o.codigo), new Date(desde), new Date(hasta) ])
-                    .then(result => { return result.rows })
+                    timbres: await pool.query('SELECT CAST(fec_hora_timbre AS VARCHAR), accion, observacion, latitud, longitud, CAST(fec_hora_timbre_servidor AS VARCHAR), dispositivo_timbre FROM timbres WHERE id_empleado = $1 AND accion = \'HA\' AND fec_hora_timbre BETWEEN $2 AND $3 ORDER BY fec_hora_timbre DESC ', [parseInt(o.codigo), new Date(desde), new Date(hasta)])
+                        .then(result => { return result.rows })
                 }
-            }) )
+            }))
 
             const nuevo = resultado.filter((obj: any) => { return obj.timbres.length > 0 })
-            
+
             return res.status(200).jsonp(nuevo)
         } catch (error) {
-            return res.status(500).jsonp({message: error})
+            return res.status(500).jsonp({ message: error })
         }
-        
+
     }
 
 }
 
 const REPORTE_A_CONTROLADOR = new ReportesAsistenciaControlador();
-export default REPORTE_A_CONTROLADOR  
+export default REPORTE_A_CONTROLADOR
 
 const AtrasosTimbresSinAccion = async function (fec_inicio: string, fec_final: string, codigo: string | number): Promise<any> {
     const orden = 1;
     // console.log('ATRASOS - TIMBRES SIN ACCION: ', fec_inicio, fec_final, codigo );
-    let horarioEntrada = await pool.query('SELECT dt.hora, dt.minu_espera, CAST(eh.fec_inicio AS VARCHAR), CAST(eh.fec_final AS VARCHAR), '+
-    'eh.lunes, eh.martes, eh.miercoles, eh.jueves, eh.viernes, eh.sabado, eh.domingo ' +
-    'FROM empl_horarios AS eh, cg_horarios AS ch, deta_horarios AS dt '+ 
-    'WHERE dt.orden = $1 AND eh.fec_inicio BETWEEN $2 AND $3 AND eh.fec_final BETWEEN $2 AND $3 AND eh.codigo = $4 ' + 
-    'AND eh.id_horarios = ch.id AND ch.id = dt.id_horario',[orden, new Date(fec_inicio), new Date(fec_final), codigo])
-    .then(result => { return result.rows })
+    let horarioEntrada = await pool.query('SELECT dt.hora, dt.minu_espera, CAST(eh.fec_inicio AS VARCHAR), CAST(eh.fec_final AS VARCHAR), ' +
+        'eh.lunes, eh.martes, eh.miercoles, eh.jueves, eh.viernes, eh.sabado, eh.domingo ' +
+        'FROM empl_horarios AS eh, cg_horarios AS ch, deta_horarios AS dt ' +
+        'WHERE dt.orden = $1 AND eh.fec_inicio BETWEEN $2 AND $3 AND eh.fec_final BETWEEN $2 AND $3 AND eh.codigo = $4 ' +
+        'AND eh.id_horarios = ch.id AND ch.id = dt.id_horario', [orden, new Date(fec_inicio), new Date(fec_final), codigo])
+        .then(result => { return result.rows })
 
     if (horarioEntrada.length === 0) return [0];
     // console.log('HORARIOS: ',horarioEntrada);    
     let nuevo: Array<any> = [];
 
-    let aux = await Promise.all(horarioEntrada.map(async(obj)=> {
+    let aux = await Promise.all(horarioEntrada.map(async (obj) => {
 
         let fechas = ModelarFechas(obj.fec_inicio, obj.fec_final, obj);
         const hora_seg = HHMMtoSegundos(obj.hora) + (obj.minu_espera * 60);
-        
-        let timbres = await Promise.all(fechas.map(async(o) => {
+
+        let timbres = await Promise.all(fechas.map(async (o) => {
             var f_inicio = o.fecha + ' ' + SegundosToHHMM(hora_seg);
-            var f_final = o.fecha + ' ' + SegundosToHHMM( hora_seg + HHMMtoSegundos('02:00:00') );
+            var f_final = o.fecha + ' ' + SegundosToHHMM(hora_seg + HHMMtoSegundos('02:00:00'));
             // console.log( f_inicio, ' || ', f_final, ' || ', codigo);
             const query = 'SELECT CAST(fec_hora_timbre AS VARCHAR) from timbres where fec_hora_timbre >= TO_TIMESTAMP(\'' + f_inicio + '\'' + ', \'YYYY-MM-DD HH:MI:SS\') ' +
-                    'and fec_hora_timbre <= TO_TIMESTAMP(\'' + f_final + '\'' + ', \'YYYY-MM-DD HH:MI:SS\') and id_empleado = ' + codigo +' order by fec_hora_timbre'
+                'and fec_hora_timbre <= TO_TIMESTAMP(\'' + f_final + '\'' + ', \'YYYY-MM-DD HH:MI:SS\') and id_empleado = ' + codigo + ' order by fec_hora_timbre'
             // console.log(query);
             return await pool.query(query)
-            .then(res => { 
-                if (res.rowCount === 0) {
-                    return 0
-                } else {
-                    const f_timbre = res.rows[0].fec_hora_timbre.split(' ')[0];
-                    const h_timbre = res.rows[0].fec_hora_timbre.split(' ')[1];
-                    const t_tim = HHMMtoSegundos(h_timbre);
-                    // console.log(f_timbre);
-                    let diferencia = (t_tim - hora_seg) / 3600;
-                    return {
-                        fecha: DiaSemana(new Date(f_timbre)) + ' ' + f_timbre,
-                        horario: obj.hora,
-                        timbre: h_timbre,
-                        atraso_dec: diferencia.toFixed(2),
-                        atraso_HHMM: SegundosToHHMM(t_tim - hora_seg),
-                    };                    
-                }
-            })
+                .then(res => {
+                    if (res.rowCount === 0) {
+                        return 0
+                    } else {
+                        const f_timbre = res.rows[0].fec_hora_timbre.split(' ')[0];
+                        const h_timbre = res.rows[0].fec_hora_timbre.split(' ')[1];
+                        const t_tim = HHMMtoSegundos(h_timbre);
+                        // console.log(f_timbre);
+                        let diferencia = (t_tim - hora_seg) / 3600;
+                        return {
+                            fecha: DiaSemana(new Date(f_timbre)) + ' ' + f_timbre,
+                            horario: obj.hora,
+                            timbre: h_timbre,
+                            atraso_dec: diferencia.toFixed(2),
+                            atraso_HHMM: SegundosToHHMM(t_tim - hora_seg),
+                        };
+                    }
+                })
         }));
 
         return timbres
-    }))    
+    }))
 
     aux.forEach(obj => {
         if (obj.length > 0) {
@@ -619,38 +657,38 @@ const AtrasosTimbresSinAccion = async function (fec_inicio: string, fec_final: s
 }
 
 const BuscarTimbresEoSReporte = async function (fec_inicio: string, fec_final: string, codigo: string | number) {
-    return await pool.query('SELECT CAST(fec_hora_timbre AS VARCHAR), id_empleado FROM timbres WHERE CAST(fec_hora_timbre AS VARCHAR) between $1 || \'%\' AND $2 || \'%\' AND accion in (\'EoS\', \'E\') AND id_empleado = $3 ORDER BY fec_hora_timbre ASC ',[ fec_inicio, fec_final, codigo])
+    return await pool.query('SELECT CAST(fec_hora_timbre AS VARCHAR), id_empleado FROM timbres WHERE CAST(fec_hora_timbre AS VARCHAR) between $1 || \'%\' AND $2 || \'%\' AND accion in (\'EoS\', \'E\') AND id_empleado = $3 ORDER BY fec_hora_timbre ASC ', [fec_inicio, fec_final, codigo])
         .then(res => {
             return res.rows;
         })
 }
 
 const BuscarTimbresSinAccionesDeEntrada = async function (fec_inicio: string, fec_final: string, codigo: string | number) {
-    
+
     const orden = 1;
-    let horarioEntrada = await pool.query('SELECT dt.hora, dt.minu_espera, CAST(eh.fec_inicio AS VARCHAR), CAST(eh.fec_final AS VARCHAR), '+
-    'eh.lunes, eh.martes, eh.miercoles, eh.jueves, eh.viernes, eh.sabado, eh.domingo ' +
-    'FROM empl_horarios AS eh, cg_horarios AS ch, deta_horarios AS dt '+ 
-    'WHERE dt.orden = $1 AND eh.fec_inicio BETWEEN $2 AND $3 AND eh.fec_final BETWEEN $2 AND $3 AND eh.codigo = $4 ' + 
-    'AND eh.id_horarios = ch.id AND ch.id = dt.id_horario',[orden, new Date(fec_inicio), new Date(fec_final), codigo])
-    .then(result => { return result.rows })
+    let horarioEntrada = await pool.query('SELECT dt.hora, dt.minu_espera, CAST(eh.fec_inicio AS VARCHAR), CAST(eh.fec_final AS VARCHAR), ' +
+        'eh.lunes, eh.martes, eh.miercoles, eh.jueves, eh.viernes, eh.sabado, eh.domingo ' +
+        'FROM empl_horarios AS eh, cg_horarios AS ch, deta_horarios AS dt ' +
+        'WHERE dt.orden = $1 AND eh.fec_inicio BETWEEN $2 AND $3 AND eh.fec_final BETWEEN $2 AND $3 AND eh.codigo = $4 ' +
+        'AND eh.id_horarios = ch.id AND ch.id = dt.id_horario', [orden, new Date(fec_inicio), new Date(fec_final), codigo])
+        .then(result => { return result.rows })
 
     if (horarioEntrada.length === 0) return [];
 
-    let aux = await Promise.all(horarioEntrada.map(async(obj)=> {
+    let aux = await Promise.all(horarioEntrada.map(async (obj) => {
 
         let fechas = ModelarFechas(obj.fec_inicio, obj.fec_final, obj);
         const hora_seg = HHMMtoSegundos(obj.hora) + (obj.minu_espera * 60);
-        
-        let timbres = await Promise.all(fechas.map(async(o) => {
-            var f_inicio= o.fecha + ' ' + SegundosToHHMM( hora_seg - HHMMtoSegundos('02:00:00') );
+
+        let timbres = await Promise.all(fechas.map(async (o) => {
+            var f_inicio = o.fecha + ' ' + SegundosToHHMM(hora_seg - HHMMtoSegundos('02:00:00'));
             var f_final = o.fecha + ' ' + SegundosToHHMM(hora_seg);
             // console.log( f_inicio, ' || ', f_final, ' || ', codigo);
             const query = 'SELECT CAST(fec_hora_timbre AS VARCHAR) from timbres where fec_hora_timbre >= TO_TIMESTAMP(\'' + f_inicio + '\'' + ', \'YYYY-MM-DD HH:MI:SS\') ' +
-                    'and fec_hora_timbre <= TO_TIMESTAMP(\'' + f_final + '\'' + ', \'YYYY-MM-DD HH:MI:SS\') and id_empleado = ' + codigo +' order by fec_hora_timbre'
+                'and fec_hora_timbre <= TO_TIMESTAMP(\'' + f_final + '\'' + ', \'YYYY-MM-DD HH:MI:SS\') and id_empleado = ' + codigo + ' order by fec_hora_timbre'
             return await pool.query(query).then(res => { return res.rows })
         }));
-        
+
         return timbres.filter(o => {
             return o.length >= 1
         }).map((e: any) => {
@@ -658,9 +696,9 @@ const BuscarTimbresSinAccionesDeEntrada = async function (fec_inicio: string, fe
             return 1
         })
     }))
-    
+
     let nuevo: Array<number> = [];
-    
+
     aux.filter(o => {
         return o.length >= 1
     }).forEach((o: Array<any>) => {
@@ -673,28 +711,28 @@ const BuscarTimbresSinAccionesDeEntrada = async function (fec_inicio: string, fe
 }
 
 const BuscarTimbres = async function (fec_inicio: string, fec_final: string, codigo: string | number) {
-    return await pool.query('SELECT CAST(fec_hora_timbre AS VARCHAR), id_reloj, accion, observacion, latitud, longitud, CAST(fec_hora_timbre_servidor AS VARCHAR)  FROM timbres WHERE CAST(fec_hora_timbre AS VARCHAR) between $1 || \'%\' AND $2 || \'%\' AND id_empleado = $3 ORDER BY fec_hora_timbre ASC ',[ fec_inicio, fec_final, codigo])
+    return await pool.query('SELECT CAST(fec_hora_timbre AS VARCHAR), id_reloj, accion, observacion, latitud, longitud, CAST(fec_hora_timbre_servidor AS VARCHAR)  FROM timbres WHERE CAST(fec_hora_timbre AS VARCHAR) between $1 || \'%\' AND $2 || \'%\' AND id_empleado = $3 ORDER BY fec_hora_timbre ASC ', [fec_inicio, fec_final, codigo])
         .then(res => {
             return res.rows;
         })
 }
 
 const ModelarAtrasosReporte = async function (obj: any) {
-    
-    let array = await pool.query('SELECT dh.hora, dh.minu_espera FROM empl_horarios AS eh, cg_horarios AS h, deta_horarios AS dh ' + 
-    'WHERE eh.codigo = $1 AND h.id = eh.id_horarios AND dh.id_horario = h.id AND eh.fec_inicio <= $2 ' + 
-    'AND eh.fec_final >= $2 AND dh.orden = 1',[obj.id_empleado, new Date(obj.fec_hora_timbre.split(' ')[0])])
-    .then(res => { return res.rows})
 
-    if (array.length === 0) return 0 
-    console.log('Hora entrada y minuto Atrasos',array);
+    let array = await pool.query('SELECT dh.hora, dh.minu_espera FROM empl_horarios AS eh, cg_horarios AS h, deta_horarios AS dh ' +
+        'WHERE eh.codigo = $1 AND h.id = eh.id_horarios AND dh.id_horario = h.id AND eh.fec_inicio <= $2 ' +
+        'AND eh.fec_final >= $2 AND dh.orden = 1', [obj.id_empleado, new Date(obj.fec_hora_timbre.split(' ')[0])])
+        .then(res => { return res.rows })
+
+    if (array.length === 0) return 0
+    console.log('Hora entrada y minuto Atrasos', array);
     return array.map(ele => {
         let retraso: boolean = false;
         var timbre = HHMMtoSegundos(obj.fec_hora_timbre.split(' ')[1])
-        var hora_seg = HHMMtoSegundos(ele.hora) + ele.minu_espera*60;
-        console.log('Timbre: ',timbre, hora_seg);
-        
-        retraso = (timbre > hora_seg ) ? true : false;
+        var hora_seg = HHMMtoSegundos(ele.hora) + ele.minu_espera * 60;
+        console.log('Timbre: ', timbre, hora_seg);
+
+        retraso = (timbre > hora_seg) ? true : false;
         if (retraso === false) return 0;
         let diferencia = (timbre - hora_seg) / 3600;
         if (diferencia > 4) return 0
@@ -715,46 +753,46 @@ function DiaSemana(dia: Date) {
 }
 
 const BuscarTimbresReporte = async function (fecha: string, codigo: number) {
-    return await pool.query('SELECT CAST(fec_hora_timbre AS VARCHAR), accion, observacion FROM timbres WHERE CAST(fec_hora_timbre AS VARCHAR) like $1 || \'%\' AND id_empleado = $2 AND accion in (\'EoS\',\'AES\',\'S\',\'E\',\'E/A\',\'S/A\') ORDER BY fec_hora_timbre ASC ',[ fecha, codigo])
+    return await pool.query('SELECT CAST(fec_hora_timbre AS VARCHAR), accion, observacion FROM timbres WHERE CAST(fec_hora_timbre AS VARCHAR) like $1 || \'%\' AND id_empleado = $2 AND accion in (\'EoS\',\'AES\',\'S\',\'E\',\'E/A\',\'S/A\') ORDER BY fec_hora_timbre ASC ', [fecha, codigo])
         .then(res => {
             return res.rows;
         })
 }
 
 const BuscarTimbresSinAccionesReporte = async function (fecha: string, codigo: number) {
-    return await pool.query('SELECT CAST(fec_hora_timbre AS VARCHAR), observacion FROM timbres WHERE CAST(fec_hora_timbre AS VARCHAR) like $1 || \'%\' AND id_empleado = $2 ORDER BY fec_hora_timbre ASC ',[ fecha, codigo])
+    return await pool.query('SELECT CAST(fec_hora_timbre AS VARCHAR), observacion FROM timbres WHERE CAST(fec_hora_timbre AS VARCHAR) like $1 || \'%\' AND id_empleado = $2 ORDER BY fec_hora_timbre ASC ', [fecha, codigo])
         .then(res => {
             return res.rows;
         })
 }
 
 const ModelarHorasTrabajaReporte = async function (codigo: number, fec_inicio: string, fec_final: string): Promise<any[]> {
-    console.log(codigo, fec_inicio ,fec_final);
-    
-    let array = await pool.query('SELECT dh.hora, dh.orden, dh.id_horario, CAST(eh.fec_inicio AS VARCHAR), CAST(eh.fec_final AS VARCHAR) FROM empl_horarios AS eh, cg_horarios AS h, deta_horarios AS dh ' + 
-    'WHERE eh.codigo = $1 AND h.id = eh.id_horarios AND dh.id_horario = h.id AND CAST(eh.fec_inicio AS VARCHAR) between $2 || \'%\' AND $3 || \'%\' ' + 
-    'AND CAST(eh.fec_final AS VARCHAR) between $2 || \'%\' AND $3 || \'%\' ORDER BY eh.fec_inicio',[codigo, fec_inicio, fec_final])
-    .then(res => { return res.rows})
+    console.log(codigo, fec_inicio, fec_final);
+
+    let array = await pool.query('SELECT dh.hora, dh.orden, dh.id_horario, CAST(eh.fec_inicio AS VARCHAR), CAST(eh.fec_final AS VARCHAR) FROM empl_horarios AS eh, cg_horarios AS h, deta_horarios AS dh ' +
+        'WHERE eh.codigo = $1 AND h.id = eh.id_horarios AND dh.id_horario = h.id AND CAST(eh.fec_inicio AS VARCHAR) between $2 || \'%\' AND $3 || \'%\' ' +
+        'AND CAST(eh.fec_final AS VARCHAR) between $2 || \'%\' AND $3 || \'%\' ORDER BY eh.fec_inicio', [codigo, fec_inicio, fec_final])
+        .then(res => { return res.rows })
 
     if (array.length === 0) return []
-    console.log('ARRAY MODELAR HORAS TRABAJADAS: ',array);
-    
+    console.log('ARRAY MODELAR HORAS TRABAJADAS: ', array);
+
     var nuevoArray: any = []
-	var arrayTemporal: any = []
-	for(var i = 0; i < array.length; i++){
-	    arrayTemporal = nuevoArray.filter((res:any) => {
+    var arrayTemporal: any = []
+    for (var i = 0; i < array.length; i++) {
+        arrayTemporal = nuevoArray.filter((res: any) => {
             return res["Fecha"] == array[i]["fec_inicio"] + ' ' + array[i]["fec_final"]
         });
-	    if(arrayTemporal.length>0){
-	        nuevoArray[nuevoArray.indexOf(arrayTemporal[0])]["Horario"].push(array[i])
-	    }else{
-	        nuevoArray.push({"Fecha" : array[i]["fec_inicio"]  + ' ' + array[i]["fec_final"] , "Horario" : [ array[i] ]})
-	    }
-	}
+        if (arrayTemporal.length > 0) {
+            nuevoArray[nuevoArray.indexOf(arrayTemporal[0])]["Horario"].push(array[i])
+        } else {
+            nuevoArray.push({ "Fecha": array[i]["fec_inicio"] + ' ' + array[i]["fec_final"], "Horario": [array[i]] })
+        }
+    }
 
     nuevoArray.sort(compareFechas);
 
-    let res_timbre: any = await Promise.all(nuevoArray.map(async(obj:any) => {
+    let res_timbre: any = await Promise.all(nuevoArray.map(async (obj: any) => {
         var fec_aux = new Date(obj.Fecha.split(' ')[0])
         var fecha1 = moment(obj.Fecha.split(' ')[0]);
         var fecha2 = moment(obj.Fecha.split(' ')[1]);
@@ -772,18 +810,18 @@ const ModelarHorasTrabajaReporte = async function (codigo: number, fec_inicio: s
             }
             fec_aux.setDate(fec_aux.getDate() + 1)
         }
-        
+
         return res
     }))
 
-    let respuesta = res_timbre.filter((obj:any) => {
+    let respuesta = res_timbre.filter((obj: any) => {
         return obj.length > 0
     })
 
     let arr_respuesta: Array<any> = [];
 
     respuesta.forEach((arr: any) => {
-        arr.forEach((o:any) => {
+        arr.forEach((o: any) => {
             let obj = {
                 fecha: o.fecha,
                 horarios: [],
@@ -791,14 +829,14 @@ const ModelarHorasTrabajaReporte = async function (codigo: number, fec_inicio: s
                 total_horario: '',
                 total_diferencia: '',
             } as IHorarioTrabajo;
-    
+
             let arr_EoS: Array<any> = [];
             let arr_AES: Array<any> = [];
             let arr_horario_EoS: Array<any> = [];
             let arr_horario_AES: Array<any> = [];
-            
+
             o.horario.forEach((h: any) => {
-                
+
                 let obj2 = {
                     hora_horario: h.hora,
                     hora_diferencia: '',
@@ -810,7 +848,7 @@ const ModelarHorasTrabajaReporte = async function (codigo: number, fec_inicio: s
                 let dif = 0;
                 switch (h.orden) {
                     case 1:
-                        var arr3 = o.timbres.filter((t: any) => { return t.accion === 'EoS' || t.accion === 'E'})
+                        var arr3 = o.timbres.filter((t: any) => { return t.accion === 'EoS' || t.accion === 'E' })
                         if (arr3.length === 0) {
                             obj2.accion = 'EoS';
                             obj2.hora_timbre = h.hora;
@@ -822,15 +860,15 @@ const ModelarHorasTrabajaReporte = async function (codigo: number, fec_inicio: s
                             obj2.hora_timbre = arr3[0].fec_hora_timbre.split(' ')[1];
                             dif = HHMMtoSegundos(h.hora) - HHMMtoSegundos(obj2.hora_timbre);
                         }
-    
+
                         diferencia = (dif < 0) ? dif * (-1) : dif;
                         obj2.hora_diferencia = (dif < 0) ? '-' + SegundosToHHMM(diferencia) : SegundosToHHMM(diferencia);
-    
-                        arr_horario_EoS.push(HHMMtoSegundos(obj2.hora_horario) )
-                        arr_EoS.push(HHMMtoSegundos(obj2.hora_timbre) );
+
+                        arr_horario_EoS.push(HHMMtoSegundos(obj2.hora_horario))
+                        arr_EoS.push(HHMMtoSegundos(obj2.hora_timbre));
                         break;
                     case 2:
-                        var arr4 = o.timbres.filter((t: any) => { return t.accion === 'AES' || t.accion === 'S/A'})
+                        var arr4 = o.timbres.filter((t: any) => { return t.accion === 'AES' || t.accion === 'S/A' })
                         if (arr4.length === 0) {
                             obj2.accion = 'AES';
                             obj2.hora_timbre = h.hora;
@@ -842,15 +880,15 @@ const ModelarHorasTrabajaReporte = async function (codigo: number, fec_inicio: s
                             obj2.hora_timbre = arr4[0].fec_hora_timbre.split(' ')[1];
                             dif = HHMMtoSegundos(obj2.hora_timbre) - HHMMtoSegundos(h.hora);
                         }
-    
+
                         diferencia = (dif < 0) ? dif * (-1) : dif;
                         obj2.hora_diferencia = (dif < 0) ? '-' + SegundosToHHMM(diferencia) : SegundosToHHMM(diferencia);
-    
+
                         arr_horario_AES.push(HHMMtoSegundos(obj2.hora_horario))
-                        arr_AES.push(HHMMtoSegundos(obj2.hora_timbre) );
+                        arr_AES.push(HHMMtoSegundos(obj2.hora_timbre));
                         break;
                     case 3:
-                        var arr1 = o.timbres.filter((t: any) => { return t.accion === 'AES' || t.accion === 'E/A'})
+                        var arr1 = o.timbres.filter((t: any) => { return t.accion === 'AES' || t.accion === 'E/A' })
                         if (arr1.length === 0) {
                             obj2.accion = 'AES';
                             obj2.hora_timbre = h.hora;
@@ -862,15 +900,15 @@ const ModelarHorasTrabajaReporte = async function (codigo: number, fec_inicio: s
                             obj2.hora_timbre = arr1[arr1.length - 1].fec_hora_timbre.split(' ')[1];
                             dif = HHMMtoSegundos(h.hora) - HHMMtoSegundos(obj2.hora_timbre);
                         }
-                        
+
                         diferencia = (dif < 0) ? dif * (-1) : dif;
                         obj2.hora_diferencia = (dif < 0) ? '-' + SegundosToHHMM(diferencia) : SegundosToHHMM(diferencia);
-    
+
                         arr_horario_AES.push(HHMMtoSegundos(obj2.hora_horario))
                         arr_AES.push(HHMMtoSegundos(obj2.hora_timbre));
                         break;
                     case 4:
-                        var arr2 = o.timbres.filter((t: any) => { return t.accion === 'EoS' || t.accion === 'S'})
+                        var arr2 = o.timbres.filter((t: any) => { return t.accion === 'EoS' || t.accion === 'S' })
                         if (arr2.length === 0) {
                             obj2.accion = 'EoS';
                             obj2.hora_timbre = h.hora;
@@ -882,36 +920,36 @@ const ModelarHorasTrabajaReporte = async function (codigo: number, fec_inicio: s
                             obj2.hora_timbre = arr2[arr2.length - 1].fec_hora_timbre.split(' ')[1];
                             dif = HHMMtoSegundos(obj2.hora_timbre) - HHMMtoSegundos(h.hora);
                         }
-    
+
                         diferencia = (dif < 0) ? dif * (-1) : dif;
                         obj2.hora_diferencia = (dif < 0) ? '-' + SegundosToHHMM(diferencia) : SegundosToHHMM(diferencia);
-    
+
                         arr_horario_EoS.push(HHMMtoSegundos(obj2.hora_horario))
                         arr_EoS.push(HHMMtoSegundos(obj2.hora_timbre));
                         break;
                     default:
                         break;
                 }
-    
+
                 obj.horarios.push(obj2)
             });
-    
-            var resta_hor_EoS  = parseFloat(arr_horario_EoS[1]) - parseFloat(arr_horario_EoS[0])
-            var resta_hor_AES  = parseFloat(arr_horario_AES[1]) - parseFloat(arr_horario_AES[0])
+
+            var resta_hor_EoS = parseFloat(arr_horario_EoS[1]) - parseFloat(arr_horario_EoS[0])
+            var resta_hor_AES = parseFloat(arr_horario_AES[1]) - parseFloat(arr_horario_AES[0])
             let resta_hor = resta_hor_EoS - resta_hor_AES;
             obj.total_horario = SegundosToHHMM(resta_hor);
-    
+
             let resta_tim_EoS = parseFloat(arr_EoS[1]) - parseFloat(arr_EoS[0])
             let resta_tim_AES = parseFloat(arr_AES[1]) - parseFloat(arr_AES[0])
             let resta_tim = resta_tim_EoS - resta_tim_AES;
             obj.total_timbres = SegundosToHHMM(resta_tim);
-    
+
             let dif_total = resta_tim - resta_hor;
             let diferencia_Total = 0;
-    
+
             diferencia_Total = (dif_total < 0) ? dif_total * (-1) : dif_total;
-            obj.total_diferencia = (dif_total < 0) ?  '-' + SegundosToHHMM(diferencia_Total) : SegundosToHHMM(diferencia_Total);
-            
+            obj.total_diferencia = (dif_total < 0) ? '-' + SegundosToHHMM(diferencia_Total) : SegundosToHHMM(diferencia_Total);
+
             arr_respuesta.push(obj)
         });
     })
@@ -920,36 +958,36 @@ const ModelarHorasTrabajaReporte = async function (codigo: number, fec_inicio: s
     res_timbre = [];
     respuesta = [];
     array = [];
-    
+
     return arr_respuesta
 }
 
 const ModelarHorasTrabajaTimbresSinAcciones = async function (codigo: number, fec_inicio: string, fec_final: string): Promise<any[]> {
 
-    let array = await pool.query('SELECT dh.hora, dh.orden, dh.id_horario, CAST(eh.fec_inicio AS VARCHAR), CAST(eh.fec_final AS VARCHAR) FROM empl_horarios AS eh, cg_horarios AS h, deta_horarios AS dh ' + 
-    'WHERE eh.codigo = $1 AND h.id = eh.id_horarios AND dh.id_horario = h.id AND CAST(eh.fec_inicio AS VARCHAR) between $2 || \'%\' AND $3 || \'%\' ' + 
-    'AND CAST(eh.fec_final AS VARCHAR) between $2 || \'%\' AND $3 || \'%\' ORDER BY eh.fec_inicio',[codigo, fec_inicio, fec_final])
-    .then(res => { return res.rows})
+    let array = await pool.query('SELECT dh.hora, dh.orden, dh.id_horario, CAST(eh.fec_inicio AS VARCHAR), CAST(eh.fec_final AS VARCHAR) FROM empl_horarios AS eh, cg_horarios AS h, deta_horarios AS dh ' +
+        'WHERE eh.codigo = $1 AND h.id = eh.id_horarios AND dh.id_horario = h.id AND CAST(eh.fec_inicio AS VARCHAR) between $2 || \'%\' AND $3 || \'%\' ' +
+        'AND CAST(eh.fec_final AS VARCHAR) between $2 || \'%\' AND $3 || \'%\' ORDER BY eh.fec_inicio', [codigo, fec_inicio, fec_final])
+        .then(res => { return res.rows })
 
     if (array.length === 0) return []
     // console.log('ARRAY MODELAR HORAS TRABAJADAS: ',array);
-    
+
     var nuevoArray: any = []
-	var arrayTemporal: any = []
-	for(var i = 0; i < array.length; i++){
-	    arrayTemporal = nuevoArray.filter((res:any) => {
+    var arrayTemporal: any = []
+    for (var i = 0; i < array.length; i++) {
+        arrayTemporal = nuevoArray.filter((res: any) => {
             return res["Fecha"] == array[i]["fec_inicio"] + ' ' + array[i]["fec_final"]
         });
-	    if(arrayTemporal.length>0){
-	        nuevoArray[nuevoArray.indexOf(arrayTemporal[0])]["Horario"].push(array[i])
-	    }else{
-	        nuevoArray.push({"Fecha" : array[i]["fec_inicio"]  + ' ' + array[i]["fec_final"] , "Horario" : [ array[i] ]})
-	    }
-	}
+        if (arrayTemporal.length > 0) {
+            nuevoArray[nuevoArray.indexOf(arrayTemporal[0])]["Horario"].push(array[i])
+        } else {
+            nuevoArray.push({ "Fecha": array[i]["fec_inicio"] + ' ' + array[i]["fec_final"], "Horario": [array[i]] })
+        }
+    }
 
     nuevoArray.sort(compareFechas);
 
-    let res_timbre: any = await Promise.all(nuevoArray.map(async(obj:any) => {
+    let res_timbre: any = await Promise.all(nuevoArray.map(async (obj: any) => {
         var fec_aux = new Date(obj.Fecha.split(' ')[0])
         var fecha1 = moment(obj.Fecha.split(' ')[0]);
         var fecha2 = moment(obj.Fecha.split(' ')[1]);
@@ -967,18 +1005,18 @@ const ModelarHorasTrabajaTimbresSinAcciones = async function (codigo: number, fe
             }
             fec_aux.setDate(fec_aux.getDate() + 1)
         }
-        
+
         return res
     }))
 
-    let respuesta = res_timbre.filter((obj:any) => {        
+    let respuesta = res_timbre.filter((obj: any) => {
         return obj.length > 0
     })
     // console.log('Respuesta timbres sin acciones:',respuesta);
     let arr_respuesta: Array<any> = [];
 
     respuesta.forEach((arr: any) => {
-        arr.forEach((o:any) => {
+        arr.forEach((o: any) => {
             let obj = {
                 fecha: o.fecha,
                 horarios: [],
@@ -986,14 +1024,14 @@ const ModelarHorasTrabajaTimbresSinAcciones = async function (codigo: number, fe
                 total_horario: '',
                 total_diferencia: '',
             } as IHorarioTrabajo;
-    
+
             let arr_EoS: Array<any> = [];
             let arr_AES: Array<any> = [];
             let arr_horario_EoS: Array<any> = [];
             let arr_horario_AES: Array<any> = [];
-            
+
             o.horario.forEach((h: any) => {
-                
+
                 let obj2 = {
                     hora_horario: h.hora,
                     hora_diferencia: '',
@@ -1005,7 +1043,7 @@ const ModelarHorasTrabajaTimbresSinAcciones = async function (codigo: number, fe
                 let dif = 0;
                 switch (h.orden) {
                     case 1:
-                        var arr3 = o.timbres.filter((t: any) => { 
+                        var arr3 = o.timbres.filter((t: any) => {
                             const hora_timbre = HHMMtoSegundos(t.fec_hora_timbre.split(' ')[1]);
                             const h_inicio = HHMMtoSegundos(h.hora) - HHMMtoSegundos('01:30:00');
                             const h_final = HHMMtoSegundos(h.hora) + HHMMtoSegundos('01:59:00');
@@ -1013,37 +1051,37 @@ const ModelarHorasTrabajaTimbresSinAcciones = async function (codigo: number, fe
                         })
 
                         obj2.hora_timbre = (arr3.length === 0) ? '' : arr3[0].fec_hora_timbre.split(' ')[1];
-                        obj2.observacion = (arr3.length === 0) ? 'Entrada': arr3[0].observacion;
+                        obj2.observacion = (arr3.length === 0) ? 'Entrada' : arr3[0].observacion;
                         obj2.accion = 'EoS';
                         dif = (obj2.hora_timbre === '') ? 0 : HHMMtoSegundos(h.hora) - HHMMtoSegundos(obj2.hora_timbre);
-    
+
                         diferencia = (dif < 0) ? dif * (-1) : dif;
                         obj2.hora_diferencia = (dif < 0) ? '-' + SegundosToHHMM(diferencia) : SegundosToHHMM(diferencia);
-    
-                        arr_horario_EoS.push(HHMMtoSegundos(obj2.hora_horario) )
-                        arr_EoS.push(HHMMtoSegundos(obj2.hora_timbre) );
+
+                        arr_horario_EoS.push(HHMMtoSegundos(obj2.hora_horario))
+                        arr_EoS.push(HHMMtoSegundos(obj2.hora_timbre));
                         break;
                     case 2:
-                        var arr4 = o.timbres.filter((t: any) => { 
+                        var arr4 = o.timbres.filter((t: any) => {
                             const hora_timbre = HHMMtoSegundos(t.fec_hora_timbre.split(' ')[1]);
                             const h_inicio = HHMMtoSegundos(h.hora) - HHMMtoSegundos('00:59:00');
                             const h_final = HHMMtoSegundos(h.hora) + HHMMtoSegundos('00:59:00');
                             return (h_inicio <= hora_timbre && h_final >= hora_timbre)
                         })
-                        
+
                         obj2.hora_timbre = (arr4.length === 0) ? '' : arr4[0].fec_hora_timbre.split(' ')[1];
-                        obj2.observacion = (arr4.length === 0) ? 'Salida Almuerzo': arr4[0].observacion;
+                        obj2.observacion = (arr4.length === 0) ? 'Salida Almuerzo' : arr4[0].observacion;
                         obj2.accion = 'AES';
                         dif = (obj2.hora_timbre === '') ? 0 : HHMMtoSegundos(obj2.hora_timbre) - HHMMtoSegundos(h.hora);
-    
+
                         diferencia = (dif < 0) ? dif * (-1) : dif;
                         obj2.hora_diferencia = (dif < 0) ? '-' + SegundosToHHMM(diferencia) : SegundosToHHMM(diferencia);
-    
+
                         arr_horario_AES.push(HHMMtoSegundos(obj2.hora_horario))
-                        arr_AES.push(HHMMtoSegundos(obj2.hora_timbre) );
+                        arr_AES.push(HHMMtoSegundos(obj2.hora_timbre));
                         break;
                     case 3:
-                        var arr1 = o.timbres.filter((t: any) => { 
+                        var arr1 = o.timbres.filter((t: any) => {
                             const hora_timbre = HHMMtoSegundos(t.fec_hora_timbre.split(' ')[1]);
                             const h_inicio = HHMMtoSegundos(h.hora) - HHMMtoSegundos('00:59:00');
                             const h_final = HHMMtoSegundos(h.hora) + HHMMtoSegundos('00:59:00');
@@ -1051,18 +1089,18 @@ const ModelarHorasTrabajaTimbresSinAcciones = async function (codigo: number, fe
                         })
 
                         obj2.hora_timbre = (arr1.length === 0) ? '' : arr1[0].fec_hora_timbre.split(' ')[1];
-                        obj2.observacion = (arr1.length === 0) ? 'Entrada Almuerzo': arr1[0].observacion;
+                        obj2.observacion = (arr1.length === 0) ? 'Entrada Almuerzo' : arr1[0].observacion;
                         obj2.accion = 'AES';
                         dif = (obj2.hora_timbre === '') ? 0 : HHMMtoSegundos(h.hora) - HHMMtoSegundos(obj2.hora_timbre);
-                        
+
                         diferencia = (dif < 0) ? dif * (-1) : dif;
                         obj2.hora_diferencia = (dif < 0) ? '-' + SegundosToHHMM(diferencia) : SegundosToHHMM(diferencia);
-    
+
                         arr_horario_AES.push(HHMMtoSegundos(obj2.hora_horario))
                         arr_AES.push(HHMMtoSegundos(obj2.hora_timbre));
                         break;
                     case 4:
-                        var arr2 = o.timbres.filter((t: any) => { 
+                        var arr2 = o.timbres.filter((t: any) => {
                             const hora_timbre = HHMMtoSegundos(t.fec_hora_timbre.split(' ')[1]);
                             const h_inicio = HHMMtoSegundos(h.hora) - HHMMtoSegundos('01:59:00');
                             const h_final = HHMMtoSegundos(h.hora) + HHMMtoSegundos('01:30:00');
@@ -1070,41 +1108,41 @@ const ModelarHorasTrabajaTimbresSinAcciones = async function (codigo: number, fe
                         })
 
                         obj2.hora_timbre = (arr2.length === 0) ? '' : arr2[0].fec_hora_timbre.split(' ')[1];
-                        obj2.observacion = (arr2.length === 0) ? 'Salida': arr2[0].observacion;
+                        obj2.observacion = (arr2.length === 0) ? 'Salida' : arr2[0].observacion;
                         obj2.accion = 'EoS';
                         dif = (obj2.hora_timbre === '') ? 0 : HHMMtoSegundos(obj2.hora_timbre) - HHMMtoSegundos(h.hora);
-    
+
                         diferencia = (dif < 0) ? dif * (-1) : dif;
                         obj2.hora_diferencia = (dif < 0) ? '-' + SegundosToHHMM(diferencia) : SegundosToHHMM(diferencia);
-    
+
                         arr_horario_EoS.push(HHMMtoSegundos(obj2.hora_horario))
                         arr_EoS.push(HHMMtoSegundos(obj2.hora_timbre));
                         break;
                     default:
                         break;
                 }
-    
+
                 obj.horarios.push(obj2)
             });
-    
+
             // RESTA DE TIEMPO DE LOS HORARIOS.
-            var resta_hor_EoS  = parseFloat(arr_horario_EoS[1]) - parseFloat(arr_horario_EoS[0])
-            var resta_hor_AES  = parseFloat(arr_horario_AES[1]) - parseFloat(arr_horario_AES[0])
+            var resta_hor_EoS = parseFloat(arr_horario_EoS[1]) - parseFloat(arr_horario_EoS[0])
+            var resta_hor_AES = parseFloat(arr_horario_AES[1]) - parseFloat(arr_horario_AES[0])
             // console.log('RESTA HORARIOS: ',resta_hor_EoS, resta_hor_AES);
             let resta_hor = (resta_hor_EoS === 0 || resta_hor_AES === 0) ? 0 : resta_hor_EoS - resta_hor_AES;
             obj.total_horario = SegundosToHHMM(resta_hor);
-    
+
             // RESTA DE TIEMPO DE LOS TIMBRES
             let resta_tim_EoS = parseFloat(arr_EoS[1]) - parseFloat(arr_EoS[0])
             let resta_tim_AES = parseFloat(arr_AES[1]) - parseFloat(arr_AES[0])
             // console.log('RESTA TIMBRES: ',resta_tim_EoS, resta_tim_AES);
             let resta_tim = (resta_tim_EoS === 0 || resta_tim_AES === 0) ? 0 : resta_tim_EoS - resta_tim_AES;
             obj.total_timbres = SegundosToHHMM(resta_tim);
-    
+
             let dif_total = (resta_tim === 0 || resta_hor === 0) ? 0 : resta_tim - resta_hor;
             let diferencia_Total = (dif_total < 0) ? dif_total * (-1) : dif_total;
-            obj.total_diferencia = (dif_total < 0) ?  '-' + SegundosToHHMM(diferencia_Total) : SegundosToHHMM(diferencia_Total);
-            
+            obj.total_diferencia = (dif_total < 0) ? '-' + SegundosToHHMM(diferencia_Total) : SegundosToHHMM(diferencia_Total);
+
             arr_respuesta.push(obj)
         });
     })
@@ -1113,14 +1151,14 @@ const ModelarHorasTrabajaTimbresSinAcciones = async function (codigo: number, fe
     res_timbre = [];
     respuesta = [];
     array = [];
-    
+
     return arr_respuesta
 }
 
 async function BuscarHorarioEmpleado(fec_inicio: string, fec_final: string, codigo: string | number) {
     let res = await pool.query('SELECT * FROM empl_horarios WHERE fec_inicio between $1::timestamp and $2::timestamp AND fec_final between $1::timestamp and $2::timestamp ' +
-    'AND codigo = $3 ORDER BY fec_inicio',[fec_inicio, fec_final, codigo]).then(result => { return result.rows });
-    
+        'AND codigo = $3 ORDER BY fec_inicio', [fec_inicio, fec_final, codigo]).then(result => { return result.rows });
+
     if (res.length === 0) return res
     let array: Array<any> = [];
     res.forEach(obj => {
@@ -1129,10 +1167,10 @@ async function BuscarHorarioEmpleado(fec_inicio: string, fec_final: string, codi
         });
     });
 
-    
-    let timbres = await Promise.all(array.map(async(o: any) => {
+
+    let timbres = await Promise.all(array.map(async (o: any) => {
         o.registros = await pool.query('SELECT count(*) FROM timbres WHERE CAST(fec_hora_timbre AS VARCHAR) like $1 || \'%\' ', [o.fecha])
-            .then(result => { 
+            .then(result => {
                 if (result.rowCount === 0) return 0
                 return parseInt(result.rows[0].count)
             })
@@ -1143,20 +1181,20 @@ async function BuscarHorarioEmpleado(fec_inicio: string, fec_final: string, codi
 }
 
 const ModelarPuntualidad = async function (obj: any): Promise<any[]> {
-    
-    let array = await pool.query('SELECT DISTINCT eh.id, dh.hora FROM empl_horarios AS eh, cg_horarios AS h, deta_horarios AS dh ' + 
-    'WHERE eh.codigo = $1 AND h.id = eh.id_horarios AND dh.id_horario = h.id AND eh.fec_inicio <= $2 ' + 
-    'AND eh.fec_final >= $2 AND dh.orden = 1',[obj.id_empleado, new Date(obj.fec_hora_timbre.split(' ')[0])])
-    .then(res => { return res.rows})
 
-    if (array.length === 0) return [ 0 ]
+    let array = await pool.query('SELECT DISTINCT eh.id, dh.hora FROM empl_horarios AS eh, cg_horarios AS h, deta_horarios AS dh ' +
+        'WHERE eh.codigo = $1 AND h.id = eh.id_horarios AND dh.id_horario = h.id AND eh.fec_inicio <= $2 ' +
+        'AND eh.fec_final >= $2 AND dh.orden = 1', [obj.id_empleado, new Date(obj.fec_hora_timbre.split(' ')[0])])
+        .then(res => { return res.rows })
+
+    if (array.length === 0) return [0]
     // console.log('Hora entrada',array);
     return array.map(ele => {
         let puntual: boolean = false;
         var timbre = HHMMtoSegundos(obj.fec_hora_timbre.split(' ')[1]) / 3600
         var hora = HHMMtoSegundos(ele.hora) / 3600;
 
-        (timbre <=  hora ) ? puntual = true : puntual = false;
+        (timbre <= hora) ? puntual = true : puntual = false;
         if (puntual === false) return 0;
         let diferencia = hora - timbre;
         if (diferencia > 4) return 0 // para diferenciar las horas de salida
@@ -1166,26 +1204,26 @@ const ModelarPuntualidad = async function (obj: any): Promise<any[]> {
 }
 
 const TimbresTabulados = async function (fec_inicio: string, fec_final: string, codigo: string | number): Promise<any[]> {
-    
-    let timbres = await pool.query('SELECT CAST(fec_hora_timbre AS VARCHAR), accion FROM timbres WHERE CAST(fec_hora_timbre AS VARCHAR) between $1 || \'%\' AND $2 || \'%\' AND id_empleado = $3 ORDER BY fec_hora_timbre ASC ',[ fec_inicio, fec_final, codigo])
-    .then(res => {
-        return res.rows;
-    })
+
+    let timbres = await pool.query('SELECT CAST(fec_hora_timbre AS VARCHAR), accion FROM timbres WHERE CAST(fec_hora_timbre AS VARCHAR) between $1 || \'%\' AND $2 || \'%\' AND id_empleado = $3 ORDER BY fec_hora_timbre ASC ', [fec_inicio, fec_final, codigo])
+        .then(res => {
+            return res.rows;
+        })
 
     if (timbres.length === 0) return []
 
     var nuevoArray: any = []
-	var arrayTemporal: any = []
-	for(var i=0; i<timbres.length; i++){
-	    arrayTemporal = nuevoArray.filter((res:any) => {
+    var arrayTemporal: any = []
+    for (var i = 0; i < timbres.length; i++) {
+        arrayTemporal = nuevoArray.filter((res: any) => {
             return res["Fecha"] == timbres[i]["fec_hora_timbre"].split(' ')[0]
         });
-	    if(arrayTemporal.length>0){
-	        nuevoArray[nuevoArray.indexOf(arrayTemporal[0])]["Timbres"].push(timbres[i])
-	    }else{
-	        nuevoArray.push({"Fecha" : timbres[i]["fec_hora_timbre"].split(' ')[0] , "Timbres" : [timbres[i]]})
-	    }
-	}
+        if (arrayTemporal.length > 0) {
+            nuevoArray[nuevoArray.indexOf(arrayTemporal[0])]["Timbres"].push(timbres[i])
+        } else {
+            nuevoArray.push({ "Fecha": timbres[i]["fec_hora_timbre"].split(' ')[0], "Timbres": [timbres[i]] })
+        }
+    }
 
     function compare(a: any, b: any) {
         var uno = new Date(a.Fecha);
@@ -1198,9 +1236,9 @@ const TimbresTabulados = async function (fec_inicio: string, fec_final: string, 
     nuevoArray.sort(compare);
     let arrayModelado: any = [];
 
-    nuevoArray.forEach((obj:any) => {
+    nuevoArray.forEach((obj: any) => {
         console.log('NUEVO ARRAY TABULADO: ', obj);
-        
+
         if (obj.Timbres[0].accion === 'EoS' || obj.Timbres[0].accion === 'AES' || obj.Timbres[0].accion === 'PES') {
             let e = {
                 fecha: obj.Fecha,
@@ -1217,7 +1255,7 @@ const TimbresTabulados = async function (fec_inicio: string, fec_final: string, 
                 entrada: obj.Timbres.filter((ele: any) => { return ele.accion === 'E' }).map((ele: any) => { return ele.fec_hora_timbre.split(' ')[1] })[0],
                 salida: obj.Timbres.filter((ele: any) => { return ele.accion === 'S' }).map((ele: any) => { return ele.fec_hora_timbre.split(' ')[1] })[0],
                 sal_Alm: obj.Timbres.filter((ele: any) => { return ele.accion === 'S/A' }).map((ele: any) => { return ele.fec_hora_timbre.split(' ')[1] })[0],
-                ent_Alm: obj.Timbres.filter((ele: any) => { return ele.accion === 'E/A'}).map((ele: any) => { return ele.fec_hora_timbre.split(' ')[1] })[0],
+                ent_Alm: obj.Timbres.filter((ele: any) => { return ele.accion === 'E/A' }).map((ele: any) => { return ele.fec_hora_timbre.split(' ')[1] })[0],
                 desconocido: obj.Timbres.filter((ele: any) => { return ele.accion != 'E' && ele.accion != 'S' && ele.accion != 'S/A' && ele.accion != 'E/A' }).map((ele: any) => { return ele.fec_hora_timbre.split(' ')[1] })[0]
             } as tim_tabulado;
             arrayModelado.push(e)
@@ -1225,59 +1263,71 @@ const TimbresTabulados = async function (fec_inicio: string, fec_final: string, 
     });
 
     return arrayModelado
-} 
+}
 
 const TimbresIncompletos = async function (fec_inicio: Date, fec_final: Date, codigo: number): Promise<any[]> {
-    
-    let horarios = 
-    await pool.query('SELECT eh.fec_inicio, eh.fec_final, eh.lunes, eh.martes, eh.miercoles, eh.jueves, eh.viernes, eh.sabado, eh.domingo, eh.codigo ' + 
-    'FROM empl_horarios AS eh WHERE eh.fec_inicio >= $1 AND eh.fec_final <= $2 AND eh.codigo = $3 ORDER BY eh.fec_inicio ASC',[fec_inicio, fec_final, codigo]).then(result => {
-        return result.rows
-    });
+
+    let horarios =
+        await pool.query('SELECT eh.fec_inicio, eh.fec_final, eh.lunes, eh.martes, eh.miercoles, eh.id_horarios, ' +
+            'eh.jueves, eh.viernes, eh.sabado, eh.domingo, eh.codigo FROM empl_horarios AS eh ' +
+            'WHERE (($1 BETWEEN eh.fec_inicio AND eh.fec_final) OR ($2 BETWEEN eh.fec_inicio AND eh.fec_final)) ' +
+            'AND eh.codigo = $3 ORDER BY eh.fec_inicio ASC',
+            [fec_inicio, fec_final, codigo]).then(result => {
+                console.log('RESPUESTA TIMBRE ENCONTRADO:1 ', result.rows);
+                return result.rows
+            });
 
     if (horarios.length === 0) return [];
 
-    let hora_deta = await Promise.all(horarios.map( async(obj: any) => {
+    let hora_deta = await Promise.all(horarios.map(async (obj: any) => {
+        console.log('RESPUESTA TIMBRE ENCONTRADO:------------------------------------ ', obj);
         obj.dias_laborados = HorariosParaInasistencias(obj)
         // obj.dias_laborados = ModelarFechas(obj.fec_inicio, obj.fec_final, obj)
-        obj.deta_horarios = await pool.query('SELECT DISTINCT dh.hora, dh.orden, dh.tipo_accion FROM empl_horarios AS eh, cg_horarios AS h, deta_horarios AS dh ' + 
-        'WHERE eh.id_horarios = h.id AND h.id = dh.id_horario AND eh.codigo = $1 ORDER BY dh.orden ASC',
-        [obj.codigo]).then(result => {
-            return result.rows
-        })
+        obj.deta_horarios = await pool.query('SELECT DISTINCT dh.hora, dh.orden, dh.tipo_accion FROM empl_horarios AS eh, cg_horarios AS h, deta_horarios AS dh ' +
+            'WHERE eh.id_horarios = h.id AND h.id = dh.id_horario AND eh.codigo = $1 AND h.id = $2 ' +
+            'ORDER BY dh.orden ASC',
+            [obj.codigo, obj.id_horarios]).then(result => {
+                return result.rows
+            })
+        console.log('RESPUESTA TIMBRE ENCONTRADO:2 ', obj);
         return obj
     }));
 
     if (hora_deta.length === 0) return [];
 
-    let modelado = await Promise.all(hora_deta.map(async(obj) => {
-        obj.dias_laborados = await Promise.all(obj.dias_laborados.map(async(obj1: any) => {
+    let modelado = await Promise.all(hora_deta.map(async (obj) => {
+        obj.dias_laborados = await Promise.all(obj.dias_laborados.map(async (obj1: any) => {
             return {
                 fecha: obj1.fecha,
-                timbres_hora: await pool.query('SELECT CAST(fec_hora_timbre AS VARCHAR) AS timbre, accion FROM timbres WHERE id_empleado = $1 AND CAST(fec_hora_timbre AS VARCHAR) like $2 || \'%\' AND accion in (\'EoS\',\'AES\', \'S\',\'E\',\'E/A\',\'S/A\')',[obj.codigo, obj1.fecha]).then(result => { return result.rows})
+                timbres_hora: await pool.query('SELECT CAST(fec_hora_timbre AS VARCHAR) AS timbre, ' +
+                    'accion FROM timbres WHERE id_empleado = $1 AND CAST(fec_hora_timbre AS VARCHAR) ' +
+                    'like $2 || \'%\' AND accion in (\'EoS\',\'AES\', \'S\',\'E\',\'E/A\',\'S/A\')',
+                    [obj.codigo, obj1.fecha]).then(result => { return result.rows })
             }
         }))
         obj.dias_laborados = obj.dias_laborados.map((o: any) => {
             if (o.timbres_hora.length === 0) {
                 o.timbres_hora = obj.deta_horarios.map((h: any) => {
                     return {
+                        fecha_timbre: o.fecha,
                         tipo: h.tipo_accion,
                         hora: h.hora
                     }
                 })
                 return o;
             } else {
-                o.timbres_hora = obj.deta_horarios.map((h:any) => {
+                o.timbres_hora = obj.deta_horarios.map((h: any) => {
                     var h_inicio = HHMMtoSegundos(h.hora) - HHMMtoSegundos('01:00:00')
                     var h_final = HHMMtoSegundos(h.hora) + HHMMtoSegundos('01:00:00')
-                    let respuesta = o.timbres_hora.filter((t:any) => {
-                        let hora_timbre = HHMMtoSegundos(t.timbre.split(' ')[1]) 
+                    let respuesta = o.timbres_hora.filter((t: any) => {
+                        let hora_timbre = HHMMtoSegundos(t.timbre.split(' ')[1])
                         return h_inicio <= hora_timbre && h_final >= hora_timbre
                     })
 
-                    // console.log('RESPUESTA TIMBRE ENCONTRADO: ', respuesta);
+                    console.log('RESPUESTA TIMBRE ENCONTRADO: ', respuesta);
                     if (respuesta.length === 0) {
                         return {
+                            fecha_timbre: o.fecha,
                             tipo: h.tipo_accion,
                             hora: h.hora
                         }
@@ -1287,59 +1337,59 @@ const TimbresIncompletos = async function (fec_inicio: Date, fec_final: Date, co
                 return o;
             }
         })
-
+        console.log('RESPUESTA TIMBRE ENCONTRADO: ', obj)
         return obj
     }))
 
     // modelado.forEach(obj => { console.log(obj.dias_laborados);})
-    let res: any = [];  
+    let res: any = [];
     modelado.forEach(obj => {
-        obj.dias_laborados.filter((o:any) => {
+        obj.dias_laborados.filter((o: any) => {
             return o.timbres_hora.length > 0
-        }).map((o:any) => {
+        }).map((o: any) => {
             res.push(o)
             return o
         })
     })
-    
+
     return res
 }
 
 const TimbresSinAccionesTabulados = async function (fec_inicio: string, fec_final: string, codigo: string | number): Promise<any[]> {
-    
-    let horarioEntrada = await pool.query('SELECT dt.hora, tipo_accion, CAST(eh.fec_inicio AS VARCHAR), CAST(eh.fec_final AS VARCHAR), '+
-    'eh.lunes, eh.martes, eh.miercoles, eh.jueves, eh.viernes, eh.sabado, eh.domingo ' +
-    'FROM empl_horarios AS eh, cg_horarios AS ch, deta_horarios AS dt '+ 
-    'WHERE eh.fec_inicio BETWEEN $1 AND $2 AND eh.fec_final BETWEEN $1 AND $2 AND eh.codigo = $3 AND eh.id_horarios = ch.id AND ch.id = dt.id_horario ' +
-    'ORDER BY eh.fec_inicio ASC, dt.hora ASC',[ new Date(fec_inicio), new Date(fec_final), codigo])
-    .then(result => { return result.rows })
+
+    let horarioEntrada = await pool.query('SELECT dt.hora, tipo_accion, CAST(eh.fec_inicio AS VARCHAR), CAST(eh.fec_final AS VARCHAR), ' +
+        'eh.lunes, eh.martes, eh.miercoles, eh.jueves, eh.viernes, eh.sabado, eh.domingo ' +
+        'FROM empl_horarios AS eh, cg_horarios AS ch, deta_horarios AS dt ' +
+        'WHERE eh.fec_inicio BETWEEN $1 AND $2 AND eh.fec_final BETWEEN $1 AND $2 AND eh.codigo = $3 AND eh.id_horarios = ch.id AND ch.id = dt.id_horario ' +
+        'ORDER BY eh.fec_inicio ASC, dt.hora ASC', [new Date(fec_inicio), new Date(fec_final), codigo])
+        .then(result => { return result.rows })
 
     // console.log('HORARIO: ',horarioEntrada);    
     if (horarioEntrada.length === 0) return [];
 
-    let aux = await Promise.all(horarioEntrada.map(async(obj)=> {
+    let aux = await Promise.all(horarioEntrada.map(async (obj) => {
 
         let fechas = ModelarFechas(obj.fec_inicio, obj.fec_final, obj);
         const hora_seg = HHMMtoSegundos(obj.hora);
-        
-        let timbres = await Promise.all(fechas.map(async(o) => {
-            var f_inicio= o.fecha + ' ' + SegundosToHHMM(hora_seg - HHMMtoSegundos('00:59:00') );
+
+        let timbres = await Promise.all(fechas.map(async (o) => {
+            var f_inicio = o.fecha + ' ' + SegundosToHHMM(hora_seg - HHMMtoSegundos('00:59:00'));
             var f_final = o.fecha + ' ' + SegundosToHHMM(hora_seg + HHMMtoSegundos('00:59:00'));
             // console.log( f_inicio, ' || ', f_final, ' || ', codigo);
             const query = 'SELECT CAST(fec_hora_timbre AS VARCHAR) from timbres where fec_hora_timbre >= TO_TIMESTAMP(\'' + f_inicio + '\'' + ', \'YYYY-MM-DD HH24:MI:SS\') ' +
-                    'and fec_hora_timbre <= TO_TIMESTAMP(\'' + f_final + '\'' + ', \'YYYY-MM-DD HH24:MI:SS\') and id_empleado = ' + codigo +' order by fec_hora_timbre'
-            return await pool.query(query).then(res => { 
+                'and fec_hora_timbre <= TO_TIMESTAMP(\'' + f_final + '\'' + ', \'YYYY-MM-DD HH24:MI:SS\') and id_empleado = ' + codigo + ' order by fec_hora_timbre'
+            return await pool.query(query).then(res => {
                 let x = res.rows.map((elemento: any) => {
                     elemento.accion = obj.tipo_accion;
                     return elemento
-                }) 
+                })
 
                 if (x.length === 0) return res.rows;
 
                 return [x[x.length - 1]]
             })
         }));
-        
+
         return timbres.filter(o => {
             return o.length >= 1
         }).map((e: any) => {
@@ -1362,17 +1412,17 @@ const TimbresSinAccionesTabulados = async function (fec_inicio: string, fec_fina
     if (timbres.length === 0) return []
 
     var nuevoArray: any = []
-	var arrayTemporal: any = []
-	for(var i=0; i<timbres.length; i++){
-	    arrayTemporal = nuevoArray.filter((res:any) => {
+    var arrayTemporal: any = []
+    for (var i = 0; i < timbres.length; i++) {
+        arrayTemporal = nuevoArray.filter((res: any) => {
             return res["Fecha"] == timbres[i]["fec_hora_timbre"].split(' ')[0]
         });
-	    if(arrayTemporal.length>0){
-	        nuevoArray[nuevoArray.indexOf(arrayTemporal[0])]["Timbres"].push(timbres[i])
-	    }else{
-	        nuevoArray.push({"Fecha" : timbres[i]["fec_hora_timbre"].split(' ')[0] , "Timbres" : [timbres[i]]})
-	    }
-	}
+        if (arrayTemporal.length > 0) {
+            nuevoArray[nuevoArray.indexOf(arrayTemporal[0])]["Timbres"].push(timbres[i])
+        } else {
+            nuevoArray.push({ "Fecha": timbres[i]["fec_hora_timbre"].split(' ')[0], "Timbres": [timbres[i]] })
+        }
+    }
 
     function compare(a: any, b: any) {
         var uno = new Date(a.Fecha);
@@ -1385,13 +1435,13 @@ const TimbresSinAccionesTabulados = async function (fec_inicio: string, fec_fina
     nuevoArray.sort(compare);
     let arrayModelado: Array<any> = [];
 
-    nuevoArray.forEach((obj:any) => {
+    nuevoArray.forEach((obj: any) => {
         console.log('NUEVO ARRAY TABULADO: ', obj);
         let e = {
             fecha: obj.Fecha,
             entrada: obj.Timbres.filter((ele: any) => { return ele.accion === 'E' }).map((ele: any) => { return ele.fec_hora_timbre.split(' ')[1] })[0],
             sal_Alm: obj.Timbres.filter((ele: any) => { return ele.accion === 'S/A' }).map((ele: any) => { return ele.fec_hora_timbre.split(' ')[1] })[0],
-            ent_Alm: obj.Timbres.filter((ele: any) => { return ele.accion === 'E/A'}).map((ele: any) => { return ele.fec_hora_timbre.split(' ')[1] })[0],
+            ent_Alm: obj.Timbres.filter((ele: any) => { return ele.accion === 'E/A' }).map((ele: any) => { return ele.fec_hora_timbre.split(' ')[1] })[0],
             salida: obj.Timbres.filter((ele: any) => { return ele.accion === 'S' }).map((ele: any) => { return ele.fec_hora_timbre.split(' ')[1] })[0],
             desconocido: obj.Timbres.filter((ele: any) => { return ele.accion != 'E' && ele.accion != 'S' && ele.accion != 'S/A' && ele.accion != 'E/A' }).map((ele: any) => { return ele.fec_hora_timbre.split(' ')[1] })[0]
         } as tim_tabulado;
@@ -1400,34 +1450,34 @@ const TimbresSinAccionesTabulados = async function (fec_inicio: string, fec_fina
     });
 
     return arrayModelado
-} 
+}
 
 const TimbresSinAccionesIncompletos = async function (fec_inicio: Date, fec_final: Date, codigo: number): Promise<any[]> {
-    
-    let horarioEntrada = await pool.query('SELECT dt.hora, tipo_accion, CAST(eh.fec_inicio AS VARCHAR), CAST(eh.fec_final AS VARCHAR), '+
-    'eh.lunes, eh.martes, eh.miercoles, eh.jueves, eh.viernes, eh.sabado, eh.domingo ' +
-    'FROM empl_horarios AS eh, cg_horarios AS ch, deta_horarios AS dt '+ 
-    'WHERE eh.fec_inicio BETWEEN $1 AND $2 AND eh.fec_final BETWEEN $1 AND $2 AND eh.codigo = $3 AND eh.id_horarios = ch.id AND ch.id = dt.id_horario ' +
-    'ORDER BY eh.fec_inicio ASC, dt.hora ASC',[ fec_inicio, fec_final, codigo])
-    .then(result => { return result.rows })
+
+    let horarioEntrada = await pool.query('SELECT dt.hora, tipo_accion, CAST(eh.fec_inicio AS VARCHAR), CAST(eh.fec_final AS VARCHAR), ' +
+        'eh.lunes, eh.martes, eh.miercoles, eh.jueves, eh.viernes, eh.sabado, eh.domingo ' +
+        'FROM empl_horarios AS eh, cg_horarios AS ch, deta_horarios AS dt ' +
+        'WHERE eh.fec_inicio BETWEEN $1 AND $2 AND eh.fec_final BETWEEN $1 AND $2 AND eh.codigo = $3 AND eh.id_horarios = ch.id AND ch.id = dt.id_horario ' +
+        'ORDER BY eh.fec_inicio ASC, dt.hora ASC', [fec_inicio, fec_final, codigo])
+        .then(result => { return result.rows })
 
     // console.log('HORARIO: ',horarioEntrada);    
     if (horarioEntrada.length === 0) return [];
 
-    let aux = await Promise.all(horarioEntrada.map(async(obj)=> {
+    let aux = await Promise.all(horarioEntrada.map(async (obj) => {
 
         let fechas = ModelarFechas(obj.fec_inicio, obj.fec_final, obj);
         const hora_seg = HHMMtoSegundos(obj.hora);
-        
-        const timbres = await Promise.all(fechas.map(async(o) => {
-            var f_inicio= o.fecha + ' ' + SegundosToHHMM(hora_seg - HHMMtoSegundos('00:59:00') );
+
+        const timbres = await Promise.all(fechas.map(async (o) => {
+            var f_inicio = o.fecha + ' ' + SegundosToHHMM(hora_seg - HHMMtoSegundos('00:59:00'));
             var f_final = o.fecha + ' ' + SegundosToHHMM(hora_seg + HHMMtoSegundos('00:59:00'));
             // console.log( f_inicio, ' || ', f_final, ' || ', codigo);
             const query = 'SELECT CAST(fec_hora_timbre AS VARCHAR) from timbres where fec_hora_timbre >= TO_TIMESTAMP(\'' + f_inicio + '\'' + ', \'YYYY-MM-DD HH24:MI:SS\') ' +
-                    'and fec_hora_timbre <= TO_TIMESTAMP(\'' + f_final + '\'' + ', \'YYYY-MM-DD HH24:MI:SS\') and id_empleado = ' + codigo +' order by fec_hora_timbre'
-            return await pool.query(query).then(res => { 
+                'and fec_hora_timbre <= TO_TIMESTAMP(\'' + f_final + '\'' + ', \'YYYY-MM-DD HH24:MI:SS\') and id_empleado = ' + codigo + ' order by fec_hora_timbre'
+            return await pool.query(query).then(res => {
                 if (res.rowCount === 0) {
-                    return  {
+                    return {
                         fecha_timbre: o.fecha,
                         tipo: obj.tipo_accion,
                         hora: obj.hora
@@ -1437,7 +1487,7 @@ const TimbresSinAccionesIncompletos = async function (fec_inicio: Date, fec_fina
                 return 0
             })
         }));
-        
+
         return timbres.filter(o => {
             return o !== 0
         }).map((e: any) => {
@@ -1453,17 +1503,17 @@ const TimbresSinAccionesIncompletos = async function (fec_inicio: Date, fec_fina
     });
 
     var nuevoArray: any = []
-	var arrayTemporal: any = []
-	for(var i = 0; i < tim.length; i++){
-	    arrayTemporal = nuevoArray.filter((res:any) => {
+    var arrayTemporal: any = []
+    for (var i = 0; i < tim.length; i++) {
+        arrayTemporal = nuevoArray.filter((res: any) => {
             return res["fecha"] == tim[i]["fecha_timbre"]
         });
-	    if(arrayTemporal.length>0){
-	        nuevoArray[nuevoArray.indexOf(arrayTemporal[0])]["timbres_hora"].push(tim[i])
-	    }else{
-	        nuevoArray.push({"fecha" : tim[i]["fecha_timbre"] , "timbres_hora" : [ tim[i] ]})
-	    }
-	}
+        if (arrayTemporal.length > 0) {
+            nuevoArray[nuevoArray.indexOf(arrayTemporal[0])]["timbres_hora"].push(tim[i])
+        } else {
+            nuevoArray.push({ "fecha": tim[i]["fecha_timbre"], "timbres_hora": [tim[i]] })
+        }
+    }
 
     nuevoArray.sort(compareFechas);
 

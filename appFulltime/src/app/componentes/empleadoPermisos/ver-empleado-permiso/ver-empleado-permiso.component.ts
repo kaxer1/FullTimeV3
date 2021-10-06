@@ -112,6 +112,7 @@ export class VerEmpleadoPermisoComponent implements OnInit {
           if (obj != '') {
             let empleado_id = obj.split('_')[0];
             var estado_auto = obj.split('_')[1];
+
             // CAMBIAR DATO ESTADO INT A VARCHAR
             if (estado_auto === '1') {
               estado_auto = 'Pendiente';
@@ -179,6 +180,7 @@ export class VerEmpleadoPermisoComponent implements OnInit {
 
   // MÉTODO PARA INGRESAR NOMBRE Y CARGO DEL USUARIO QUE REVISÓ LA SOLICITUD 
   cadena_texto: string = ''; // VARIABLE PARA ALMACENAR TODOS LOS USUARIOS
+
   VerInformacionAutoriza(array: any) {
     array.map(empl => {
       this.restGeneral.AutorizaEmpleado(parseInt(empl.id_empleado)).subscribe(data => {

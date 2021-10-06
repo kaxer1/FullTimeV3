@@ -96,6 +96,9 @@ const TREE_DATA: CategoriasReportes[] = [
       { name: 'Puntualidad', url: '/reporte-puntualidad' },
       { name: 'Horas Trabajadas', url: '/reporte-horas-trabaja' },
       { name: 'Empleados Vacunados', url: '/lista-vacunados' },
+      { name: 'Timbre Incompleto', url: '/reporte-timbre-incompleto' },
+      { name: 'Salidas Anticipadas', url: '/salidas-anticipadas' },
+      { name: 'Vacaciones Solicitadas', url: '/solicitud-vacacion' },
     ]
   },
   {
@@ -127,5 +130,12 @@ const TREE_DATA: CategoriasReportes[] = [
       { name: 'Todos', url: '/listaAllNotificaciones' },
       { name: 'Usuarios', url: '/listaNotifacionUsuario' },
     ]
-  }
+  },
+  {
+    name: 'Reportes Auditoría',
+    icono: 'gavel',
+    children: [
+      { name: 'Lista reportes', url: '/auditoria' },
+    ]
+  },
 ];

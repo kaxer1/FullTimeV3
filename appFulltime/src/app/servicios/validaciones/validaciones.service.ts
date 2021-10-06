@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { LoginService } from '../login/login.service';
+
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +12,7 @@ export class ValidacionesService {
   constructor(
     private toastr: ToastrService,
     private router: Router,
-    private route: ActivatedRoute,
+    private audit: LoginService,
   ) { }
 
 
@@ -118,4 +120,17 @@ export class ValidacionesService {
     }
   }
 
+  Auditar(esquema:string, tabla: string) {
+    let data = {
+      esquema: esquema,
+      tabla: tabla,
+      user: localStorage.getItem('user'),
+      ip: localStorage.getItem('ip')
+    }
+    this.audit.AuditarUpdate(data).subscribe(res => {
+    });
+  }
+
 }
+
+

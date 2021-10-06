@@ -62,4 +62,11 @@ export class LoginService {
   changePassword(data: any) {
     return this.http.post(`${environment.url}/login/cambiar-contrasenia`, data)
   }
+
+
+
+  // AUDITAR
+  AuditarUpdate(data: any) {
+    return this.http.post(`${environment.url}/login/auditar`, data)
+  }
 }

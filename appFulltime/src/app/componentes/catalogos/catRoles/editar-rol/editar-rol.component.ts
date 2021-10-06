@@ -4,6 +4,7 @@ import { RolesService } from 'src/app/servicios/catalogos/catRoles/roles.service
 import { ToastrService } from 'ngx-toastr';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
+import { ValidacionesService } from 'src/app/servicios/validaciones/validaciones.service';
 
 @Component({
   selector: 'app-editar-rol',
@@ -30,6 +31,7 @@ export class EditarRolComponent implements OnInit {
     public restEmpleado: EmpleadoService,
     private toastr: ToastrService,
     public dialogRef: MatDialogRef<EditarRolComponent>,
+    public validar: ValidacionesService,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
     this.idEmpleadoLogueado = parseInt(localStorage.getItem('empleado'));
@@ -82,6 +84,7 @@ export class EditarRolComponent implements OnInit {
           this.toastr.success('Operacion Exitosa', 'Rol actualizado', {
             timeOut: 6000,
           });
+          this.validar.Auditar('public', 'cg_roles');
           this.limpiarCampos();
           this.salir = true;
           this.dialogRef.close(this.salir);

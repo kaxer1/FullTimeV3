@@ -12,7 +12,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.horaExtraPedidasControlador = void 0;
 const database_1 = __importDefault(require("../../database"));
 const MetodosHorario_1 = require("../../libs/MetodosHorario");
 const settingsMail_1 = require("../../libs/settingsMail");
@@ -409,6 +408,49 @@ class HorasExtrasPedidasControlador {
             }
         });
     }
+    /** ******************************************************************************* *
+     **       REPORTE PARA VER INFORMACIÓN DE PLANIFICACIÓN DE HORAS EXTRAS             *
+     ** ******************************************************************************* */
+    ReporteVacacionesMultiple(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            console.log('datos recibidos', req.body);
+            let datos = req.body;
+            let { desde, hasta } = req.params;
+            let n = yield Promise.all(datos.map((obj) => __awaiter(this, void 0, void 0, function* () {
+                obj.departamentos = yield Promise.all(obj.departamentos.map((ele) => __awaiter(this, void 0, void 0, function* () {
+                    ele.empleado = yield Promise.all(ele.empleado.map((o) => __awaiter(this, void 0, void 0, function* () {
+                        o.horaE = yield BuscarHorasExtras(o.codigo, desde, hasta);
+                        console.log('Vacaciones: ', o);
+                        return o;
+                    })));
+                    return ele;
+                })));
+                return obj;
+            })));
+            let nuevo = n.map((obj) => {
+                obj.departamentos = obj.departamentos.map((e) => {
+                    e.empleado = e.empleado.filter((v) => { return v.vacaciones.length > 0; });
+                    return e;
+                }).filter((e) => { return e.empleado.length > 0; });
+                return obj;
+            }).filter(obj => { return obj.departamentos.length > 0; });
+            if (nuevo.length === 0)
+                return res.status(400).jsonp({ message: 'No se ha encontrado registro de planificaciones.' });
+            return res.status(200).jsonp(nuevo);
+        });
+    }
 }
 exports.horaExtraPedidasControlador = new HorasExtrasPedidasControlador();
 exports.default = exports.horaExtraPedidasControlador;
+const BuscarHorasExtras = function (id, desde, hasta) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return yield database_1.default.query('SELECT p.fecha_desde, p.fecha_hasta, p.hora_inicio, p.hora_fin, p.descripcion, ' +
+            'p.horas_totales, e.nombre AS planifica_nombre, e.apellido AS planifica_apellido ' +
+            'FROM plan_hora_extra AS p, plan_hora_extra_empleado AS pe, empleados AS e ' +
+            'WHERE p.id = pe.id_plan_hora AND e.id = p.id_empl_planifica AND pe.codigo = $1 AND ' +
+            'p.fecha_desde BETWEEN $2 AND $3', [id, desde, hasta])
+            .then(res => {
+            return res.rows;
+        });
+    });
+};

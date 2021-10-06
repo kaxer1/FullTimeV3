@@ -1,3 +1,4 @@
+// IMPORTAR LIBRERIAS
 import { Validators, FormControl } from '@angular/forms';
 import { PageEvent } from '@angular/material/paginator';
 import { Component, OnInit } from '@angular/core';
@@ -5,14 +6,16 @@ import pdfFonts from 'pdfmake/build/vfs_fonts';
 import pdfMake from 'pdfmake/build/pdfmake';
 import { ToastrService } from 'ngx-toastr';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
+
 // LIBRERÍA PARA FORMATO DE FECHAS
 import * as moment from 'moment';
 moment.locale('es');
+
 // LLAMADO DE SERVICIOS
 import { EmpleadoProcesosService } from 'src/app/servicios/empleado/empleadoProcesos/empleado-procesos.service';
-import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
 import { EmplCargosService } from 'src/app/servicios/empleado/empleadoCargo/empl-cargos.service';
 import { AccionPersonalService } from 'src/app/servicios/accionPersonal/accion-personal.service';
+import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
 
 @Component({
   selector: 'app-listar-pedido-accion',
@@ -38,11 +41,11 @@ export class ListarPedidoAccionComponent implements OnInit {
   apellido = new FormControl('', [Validators.minLength(2)]);
 
   constructor(
-    public restEmpleadoProcesos: EmpleadoProcesosService,
-    public restAccion: AccionPersonalService,
-    public restCargo: EmplCargosService,
-    public restEmpre: EmpresaService,
-    private toastr: ToastrService,
+    public restEmpleadoProcesos: EmpleadoProcesosService, // SERVICIO DATOS PROCESOS DEL EMPLEADO
+    public restAccion: AccionPersonalService, // SERVICIO DATOS ACCIONES DE PERSONAL
+    public restCargo: EmplCargosService, // SERVICIO DATOS DE CARGO
+    public restEmpre: EmpresaService, // SERVICIO DATOS DE EMPRESA
+    private toastr: ToastrService, // VARIABLE PARA MANEJO DE NOTIFICACIONES 
   ) { }
 
   ngOnInit(): void {
@@ -51,8 +54,7 @@ export class ListarPedidoAccionComponent implements OnInit {
     this.ObtenerEmpresa();
   }
 
-
-  // Evento para manejar la páginación
+  // EVENTO PARA MANEJAR LA PÁGINACIÓN
   ManejarPagina(e: PageEvent) {
     this.tamanio_pagina = e.pageSize;
     this.numero_pagina = e.pageIndex + 1;
@@ -119,6 +121,7 @@ export class ListarPedidoAccionComponent implements OnInit {
     this.contador = 0;
     this.restAccion.BuscarDatosPedidoId(id).subscribe(data => {
       this.datosPedido = data;
+      console.log('data pedido', this.datosPedido)
       this.BuscarPedidoEmpleado(this.datosPedido);
     });
   }
@@ -178,9 +181,9 @@ export class ListarPedidoAccionComponent implements OnInit {
 
   /** MÉTODO PARA BUSCAR INFORMACIÓN DE LOS EMPLEADOS RESPONSABLES / FIRMAS */
   BusquedaInformacion() {
-    this.restAccion.BuscarDatosPedidoEmpleados(this.datosPedido[0].firma_empl_uno).subscribe(data2 => {
+    this.restAccion.BuscarDatosPedidoEmpleados(parseInt(this.datosPedido[0].firma_empl_uno)).subscribe(data2 => {
       this.empleado_2 = data2;
-      this.restAccion.BuscarDatosPedidoEmpleados(this.datosPedido[0].firma_empl_dos).subscribe(data3 => {
+      this.restAccion.BuscarDatosPedidoEmpleados(parseInt(this.datosPedido[0].firma_empl_dos)).subscribe(data3 => {
         this.empleado_3 = data3;
         this.VerificarDatos();
       });
@@ -292,29 +295,24 @@ export class ListarPedidoAccionComponent implements OnInit {
     })
   }
 
-
   /* ****************************************************************************************************
    *                               PARA LA EXPORTACIÓN DE ARCHIVOS PDF
    * ****************************************************************************************************/
 
   generarPdf(action = 'open') {
     const documentDefinition = this.getDocumentDefinicion();
-
     switch (action) {
       case 'open': pdfMake.createPdf(documentDefinition).open(); break;
       case 'print': pdfMake.createPdf(documentDefinition).print(); break;
       case 'download': pdfMake.createPdf(documentDefinition).download(); break;
-
       default: pdfMake.createPdf(documentDefinition).open(); break;
     }
-
   }
 
 
   getDocumentDefinicion() {
-    // sessionStorage.setItem('Roles', this.roles);
     return {
-      // Encabezado de la página
+      // ENCABEZADO DE LA PÁGINA
       pageMargins: [10, 40, 10, 40],
       content: [
 
@@ -357,26 +355,7 @@ export class ListarPedidoAccionComponent implements OnInit {
     };
   }
 
-  presentarDataPDFRoles() {
-    return {
-      table: {
-        widths: [565.28],
-        heights: [755],
-        body: [
-          [
-            [
-              ''
-            ]/*  */
-          ],
-
-        ],
-      },
-
-    };
-  }
-
   PresentarHoja1_Parte_1() {
-    var mes = moment(this.datosPedido[0].fec_rige_desde).month()
     return {
       table: {
         widths: [280, 'auto', '*'],
@@ -430,7 +409,6 @@ export class ListarPedidoAccionComponent implements OnInit {
       table: {
         widths: ['*'],
         heights: [20],
-
         body: [
           [
             {

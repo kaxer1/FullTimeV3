@@ -73,6 +73,9 @@ const licencias_1 = __importDefault(require("./utils/licencias"));
 const reloj_virtual_1 = __importDefault(require("./utils/reloj_virtual"));
 const vacunasRutas_1 = __importDefault(require("./rutas/empleado/empleadoVacuna/vacunasRutas"));
 const reporteVacunasRutas_1 = __importDefault(require("./rutas/reportes/reporteVacunasRutas"));
+const salidasAntesRutas_1 = __importDefault(require("./rutas/reportes/salidasAntesRutas"));
+const auditoriaRutas_1 = __importDefault(require("./rutas/auditoria/auditoriaRutas"));
+const solicitudVacacionesRutas_1 = __importDefault(require("./rutas/reportes/solicitudVacacionesRutas"));
 const http_1 = require("http");
 const socketIo = require('socket.io');
 class Servidor {
@@ -160,8 +163,13 @@ class Servidor {
         this.app.use('/reportes/hora-extra', reporteHoraExtraRutas_1.default); //acceso controlado por
         this.app.use('/reporte', reportesRutas_1.default);
         this.app.use('/reportes-asistencias/', reportesAsistenciaRutas_1.default);
+        this.app.use('/reporte-salidas-antes/', salidasAntesRutas_1.default);
+        // REPORTES DE AUDITORIA
+        this.app.use('/reportes-auditoria', auditoriaRutas_1.default);
         // REPORTE MÚLTIPLE DE VACUNAS
         this.app.use('/empleado-vacunas-multiples', reporteVacunasRutas_1.default);
+        // REPORTE SOLICITUD DE VACACIONES
+        this.app.use('/empleado-vacaciones-solicitudes', solicitudVacacionesRutas_1.default);
         // Modulo Alimentación
         this.app.use('/alimentacion', alimentacionRutas_1.default); // acceso controlado por ModuloAlimentacionValidation
         // HORAS EXTRAS

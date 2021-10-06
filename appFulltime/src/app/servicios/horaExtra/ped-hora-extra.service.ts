@@ -93,4 +93,13 @@ export class PedHoraExtraService {
   ListarPedidosHEAutorizadas_Empleado(id_empleado: number) {
     return this.http.get(`${environment.url}/horas-extras-pedidas/solicitudes/autorizadas/empleado/${id_empleado}`);
   }
+
+
+
+  // SERVICIOS DE CONSULTA DE DATOS DE PLANIFICACIONES DE HORAS EXTRAS
+
+  BuscarHorasPlanificadas(datos: any, desde: string, hasta: string) {
+    return this.http.put(`${environment.url}/horas-extras-pedidas/horas-planificadas/${desde}/${hasta}`, datos);
+  }
+  
 }
