@@ -64,7 +64,7 @@ export class LoginComponent implements OnInit {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (objPosition) => {
-          
+
           this.latitud = objPosition.coords.latitude;
           this.longitud = objPosition.coords.longitude;
 
@@ -105,9 +105,9 @@ export class LoginComponent implements OnInit {
 
   ValidarUsuario(form) {
 
-    if (form.usuarioF.trim().length === 0) return ;
-    if (form.passwordF.trim().length === 0) return ;
-    
+    if (form.usuarioF.trim().length === 0) return;
+    if (form.passwordF.trim().length === 0) return;
+
     var local: boolean;
     this.intentos = this.intentos + 1;
     var f = moment();
@@ -176,6 +176,11 @@ export class LoginComponent implements OnInit {
         this.IngresoSistema(form.usuarioF, 'Fallido', datos.text);
       }
       else {
+
+
+
+
+
         localStorage.setItem('token', datos.token);
         localStorage.setItem('usuario', datos.usuario);
         localStorage.setItem('rol', datos.rol);
@@ -195,7 +200,7 @@ export class LoginComponent implements OnInit {
         if (datos.rol === 1) { // Admin
           if (!!localStorage.getItem("redireccionar")) {
             let redi = localStorage.getItem("redireccionar");
-            this.router.navigate([redi],  { relativeTo: this.route, skipLocationChange: false });
+            this.router.navigate([redi], { relativeTo: this.route, skipLocationChange: false });
             localStorage.removeItem("redireccionar");
           } else {
             this.router.navigate(['/home'])

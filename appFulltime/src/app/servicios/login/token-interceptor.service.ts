@@ -13,6 +13,19 @@ export class TokenInterceptorService implements HttpInterceptor {
 
   // con esta clase me ayuda añadir la cabecera de autorizacion en cada peticion que se realice a la API
   intercept(req, next) {
+
+
+
+
+
+   // var IpRemota = Request.getHeader("X-Forwarded-For")
+
+
+
+
+
+
+
     const tokenizeReq = req.clone({
       setHeaders: {
         Authorization: `Bearer ${this.loginServices.getToken()}`

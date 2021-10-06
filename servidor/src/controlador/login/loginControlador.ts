@@ -1,9 +1,11 @@
-import { Request, Response } from 'express';
+import {Request, Response } from 'express';
+//import { req, Response } from 'express';
 import pool from '../../database';
 import { email, enviarMail, Credenciales } from '../../libs/settingsMail';
 import jwt from 'jsonwebtoken';
 import fs from 'fs';
-import { Licencias } from '../../class/Licencia'
+import { Licencias } from '../../class/Licencia';
+
 
 interface IPayload {
   _id: number,
@@ -16,6 +18,34 @@ class LoginControlador {
   public async ValidarCredenciales(req: Request, res: Response) {
     var ip = require("ip");
     console.log('ip', ip.address());
+
+    /* const URL_API = "https://api.ipify.org/?format=json";
+     fetch(URL_API)
+       .then(respuestaRaw => respuestaRaw.json())
+       .then((respuesta: any) => {
+         const ip = respuesta.ip;
+         console.log("Tu IP es: ");
+         console.log(ip)
+       });*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     let caducidad_licencia: Date = new Date();
     try {
       const { nombre_usuario, pass, latitud, longitud } = req.body;
