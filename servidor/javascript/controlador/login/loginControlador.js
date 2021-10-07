@@ -30,6 +30,9 @@ class LoginControlador {
                  console.log("Tu IP es: ");
                  console.log(ip)
                });*/
+            var requestIp = require('request-ip');
+            var clientIp = requestIp.getClientIp(req);
+            console.log('-------------------ip', clientIp);
             let caducidad_licencia = new Date();
             try {
                 const { nombre_usuario, pass, latitud, longitud } = req.body;
@@ -139,7 +142,7 @@ class LoginControlador {
         return __awaiter(this, void 0, void 0, function* () {
             const correo = req.body.correo;
             const url_page = req.body.url_page;
-            settingsMail_1.Credenciales(1);
+            (0, settingsMail_1.Credenciales)(1);
             const correoValido = yield database_1.default.query('SELECT e.id, e.nombre, e.apellido, e.correo, u.usuario, u.contrasena FROM empleados AS e, usuarios AS u WHERE correo = $1 AND u.id_empleado = e.id', [correo]);
             if (correoValido.rows[0] == undefined)
                 return res.status(401).send('Correo no valido para el usuario');
@@ -157,7 +160,7 @@ class LoginControlador {
         </a>
       `
             };
-            settingsMail_1.enviarMail(data);
+            (0, settingsMail_1.enviarMail)(data);
             res.jsonp({ mail: 'si', message: 'Mail enviado' });
         });
     }

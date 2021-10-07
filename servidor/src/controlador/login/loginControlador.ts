@@ -28,10 +28,12 @@ class LoginControlador {
          console.log(ip)
        });*/
 
-
-
-
-
+       var requestIp = require('request-ip');
+  
+        var clientIp = requestIp.getClientIp(req);
+        console.log('-------------------ip',   clientIp);
+      
+   
 
 
 
