@@ -229,9 +229,14 @@ class Servidor {
     }
 
     start(): void {
+
         this.server.listen(this.app.get('puerto'), () => {
             console.log('Servidor en el puerto', this.app.get('puerto'));
+            
         });
+  
+
+
         this.io.on('connection', (socket: any) => {
             console.log('Connected client on port %s.', this.app.get('puerto'));
 
@@ -251,6 +256,7 @@ class Servidor {
                 socket.broadcast.emit('enviar_notification', data_llega);
             });
         });
+
     }
 }
 

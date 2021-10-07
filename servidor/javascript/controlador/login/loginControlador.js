@@ -12,6 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+//import { req, Response } from 'express';
 const database_1 = __importDefault(require("../../database"));
 const settingsMail_1 = require("../../libs/settingsMail");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
@@ -21,6 +22,17 @@ class LoginControlador {
         return __awaiter(this, void 0, void 0, function* () {
             var ip = require("ip");
             console.log('ip', ip.address());
+            /* const URL_API = "https://api.ipify.org/?format=json";
+             fetch(URL_API)
+               .then(respuestaRaw => respuestaRaw.json())
+               .then((respuesta: any) => {
+                 const ip = respuesta.ip;
+                 console.log("Tu IP es: ");
+                 console.log(ip)
+               });*/
+            var requestIp = require('request-ip');
+            var clientIp = requestIp.getClientIp(req);
+            console.log('-------------------ip', clientIp);
             let caducidad_licencia = new Date();
             try {
                 const { nombre_usuario, pass, latitud, longitud } = req.body;
