@@ -1,10 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+// IMPORTAR LIBRERIAS
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { RolesService } from 'src/app/servicios/catalogos/catRoles/roles.service';
-import { ToastrService } from 'ngx-toastr';
 import { MatDialogRef } from '@angular/material/dialog';
-import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
+import { Component, OnInit } from '@angular/core';
+import { ToastrService } from 'ngx-toastr';
+
+// IMPORTAR SERVICIOS
 import { ValidacionesService } from 'src/app/servicios/validaciones/validaciones.service';
+import { RolesService } from 'src/app/servicios/catalogos/catRoles/roles.service';
 
 @Component({
   selector: 'app-registro-rol',
@@ -14,63 +16,42 @@ import { ValidacionesService } from 'src/app/servicios/validaciones/validaciones
 
 export class RegistroRolComponent implements OnInit {
 
-  // Datos empleado logueado
-  empleadoLogueado: any = [];
-  idEmpleadoLogueado: number;
-
+  // VARIABLE PARA ENVIO DE INFORMACION ENTRE VENTANAS
   salir: boolean = false;
 
+  // CAMPOS DE FORMULARIO
   descripcion = new FormControl('', Validators.required);
 
+  // CAMPOS DE FORMULARIO EN GRUPO
   public nuevoRolForm = new FormGroup({
     descripcionForm: this.descripcion
   });
 
   constructor(
-    public rest: RolesService,
-    public restEmpleado: EmpleadoService,
-    private toastr: ToastrService,
-    public dialogRef: MatDialogRef<RegistroRolComponent>,
-    public validar: ValidacionesService,
+    public ventana: MatDialogRef<RegistroRolComponent>, // VARIABLE PARA MANEJO DE VENTANAS
+    public validar: ValidacionesService, // VALIDACIONES DE SERVICIOS
+    private toastr: ToastrService, // VARIABLE PARA MANEJO DE NOTIFICACIONES
+    public rest: RolesService, // SERVICIO DATOS DE CATÁLOGO ROLES
   ) {
-    this.idEmpleadoLogueado = parseInt(localStorage.getItem('empleado'));
     this.nuevoRolForm.setValue({
       descripcionForm: '',
     });
   }
 
   ngOnInit(): void {
-    this.ObtenerEmpleadoLogueado(this.idEmpleadoLogueado);
-    this.limpiarCampos();
   }
 
-  // Método para ver la información del empleado 
-  ObtenerEmpleadoLogueado(idemploy: any) {
-    this.empleadoLogueado = [];
-    this.restEmpleado.getOneEmpleadoRest(idemploy).subscribe(data => {
-      this.empleadoLogueado = data;
-    })
-  }
-
-  obtenerMensajeErrorDescripcion() {
-    if (this.descripcion.hasError('required')) {
-      return 'Debe ingresar alguna Descripción';
-    }
-  }
-
-  limpiarCampos() {
-    this.nuevoRolForm.reset();
-  }
-
+  // MÉTODO PARA INSERTAR DATOS
   contador: number = 0;
+  data_nueva: any = [];
   roles: any = [];
-  insertarRol(form) {
+  InsertarRol(form) {
     this.contador = 0;
     this.roles = [];
     let dataRol = {
       nombre: form.descripcionForm,
-      logged: parseInt(this.empleadoLogueado[0].codigo)
     };
+    this.data_nueva = dataRol;
     this.rest.getRoles().subscribe(response => {
       this.roles = response;
       this.roles.forEach(obj => {
@@ -84,13 +65,13 @@ export class RegistroRolComponent implements OnInit {
           this.toastr.success('Operacion Exitosa', 'Rol guardado', {
             timeOut: 6000,
           });
-          //this.validar.Auditar();
-          this.limpiarCampos();
+          this.validar.Auditar('app-web', 'cg_roles', '', this.data_nueva, 'INSERT');
+          this.LimpiarCampos();
           this.salir = true;
         });
       }
       else {
-        this.toastr.error('Para el correcto funcionamiento del sistema ingresar un nuevo nombre rol ' +
+        this.toastr.error('Para el correcto funcionamiento del sistema ingresar un nuevo rol ' +
           'que no se encuentre registrado en el sistema.',
           'Nombre de Rol Duplicado', {
           timeOut: 6000,
@@ -100,29 +81,21 @@ export class RegistroRolComponent implements OnInit {
   }
 
   IngresarSoloLetras(e) {
-    let key = e.keyCode || e.which;
-    let tecla = String.fromCharCode(key).toString();
-    //Se define todo el abecedario que se va a usar.
-    let letras = " áéíóúabcdefghijklmnñopqrstuvwxyzÁÉÍÓÚABCDEFGHIJKLMNÑOPQRSTUVWXYZ";
-    //Es la validación del KeyCodes, que teclas recibe el campo de texto.
-    let especiales = [8, 37, 39, 46, 6, 13];
-    let tecla_especial = false
-    for (var i in especiales) {
-      if (key == especiales[i]) {
-        tecla_especial = true;
-        break;
-      }
-    }
-    if (letras.indexOf(tecla) == -1 && !tecla_especial) {
-      this.toastr.info('No se admite datos numéricos', 'Usar solo letras', {
-        timeOut: 6000,
-      })
-      return false;
+    this.validar.IngresarSoloLetras(e);
+  }
+
+  ObtenerMensajeErrorDescripcion() {
+    if (this.descripcion.hasError('required')) {
+      return 'Debe ingresar alguna Descripción.';
     }
   }
 
+  LimpiarCampos() {
+    this.nuevoRolForm.reset();
+  }
+
   CerrarVentanaRegistroRol() {
-    this.limpiarCampos();
-    this.dialogRef.close(this.salir);
+    this.LimpiarCampos();
+    this.ventana.close(this.salir);
   }
 }
