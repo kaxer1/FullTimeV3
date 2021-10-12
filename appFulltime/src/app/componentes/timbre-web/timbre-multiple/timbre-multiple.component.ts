@@ -1,28 +1,31 @@
-import { Component, OnInit } from '@angular/core';
+// IMPORTAR LIBRERIAS
 import { Validators, FormControl, FormGroup } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
-import { PageEvent } from '@angular/material/paginator';
 import { SelectionModel } from '@angular/cdk/collections';
+import { PageEvent } from '@angular/material/paginator';
+import { MatDialog } from '@angular/material/dialog';
+import { Component, OnInit } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
 
-import { TimbresService } from 'src/app/servicios/timbres/timbres.service';
+// IMPORTAR SERVICIOS
 import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
 import { UsuarioService } from 'src/app/servicios/usuarios/usuario.service';
+import { TimbresService } from 'src/app/servicios/timbres/timbres.service';
 
-// Servicios Filtros de búsqueda
-import { SucursalService } from 'src/app/servicios/sucursales/sucursal.service';
+// SERVICIOS FILTROS DE BÚSQUEDA
 import { DepartamentosService } from 'src/app/servicios/catalogos/catDepartamentos/departamentos.service';
-import { EmplCargosService } from 'src/app/servicios/empleado/empleadoCargo/empl-cargos.service';
-import { RegimenService } from 'src/app/servicios/catalogos/catRegimen/regimen.service';
-
-
-import { FraseSeguridadComponent } from '../../frase-administrar/frase-seguridad/frase-seguridad.component';
-import { CrearTimbreComponent } from '../crear-timbre/crear-timbre.component';
-import { SeguridadComponent } from 'src/app/componentes/frase-administrar/seguridad/seguridad.component';
 import { DatosGeneralesService } from 'src/app/servicios/datosGenerales/datos-generales.service';
+import { EmplCargosService } from 'src/app/servicios/empleado/empleadoCargo/empl-cargos.service';
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
+import { ValidacionesService } from 'src/app/servicios/validaciones/validaciones.service';
+import { RegimenService } from 'src/app/servicios/catalogos/catRegimen/regimen.service';
+import { SucursalService } from 'src/app/servicios/sucursales/sucursal.service';
 import { LoginService } from 'src/app/servicios/login/login.service';
+
+// IMPORTAR COMPONENTES
+import { FraseSeguridadComponent } from '../../frase-administrar/frase-seguridad/frase-seguridad.component';
+import { SeguridadComponent } from 'src/app/componentes/frase-administrar/seguridad/seguridad.component';
+import { CrearTimbreComponent } from '../crear-timbre/crear-timbre.component';
 
 export interface EmpleadoElemento {
   id: number;
@@ -30,92 +33,91 @@ export interface EmpleadoElemento {
   apellido: string;
 }
 
-
 @Component({
   selector: 'app-timbre-multiple',
   templateUrl: './timbre-multiple.component.html',
   styleUrls: ['./timbre-multiple.component.css']
 })
+
 export class TimbreMultipleComponent implements OnInit {
 
+  // VARIABLE DE ALMACENAMIENTO DE DATOS DE EMPLEADO
   Lista_empleados: any = [];
 
-  // items de paginacion de la tabla
-  tamanio_pagina: number = 5;
+  // ITEMS DE PAGINACION DE LA TABLA
   numero_pagina: number = 1;
+  tamanio_pagina: number = 5;
   pageSizeOptions = [5, 10, 20, 50];
 
-  /**
-  * Variables Tabla de datos
-  */
+  // VARIABLES TABLA DE DATOS
   dataSource: any;
   filtroEmpleados = '';
   idEmpleadoLogueado: any;
 
-  /**FILTROS DE BÚSQUEDA */
+  // FILTROS DE BÚSQUEDA
   sucursalF = new FormControl('');
-  depaF = new FormControl('');
-  cargosF = new FormControl('');
   laboralF = new FormControl('');
-  // Formulario de Búsquedas
+  cargosF = new FormControl('');
+  depaF = new FormControl('');
+
+  // FORMULARIO DE BÚSQUEDAS
   public busquedasForm = new FormGroup({
     sucursalForm: this.sucursalF,
-    depaForm: this.depaF,
-    cargosForm: this.cargosF,
     laboralForm: this.laboralF,
+    cargosForm: this.cargosF,
+    depaForm: this.depaF,
   });
 
-  /**BÚSQUEDA INMEDIATA */
-  // Datos del Formulario de búsqueda
+  // BÚSQUEDA INMEDIATA DATOS DEL FORMULARIO 
+  departamentoF = new FormControl('', Validators.minLength(2));
+  regimenF = new FormControl('', Validators.minLength(2));
+  cedula = new FormControl('', Validators.minLength(2));
+  nombre = new FormControl('', Validators.minLength(2));
+  cargoF = new FormControl('', Validators.minLength(2));
   codigo = new FormControl('');
-  cedula = new FormControl('', [Validators.minLength(2)]);
-  nombre = new FormControl('', [Validators.minLength(2)]);
-  departamentoF = new FormControl('', [Validators.minLength(2)]);
-  regimenF = new FormControl('', [Validators.minLength(2)]);
-  cargoF = new FormControl('', [Validators.minLength(2)]);
 
-  // Datos de filtros de búsqueda
-  filtroCodigo: number;
-  filtroCedula: '';
-  filtroEmpleado = '';
+  // DATOS DE FILTROS DE BÚSQUEDA
   filtroDepartamento: '';
+  filtroCodigo: number;
+  filtroEmpleado = '';
   filtroRegimen: '';
+  filtroCedula: '';
   filtroCargo: '';
 
   constructor(
-    /** FILTROS DE BÚSQUEDA */
-    public restSucur: SucursalService,
     public restDepa: DepartamentosService,
-    public restCargo: EmplCargosService,
-    public restRegimen: RegimenService,
-    public restD: DatosGeneralesService,
     public restEmpleado: EmpleadoService,
+    private validar: ValidacionesService,
+    public restD: DatosGeneralesService,
     private restTimbres: TimbresService,
     private restEmpresa: EmpresaService,
+    public restCargo: EmplCargosService,
     private restUsuario: UsuarioService,
-    private vistaFlotante: MatDialog,
-    private toastr: ToastrService,
-    private openView: MatDialog,
-    private router: Router,
+    public restRegimen: RegimenService,
+    public restSucur: SucursalService,
     public loginService: LoginService,
+    private toastr: ToastrService,
+    private ventana: MatDialog,
+    private router: Router,
   ) {
     this.idEmpleadoLogueado = parseInt(localStorage.getItem('empleado'));
   }
 
   ngOnInit(): void {
     this.ObtenerEmpleados();
-    //FILTROS DE BÚSQUEDA
     this.ListarSucursales();
     this.ListarDepartamentos();
     this.ListarCargos();
     this.ListarRegimen();
   }
 
+  // MÉTODO PARA MANEJAR PÁGINAS DE TABLA
   ManejarPagina(e: PageEvent) {
     this.tamanio_pagina = e.pageSize;
     this.numero_pagina = e.pageIndex + 1;
   }
 
+  // MÉTODO PARA OBTENER DATOS DE EMPLEADO
   ObtenerEmpleados() {
     this.Lista_empleados = [];
     this.restD.ListarInformacionActual().subscribe(data => {
@@ -124,28 +126,29 @@ export class TimbreMultipleComponent implements OnInit {
     });
   }
 
+  // MÉTODO PARA APLICAR FILTRO DE BÚSQUEDA
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.filtroEmpleados = filterValue.trim().toLowerCase();
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
+  // MÉTODO PARA INGRESAR TIMBRE DE UN USUARIO
   RegistrarTibre(empleado) {
-    this.openView.open(CrearTimbreComponent, { width: '400px', data: empleado }).afterClosed().subscribe(dataT => {
-      console.log('ver data', dataT);
+    this.ventana.open(CrearTimbreComponent, { width: '400px', data: empleado }).afterClosed().subscribe(dataT => {
       if (!dataT.close) {
         this.restTimbres.PostTimbreWebAdmin(dataT).subscribe(res => {
-          console.log(res);
           this.toastr.success(res.message)
+          // MÉTODO PARA AUDITORIA DE TIMBRES
+          this.validar.Auditar('app-web', 'timbres', '', dataT, 'INSERT');
         }, err => {
-          console.log(err);
           this.toastr.error(err)
         })
       }
     })
   }
 
-  /** Función para confirmar creación de timbre */
+  // FUNCIÓN PARA CONFIRMAR CREACIÓN DE TIMBRE 
   ConfirmarTimbre(empleado: any) {
     this.restEmpresa.ConsultarDatosEmpresa(parseInt(localStorage.getItem('empresa'))).subscribe(datos => {
       if (datos[0].seg_frase === true) {
@@ -171,8 +174,9 @@ export class TimbreMultipleComponent implements OnInit {
 
   }
 
+  // MÉTODO PARA ABRIR VENTANA DE SEGURIDAD
   AbrirVentana(datos: any) {
-    this.openView.open(SeguridadComponent, { width: '350px' }).afterClosed()
+    this.ventana.open(SeguridadComponent, { width: '350px' }).afterClosed()
       .subscribe((confirmado: string) => {
         console.log('prueba', confirmado)
         if (confirmado === 'true') {
@@ -186,9 +190,10 @@ export class TimbreMultipleComponent implements OnInit {
   }
 
   RegistrarFrase() {
-    this.vistaFlotante.open(FraseSeguridadComponent, { width: '350px', data: this.idEmpleadoLogueado }).disableClose = true;
+    this.ventana.open(FraseSeguridadComponent, { width: '350px', data: this.idEmpleadoLogueado }).disableClose = true;
   }
 
+  // MÉTODO PARA HABILITAR Y DESHABILITAR SELECCIÓN DE DATOS
   selectionUno = new SelectionModel<EmpleadoElemento>(true, []);
   btnCheckHabilitar: boolean = false;
   auto_individual: boolean = true;
@@ -202,21 +207,21 @@ export class TimbreMultipleComponent implements OnInit {
     }
   }
 
-  /** Si el número de elementos seleccionados coincide con el número total de filas. */
+  // SI EL NÚMERO DE ELEMENTOS SELECCIONADOS COINCIDE CON EL NÚMERO TOTAL DE FILAS. 
   isAllSelected() {
     const numSelected = this.selectionUno.selected.length;
     const numRows = this.Lista_empleados.length;
     return numSelected === numRows;
   }
 
-  /** Selecciona todas las filas si no están todas seleccionadas; de lo contrario, selección clara. */
+  // SELECCIONA TODAS LAS FILAS SI NO ESTÁN TODAS SELECCIONADAS; DE LO CONTRARIO, SELECCIÓN CLARA. 
   masterToggle() {
     this.isAllSelected() ?
       this.selectionUno.clear() :
       this.Lista_empleados.forEach(row => this.selectionUno.select(row));
   }
 
-  /** La etiqueta de la casilla de verificación en la fila pasada*/
+  // LA ETIQUETA DE LA CASILLA DE VERIFICACIÓN EN LA FILA PASADA
   checkboxLabel(row?: EmpleadoElemento): string {
     if (!row) {
       return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
@@ -224,6 +229,7 @@ export class TimbreMultipleComponent implements OnInit {
     return `${this.selectionUno.isSelected(row) ? 'deselect' : 'select'} row ${row.id + 1}`;
   }
 
+  // MÉTODO PARA REGISTRAR VARIOS TIMBRES
   TimbrarVarios() {
     let EmpleadosSeleccionados;
     EmpleadosSeleccionados = this.selectionUno.selected.map(obj => {
@@ -233,15 +239,18 @@ export class TimbreMultipleComponent implements OnInit {
       }
     })
     if (EmpleadosSeleccionados.length > 0) {
-      this.openView.open(CrearTimbreComponent, { width: '400px', data: EmpleadosSeleccionados })
+      this.ventana.open(CrearTimbreComponent, { width: '400px', data: EmpleadosSeleccionados })
         .afterClosed().subscribe(dataT => {
-          this.ObtenerEmpleados();
           this.LimpiarCampos();
+          this.ObtenerEmpleados();
           this.LimpiarBusquedas();
+          this.selectionUno.clear();
+          this.btnCheckHabilitar = false;
         })
     }
   }
 
+  // MÉTODO PARA VERIFICAR TIPO DE SEGURIDAD EN EL SISTEMA
   VerificarSeguridad() {
     this.restEmpresa.ConsultarDatosEmpresa(parseInt(localStorage.getItem('empresa'))).subscribe(datos => {
       if (datos[0].seg_frase === true) {
@@ -267,7 +276,7 @@ export class TimbreMultipleComponent implements OnInit {
   }
 
   AbrirSeguridad() {
-    this.openView.open(SeguridadComponent, { width: '350px' }).afterClosed()
+    this.ventana.open(SeguridadComponent, { width: '350px' }).afterClosed()
       .subscribe((confirmado: string) => {
         console.log('config', confirmado)
         if (confirmado === 'true') {
@@ -281,44 +290,11 @@ export class TimbreMultipleComponent implements OnInit {
   }
 
   IngresarSoloLetras(e) {
-    let key = e.keyCode || e.which;
-    let tecla = String.fromCharCode(key).toString();
-    //Se define todo el abecedario que se va a usar.
-    let letras = " áéíóúabcdefghijklmnñopqrstuvwxyzÁÉÍÓÚABCDEFGHIJKLMNÑOPQRSTUVWXYZ";
-    //Es la validación del KeyCodes, que teclas recibe el campo de texto.
-    let especiales = [8, 37, 39, 46, 6, 13];
-    let tecla_especial = false
-    for (var i in especiales) {
-      if (key == especiales[i]) {
-        tecla_especial = true;
-        break;
-      }
-    }
-    if (letras.indexOf(tecla) == -1 && !tecla_especial) {
-      this.toastr.info('No se admite datos numéricos', 'Usar solo letras', {
-        timeOut: 6000,
-      })
-      return false;
-    }
+    this.validar.IngresarSoloLetras(e);
   }
 
   IngresarSoloNumeros(evt) {
-    if (window.event) {
-      var keynum = evt.keyCode;
-    }
-    else {
-      keynum = evt.which;
-    }
-    // Comprobamos si se encuentra en el rango numérico y que teclas no recibirá.
-    if ((keynum > 47 && keynum < 58) || keynum == 8 || keynum == 13 || keynum == 6) {
-      return true;
-    }
-    else {
-      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números', {
-        timeOut: 6000,
-      })
-      return false;
-    }
+    this.validar.IngresarSoloNumeros(evt);
   }
 
   LimpiarCampos() {
@@ -331,7 +307,7 @@ export class TimbreMultipleComponent implements OnInit {
     this.filtroEmpleado = '';
   }
 
-  /*FILTROS DE BÚSQUEDA*/
+  // FILTROS DE BÚSQUEDA
   sucursales: any = [];
   ListarSucursales() {
     this.sucursales = [];

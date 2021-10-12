@@ -57,6 +57,7 @@ body { margin: 0;}
     background: rgb(52,65,84); 
     color: white; 
     padding-top: 14px; 
+    padding-bottom: 10px;
 }
 
 /* ESTILO DE PÁGINACIÓN DE TABLAS */

@@ -1,9 +1,11 @@
 // IMPORTAR LIBRERIAS
 import { PageEvent } from '@angular/material/paginator';
+import { MatDialog } from '@angular/material/dialog';
 import { Component, OnInit } from '@angular/core';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 import pdfMake from 'pdfmake/build/pdfmake';
 import { ToastrService } from 'ngx-toastr';
+import { Router } from '@angular/router';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 import * as moment from 'moment';
 import * as xlsx from 'xlsx';
@@ -13,6 +15,11 @@ import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/emp
 import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
 import { AuditoriaService } from 'src/app/servicios/auditoria/auditoria.service';
 import { ReportesService } from 'src/app/servicios/reportes/reportes.service';
+import { UsuarioService } from 'src/app/servicios/usuarios/usuario.service';
+
+// IMPORTAR COMPONENTES
+import { FraseSeguridadComponent } from '../../frase-administrar/frase-seguridad/frase-seguridad.component';
+import { SeguridadComponent } from '../../frase-administrar/seguridad/seguridad.component';
 
 @Component({
   selector: 'app-auditoria',
@@ -34,46 +41,53 @@ export class AuditoriaComponent implements OnInit {
   empleadoD: any = [];
   idEmpleado: number;
 
+  // HABILITAR O DESHABILITAR LISTA DE REPORTES
+  ver: boolean = false;
+
   constructor(
-    private reporteService: ReportesService,
-    private restEmpleado: EmpleadoService,
-    private restAuditar: AuditoriaService,
-    private restEmpre: EmpresaService,
-    private toastr: ToastrService,
+    private reporteService: ReportesService, // VALIDACIONES DE REPORTES
+    private restEmpleado: EmpleadoService, // SERVICIO DATOS DE EMPLEADO
+    private restAuditar: AuditoriaService, // SERVICIO DATOS AUDITORIA
+    private restUsuario: UsuarioService, // SERVICIO DATOS USUARIO
+    private restEmpre: EmpresaService, // SERVICIO DATOS EMPRESA
+    private toastr: ToastrService, // VARIABLE DE MANEJO DE NOTIFICACIONES
+    private ventana: MatDialog, // VARIABLE DE MANEJO DE VENTANAS
+    private router: Router, // VARIABLE NAVEGACIÓN ENTRE RUTAS
   ) { }
 
   ngOnInit(): void {
     this.idEmpleado = parseInt(localStorage.getItem('empleado'));
-    this.ObtenerEmpleados();
     this.ObtenerEmpleadoLogueado(this.idEmpleado);
     this.ListarTipos();
+    this.VerificarSeguridad();
   }
 
   // LISTA DE REPORTES DE AUDITORIA
   tipos: any = [];
   ListarTipos() {
     this.tipos = [
-      { id: 1, nombre: 'Atrasos', value: 'atrasos' },
-      { id: 2, nombre: 'Horarios', value: 'empl_horarios' },
-      { id: 3, nombre: 'Ingreso al Sistema', value: 'logged_user' },
-      { id: 4, nombre: 'Timbres', value: 'timbres' },
-      { id: 5, nombre: 'Permisos', value: 'permisos' },
-      { id: 6, nombre: 'Planificación de horas extras', value: 'plan_hora_extra' },
-      { id: 7, nombre: 'Planificación de servicios de alimentación', value: 'plan_hora_extra_empleado' },
-      { id: 8, nombre: 'Solicitud de servicios de alimentación', value: 'solicita_comidas' },
-      { id: 9, nombre: 'Vacaciones', value: 'vacaciones' },
-      { id: 10, nombre: 'Roles', value: 'cg_roles' },
-      { id: 11, nombre: 'Feriados', value: 'cg_feriados' },
-      { id: 12, nombre: 'Empleados', value: 'empleados' },
-      { id: 13, nombre: 'Autoriza Departamento', value: 'depa_autorizaciones' },
-      { id: 14, nombre: 'Autorizaciones', value: 'autorizaciones' },
-      { id: 15, nombre: 'Procesos Empleado', value: 'empl_procesos' },
-      { id: 16, nombre: 'Funciones', value: 'funciones' },
-      { id: 17, nombre: 'Acciones de Personal', value: 'accion_personal_empleado' },
-      { id: 18, nombre: 'Servicio Alimentación Invitados', value: 'comida_invitados' },
+      { id: 1,  nombre: 'Roles', value: 'cg_roles' },
+      { id: 2,  nombre: 'Atrasos', value: 'atrasos' },
+      { id: 3,  nombre: 'Timbres', value: 'timbres' },
+      { id: 4,  nombre: 'Horarios', value: 'empl_horarios' },
+      { id: 5,  nombre: 'Permisos', value: 'permisos' },
+      { id: 6,  nombre: 'Feriados', value: 'cg_feriados' },
+      { id: 7,  nombre: 'Funciones', value: 'funciones' },
+      { id: 8,  nombre: 'Empleados', value: 'empleados' },
+      { id: 9,  nombre: 'Vacaciones', value: 'vacaciones' },
+      { id: 10, nombre: 'Autorizaciones', value: 'autorizaciones' },
+      { id: 11, nombre: 'Procesos Empleado', value: 'empl_procesos' },
+      { id: 12, nombre: 'Ingreso al Sistema', value: 'logged_user' },
+      { id: 13, nombre: 'Acciones de Personal', value: 'accion_personal_empleado' },
+      { id: 14, nombre: 'Autoriza Departamento', value: 'depa_autorizaciones' },
+      { id: 15, nombre: 'Planificación de horas extras', value: 'plan_hora_extra' },
+      { id: 16, nombre: 'Servicio Alimentación Invitados', value: 'comida_invitados' },
+      { id: 17, nombre: 'Solicitud de servicios de alimentación', value: 'solicita_comidas' },
+      { id: 18, nombre: 'Planificación de servicios de alimentación', value: 'plan_hora_extra_empleado' },
     ]
   }
 
+  // MÉTODO PARA GENERAR PDF SEGÚN OPCION SELECCIONADA
   auditoria: any = [];
   PresentarReporte(opcion: number, valor: any) {
     this.auditoria = [];
@@ -96,13 +110,6 @@ export class AuditoriaComponent implements OnInit {
         timeOut: 10000,
       }).onTap.subscribe(obj => {
       });
-    });
-  }
-
-  ObtenerEmpleados() {
-    this.empleados = [];
-    this.restEmpleado.getEmpleadosRest().subscribe(res => {
-      this.empleados = res;
     });
   }
 
@@ -132,8 +139,6 @@ export class AuditoriaComponent implements OnInit {
     });
   }
 
-  lista: any = [];
-
   // MÉTODO PARA MANEJAR PAGINACIÓN DE LA TABLA DE DATOS
   ManejarPagina(e: PageEvent) {
     this.tamanio_pagina = e.pageSize;
@@ -143,7 +148,6 @@ export class AuditoriaComponent implements OnInit {
   /* ****************************************************************************************************
   *                               PARA LA EXPORTACIÓN DE ARCHIVOS PDF 
   * ****************************************************************************************************/
-  fechaHoy: string;
 
   GenerarPdf(action = 'open', datos: any) {
 
@@ -153,11 +157,9 @@ export class AuditoriaComponent implements OnInit {
       case 'open': pdfMake.createPdf(documentDefinition).open(); break;
       case 'print': pdfMake.createPdf(documentDefinition).print(); break;
       case 'download': pdfMake.createPdf(documentDefinition).download(); break;
-
       default: pdfMake.createPdf(documentDefinition).open(); break;
     }
   }
-
 
   EstructurarPDF(datos: any) {
     return {
@@ -208,7 +210,7 @@ export class AuditoriaComponent implements OnInit {
           width: 'auto',
           table: {
             headerRows: 1,
-            widths: ['auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 230],
+            widths: ['auto', 'auto', 'auto', 'auto', 'auto', 'auto', 230, 230],
             body: [
               this.FuncionTituloColumna(),
               ...datosRest.map((obj) => {
@@ -290,4 +292,53 @@ export class AuditoriaComponent implements OnInit {
     xlsx.writeFile(wb, "Auditoria" + new Date().getTime() + '.xlsx');
   }
 
+
+
+  /** *********************************************************************** *
+   **                         VENTANA DE SEGURIDAD                            *
+   ** *********************************************************************** */
+
+  RegistrarFrase() {
+    this.ventana.open(FraseSeguridadComponent, { width: '350px', data: this.idEmpleado }).disableClose = true;
+  }
+
+  VerificarSeguridad() {
+    this.restEmpre.ConsultarDatosEmpresa(parseInt(localStorage.getItem('empresa'))).subscribe(datos => {
+      if (datos[0].seg_frase === true) {
+        this.restUsuario.BuscarDatosUser(this.idEmpleado).subscribe(data => {
+          if (data[0].frase === null || data[0].frase === '') {
+            this.toastr.info('Debe registrar su frase de seguridad.', 'Configuración doble seguridad', { timeOut: 10000 })
+              .onTap.subscribe(obj => {
+                this.RegistrarFrase()
+              })
+          }
+          else {
+            this.AbrirSeguridad();
+          }
+        });
+      }
+      else if (datos[0].seg_contrasena === true) {
+        this.AbrirSeguridad();
+      }
+      else if (datos[0].seg_ninguna === true) {
+        this.ver = true;
+      }
+    });
+  }
+
+  AbrirSeguridad() {
+    this.ventana.open(SeguridadComponent, { width: '350px' }).afterClosed()
+      .subscribe((confirmado: string) => {
+        console.log('config', confirmado)
+        if (confirmado === 'true') {
+          this.ver = true;
+        } else if (confirmado === 'false') {
+          this.router.navigate(['/listaReportes']);
+        } else if (confirmado === 'olvidar') {
+          this.router.navigate(['/frase-olvidar']);
+        } else if (confirmado === undefined) {
+          this.router.navigate(['/listaReportes']);
+        }
+      });
+  }
 }
