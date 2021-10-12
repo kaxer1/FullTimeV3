@@ -120,14 +120,17 @@ export class ValidacionesService {
     }
   }
 
-  Auditar(esquema:string, tabla: string) {
+  Auditar(esquema: string, tabla: string, old: string, nueva: string, accion: string) {
     let data = {
       esquema: esquema,
       tabla: tabla,
-      user: localStorage.getItem('user'),
-      ip: localStorage.getItem('ip')
+      user: localStorage.getItem('usuario'),
+      old_data: old,
+      new_data: nueva,
+      ip: localStorage.getItem('ip'),
+      accion: accion
     }
-    this.audit.AuditarUpdate(data).subscribe(res => {
+    this.audit.Auditar(data).subscribe(res => {
     });
   }
 

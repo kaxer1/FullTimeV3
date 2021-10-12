@@ -63,10 +63,8 @@ export class LoginService {
     return this.http.post(`${environment.url}/login/cambiar-contrasenia`, data)
   }
 
-
-
   // AUDITAR
-  AuditarUpdate(data: any) {
+  Auditar(data: any) {
     return this.http.post(`${environment.url}/login/auditar`, data)
   }
 }

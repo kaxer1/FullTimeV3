@@ -22,6 +22,7 @@ import { MetodosComponent } from 'src/app/componentes/metodoEliminar/metodos.com
 import { PlantillaReportesService } from 'src/app/componentes/reportes/plantilla-reportes.service';
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 import { RolesService } from 'src/app/servicios/catalogos/catRoles/roles.service';
+import { ValidacionesService } from 'src/app/servicios/validaciones/validaciones.service';
 
 @Component({
   selector: 'app-vista-roles',
@@ -53,6 +54,7 @@ export class VistaRolesComponent implements OnInit {
   constructor(
     private plantillaPDF: PlantillaReportesService, // SERVICIO DATOS DE EMPRESA
     public vistaRegistrarDatos: MatDialog, // VARIABLE DE MANEJO DE VENTANAS
+    private validar: ValidacionesService, // VARIABLE PARA MANEJO DE SERVICIOS
     private restE: EmpleadoService, // SERVICIO DATOS DE EMPLEADO
     private toastr: ToastrService, // VARIABLE DE MANEJO DE MENSAJES DE NOTIFICACIONES
     private rest: RolesService, // SERVICIO DATOS DE ROLES
@@ -83,25 +85,7 @@ export class VistaRolesComponent implements OnInit {
 
   // MÉTODO PARA INGRESAR SOLO LETRAS
   IngresarSoloLetras(e) {
-    let key = e.keyCode || e.which;
-    let tecla = String.fromCharCode(key).toString();
-    // SE DEFINE TODO EL ABECEDARIO QUE SE VA A USAR.
-    let letras = " áéíóúabcdefghijklmnñopqrstuvwxyzÁÉÍÓÚABCDEFGHIJKLMNÑOPQRSTUVWXYZ";
-    // ES LA VALIDACIÓN DEL KEYCODES, QUE TECLAS RECIBE EL CAMPO DE TEXTO.
-    let especiales = [8, 37, 39, 46, 6, 13];
-    let tecla_especial = false
-    for (var i in especiales) {
-      if (key == especiales[i]) {
-        tecla_especial = true;
-        break;
-      }
-    }
-    if (letras.indexOf(tecla) == -1 && !tecla_especial) {
-      this.toastr.info('No se admite datos numéricos', 'Usar solo letras', {
-        timeOut: 6000,
-      })
-      return false;
-    }
+    this.validar.IngresarSoloLetras(e);
   }
 
   ObtenerRoles() {
@@ -139,11 +123,12 @@ export class VistaRolesComponent implements OnInit {
 
 
   // FUNCIÓN PARA ELIMINAR REGISTRO SELECCIONADO 
-  Eliminar(id_rol: number) {
-    this.rest.EliminarRoles(id_rol).subscribe(res => {
+  Eliminar(rol: any) {
+    this.rest.EliminarRoles(rol.id).subscribe(res => {
       this.toastr.error('Registro eliminado', '', {
         timeOut: 6000,
       });
+      this.validar.Auditar('app-web', 'cg_roles', rol, '', 'DELETE');
       this.ObtenerRoles();
     });
   }
@@ -153,7 +138,7 @@ export class VistaRolesComponent implements OnInit {
     this.vistaRegistrarDatos.open(MetodosComponent, { width: '450px' }).afterClosed()
       .subscribe((confirmado: Boolean) => {
         if (confirmado) {
-          this.Eliminar(datos.id);
+          this.Eliminar(datos);
         } else {
           this.router.navigate(['/roles']);
         }

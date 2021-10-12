@@ -12,7 +12,7 @@ class LoginRuta {
         this.router.post('/', LOGIN_CONTROLADOR.ValidarCredenciales);
         this.router.post('/recuperar-contrasenia/', LOGIN_CONTROLADOR.RestablecerContrasenia);
         this.router.post('/cambiar-contrasenia/', LOGIN_CONTROLADOR.CambiarContrasenia);
-        this.router.post('/auditar', LOGIN_CONTROLADOR.AuditarActualizar);
+        this.router.post('/auditar', LOGIN_CONTROLADOR.Auditar);
 
     }
 
