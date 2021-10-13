@@ -1,28 +1,30 @@
-// IMPORTACIÓN DE LIBRERIAS
-import { environment } from 'src/environments/environment';
-import { Component, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+// IMPORTAR LIBRERIAS
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { ToastrService } from 'ngx-toastr';
+import { environment } from 'src/environments/environment';
 import { PageEvent } from '@angular/material/paginator';
-import { Router } from '@angular/router';
-import * as moment from 'moment';
-
-import pdfMake from 'pdfmake/build/pdfmake';
+import { MatDialog } from '@angular/material/dialog';
+import { Component, OnInit } from '@angular/core';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
-pdfMake.vfs = pdfFonts.pdfMake.vfs;
-import * as xlsx from 'xlsx';
+import pdfMake from 'pdfmake/build/pdfmake';
+import { ToastrService } from 'ngx-toastr';
+import { Router } from '@angular/router';
 import * as FileSaver from 'file-saver';
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
+import * as moment from 'moment';
+import * as xlsx from 'xlsx';
 
-import { HorarioService } from 'src/app/servicios/catalogos/catHorarios/horario.service';
+// IMPORTAR SERVICIOS
 import { DetalleCatHorariosService } from 'src/app/servicios/horarios/detalleCatHorarios/detalle-cat-horarios.service';
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
+import { HorarioService } from 'src/app/servicios/catalogos/catHorarios/horario.service';
 import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
 
-import { RegistroHorarioComponent } from 'src/app/componentes/catalogos/catHorario/registro-horario/registro-horario.component';
+// IMPORTAR COMPONENTES
 import { DetalleCatHorarioComponent } from 'src/app/componentes/catalogos/catHorario/detalle-cat-horario/detalle-cat-horario.component';
-import { EditarHorarioComponent } from '../editar-horario/editar-horario.component';
+import { RegistroHorarioComponent } from 'src/app/componentes/catalogos/catHorario/registro-horario/registro-horario.component';
 import { MetodosComponent } from 'src/app/componentes/metodoEliminar/metodos.component';
+import { EditarHorarioComponent } from '../editar-horario/editar-horario.component';
+import { ValidacionesService } from 'src/app/servicios/validaciones/validaciones.service';
 
 @Component({
   selector: 'app-principal-horario',
@@ -32,44 +34,48 @@ import { MetodosComponent } from 'src/app/componentes/metodoEliminar/metodos.com
 
 export class PrincipalHorarioComponent implements OnInit {
 
-  // Almacenamiento de datos y búsqueda
+  // ALMACENAMIENTO DE DATOS Y BÚSQUEDA
   horarios: any = [];
 
-  // filtros
+  // FILTROS
   filtroNombreHorario = '';
 
-  // Control de campos y validaciones del formulario
-  nombreHorarioF = new FormControl('', [Validators.minLength(2)]);
+  // CONTROL DE CAMPOS Y VALIDACIONES DEL FORMULARIO
+  nombreHorarioF = new FormControl('', Validators.minLength(2));
   archivo1Form = new FormControl('');
   archivo2Form = new FormControl('');
   archivo3Form = new FormControl('');
 
-  // Asignación de validaciones a inputs del formulario
+  // ASIGNACIÓN DE VALIDACIONES A INPUTS DEL FORMULARIO
   public buscarHorarioForm = new FormGroup({
     nombreHorarioForm: this.nombreHorarioF,
   });
 
+  // VARIABLES USADAS EN SELECCIÓN DE ARCHIVOS
   nameFile: string;
   archivoSubido: Array<File>;
 
-  // items de paginacion de la tabla
-  tamanio_pagina: number = 5;
+  // ITEMS DE PAGINACION DE LA TABLA
   numero_pagina: number = 1;
+  tamanio_pagina: number = 5;
   pageSizeOptions = [5, 10, 20, 50];
 
+  // VARIABLES DE ALMACENAMIENTO DE USUARIO DE INICIO SESIÓN
   empleado: any = [];
   idEmpleado: number;
 
+  // VARIABLES DE 
   hipervinculo: string = environment.url;
 
   constructor(
-    private rest: HorarioService,
-    public restE: EmpleadoService,
-    private restD: DetalleCatHorariosService,
-    private toastr: ToastrService,
-    public restEmpre: EmpresaService,
-    public vistaRegistrarDatos: MatDialog,
-    public router: Router,
+    private restD: DetalleCatHorariosService, // SERVICIO DE DATOS DE DETALLES DE HORARIOS
+    public validar: ValidacionesService, // VARIABLE USADA PARA CONTROL DE VALIDACIONES
+    public restEmpre: EmpresaService, // SERVICIO DATOS DE EMPRESA
+    public restE: EmpleadoService, // SERVICIO DATOS DE EMPLEADO
+    private toastr: ToastrService, // VARIABLE DE MANEJO DE NOTIFICACIONES
+    private rest: HorarioService, // SERVICIO DATOS DE HORARIO
+    public ventana: MatDialog, // VARIABLES MANEJO DE VENTANAS
+    public router: Router, // VARIABLE DE MANEJO DE RUTAS
   ) {
     this.idEmpleado = parseInt(localStorage.getItem('empleado'));
   }
@@ -82,7 +88,7 @@ export class PrincipalHorarioComponent implements OnInit {
     this.ObtenerColores();
   }
 
-  // Método para ver la información del empleado 
+  // MÉTODO PARA VER LA INFORMACIÓN DEL EMPLEADO 
   ObtenerEmpleados(idemploy: any) {
     this.empleado = [];
     this.restE.getOneEmpleadoRest(idemploy).subscribe(data => {
@@ -90,7 +96,7 @@ export class PrincipalHorarioComponent implements OnInit {
     })
   }
 
-  // Método para obtener el logo de la empresa
+  // MÉTODO PARA OBTENER EL LOGO DE LA EMPRESA
   logo: any = String;
   ObtenerLogo() {
     this.restEmpre.LogoEmpresaImagenBase64(localStorage.getItem('empresa')).subscribe(res => {
@@ -110,11 +116,13 @@ export class PrincipalHorarioComponent implements OnInit {
     });
   }
 
+  // MÉTODO PARA MANEJAR PÁGINAS DE TABLA
   ManejarPagina(e: PageEvent) {
     this.tamanio_pagina = e.pageSize;
     this.numero_pagina = e.pageIndex + 1;
   }
 
+  // MÉTODO PARA OBTENER HORARIOS
   ObtenerHorarios() {
     this.horarios = [];
     this.rest.getHorariosRest().subscribe(datos => {
@@ -122,20 +130,22 @@ export class PrincipalHorarioComponent implements OnInit {
     })
   }
 
+  // MÉTODO PARA ABRIR VENTANA REGISTRAR HORARIO
   AbrirVentanaRegistrarHorario(): void {
-    this.vistaRegistrarDatos.open(RegistroHorarioComponent, { width: '1200px' }).afterClosed().subscribe(items => {
+    this.ventana.open(RegistroHorarioComponent, { width: '1200px' }).afterClosed().subscribe(items => {
       this.ObtenerHorarios();
     });
   }
 
+  // MÉTODO PARA ABRIR VENTANA REGISTRAR DETALLEE DE HORARIO
   AbrirRegistraDetalle(datosSeleccionados: any): void {
-    console.log(datosSeleccionados);
-    this.vistaRegistrarDatos.open(DetalleCatHorarioComponent,
+    this.ventana.open(DetalleCatHorarioComponent,
       { width: '600px', data: { datosHorario: datosSeleccionados, actualizar: false } }).afterClosed().subscribe(items => {
         this.ObtenerHorarios();
       });
   }
 
+  // MÉTODO PARA LIMPIAR FORMULARIO
   LimpiarCampos() {
     this.buscarHorarioForm.setValue({
       nombreHorarioForm: '',
@@ -143,15 +153,18 @@ export class PrincipalHorarioComponent implements OnInit {
     this.ObtenerHorarios();
   }
 
+  // MÉTODO PARA ABRIR VENTANA EDITAR HORARIO
   AbrirVentanaEditarHorario(datosSeleccionados: any): void {
-    this.vistaRegistrarDatos.open(EditarHorarioComponent, { width: '900px', data: { horario: datosSeleccionados, actualizar: false } }).afterClosed().subscribe(items => {
+    this.ventana.open(EditarHorarioComponent, { width: '900px', data: { horario: datosSeleccionados, actualizar: false } }).afterClosed().subscribe(items => {
       this.ObtenerHorarios();
     });
   }
 
-  /** Función para eliminar registro seleccionado Planificación*/
-  EliminarDetalle(id_horario: number) {
-    this.rest.EliminarRegistro(id_horario).subscribe(res => {
+  // FUNCIÓN PARA ELIMINAR REGISTRO SELECCIONADO PLANIFICACIÓN
+  EliminarDetalle(id_horario: any) {
+    this.rest.EliminarRegistro(id_horario.id).subscribe(res => {
+      // MÉTODO PARA AUDITAR CATÁLOGO HORARIOS
+      this.validar.Auditar('app-web', 'cg_horarios', id_horario, '', 'DELETE');
       this.toastr.error('Registro eliminado', '', {
         timeOut: 6000,
       });
@@ -159,13 +172,12 @@ export class PrincipalHorarioComponent implements OnInit {
     });
   }
 
-  /** Función para confirmar si se elimina o no un registro */
+  // FUNCIÓN PARA CONFIRMAR SI SE ELIMINA O NO UN REGISTRO 
   ConfirmarDelete(datos: any) {
-    console.log(datos);
-    this.vistaRegistrarDatos.open(MetodosComponent, { width: '450px' }).afterClosed()
+    this.ventana.open(MetodosComponent, { width: '450px' }).afterClosed()
       .subscribe((confirmado: Boolean) => {
         if (confirmado) {
-          this.EliminarDetalle(datos.id);
+          this.EliminarDetalle(datos);
         } else {
           this.router.navigate(['/horario/']);
         }
@@ -174,7 +186,7 @@ export class PrincipalHorarioComponent implements OnInit {
 
 
   /****************************************************************************************************** 
-   * PLANTILLA CARGAR SOLO HORARIOS
+   *                                 PLANTILLA CARGAR SOLO HORARIOS
    ******************************************************************************************************/
 
   fileChangeCatalogoHorario(element) {
@@ -303,7 +315,7 @@ export class PrincipalHorarioComponent implements OnInit {
   }
 
   /****************************************************************************************************** 
-   * MÉTODO PARA EXPORTAR A PDF 
+   *                                MÉTODO PARA EXPORTAR A PDF 
    ******************************************************************************************************/
 
   generarPdf(action = 'open') {
@@ -321,29 +333,19 @@ export class PrincipalHorarioComponent implements OnInit {
   getDocumentDefinicion() {
     sessionStorage.setItem('Empleados', this.horarios);
     return {
-
-      // Encabezado de página
+      // ENCABEZADO DE PÁGINA
       pageOrientation: 'landscape',
       watermark: { text: this.frase, color: 'blue', opacity: 0.1, bold: true, italics: false },
       header: { text: 'Impreso por:  ' + this.empleado[0].nombre + ' ' + this.empleado[0].apellido, margin: 10, fontSize: 9, opacity: 0.3, alignment: 'right' },
-
-      // Pie de página
+      // PIE DE PÁGINA
       footer: function (currentPage: any, pageCount: any, fecha: any, hora: any) {
         var f = moment();
         fecha = f.format('YYYY-MM-DD');
-
-        var h = new Date();
-        // Formato de hora actual
-        if (h.getMinutes() < 10) {
-          var time = h.getHours() + ':0' + h.getMinutes();
-        }
-        else {
-          var time = h.getHours() + ':' + h.getMinutes();
-        }
+        hora = f.format('HH:mm:ss');
         return {
           margin: 10,
           columns: [
-            { text: 'Fecha: ' + fecha + ' Hora: ' + time, opacity: 0.3 },
+            { text: 'Fecha: ' + fecha + ' Hora: ' + hora, opacity: 0.3 },
             {
               text: [
                 {
@@ -412,9 +414,9 @@ export class PrincipalHorarioComponent implements OnInit {
   }
 
 
-  /****************************************************************************************************** 
-   * MÉTODO PARA EXPORTAR A EXCEL 
-   ******************************************************************************************************/
+  /* ***************************************************************************************************** 
+   *                                    MÉTODO PARA EXPORTAR A EXCEL 
+   * *****************************************************************************************************/
 
   exportToExcel() {
     const wsr: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.horarios);
@@ -423,9 +425,9 @@ export class PrincipalHorarioComponent implements OnInit {
     xlsx.writeFile(wb, "CatHorariosEXCEL" + new Date().getTime() + '.xlsx');
   }
 
-  /****************************************************************************************************** 
-   * MÉTODO PARA EXPORTAR A CSV 
-   ******************************************************************************************************/
+  /* ***************************************************************************************************** 
+   *                                                MÉTODO PARA EXPORTAR A CSV 
+   * *****************************************************************************************************/
 
   exportToCVS() {
     const wse: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.horarios);
@@ -435,8 +437,8 @@ export class PrincipalHorarioComponent implements OnInit {
   }
 
   /* ****************************************************************************************************
-*                                 PARA LA EXPORTACIÓN DE ARCHIVOS XML
-* ****************************************************************************************************/
+   *                                  PARA LA EXPORTACIÓN DE ARCHIVOS XML
+   * ****************************************************************************************************/
 
   urlxml: string;
   data: any = [];

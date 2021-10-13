@@ -20,3 +20,5 @@ td { padding-top: 10px; text-align: center;  }
 table { width: 100%; font-size: 14px; }
 
 #SelectCheck { cursor: pointer; margin-left: 10px; }
+
+#individual { color:rgb(197, 95, 11); margin-left: 15px; }

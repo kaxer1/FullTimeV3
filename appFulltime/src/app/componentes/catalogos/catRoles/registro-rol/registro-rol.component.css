@@ -1,9 +1,5 @@
 .btn { background-color: rgb(80,87,97); color: white; }
 
-#movilidad { 
-    cursor: grab;
-}
-
 .nota {
     font-size: 12px; 
     font-weight: bold; 

@@ -1,8 +1,8 @@
-<div class="d-flex bd-highlight barraTitulo">
-    <mat-icon class="flex-shrink-1 bd-highlight align-self-center" id="movilidad">open_with</mat-icon>
-    <h5 class="w-100 bd-highlight align-self-center">Horario del Empleado</h5>
+<div class="d-flex bd-highlight" id="titulo">
+    <h5 id="movilidad" class="w-100 bd-highlight align-self-center" cdkDrag cdkDragRootElement=".cdk-overlay-pane">
+        HORARIO DEL EMPLEADO</h5>
 </div>
-<!-- Formulario Completo -->
+<!-- FORMULARIO COMPLETO -->
 <form [formGroup]="EmpleadoHorarioForm">
     <mat-card-content>
         <div class="container" style="padding-top: 15px; text-align: center;">
@@ -47,7 +47,7 @@
                     </mat-form-field>
                 </div>
                 <div class="col-sm" style="text-align: left;">
-                    <label style="margin-right: 35px;">Seleccionar días libres *</label>
+                    <label style="margin-right: 35px;">Seleccionar días Libres *</label>
                     <mat-icon id="i-cursor" matSuffix matTooltipPosition="right"
                         matTooltip="Indicar si existen días libres en el horario de trabajo.">
                         help_outline</mat-icon>

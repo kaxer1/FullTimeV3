@@ -1,10 +1,11 @@
-<div class="d-flex bd-highlight tituloHorarioR">
-    <mat-icon class="flex-shrink-1 bd-highlight align-self-center" id="movilidad">open_with</mat-icon>
-    <h5 class="w-100 bd-highlight align-self-center">Registrar Horario</h5>
+<div class="d-flex bd-highlight" id="titulo">
+    <h5 id="movilidad" class="w-100 bd-highlight align-self-center" cdkDrag cdkDragRootElement=".cdk-overlay-pane">
+        REGISTRAR HORARIO</h5>
 </div>
 <div style="text-align: center">
-    <!-- Formulario Completo -->
+    <!-- FORMULARIO COMPLETO -->
     <div class="container">
+        <br>
         <div class="nota">
             <span>NOTA: Por favor llenar todos los campos obligatorios (*) del formulario para activar el botón
                 Guardar.</span>
@@ -22,7 +23,7 @@
                             matTooltip="Indicar un nombre con el cual se va a identificar al nuevo horario">
                             help_outline</mat-icon>
                         <mat-error *ngIf="nombre.invalid">{{ObtenerMensajeErrorNombre()}}</mat-error>
-                        <mat-error *ngIf="nombre.invalid">Ingresar un nombre válido</mat-error>
+                        <mat-error *ngIf="nombre.invalid">Ingresar un nombre válido.</mat-error>
                         <br>
                     </mat-form-field>
                     <mat-form-field>
@@ -56,7 +57,7 @@
                         <mat-checkbox [formControl]="detalleF" [(ngModel)]="detalle">Requiere detalle
                         </mat-checkbox>
                         <mat-icon id="i-cursor" matSuffix matTooltipPosition="right"
-                            matTooltip="Indicar si el horario requiere detalles de horario.">
+                            matTooltip="Indicar si el horario requiere detalles.">
                             help_outline</mat-icon>
                     </div>
                 </div>

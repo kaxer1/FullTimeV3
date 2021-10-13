@@ -75,3 +75,6 @@ body { margin: 0;}
 
 /* ESTILO CURSO EN ICONOS */
 #i-cursor {cursor: pointer; }
+
+/* ESTILO PARA ICONO DE MOVILIDAD */
+#movilidad {  cursor: grab; }

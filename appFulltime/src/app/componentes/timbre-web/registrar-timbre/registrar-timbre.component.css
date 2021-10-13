@@ -1,21 +1,6 @@
-mat-label { font-size: 14px; } 
-
 .btn { background-color: rgb(80,87,97); color: white; margin: 5px 10px 5px 10px;} 
 
 mat-form-field {width: 100%; padding: 10px 10px 0px 10px;}
-
-.barraTitulo { 
-    font-size: 20px; 
-    text-align: center; 
-    background: rgb(52,65,84); 
-    color: white;  
-    padding-top: 6px; 
-    padding-bottom: 6px; 
-}
-
-/*.color-tooltip { background: #2c6ec5; }*/
-
-#permiso { cursor: pointer; }
 
 .nota {
     font-size: 11px; 

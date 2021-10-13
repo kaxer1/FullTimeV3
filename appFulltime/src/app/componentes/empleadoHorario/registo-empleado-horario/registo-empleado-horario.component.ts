@@ -12,6 +12,7 @@ import { HorarioService } from 'src/app/servicios/catalogos/catHorarios/horario.
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 import { EmpleadoHorariosService } from 'src/app/servicios/horarios/empleadoHorarios/empleado-horarios.service';
 import { DetalleCatHorariosService } from 'src/app/servicios/horarios/detalleCatHorarios/detalle-cat-horarios.service';
+import { ValidacionesService } from 'src/app/servicios/validaciones/validaciones.service';
 
 @Component({
   selector: 'app-registo-empleado-horario',
@@ -65,6 +66,7 @@ export class RegistoEmpleadoHorarioComponent implements OnInit {
     public restE: EmpleadoService,
     private toastr: ToastrService,
     public restP: PlanGeneralService,
+    public validar: ValidacionesService,
     public rest: EmpleadoHorariosService,
     public restD: DetalleCatHorariosService,
     @Inject(MAT_DIALOG_DATA) public datoEmpleado: any,
@@ -183,6 +185,9 @@ export class RegistoEmpleadoHorarioComponent implements OnInit {
     }, error => { });
   }
 
+  // VARIABLES USADAS PARA AUDITORIA
+  data_nueva: any = [];
+  // MÉTODO PARA REGISTRAR DATOS DE HORARIO
   fechasHorario: any = [];
   inicioDate: any;
   finDate: any;
@@ -205,6 +210,10 @@ export class RegistoEmpleadoHorarioComponent implements OnInit {
     };
     console.log(datosempleH);
     this.rest.IngresarEmpleadoHorarios(datosempleH).subscribe(response => {
+      // MÉTODO PARA AUDITAR TIMBRES
+      this.data_nueva = [];
+      this.data_nueva = datosempleH;
+      this.validar.Auditar('app-web', 'empl_horarios', '', this.data_nueva, 'INSERT');
       this.IngresarPlanGeneral(form);
       this.CerrarVentanaEmpleadoHorario();
     });

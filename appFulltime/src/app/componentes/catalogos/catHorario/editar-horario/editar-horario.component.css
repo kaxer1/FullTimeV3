@@ -1,31 +1,8 @@
 .btn { background-color: rgb(80,87,97); color: white; margin: 5px 10px 5px 10px;} 
 
-.mat-radio-button ~ .mat-radio-button { margin-left: 16px; }
-
 mat-form-field {width: 250px; padding: 10px 10px 0px 10px;}
 
-mat-radio-group { width: 250px; padding: 15px 20px 15px 20x; margin-bottom: 10px;}
-
-.label-theme { font-size: 15px; }
-
 #hora { font-size: x-small; }
-
-#movilidad { 
-    cursor: grab;
-    color: blue;
-    margin-left: 10px;
-}
-
-.tituloHorarioR { 
-    text-align: center; 
-    background: rgb(52,65,84); 
-    color: white; 
-    height: 50px;
-}
-
-#cerrar { cursor: pointer; color: red;}
-
-#letra { font-size: 14px; } 
 
 [type="file"] {
     height: 0;

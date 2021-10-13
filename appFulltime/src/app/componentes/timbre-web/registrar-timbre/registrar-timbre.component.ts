@@ -1,9 +1,9 @@
-// LLAMADO A LAS LIBRERIAS
+// IMPORTAR LIBRERIAS
 import { Validators, FormGroup, FormControl } from '@angular/forms';
+import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MatDialogRef } from '@angular/material/dialog';
 import { Component, OnInit } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
-import { MatCheckboxChange } from '@angular/material/checkbox';
 
 @Component({
   selector: 'app-registrar-timbre',
@@ -14,7 +14,7 @@ import { MatCheckboxChange } from '@angular/material/checkbox';
 export class RegistrarTimbreComponent implements OnInit {
 
   // CAMPOS DEL FORMULARIO Y VALIDACIONES
-  accionF = new FormControl('', [Validators.required]);
+  accionF = new FormControl('', Validators.required);
   teclaFuncionF = new FormControl('');
   observacionF = new FormControl('');
 
@@ -44,7 +44,7 @@ export class RegistrarTimbreComponent implements OnInit {
   f: Date = new Date();
 
   constructor(
-    public dialogRef: MatDialogRef<RegistrarTimbreComponent>, // VARIABLE DE USO DE VENTANA DE DIÁLOGO
+    public ventana: MatDialogRef<RegistrarTimbreComponent>, // VARIABLE DE USO DE VENTANA DE DIÁLOGO
     private toastr: ToastrService, // VARIABLE DE USO EN NOTIFICACIONES
   ) { }
 
@@ -113,10 +113,10 @@ export class RegistrarTimbreComponent implements OnInit {
         }, (objPositionError) => {
           switch (objPositionError.code) {
             case objPositionError.PERMISSION_DENIED:
-              console.log('No se ha permitido el acceso a la posición del usuario.');
+              console.log('No se ha permitido el acceso a posición del usuario.');
               break;
             case objPositionError.POSITION_UNAVAILABLE:
-              console.log('No se ha podido acceder a la información de su posición.');
+              console.log('No se ha podido acceder a información de su posición.');
               break;
             case objPositionError.TIMEOUT:
               console.log('El servicio ha tardado demasiado tiempo en responder.');
@@ -127,7 +127,7 @@ export class RegistrarTimbreComponent implements OnInit {
         }, this.options);
     }
     else {
-      console.log('Su navegador no soporta la API de geolocalización.');
+      console.log('Su navegador no soporta API de geolocalización.');
     }
   }
 
@@ -149,7 +149,6 @@ export class RegistrarTimbreComponent implements OnInit {
   }
 
   RegistrarDatosTimbre(form1) {
-    console.log(this.f.toLocaleString());
     let dataTimbre = {
       fec_hora_timbre: this.f.toLocaleString(),
       accion: form1.accionForm,
@@ -157,32 +156,9 @@ export class RegistrarTimbreComponent implements OnInit {
       observacion: form1.observacionForm,
       latitud: this.latitud,
       longitud: this.longitud,
-      id_reloj: null,
+      id_reloj: 98,
     }
-    this.dialogRef.close(dataTimbre)
-  }
-
-  // MÉTODO DE INGRESO DE SOLO LETRAS EN UN CAMPO DEL FORMULARIO
-  IngresarSoloLetras(e) {
-    let key = e.keyCode || e.which;
-    let tecla = String.fromCharCode(key).toString();
-    // SE DEFINE TODO EL ABECEDARIO QUE SE VA A USAR.
-    let letras = " áéíóúabcdefghijklmnñopqrstuvwxyzÁÉÍÓÚABCDEFGHIJKLMNÑOPQRSTUVWXYZ";
-    // ES LA VALIDACIÓN DEL KEYCODES, QUE TECLAS RECIBE EL CAMPO DE TEXTO.
-    let especiales = [8, 37, 39, 46, 6, 13];
-    let tecla_especial = false
-    for (var i in especiales) {
-      if (key == especiales[i]) {
-        tecla_especial = true;
-        break;
-      }
-    }
-    if (letras.indexOf(tecla) == -1 && !tecla_especial) {
-      this.toastr.info('No se admite datos numéricos', 'Usar solo letras', {
-        timeOut: 6000,
-      })
-      return false;
-    }
+    this.ventana.close(dataTimbre)
   }
 
 }

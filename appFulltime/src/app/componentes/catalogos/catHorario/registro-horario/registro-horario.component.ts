@@ -1,12 +1,15 @@
-import { Component, OnInit } from '@angular/core';
-import { ToastrService } from 'ngx-toastr';
+// IMPORTAR LIBRERIAS
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
-
-import { HorarioService } from 'src/app/servicios/catalogos/catHorarios/horario.service';
-import { ThemePalette } from '@angular/material/core';
-import { ProgressSpinnerMode } from '@angular/material/progress-spinner';
+import { Component, OnInit } from '@angular/core';
+import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
+
+// IMPORTAR SERVICIOS
+import { HorarioService } from 'src/app/servicios/catalogos/catHorarios/horario.service';
+import { ProgressSpinnerMode } from '@angular/material/progress-spinner';
+import { ThemePalette } from '@angular/material/core';
+import { ValidacionesService } from 'src/app/servicios/validaciones/validaciones.service';
 
 @Component({
   selector: 'app-registro-horario',
@@ -16,57 +19,62 @@ import { Router } from '@angular/router';
 
 export class RegistroHorarioComponent implements OnInit {
 
-  nocturno = false;
+  // VARIABLES DE OPCIONES DE REGISTRO DE HORARIO
   detalle = false;
+  nocturno = false;
   isChecked: boolean = false;
 
-  // Validaciones para el formulario
-  nombre = new FormControl('', [Validators.required, Validators.minLength(2)]);
-  minAlmuerzo = new FormControl('', [Validators.pattern('[0-9]*')]);
+  // VALIDACIONES PARA EL FORMULARIO
   horaTrabajo = new FormControl('', [Validators.required, Validators.pattern("^[0-9]*(:[0-9][0-9])?$")]);
-  tipoF = new FormControl('');
-  detalleF = new FormControl('');
+  nombre = new FormControl('', [Validators.required, Validators.minLength(2)]);
+  minAlmuerzo = new FormControl('', Validators.pattern('[0-9]*'));
   nombreCertificadoF = new FormControl('');
   archivoForm = new FormControl('');
+  detalleF = new FormControl('');
+  tipoF = new FormControl('');
 
-  // asignar los campos en un formulario en grupo
+  // ASIGNAR LOS CAMPOS EN UN FORMULARIO EN GRUPO
   public nuevoHorarioForm = new FormGroup({
-    horarioNombreForm: this.nombre,
-    horarioMinAlmuerzoForm: this.minAlmuerzo,
-    horarioHoraTrabajoForm: this.horaTrabajo,
     nombreCertificadoForm: this.nombreCertificadoF,
-    tipoForm: this.tipoF,
+    horarioHoraTrabajoForm: this.horaTrabajo,
+    horarioMinAlmuerzoForm: this.minAlmuerzo,
+    horarioNombreForm: this.nombre,
     detalleForm: this.detalleF,
+    tipoForm: this.tipoF,
   });
 
-  /**
-   * Variables progress spinner
-   */
-  color: ThemePalette = 'primary';
+
+  // VARIABLES PROGRESS SPINNER
   mode: ProgressSpinnerMode = 'indeterminate';
-  value = 10;
   habilitarprogress: boolean = false;
+  color: ThemePalette = 'primary';
+  value = 10;
 
   constructor(
-    private rest: HorarioService,
-    private toastr: ToastrService,
-    public router: Router,
-    public dialogRef: MatDialogRef<RegistroHorarioComponent>
+    public ventana: MatDialogRef<RegistroHorarioComponent>, // VARIABLE MANEJO DE VENTANAS
+    public validar: ValidacionesService, // SERVICIO PARA CONTROL DE VALIDACIONES
+    private toastr: ToastrService, // VARIABLE PARA USO DE NOTIFICACIONES
+    private rest: HorarioService, // SERVICIO DATOS DE HORARIO
+    public router: Router, // VARIABLE MANEJO DE RUTAS
   ) { }
 
   ngOnInit(): void {
   }
 
+  // VARAIBLE DE ALMACENAMIENTO DE DATOS DE AUDITORIA
+  data_nueva: any = [];
+
+  // MÉTODO PARA TOMAR LOS DATOS DE HORARIO
   idHorario: any;
   InsertarHorario(form) {
     this.habilitarprogress = true;
     let dataHorario = {
-      nombre: form.horarioNombreForm,
       min_almuerzo: form.horarioMinAlmuerzoForm,
       hora_trabajo: form.horarioHoraTrabajoForm,
       doc_nombre: form.nombreCertificadoForm,
-      nocturno: form.tipoForm,
+      nombre: form.horarioNombreForm,
       detalle: form.detalleForm,
+      nocturno: form.tipoForm,
     };
     if (dataHorario.detalle === false) {
       dataHorario.hora_trabajo = this.StringTimeToSegundosTime(form.horarioHoraTrabajoForm)
@@ -85,16 +93,17 @@ export class RegistroHorarioComponent implements OnInit {
         this.habilitarprogress = false;
       }, error => {
         this.rest.postHorarioRest(dataHorario).subscribe(hora => {
+          this.RegistrarAuditoria(dataHorario);
           this.toastr.success('Operación Exitosa', 'Horario registrado', {
             timeOut: 6000,
           });
           this.habilitarprogress = false;
           if (dataHorario.detalle === true) {
             this.router.navigate(['/verHorario', hora.id]);
-            this.dialogRef.close();
+            this.ventana.close();
           }
           else {
-            this.dialogRef.close();
+            this.ventana.close();
           }
         }, error => {
           this.toastr.error('Operación Fallida', 'Horario no pudo ser registrado', {
@@ -116,6 +125,7 @@ export class RegistroHorarioComponent implements OnInit {
     }
   }
 
+  // MÉTODO PARA TRANSFORMAR SEGUNDOS EN HORAS
   StringTimeToSegundosTime(stringTime: string) {
     let hora = '';
     if (stringTime.split(':').length === 1) {
@@ -140,6 +150,7 @@ export class RegistroHorarioComponent implements OnInit {
     }
   }
 
+  // MÉTODO PARA CAMBIAR FORMATO DE HORAS
   CambiarFormato(stringTime: string) {
     let horaT = '';
     if (stringTime.split(':').length === 1) {
@@ -168,6 +179,7 @@ export class RegistroHorarioComponent implements OnInit {
     this.habilitarprogress = true;
     if (this.archivoSubido[0].size <= 2e+6) {
       this.rest.postHorarioRest(datos).subscribe(response => {
+        this.RegistrarAuditoria(datos);
         this.toastr.success('Operación Exitosa', 'Horario registrado', {
           timeOut: 6000,
         });
@@ -177,10 +189,10 @@ export class RegistroHorarioComponent implements OnInit {
         this.SubirRespaldo(this.idHorario.id);
         if (datos.detalle === true) {
           this.router.navigate(['/verHorario', this.idHorario.id]);
-          this.dialogRef.close();
+          this.ventana.close();
         }
         else {
-          this.dialogRef.close();
+          this.ventana.close();
         }
       }, error => {
         this.habilitarprogress = false;
@@ -196,6 +208,7 @@ export class RegistroHorarioComponent implements OnInit {
     }
   }
 
+  // MÉTODO PARA VALIDAR INGRESO DE NÚMEROS
   IngresarNumeroDecimal(evt) {
     if (window.event) {
       var keynum = evt.keyCode;
@@ -203,7 +216,7 @@ export class RegistroHorarioComponent implements OnInit {
     else {
       keynum = evt.which;
     }
-    // Comprobamos si se encuentra en el rango numérico y que teclas no recibirá.
+    // COMPROBAMOS SI SE ENCUENTRA EN EL RANGO NUMÉRICO Y QUE TECLAS NO RECIBIRÁ.
     if ((keynum > 47 && keynum < 58) || keynum == 8 || keynum == 13 || keynum == 6 || keynum == 58) {
       return true;
     }
@@ -216,22 +229,7 @@ export class RegistroHorarioComponent implements OnInit {
   }
 
   IngresarSoloNumerosEnteros(evt) {
-    if (window.event) {
-      var keynum = evt.keyCode;
-    }
-    else {
-      keynum = evt.which;
-    }
-    // Comprobamos si se encuentra en el rango numérico y que teclas no recibirá.
-    if ((keynum > 47 && keynum < 58) || keynum == 8 || keynum == 13 || keynum == 6) {
-      return true;
-    }
-    else {
-      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números', {
-        timeOut: 6000,
-      })
-      return false;
-    }
+    this.validar.IngresarSoloNumeros(evt);
   }
 
   ObtenerMensajeErrorNombre() {
@@ -246,6 +244,7 @@ export class RegistroHorarioComponent implements OnInit {
     }
   }
 
+  // MÉTODO PARA LIMPIAR FORMULARIOS
   LimpiarCampos() {
     this.nuevoHorarioForm.reset();
   }
@@ -256,6 +255,7 @@ export class RegistroHorarioComponent implements OnInit {
     });
   }
 
+  // MÉTODO PARA HABILITAR VISTA DE SELECCIÓN DE ARCHIVO
   HabilitarBtn: boolean = false;
   deseleccionarArchivo() {
     this.archivoSubido = [];
@@ -263,19 +263,19 @@ export class RegistroHorarioComponent implements OnInit {
     this.LimpiarNombreArchivo();
   }
 
-  nameFile: string;
+  // MÉTODO PARA SELECCIONAR ARCHIVO
   archivoSubido: Array<File>;
-
+  nameFile: string;
   fileChange(element) {
     this.archivoSubido = element.target.files;
     if (this.archivoSubido.length != 0) {
       const name = this.archivoSubido[0].name;
-      console.log(this.archivoSubido[0].name);
       this.nuevoHorarioForm.patchValue({ nombreCertificadoForm: name });
       this.HabilitarBtn = true
     }
   }
 
+  // MÉTODO PARA REGISTRAR RESPALDO D ECREACIÓN DE HORARIO
   SubirRespaldo(id: number) {
     this.habilitarprogress = true;
     let formData = new FormData();
@@ -284,7 +284,7 @@ export class RegistroHorarioComponent implements OnInit {
     }
     this.rest.SubirArchivoRespaldo(formData, id).subscribe(res => {
       this.habilitarprogress = false;
-      this.toastr.success('Operación Exitosa', 'Documento subido con exito', {
+      this.toastr.success('Operación Exitosa.', 'Documento subido con exito.', {
         timeOut: 6000,
       });
       this.archivoForm.reset();
@@ -292,9 +292,17 @@ export class RegistroHorarioComponent implements OnInit {
     });
   }
 
+  // MÉTODO PARA CERRAR VENTANAS
   CerrarVentanaRegistroHorario() {
     this.LimpiarCampos();
-    this.dialogRef.close();
+    this.ventana.close();
+  }
+
+  // MÉTODO PARA AUDITAR CATÁLOGO HORARIOS
+  RegistrarAuditoria(dataHorario) {
+    this.data_nueva = [];
+    this.data_nueva = dataHorario;
+    this.validar.Auditar('app-web', 'cg_horarios', '', this.data_nueva, 'INSERT');
   }
 
 }
