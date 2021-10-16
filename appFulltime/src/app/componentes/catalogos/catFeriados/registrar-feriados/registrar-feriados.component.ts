@@ -87,6 +87,8 @@ export class RegistrarFeriadosComponent implements OnInit {
             timeOut: 6000,
           })
         }
+      }, vacio => {
+        this.CrearFeriado(datosFeriado);
       })
     }
     else {
@@ -114,6 +116,8 @@ export class RegistrarFeriadosComponent implements OnInit {
             timeOut: 6000,
           })
         }
+      }, vacio => {
+        this.CrearFeriado(datosFeriado);
       })
     }
   }
