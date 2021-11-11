@@ -76,7 +76,7 @@ class ReportesControlador {
         }
     }
 
-    public async ListarTimbres(req: Request, res: Response) {
+   /* public async ListarTimbres(req: Request, res: Response) {
         const { id_empleado } = req.params;
         const { fechaInicio, fechaFinal } = req.body;
         const DATOS = await pool.query('SELECT * FROM timbres WHERE NOT accion = \'HA\' AND id_empleado = $1 AND ' +
@@ -87,7 +87,48 @@ class ReportesControlador {
         else {
             return res.status(404).jsonp({ text: 'error' });
         }
-    }
+    }*/
+
+        ////PLANIFICACION DE EMPLEADO CON FECHAS
+        public async BuscarPlan(req: Request, res: Response) {
+            const { id_empleado } = req.params;
+            const { fechaInicio, fechaFinal } = req.body;
+            const FECHAS = await pool.query('select pg.id, pg.codigo, pg.id_empl_cargo, pg.id_det_horario, pg.fec_horario, pg.fec_hora_horario, pg.tipo_entr_salida, pg.fec_hora_timbre, pg.id_horario' +
+                'from plan_general pg '+
+                'where pg.codigo = $3 and '+
+                '( pg.fec_hora_horario::date between $1 and $2 ) ' +
+                'order by fec_hora_horario;',
+                [fechaInicio, fechaFinal, id_empleado]);
+                console.log("m: ",(FECHAS.rows));
+            if (FECHAS.rowCount > 0) {
+                return res.jsonp(FECHAS.rows)
+            }
+            else {
+                return res.status(404).jsonp({ text: 'No se encuentran registros' });
+            }
+        }
+        //// FIN PLANIFICACION DE EMPLEADO CON FECHAS
+    
+        ////CAMBIO DE LISTAR TIMBRES COMENTAR METODO ANTIGUO
+        public async ListarTimbres(req: Request, res: Response) {
+            const { id_empleado } = req.params;
+            const { fechaInicio, fechaFinal } = req.body;
+            const DATOS = await pool.query('select t.fec_hora_timbre,t.accion, t.tecl_funcion, t.observacion, t.latitud, t.longitud, t.id, t.id_empleado, t.id_reloj, t.hora_timbre_diferente, t.fec_hora_timbre_servidor, t.dispositivo_timbre, t.tipo_autenticacion, cg_h.min_almuerzo ' +
+                'from timbres t, plan_general pg, cg_horarios cg_h where '+
+                't.id_empleado = pg.codigo and pg.id_horario = cg_h.id and ' +
+                'date(pg.fec_horario) = date(t.fec_hora_timbre) and NOT accion = \'HA\' and ' +
+                't.id_empleado = $1 and t.fec_hora_timbre::date BETWEEN $2 AND $3 '+
+                'group by t.fec_hora_timbre,t.accion, t.tecl_funcion, t.observacion, t.latitud, t.longitud, t.id, t.id_empleado, t.id_reloj, t.hora_timbre_diferente, t.fec_hora_timbre_servidor, t.dispositivo_timbre, t.tipo_autenticacion, cg_h.min_almuerzo ' +
+                'order by t.fec_hora_timbre asc;', [id_empleado, fechaInicio, fechaFinal]);
+            console.log("LT RepCont: ",(DATOS.rows));
+            if (DATOS.rowCount > 0) {
+                return res.jsonp(DATOS.rows);
+            }
+            else {
+                return res.status(404).jsonp({ text: 'error' });
+            }
+        }
+        ////FIN CAMBIO DE LISTAR TIMBRES
 
     public async ListarPermisoHorarioEmpleado(req: Request, res: Response) {
         const { id_empleado } = req.params;

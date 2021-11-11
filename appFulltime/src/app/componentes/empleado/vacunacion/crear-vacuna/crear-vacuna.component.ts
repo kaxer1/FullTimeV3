@@ -138,18 +138,19 @@ export class CrearVacunaComponent implements OnInit {
 
   // MÉTODO PARA VISUALIZAR CAMPO REGISTRO DE TIPO DE VACUNA
   AbrirVentana(form, opcion: number) {
+    console.log('ver seleccion', form, opcion)
     if (opcion === 1) {
-      if (form.vacuna_1Form === undefined) {
+      if (form.vacuna_1Form === 'OTRO') {
         this.AbrirTipoVacuna();
       }
     }
     else if (opcion === 2) {
-      if (form.vacuna_2Form === undefined) {
+      if (form.vacuna_2Form === 'OTRO') {
         this.AbrirTipoVacuna();
       }
     }
     else if (opcion === 3) {
-      if (form.vacuna_3Form === undefined) {
+      if (form.vacuna_3Form === 'OTRO') {
         this.AbrirTipoVacuna();
       }
     }
@@ -176,6 +177,15 @@ export class CrearVacunaComponent implements OnInit {
       id_tipo_vacuna_1: form.vacuna_1Form,
       nom_carnet: form.certificadoForm,
       id_empleado: parseInt(this.idEmploy),
+    }
+    if(dataCarnet.id_tipo_vacuna_1 === ''){
+      dataCarnet.id_tipo_vacuna_1 = null;
+    }
+    if(dataCarnet.id_tipo_vacuna_2 === ''){
+      dataCarnet.id_tipo_vacuna_2 = null;
+    }
+    if(dataCarnet.id_tipo_vacuna_3 === ''){
+      dataCarnet.id_tipo_vacuna_3 = null;
     }
     this.MensajeFechas(form, dataCarnet);
     this.restVacuna.CrearRegistroVacunacion(dataCarnet).subscribe(response => {

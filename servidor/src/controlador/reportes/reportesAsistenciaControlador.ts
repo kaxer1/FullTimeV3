@@ -1156,18 +1156,22 @@ const ModelarHorasTrabajaTimbresSinAcciones = async function (codigo: number, fe
 }
 
 async function BuscarHorarioEmpleado(fec_inicio: string, fec_final: string, codigo: string | number) {
-    let res = await pool.query('SELECT * FROM empl_horarios WHERE fec_inicio between $1::timestamp and $2::timestamp AND fec_final between $1::timestamp and $2::timestamp ' +
-        'AND codigo = $3 ORDER BY fec_inicio', [fec_inicio, fec_final, codigo]).then(result => { return result.rows });
+    let res = await pool.query('SELECT * FROM empl_horarios WHERE ($1 BETWEEN fec_inicio AND fec_final ' +
+        'OR $2 BETWEEN fec_inicio AND fec_final) AND codigo = $3 ORDER BY fec_inicio',
+        [fec_inicio, fec_final, codigo]).then(result => { return result.rows });
 
     if (res.length === 0) return res
     let array: Array<any> = [];
     res.forEach(obj => {
+
         HorariosParaInasistencias(obj).forEach(o => {
+
             array.push(o)
         });
     });
 
-
+    console.log('obj----faltas', array)
+    
     let timbres = await Promise.all(array.map(async (o: any) => {
         o.registros = await pool.query('SELECT count(*) FROM timbres WHERE CAST(fec_hora_timbre AS VARCHAR) like $1 || \'%\' ', [o.fecha])
             .then(result => {

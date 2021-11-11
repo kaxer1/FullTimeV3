@@ -27,6 +27,7 @@ import { DepartamentosService } from 'src/app/servicios/catalogos/catDepartament
 import { EmplCargosService } from 'src/app/servicios/empleado/empleadoCargo/empl-cargos.service';
 import { RegimenService } from 'src/app/servicios/catalogos/catRegimen/regimen.service';
 import { ValidacionesService } from '../../../../servicios/validaciones/validaciones.service';
+import { PlanGeneralService } from 'src/app/servicios/planGeneral/plan-general.service';
 
 @Component({
   selector: 'app-reporte-timbres',
@@ -110,6 +111,7 @@ export class ReporteTimbresComponent implements OnInit {
     public restR: ReportesService,
     public restEmpre: EmpresaService,
     public restD: DatosGeneralesService,
+    public restP: PlanGeneralService,
     public router: Router,
     private toastr: ToastrService,
     private validaciones: ValidacionesService
@@ -174,7 +176,7 @@ export class ReporteTimbresComponent implements OnInit {
     });
   }
 
-  // Control para verificar ingreso de fechas
+/*  // Control para verificar ingreso de fechas
   timbres: any = [];
   VerTimbresEmpleado(id_seleccionado, form, archivo) {
     if (form.inicioForm === '' || form.finalForm === '') {
@@ -219,7 +221,324 @@ export class ReporteTimbresComponent implements OnInit {
       }
     }
 
+  }*/
+
+
+  // Control para verificar ingreso de fechas
+  timbres: any = [];
+  timbresLimpios: any = [];
+  timbresLimpiosES: any = [];
+  timbresLimpiosES_A: any = [];
+  timbresLimpiosES_P: any = [];
+  timbresLimpiosPorDia: any = [];
+  planificacionGeneral: any = [];
+  async VerTimbresEmpleado(id_seleccionado, form, archivo) {
+    if (form.inicioForm === '' || form.finalForm === '') {
+      this.toastr.info('Ingresar fechas de periodo de bÃºsqueda.', 'VERIFICAR DATOS DE FECHA', {
+        timeOut: 6000,
+      })
+    }
+    else {
+      if (Date.parse(form.inicioForm) <= Date.parse(form.finalForm)) {
+        let fechas = {
+          fechaInicio: form.inicioForm,
+          fechaFinal: form.finalForm
+        }
+        const fechaFinalAux = form.finalForm.add(9,'h');
+        let fechasPlan = {
+          fechaInicio: form.inicioForm,
+          fechaFinal: fechaFinalAux
+        }
+        
+        //Extrae la planificacion del empleado clikeado con el rango de fechas de la interfaz
+        this.planificacionGeneral = [];
+        await this.restP.BuscarPlanificacionEmpleado(id_seleccionado, fechasPlan).subscribe(data => {
+            this.planificacionGeneral = data;
+            console.log("Planificacion: ", this.planificacionGeneral);
+          }, error => {
+            this.toastr.info('NO existe horario registrado.', 'VERIFICAR', {
+              timeOut: 6000,
+            });}
+        );
+
+        //**********************************/
+        this.timbres = [];
+        this.restR.ObtenerTimbres(id_seleccionado, fechas).subscribe(data => {
+          console.log("Data: ", data);
+          this.timbres = data;
+          console.log("Timbres: ", this.timbres);
+          //Limpia timbres repetidos: timbres que esten en un rango de 10 mins a partir del primer turno, del empleado seleccionado
+          for (let i = 0; i < this.timbres.length; i++){
+            if (i>0){
+              if((moment(this.timbres[i].fec_hora_timbre).format('DD/MM/YYYY HH:mm:ss')) > (moment(this.timbres[i-1].fec_hora_timbre).add(10, 'm').format('DD/MM/YYYY HH:mm:ss'))){
+                this.timbresLimpios.push(this.timbres[i]);
+              }
+              //console.log("bool i: ",(this.timbres[i].fec_hora_timbre));
+              //console.log("bool i: ",moment(this.timbres[i].fec_hora_timbre).format('DD/MM/YYYY HH:mm:ss'));
+              //console.log("bool i-1: ",moment(this.timbres[i-1].fec_hora_timbre).format('DD/MM/YYYY HH:mm:ss'));
+              //console.log("bool i-1: ",moment(this.timbres[i-1].fec_hora_timbre).add(10, 'm').format('DD/MM/YYYY HH:mm:ss'));
+              //console.log("If: ", (moment(this.timbres[i].fec_hora_timbre).format('DD/MM/YYYY HH:mm:ss')) > (moment(this.timbres[i-1].fec_hora_timbre).add(10, 'm').format('DD/MM/YYYY HH:mm:ss')));
+              //this.timbresLimpios.push(this.timbres[i]);
+            }else{
+              this.timbresLimpios.push(this.timbres[i]);
+              //console.log("DAT: ", this.timbres[i]);
+              //console.log("DAT A: ", this.timbresLimpios);
+            }
+          }
+          console.log("DAT L1: ", this.timbresLimpios);
+          
+          for(let j=0;j<this.timbresLimpios.length;j++){
+              let busquedaE: any;
+              let busquedaS: any;
+              let busquedaSA: any;
+              let busquedaEA: any;
+              busquedaE = null;
+              busquedaS = null;
+              busquedaSA = null;
+              busquedaEA = null;
+              
+              console.log("Timbre: ", moment(this.timbresLimpios[j].fec_hora_timbre).format('YYYY-MM-DD HH:mm:ss'));
+
+              //Busca su horario de timbre de entrada comparada con su timbre registrado
+              busquedaE = this.planificacionGeneral.find(
+                aux => 
+                  (
+                  moment(aux.fec_hora_horario).add(60,'m').format('YYYY-MM-DD HH:mm:ss') >= moment(this.timbresLimpios[j].fec_hora_timbre).format('YYYY-MM-DD HH:mm:ss') &&
+                  moment(aux.fec_horario).format('YYYY-MM-DD') === moment(this.timbresLimpios[j].fec_hora_timbre).format('YYYY-MM-DD')
+                  && aux.tipo_entr_salida === 'E'
+                  && this.timbresLimpios[j].accion != 'PES'
+                  )
+              );
+              if(busquedaE != undefined){
+                console.log("Entrada: ",
+                moment(busquedaE.fec_hora_horario).format('YYYY-MM-DD HH:mm:ss'));
+                this.timbresLimpios[j].accion = 'E';
+              }else{
+                  busquedaSA = this.planificacionGeneral.find(
+                    aux => 
+                      (
+                      moment(aux.fec_hora_horario).subtract(20,'m').format('YYYY-MM-DD HH:mm:ss') <= moment(this.timbresLimpios[j].fec_hora_timbre).format('YYYY-MM-DD HH:mm:ss') &&
+                      moment(aux.fec_hora_horario).add((parseInt(this.timbresLimpios[j].min_almuerzo)),'m').format('YYYY-MM-DD HH:mm:ss') >= moment(this.timbresLimpios[j].fec_hora_timbre).format('YYYY-MM-DD HH:mm:ss') &&
+                      moment(aux.fec_horario).format('YYYY-MM-DD') === moment(this.timbresLimpios[j].fec_hora_timbre).format('YYYY-MM-DD')
+                      && aux.tipo_entr_salida === 'S/A'
+                      && this.timbresLimpios[j].accion != 'PES' && this.timbresLimpios[j].accion != 'S/P'
+                      )
+                  );
+                  if(busquedaSA != undefined){
+                    console.log("Almuerzo 1: ",
+                    moment(busquedaSA.fec_hora_horario).format('YYYY-MM-DD HH:mm:ss'));
+                    this.timbresLimpios[j].accion = 'AES';
+                  }else{
+                    busquedaEA = this.planificacionGeneral.find(
+                      aux => 
+                        (
+                        moment(aux.fec_hora_horario).add(20,'m').format('YYYY-MM-DD HH:mm:ss') >= moment(this.timbresLimpios[j].fec_hora_timbre).format('YYYY-MM-DD HH:mm:ss') &&
+                        moment(aux.fec_hora_horario).subtract((parseInt(this.timbresLimpios[j].min_almuerzo)),'m').format('YYYY-MM-DD HH:mm:ss') <= moment(this.timbresLimpios[j].fec_hora_timbre).format('YYYY-MM-DD HH:mm:ss') &&
+                        moment(aux.fec_horario).format('YYYY-MM-DD') === moment(this.timbresLimpios[j].fec_hora_timbre).format('YYYY-MM-DD')
+                        && aux.tipo_entr_salida === 'E/A'
+                        && this.timbresLimpios[j].accion != 'PES' && this.timbresLimpios[j].accion != 'E/P'
+                        )
+                    );
+                    if(busquedaEA != undefined){
+                      console.log("Almuerzo 2: ",
+                      moment(busquedaEA.fec_hora_horario).format('YYYY-MM-DD HH:mm:ss'));
+                      this.timbresLimpios[j].accion = 'AES';
+                    }else{
+                      busquedaS = this.planificacionGeneral.find(
+                        aux => 
+                          (
+                          moment(aux.fec_hora_horario).subtract(45,'m').format('YYYY-MM-DD HH:mm:ss') <= moment(this.timbresLimpios[j].fec_hora_timbre).format('YYYY-MM-DD HH:mm:ss') &&
+                          moment(aux.fec_horario).format('YYYY-MM-DD') === moment(this.timbresLimpios[j].fec_hora_timbre).format('YYYY-MM-DD')
+                          && aux.tipo_entr_salida === 'S'
+                          && this.timbresLimpios[j].accion != 'PES'
+                          )
+                      );
+                      if(busquedaS != undefined){
+                        console.log("Salida: ",
+                        moment(busquedaS.fec_hora_horario).format('YYYY-MM-DD HH:mm:ss'));
+                        this.timbresLimpios[j].accion = 'S';
+                      }
+                    }
+                  }
+
+                }
+              
+              /*
+              if(busquedaS != undefined){
+                console.log("Salida: ",
+                moment(busquedaS.fec_hora_horario).format('YYYY-MM-DD HH:mm:ss')
+                );
+              }
+              if(busquedaSA != undefined){
+                console.log("S Almuerzo: ",
+                moment(busquedaSA.fec_hora_horario).format('YYYY-MM-DD HH:mm:ss')
+                );
+              }
+              if(busquedaEA != undefined){
+                console.log("E Almuerzo: ",
+                moment(busquedaEA.fec_hora_horario).format('YYYY-MM-DD HH:mm:ss')
+                );
+              }
+              */
+          }
+
+          //Codigos 99
+          let busqueda99: any;
+          do {
+            busqueda99 = null;
+            busqueda99 = this.timbresLimpios.find(
+              aux => 
+                (
+                aux.accion === 'NA'
+                )
+            );
+            if(busqueda99 != undefined){
+              console.log("EncontrÃ³ timbre 99: ",busqueda99);
+              let index99 = this.timbresLimpios.indexOf(busqueda99);
+              let index99_Anterior = index99 - 1;
+              let index99_Posterior = index99 + 1;
+              switch (this.timbresLimpios[index99_Anterior].accion){
+                case 'E':
+                  if(this.timbresLimpios[index99_Posterior].accion === 'E/A'){
+                    this.timbresLimpios[index99].accion = 'AES';
+                  }else{
+                    if(this.timbresLimpios[index99_Posterior].accion === 'NA'){
+                      this.timbresLimpios[index99].accion = 'AES';
+                    }else{
+                      this.timbresLimpios[index99].accion = 'NN';
+                    }
+                  }
+                break;
+                case 'S/A':
+                  this.timbresLimpios[index99].accion = 'AES';
+                break;
+                case 'E/A':
+                  this.timbresLimpios[index99].accion = 'S';
+                break;
+                case 'S':
+                  this.timbresLimpios[index99].accion = 'E';
+                break;
+                case 'S/P':
+                  this.timbresLimpios[index99].accion = 'E/P';
+                break;
+                case 'PES':
+                  this.timbresLimpios[index99].accion = 'E/P';
+                break;
+                default:
+                  this.timbresLimpios[index99].accion = 'NN';
+              }
+            }
+          } while (busqueda99 != undefined);
+
+          //Busqueda de permisos
+          let busquedaEP: any;
+          let busquedaSP: any;
+          let k = 0;
+          do {
+            busquedaEP = null;
+            busquedaEP = this.timbresLimpios.find(
+              aux => 
+                (
+                aux.accion === 'PES'
+                )
+            );
+            if(busquedaEP != undefined){
+              console.log("EncontrÃ³ timbre PES: ",busquedaEP);
+              let indexEP = this.timbresLimpios.indexOf(busquedaEP);
+              let indexEPAnterior = indexEP - 1;
+              let indexEPPosterior = indexEP + 1;
+              if(this.timbresLimpios[indexEPAnterior].accion != 'PES' && this.timbresLimpios[indexEPAnterior].accion != 'NA' && this.timbresLimpios[indexEPAnterior].accion != 'S/P'){
+                this.timbresLimpios[indexEP].accion = 'S/P'
+              }else{
+                this.timbresLimpios[indexEP].accion = 'E/P'
+              }
+            }
+            k ++;
+          } while (busquedaEP != undefined);
+
+          //Busqueda Alimentacion
+          let busquedaSA_Destiempo: any;
+          do {
+            busquedaSA_Destiempo = null;
+            busquedaSA_Destiempo = this.timbresLimpios.find(
+              aux => 
+                (
+                aux.accion === 'AES'
+                )
+            );
+            if(busquedaSA_Destiempo != undefined){
+              console.log("EncontrÃ³ timbre Almuerzo: ",busquedaSA_Destiempo);
+              let indexSA_Destiempo = this.timbresLimpios.indexOf(busquedaSA_Destiempo);
+              let indexSA_Destiempo_Anterior = indexSA_Destiempo - 1;
+              let indexSA_Destiempo_Posterior = indexSA_Destiempo + 1;
+              if(this.timbresLimpios[indexSA_Destiempo_Anterior].accion != 'AES' && this.timbresLimpios[indexSA_Destiempo_Anterior].accion != 'S/A'){
+                this.timbresLimpios[indexSA_Destiempo].accion = 'S/A';
+              }else{
+                this.timbresLimpios[indexSA_Destiempo].accion = 'E/A';
+              }
+            }
+          } while (busquedaSA_Destiempo != undefined);
+
+          do {
+            busqueda99 = null;
+            busqueda99 = this.timbresLimpios.find(
+              aux => 
+                (
+                aux.accion === 'NN'
+                )
+            );
+            if(busqueda99 != undefined){
+              console.log("EncontrÃ³ timbre 99: ",busqueda99);
+              let index99 = this.timbresLimpios.indexOf(busqueda99);
+              let index99_Anterior = index99 - 1;
+              let index99_Posterior = index99 + 1;
+              switch (this.timbresLimpios[index99_Anterior].accion){
+                case 'S/A':
+                  this.timbresLimpios[index99].accion = 'E/A';
+                break;
+                default:
+                  this.timbresLimpios[index99].accion = 'NM';
+              }
+            }
+          } while (busqueda99 != undefined);
+
+          
+          console.log('Datos timbres: ', this.timbres);
+          
+          if (archivo === 'pdf') {
+            this.generarPdf('open', id_seleccionado, form);
+            this.LimpiarFechas();
+          }
+          else if (archivo === 'excel') {
+            this.exportToExcelTimbres(id_seleccionado, form);
+            this.LimpiarFechas();
+          }
+        }, error => {
+          this.toastr.info('En el periodo indicado el empleado no tiene registros de Timbres. ', 'Dar click aquÃ­, para obtener reporte, en el que se indica que no existen registros.', {
+            timeOut: 10000,//Revisar ingreso de horario
+          }).onTap.subscribe(obj => {
+            if (archivo === 'pdf') {
+              this.PDF_Vacio('open', id_seleccionado, form);
+              this.LimpiarFechas();
+            }
+          });
+        }
+        );
+      }
+      else {
+        this.toastr.info('La fecha de inicio de Periodo no puede ser posterior a la fecha de fin de Periodo.', 'VERIFICAR', {
+          timeOut: 6000,
+        });
+      }
+    }
+    this.timbresLimpios = [];
   }
+
+
+
+
+
+
 
   IngresarSoloLetras(e) {
     return this.validaciones.IngresarSoloLetras(e)

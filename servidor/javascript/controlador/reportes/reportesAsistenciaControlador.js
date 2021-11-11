@@ -1000,8 +1000,8 @@ const ModelarHorasTrabajaTimbresSinAcciones = function (codigo, fec_inicio, fec_
 };
 function BuscarHorarioEmpleado(fec_inicio, fec_final, codigo) {
     return __awaiter(this, void 0, void 0, function* () {
-        let res = yield database_1.default.query('SELECT * FROM empl_horarios WHERE fec_inicio between $1::timestamp and $2::timestamp AND fec_final between $1::timestamp and $2::timestamp ' +
-            'AND codigo = $3 ORDER BY fec_inicio', [fec_inicio, fec_final, codigo]).then(result => { return result.rows; });
+        let res = yield database_1.default.query('SELECT * FROM empl_horarios WHERE ($1 BETWEEN fec_inicio AND fec_final ' +
+            'OR $2 BETWEEN fec_inicio AND fec_final) AND codigo = $3 ORDER BY fec_inicio', [fec_inicio, fec_final, codigo]).then(result => { return result.rows; });
         if (res.length === 0)
             return res;
         let array = [];
@@ -1010,6 +1010,7 @@ function BuscarHorarioEmpleado(fec_inicio, fec_final, codigo) {
                 array.push(o);
             });
         });
+        console.log('obj----faltas', array);
         let timbres = yield Promise.all(array.map((o) => __awaiter(this, void 0, void 0, function* () {
             o.registros = yield database_1.default.query('SELECT count(*) FROM timbres WHERE CAST(fec_hora_timbre AS VARCHAR) like $1 || \'%\' ', [o.fecha])
                 .then(result => {

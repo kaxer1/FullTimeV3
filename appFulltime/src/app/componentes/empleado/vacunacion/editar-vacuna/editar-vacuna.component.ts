@@ -164,17 +164,17 @@ export class EditarVacunaComponent implements OnInit {
   // MÉTODO PARA VISUALIZAR CAMPO REGISTRO DE TIPO DE VACUNA
   AbrirVentana(form, opcion: number) {
     if (opcion === 1) {
-      if (form.vacuna_1Form === undefined) {
+      if (form.vacuna_1Form === 'OTRO') {
         this.AbrirTipoVacuna();
       }
     }
     else if (opcion === 2) {
-      if (form.vacuna_2Form === undefined) {
+      if (form.vacuna_2Form === 'OTRO') {
         this.AbrirTipoVacuna();
       }
     }
     else if (opcion === 3) {
-      if (form.vacuna_3Form === undefined) {
+      if (form.vacuna_3Form === 'OTRO') {
         this.AbrirTipoVacuna();
       }
     }
@@ -193,6 +193,15 @@ export class EditarVacunaComponent implements OnInit {
       id_tipo_vacuna_2: form.vacuna_2Form,
       id_tipo_vacuna_3: form.vacuna_3Form,
       id_tipo_vacuna_1: form.vacuna_1Form,
+    }
+    if(dataCarnet.id_tipo_vacuna_1 === ''){
+      dataCarnet.id_tipo_vacuna_1 = null;
+    }
+    if(dataCarnet.id_tipo_vacuna_2 === ''){
+      dataCarnet.id_tipo_vacuna_2 = null;
+    }
+    if(dataCarnet.id_tipo_vacuna_3 === ''){
+      dataCarnet.id_tipo_vacuna_3 = null;
     }
     if (this.dvacuna.nom_carnet != '' && this.dvacuna.nom_carnet != null &&
       (form.certificadoForm === '' || form.certificadoForm === null || form.certificadoForm === undefined)) {

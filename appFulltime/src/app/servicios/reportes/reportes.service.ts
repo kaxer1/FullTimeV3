@@ -53,6 +53,9 @@ export class ReportesService {
     return this.http.post(`${environment.url}/reporte/reportePermisos/fechas/planificacion/${empleado_id}`, data);
   }
 
+  ObtenerPlanificacionEmpleado(empleado_id: any, data: any) {
+    return this.http.post(`${environment.url}/reporte/reporteTimbres/buscarPlan/${empleado_id}`, data);
+  }
 
   /**
    * SERVICIOS CENTRALIZADOS RANGO DE FECHAS

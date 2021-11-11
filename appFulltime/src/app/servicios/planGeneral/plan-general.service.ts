@@ -27,4 +27,8 @@ export class PlanGeneralService {
     return this.http.post(`${environment.url}/planificacion_general/buscar_fecha/plan`, datos);
   }
 
+  BuscarPlanificacionEmpleado(empleado_id: any, datos: any) {
+    return this.http.post(`${environment.url}/planificacion_general/buscar_plan/${empleado_id}`, datos);
+  }
+
 }
